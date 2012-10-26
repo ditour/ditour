@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QLJ-oh-VMg">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
+    </dependencies>
+    <scenes>
+        <!--Lobby Configuration Controller - Configuration-->
+        <scene sceneID="5">
+            <objects>
+                <viewController storyboardIdentifier="Configuration" id="2" customClass="ILobbyConfigurationController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3">
+                        <rect key="frame" x="0.0" y="64" width="568" height="256"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Presentation URL" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ETh-D7-lRq">
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="500" constant="100" type="user" id="RuN-Vx-Zbi"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="URL" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="presentationLocationChanged:" destination="2" eventType="editingDidEnd" id="kZG-Vx-hHy"/>
+                                    <outlet property="delegate" destination="2" id="2Rx-JX-TMb"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Presentation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C0r-LU-aDG">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="101" id="ZuN-qI-eLj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lpi-pH-2DQ"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Download Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbu-mn-EmG">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="C0r-LU-aDG" firstAttribute="top" secondItem="3" secondAttribute="top" constant="12" type="user" id="2r1-jd-nnl"/>
+                            <constraint firstItem="ETh-D7-lRq" firstAttribute="trailing" secondItem="tbu-mn-EmG" secondAttribute="trailing" type="user" id="IhP-NI-UVo"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="top" secondItem="3" secondAttribute="top" constant="98" type="user" id="JYZ-xS-O4t"/>
+                            <constraint firstItem="C0r-LU-aDG" firstAttribute="top" secondItem="ETh-D7-lRq" secondAttribute="top" type="user" id="QLZ-97-mV3"/>
+                            <constraint firstItem="tbu-mn-EmG" firstAttribute="top" secondItem="ETh-D7-lRq" secondAttribute="bottom" constant="21" type="user" id="QM6-Y8-ZjG"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="trailing" secondItem="tbu-mn-EmG" secondAttribute="trailing" type="user" id="UDF-mt-5Ge"/>
+                            <constraint firstItem="tbu-mn-EmG" firstAttribute="leading" secondItem="C0r-LU-aDG" secondAttribute="leading" type="user" id="XVx-y4-4gZ"/>
+                            <constraint firstItem="C0r-LU-aDG" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="14" type="user" id="gtG-y3-DeM"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3" secondAttribute="leading" constant="20" type="user" id="hVx-gg-xBQ"/>
+                            <constraint firstItem="tbu-mn-EmG" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="14" type="user" id="hZS-JN-Qot"/>
+                            <constraint firstAttribute="trailing" secondItem="tbu-mn-EmG" secondAttribute="trailing" constant="9" type="user" id="hva-J4-16G"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="top" secondItem="tbu-mn-EmG" secondAttribute="bottom" constant="14" type="user" id="nsQ-8Q-2oI"/>
+                            <constraint firstAttribute="trailing" secondItem="lpi-pH-2DQ" secondAttribute="trailing" constant="9" type="user" id="oro-SD-178"/>
+                            <constraint firstItem="ETh-D7-lRq" firstAttribute="leading" secondItem="C0r-LU-aDG" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="s6z-th-e3u"/>
+                            <constraint firstItem="tbu-mn-EmG" firstAttribute="top" secondItem="3" secondAttribute="top" constant="63" type="user" id="uNk-F7-aDN"/>
+                            <constraint firstAttribute="trailing" secondItem="ETh-D7-lRq" secondAttribute="trailing" constant="9" type="user" id="vWl-qs-qWX"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="vhi-8j-pvU"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Configuration" id="xrb-Yu-Vu8">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="NG5-uM-EpG">
+                            <connections>
+                                <action selector="downloadPresentation:" destination="2" id="Ryo-AD-vYU"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <connections>
+                        <outlet property="downloadProgressLabel" destination="tbu-mn-EmG" id="6zh-yS-dib"/>
+                        <outlet property="downloadProgressView" destination="lpi-pH-2DQ" id="8Wb-3T-9y4"/>
+                        <outlet property="presentationLocationField" destination="ETh-D7-lRq" id="hWC-Ja-JXo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1261" y="-210"/>
+        </scene>
+        <!--Lobby View Controller - Presentations-->
+        <scene sceneID="6Sp-gQ-LXd">
+            <objects>
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="7dl-Yl-nQz" customClass="ILobbyViewController" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="ESk-8c-tdQ">
+                        <rect key="frame" x="0.0" y="64" width="568" height="256"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="23W-mg-kbj">
+                            <size key="itemSize" width="189" height="167"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TrackCell" id="sIN-iW-WkN" customClass="ILobbyTrackViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="189" height="167"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="189" height="167"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="ym7-KD-SKH"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GN2-P1-NVM">
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="175" id="eCn-C9-ZH8"/>
+                                                <constraint firstAttribute="height" constant="34" id="leL-4k-rzp"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="ym7-KD-SKH" secondAttribute="bottom" constant="50" type="user" id="8AF-0Z-5BS"/>
+                                    <constraint firstItem="ym7-KD-SKH" firstAttribute="centerX" secondItem="GN2-P1-NVM" secondAttribute="centerX" type="default" id="BhX-sJ-cbo"/>
+                                    <constraint firstItem="ym7-KD-SKH" firstAttribute="leading" secondItem="sIN-iW-WkN" secondAttribute="leading" constant="13" type="user" id="LtH-Jh-8sw"/>
+                                    <constraint firstAttribute="bottom" secondItem="GN2-P1-NVM" secondAttribute="bottom" constant="9" id="SK8-NL-UFd"/>
+                                    <constraint firstItem="ym7-KD-SKH" firstAttribute="top" secondItem="sIN-iW-WkN" secondAttribute="top" constant="9" type="user" id="fYF-5x-qWc"/>
+                                    <constraint firstAttribute="trailing" secondItem="ym7-KD-SKH" secondAttribute="trailing" constant="14" type="user" id="jiN-0W-0rf"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="ym7-KD-SKH" id="Jth-pz-WEz"/>
+                                    <outlet property="label" destination="GN2-P1-NVM" id="j7A-ZR-FqY"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="7dl-Yl-nQz" id="N9X-sm-UNn"/>
+                            <outlet property="delegate" destination="7dl-Yl-nQz" id="h2I-G2-cVm"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="Presentations" id="xU4-Ys-9KI">
+                        <barButtonItem key="rightBarButtonItem" systemItem="organize" id="USG-ZS-uMH">
+                            <connections>
+                                <segue destination="2" kind="push" identifier="ShowConfiguration" id="TVQ-iC-2n6"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gRZ-ti-PbK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="485" y="-210"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="LXc-TM-WIi">
+            <objects>
+                <navigationController id="QLJ-oh-VMg" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="n85-jv-JeF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="7dl-Yl-nQz" kind="relationship" relationship="rootViewController" id="cva-BJ-pfg"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FYj-DP-kQS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-269" y="-221"/>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="ILobbyConfigurationController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ILobbyConfigurationController.h"/>
+            <relationships>
+                <relationship kind="action" name="downloadPresentation:"/>
+                <relationship kind="action" name="presentationLocationChanged:"/>
+                <relationship kind="outlet" name="downloadProgressLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="presentationLocationField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="ILobbyTrackViewCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ILobbyTrackViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ILobbyViewController" superclassName="UICollectionViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ILobbyViewController.h"/>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewController.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
