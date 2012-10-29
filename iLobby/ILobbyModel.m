@@ -118,9 +118,12 @@ static NSString *PRESENTATION_PATH;
 					[self stop];
 					[self installPresentation];
 					[self loadPresentation];
+					[self play];
 				}
-				// play the default track
-				[self playTrack:self.defaultTrack cancelCurrent:NO];
+				else {
+					// play the default track
+					[self playTrack:self.defaultTrack cancelCurrent:NO];
+				}
 			}
 		}];
 	}
