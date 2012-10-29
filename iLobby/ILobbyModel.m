@@ -186,7 +186,16 @@ static NSString *PRESENTATION_PATH;
 			[downloader removeObserver:self forKeyPath:@"progress"];
 			
 			[self updateProgress:downloader];
+
+			// mark that a new presentation is awaiting to be loaded during the next default slideshow cycle (if playing)
 			self.hasPresentationUpdate = YES;
+
+			// if we are not playing (e.g. starting from scratch) then automatically install, load and begin playing the presentation
+			if ( !self.playing ) {
+				[self installPresentation];
+				[self loadPresentation];
+				[self play];
+			}
 		}
 	}];
 	[self.presentationDownloader addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
