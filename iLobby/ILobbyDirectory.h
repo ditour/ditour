@@ -19,4 +19,6 @@
 + (ILobbyDirectory *)remoteDirectoryWithURL:(NSURL *)location;
 + (ILobbyDirectory *)localDirectoryWithPath:(NSString *)path;
 
+- (NSArray *)filesMatching:(NSString *)pattern;
+
 @end

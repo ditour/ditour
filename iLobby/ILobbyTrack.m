@@ -8,6 +8,7 @@
 
 #import "ILobbyTrack.h"
 #import "ILobbySlide.h"
+#import "ILobbyDirectory.h"
 
 #define DEFAULT_SLIDE_DURATION 5.0f
 
@@ -40,10 +41,11 @@
 		NSNumber *defaultDuration = trackConfig[@"defaultDuration"];
 		self.defaultSlideDuration = defaultDuration != nil ? [defaultDuration floatValue] : DEFAULT_SLIDE_DURATION;
 		
+		ILobbyDirectory *trackDirectory = [ILobbyDirectory localDirectoryWithPath:trackPath];
 		NSArray *slidesConfigs = trackConfig[@"slides"];
 		NSMutableArray *slides = [NSMutableArray new];
 		for ( id slideConfig in slidesConfigs ) {
-			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig];
+			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig inDirectory:trackDirectory];
 			for ( NSString *slideFile in slideFiles ) {
 				ILobbySlide *slide = [ILobbySlide slideWithFile:[trackPath stringByAppendingPathComponent:slideFile] duration:self.defaultSlideDuration];
 				if ( slide ) {

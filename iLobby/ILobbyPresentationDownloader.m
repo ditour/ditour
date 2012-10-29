@@ -9,6 +9,7 @@
 #import "ILobbyPresentationDownloader.h"
 #import "ILobbyFileDownloader.h"
 #import "ILobbySlide.h"
+#import "ILobbyDirectory.h"
 
 #define PRESENTATION_SUBDIRECTORY @"Presentation"
 
@@ -78,12 +79,17 @@
 
 	NSMutableArray *itemURLs = [NSMutableArray new];
 	for ( NSDictionary *trackConfig in config[@"tracks"] ) {
+		NSString *trackLocation = trackConfig[@"location"];
+		NSString *relativeTrackPath = [@"tracks" stringByAppendingPathComponent:trackLocation];
+		NSURL *trackURL = [NSURL URLWithString:relativeTrackPath relativeToURL:self.baseURL];
+		ILobbyDirectory *trackDirectory = [ILobbyDirectory remoteDirectoryWithURL:trackURL];
+
 		NSString *iconFile = trackConfig[@"icon"];
 		NSURL *iconURL = [self itemURLForFile:iconFile inTrack:trackConfig];
 		[itemURLs addObject:iconURL];
 		NSArray *slidesConfigs = trackConfig[@"slides"];
 		for ( id slideConfig in slidesConfigs ) {
-			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig];
+			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig inDirectory:trackDirectory];
 			for ( NSString *slideFile in slideFiles ) {
 				NSURL *slideURL = [self itemURLForFile:slideFile inTrack:trackConfig];
 				[itemURLs addObject:slideURL];

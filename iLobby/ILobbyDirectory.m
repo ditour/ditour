@@ -55,6 +55,20 @@
 	return [[ILobbyLocalDirectory alloc] initWithPath:path];
 }
 
+
+- (NSArray *)filesMatching:(NSString *)pattern {
+	NSMutableArray *matchingFiles = [NSMutableArray new];
+
+	for ( NSString *file in self.files ) {
+		NSRange matchingRange = [file rangeOfString:pattern options:NSRegularExpressionSearch];
+		if ( matchingRange.location != NSNotFound ) {
+			[matchingFiles addObject:file];
+		}
+	}
+
+	return [NSArray arrayWithArray:matchingFiles];
+}
+
 @end
 
 

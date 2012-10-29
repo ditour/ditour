@@ -55,6 +55,9 @@ static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if ( [object isKindOfClass:[ILobbyModel class]] ) {
 		if ( [keyPath isEqualToString:@"tracks"] ) {
+			dispatch_async( dispatch_get_main_queue(), ^{
+				[self.collectionView reloadData];
+			});
 		}
 		else if ( [keyPath isEqualToString:@"currentTrack"] ) {
 			NSArray *tracks = self.lobbyModel.tracks;
@@ -63,7 +66,7 @@ static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
 
 			if ( tracks && oldTrack != currentTrack ) {
 				NSMutableArray *paths = [NSMutableArray new];
-				if ( oldTrack ) {
+				if ( oldTrack && [tracks containsObject:oldTrack] ) {	// verifies that oldTrack is still relevant (e.g. after presentation download)
 					NSUInteger item = [tracks indexOfObjectIdenticalTo:oldTrack];
 					if ( item != NSNotFound ) {
 						[paths addObject:[NSIndexPath indexPathForItem:item inSection:0]];
