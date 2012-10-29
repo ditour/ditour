@@ -22,6 +22,7 @@
 @property (weak, readwrite, nonatomic) id<ILobbyPresentationDelegate> presentationDelegate;
 
 - (void)downloadPresentation;
+- (BOOL)play;
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;
 
 @end

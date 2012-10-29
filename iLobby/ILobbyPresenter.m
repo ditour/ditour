@@ -106,7 +106,7 @@
 
 // handle the change in screens
 - (void)handleScreensChange:(NSNotification *)notification {
-	[self configureExternalDisplay];
+	[self updateConfiguration];
 }
 
 @end

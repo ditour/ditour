@@ -53,7 +53,28 @@ static NSString *PRESENTATION_PATH;
 
 - (void)setPresentationDelegate:(id<ILobbyPresentationDelegate>)presentationDelegate {
 	_presentationDelegate = presentationDelegate;
-	[self playTrack:self.defaultTrack cancelCurrent:YES];
+}
+
+
+- (BOOL)canPlay {
+	NSArray *tracks = self.tracks;
+	return tracks != nil && tracks.count > 0;
+}
+
+
+- (BOOL)play {
+	if ( [self canPlay] ) {
+		[self playTrack:self.defaultTrack cancelCurrent:YES];
+		return YES;
+	}
+	else {
+		return NO;
+	}
+}
+
+
+- (void)stop {
+	[self.currentTrack cancelPresentation];
 }
 
 
@@ -70,10 +91,10 @@ static NSString *PRESENTATION_PATH;
 
 	id<ILobbyPresentationDelegate> presentationDelegate = self.presentationDelegate;
 	if ( presentationDelegate ) {
-//		NSLog( @"presenting track to delegate..." );
 		self.currentTrack = track;
 		[track presentTo:presentationDelegate completionHandler:^(ILobbyTrack *track) {
-			[self playTrack:self.defaultTrack cancelCurrent:NO];	// no need to cancel current since the current track completed normally
+			// after a track completes on its own (no need to cancel), revert to the default track
+			[self playTrack:self.defaultTrack cancelCurrent:NO];
 		}];
 	}
 }
@@ -110,9 +131,9 @@ static NSString *PRESENTATION_PATH;
 			ILobbyTrack *track = [[ILobbyTrack alloc] initWithConfiguration:trackConfig relativeTo:trackPath];
 			[tracks addObject:track];
 		}
+
 		self.tracks = [NSArray arrayWithArray:tracks];
 		self.defaultTrack = tracks.count > 0 ? tracks[0] : nil;
-		[self playTrack:self.defaultTrack cancelCurrent:YES];
 	}
 }
 

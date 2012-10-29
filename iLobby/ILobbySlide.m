@@ -127,7 +127,6 @@ static NSArray *IMAGE_EXTENSIONS;
 
 
 - (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
-//	NSLog( @"presenting slide with medial file: %@", self.mediaFile );
 	[presenter displayImage:[UIImage imageWithContentsOfFile:self.mediaFile]];
 	
 	int64_t delayInSeconds = self.duration;
