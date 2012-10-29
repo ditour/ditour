@@ -84,7 +84,7 @@
 	[slide presentTo:presenter completionHandler:^(ILobbySlide *theSlide) {
 		NSUInteger nextSlideIndex = slideIndex + 1;
 		if ( runID == presenter.currentRunID ) {
-			if ( nextSlideIndex < slides.count - 1 ) {
+			if ( nextSlideIndex < slides.count ) {
 				[self presentSlideAt:nextSlideIndex to:presenter forRun:runID completionHandler:trackCompletionHandler];
 			}
 			else {
