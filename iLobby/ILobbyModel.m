@@ -17,6 +17,8 @@ static NSString *PRESENTATION_PATH;
 @interface ILobbyModel ()
 @property (strong, nonatomic) ILobbyPresentationDownloader *presentationDownloader;
 @property (strong, readwrite) ILobbyProgress *downloadProgress;
+@property (readwrite) BOOL hasPresentationUpdate;
+@property (readwrite) BOOL playing;
 @property (strong, readwrite) NSArray *tracks;
 @property (strong, readwrite) ILobbyTrack *defaultTrack;
 @property (strong, readwrite) ILobbyTrack *currentTrack;
@@ -44,6 +46,8 @@ static NSString *PRESENTATION_PATH;
 - (id)init {
     self = [super init];
     if (self) {
+		self.playing = NO;
+		
 		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
 		[self loadPresentation];
     }
@@ -65,6 +69,7 @@ static NSString *PRESENTATION_PATH;
 - (BOOL)play {
 	if ( [self canPlay] ) {
 		[self playTrack:self.defaultTrack cancelCurrent:YES];
+		self.playing = YES;
 		return YES;
 	}
 	else {
@@ -74,7 +79,20 @@ static NSString *PRESENTATION_PATH;
 
 
 - (void)stop {
+	self.playing = NO;
 	[self.currentTrack cancelPresentation];
+}
+
+
+- (void)performShutdown {
+	// stop the presentation
+	[self stop];
+
+	// check to see if there are any pending installations to install
+	if ( self.hasPresentationUpdate ) {
+		[self installPresentation];
+		[self loadPresentation];
+	}
 }
 
 
@@ -93,8 +111,17 @@ static NSString *PRESENTATION_PATH;
 	if ( presentationDelegate ) {
 		self.currentTrack = track;
 		[track presentTo:presentationDelegate completionHandler:^(ILobbyTrack *track) {
-			// after a track completes on its own (no need to cancel), revert to the default track
-			[self playTrack:self.defaultTrack cancelCurrent:NO];
+			// if playing, present the default track after any track completes on its own (no need to cancel)
+			if ( self.playing ) {
+				// check whether a new presentation download is ready and install and load it if so
+				if ( self.hasPresentationUpdate ) {
+					[self stop];
+					[self installPresentation];
+					[self loadPresentation];
+				}
+				// play the default track
+				[self playTrack:self.defaultTrack cancelCurrent:NO];
+			}
 		}];
 	}
 }
@@ -112,6 +139,7 @@ static NSString *PRESENTATION_PATH;
 	NSString *downloadPath = [ILobbyPresentationDownloader presentationPath];
 	[fileManager moveItemAtPath:downloadPath toPath:PRESENTATION_PATH error:&error];
 
+	self.hasPresentationUpdate = NO;
 }
 
 
@@ -155,8 +183,7 @@ static NSString *PRESENTATION_PATH;
 			[downloader removeObserver:self forKeyPath:@"progress"];
 			
 			[self updateProgress:downloader];
-			[self installPresentation];
-			[self loadPresentation];
+			self.hasPresentationUpdate = YES;
 		}
 	}];
 	[self.presentationDownloader addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];

@@ -24,5 +24,6 @@
 - (void)downloadPresentation;
 - (BOOL)play;
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;
+- (void)performShutdown;
 
 @end
