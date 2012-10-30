@@ -121,10 +121,9 @@ static NSString *DOWNLOADS_PATH = nil;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.response = response;
-	long long remoteFileSize = self.response.expectedContentLength;
 
 	// if there is an archive path, use it as an alternative to downloading if the file is fresh enough and the file sizes match
-	if ( self.archivePath ) {
+	if ( self.archivePath ) {		
 		// get the remote file's modification date
 		NSString *modified = [(NSHTTPURLResponse *)response allHeaderFields][@"Last-Modified"];
 		NSDateFormatter *formatter = [NSDateFormatter new];
@@ -140,6 +139,7 @@ static NSString *DOWNLOADS_PATH = nil;
 			NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:archiveFilePath error:&fileError];
 			if ( !fileError ) {
 				long long archiveFileSize = [fileAttributes fileSize];
+				long long remoteFileSize = self.response.expectedContentLength;
 				// verify that the remote file size matches the archive file size
 				if ( archiveFileSize == remoteFileSize ) {
 					// get the local file's creation date and compare it with the source file's modification date
