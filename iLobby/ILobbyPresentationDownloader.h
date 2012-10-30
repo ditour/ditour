@@ -18,7 +18,7 @@ typedef void (^ILobbyPresentationDownloadHandler)(ILobbyPresentationDownloader *
 @property (assign, readonly) BOOL complete;
 @property (strong, readonly) ILobbyProgress *progress;
 
--(id)initWithIndexURL:(NSURL *)indexAbsoluteURL completionHandler:(ILobbyPresentationDownloadHandler)handler;
+-(id)initWithIndexURL:(NSURL *)indexAbsoluteURL archivePath:(NSString *)archivePath completionHandler:(ILobbyPresentationDownloadHandler)handler;
 
 + (NSString *)presentationPath;
 

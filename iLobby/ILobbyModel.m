@@ -180,7 +180,7 @@ static NSString *PRESENTATION_PATH;
 
 
 - (void)downloadPresentation {
-	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation completionHandler:^(ILobbyPresentationDownloader *downloader) {
+	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation archivePath:PRESENTATION_PATH completionHandler:^(ILobbyPresentationDownloader *downloader) {
 		if ( self.presentationDownloader.complete ) {
 			// stop observing progress
 			[downloader removeObserver:self forKeyPath:@"progress"];

@@ -13,7 +13,8 @@
 @property (strong, nonatomic) NSURLConnection *connection;
 @property (strong, nonatomic) NSURLResponse *response;
 @property (readwrite, strong, nonatomic) NSURL *sourceURL;
-@property (readwrite, strong, nonatomic) NSString *outputFilePath;
+@property (readwrite, copy, nonatomic) NSString *outputFilePath;
+@property (readwrite, copy, nonatomic) NSString *archivePath;
 @property (readwrite, copy) ILobbyFileDownloadHandler progressHandler;
 @property (readwrite) float progress;
 @property (readwrite) BOOL complete;
@@ -55,9 +56,10 @@ static NSString *DOWNLOADS_PATH = nil;
 
 
 // instance initialization
-- (id)initWithSourceURL:(NSURL *)sourceURL subdirectory:(NSString *)rootSubdirectory progressHandler:(ILobbyFileDownloadHandler)handler {
+- (id)initWithSourceURL:(NSURL *)sourceURL subdirectory:(NSString *)rootSubdirectory archivePath:(NSString *)archivePath progressHandler:(ILobbyFileDownloadHandler)handler {
     self = [super init];
     if (self) {
+		self.archivePath = archivePath;
 		self.complete = NO;
 		self.progress = 0.0f;
 		self.response = nil;
@@ -82,16 +84,8 @@ static NSString *DOWNLOADS_PATH = nil;
 			}
 
 //			NSLog( @"Output file path: %@", self.outputFilePath );
-			BOOL success = [fileManager createFileAtPath:self.outputFilePath contents:nil attributes:nil];
-			if ( success ) {
-//				NSLog( @"Created output file..." );
-				// start the download
-				NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:sourceURL];
-				self.connection = [NSURLConnection connectionWithRequest:downloadRequest delegate:self];
-			}
-			else {
-				NSLog( @"Failed to create output file..." );
-			}
+			NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:sourceURL];
+			self.connection = [NSURLConnection connectionWithRequest:downloadRequest delegate:self];
 		}
 		else {
 			self.complete = YES;
@@ -128,10 +122,56 @@ static NSString *DOWNLOADS_PATH = nil;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.response = response;
 //	NSLog( @"Connection received response for %@: %lld", self.outputFilePath, response.expectedContentLength );
+//	NSLog( @"Response header: %@", [(NSHTTPURLResponse *)response allHeaderFields] );
+
+	// log the file's modification on the server
+	NSString *modified = [(NSHTTPURLResponse *)response allHeaderFields][@"Last-Modified"];
+	NSDateFormatter *formatter = [NSDateFormatter new];
+	// response "Last-Modified" value format is of the form: TUE, 30 Oct 2012 14:32:10 GMT
+	formatter.dateFormat = @"EEE, d MMM yyyy K:mm:ss z";
+	[formatter setLenient:YES];
+	NSDate *sourceModification = [formatter dateFromString:modified];
+//	NSLog( @"Source Modification date: %@", sourceModification );
+	NSString *archiveFilePath = [self.archivePath stringByAppendingPathComponent:self.sourceURL.relativePath];
+//	NSLog( @"Archive File Path: %@", archiveFilePath );
+
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if ( [fileManager fileExistsAtPath:archiveFilePath] ) {
+		NSError *fileError;
+		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:archiveFilePath error:&fileError];
+		if ( !fileError ) {
+			NSDate *archiveModification = [fileAttributes fileCreationDate];
+//			NSLog( @"Archive Date: %@", archiveModification );
+			NSComparisonResult comparison = [archiveModification compare:sourceModification];
+			switch ( comparison ) {
+				case NSOrderedDescending:
+					[fileManager copyItemAtPath:archiveFilePath toPath:self.outputFilePath error:&fileError];
+//					NSLog( @"Copying file from local archive..." );
+					if ( !fileError ) {
+//						NSLog( @"Cancelling connection..." );
+						[connection cancel];
+						self.progress = 1.0f;
+						self.complete = YES;
+						self.progressHandler( self, nil );
+					}
+					else {
+						NSLog( @"File error: %@", fileError );
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }
 
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if ( ![fileManager fileExistsAtPath:self.outputFilePath]) {
+		[fileManager createFileAtPath:self.outputFilePath contents:nil attributes:nil];
+	}
+	
 	NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.outputFilePath];
 	[fileHandle seekToEndOfFile];
 	[fileHandle writeData:data];
@@ -144,7 +184,7 @@ static NSString *DOWNLOADS_PATH = nil;
 
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//	NSLog( @"Connection finished loading..." );
+//	NSLog( @"Connection finished loading: %@", self.outputFilePath );
 	self.progress = 1.0f;
 	self.complete = YES;
 	self.progressHandler( self, nil );

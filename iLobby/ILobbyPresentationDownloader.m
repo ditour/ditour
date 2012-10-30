@@ -20,15 +20,17 @@
 @property (assign, readwrite) BOOL complete;
 @property (strong, readwrite) ILobbyProgress *progress;
 @property (strong) ILobbyFileDownloader *currentFileDownloader;
+@property (readwrite, copy, nonatomic) NSString *archivePath;
 @end
 
 
 @implementation ILobbyPresentationDownloader
 
 
--(id)initWithIndexURL:(NSURL *)indexAbsoluteURL completionHandler:(ILobbyPresentationDownloadHandler)handler {
+-(id)initWithIndexURL:(NSURL *)indexAbsoluteURL archivePath:(NSString *)archivePath completionHandler:(ILobbyPresentationDownloadHandler)handler {
     self = [super init];
     if (self) {
+		self.archivePath = archivePath;
 		self.completionHandler = handler;
 		self.complete = NO;
 		self.progress = [ILobbyProgress progressWithFraction:0.0f label:@"Download starting..."];
@@ -47,7 +49,7 @@
 		NSString *indexPath = [indexAbsoluteURL lastPathComponent];
 		NSURL *indexURL = [NSURL URLWithString:indexPath relativeToURL:self.baseURL];
 
-		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:indexURL subdirectory:PRESENTATION_SUBDIRECTORY progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
+		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:indexURL subdirectory:PRESENTATION_SUBDIRECTORY archivePath:archivePath progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
 			self.progress = [ILobbyProgress progressWithFraction:downloader.progress label:[NSString stringWithFormat:@"Downloading: %@", downloader.sourceURL]];
 			if ( downloader.complete ) {
 				[self handleIndexDownload:downloader error:error];
@@ -105,7 +107,7 @@
 	NSUInteger count = [itemURLs count];
 	if ( count > index ) {
 		NSURL *itemURL = itemURLs[index];
-		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:itemURL subdirectory:PRESENTATION_SUBDIRECTORY progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
+		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:itemURL subdirectory:PRESENTATION_SUBDIRECTORY archivePath:self.archivePath progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
 			[self updateProgressForCount:count index:index downloader:downloader];
 			if ( downloader.complete ) {
 				[self downloadItemIn:itemURLs atIndex:(index+1)];

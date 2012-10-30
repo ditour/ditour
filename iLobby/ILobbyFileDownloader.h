@@ -15,13 +15,14 @@ typedef void (^ILobbyFileDownloadHandler)(ILobbyFileDownloader *, NSError *);
 @interface ILobbyFileDownloader : NSObject
 
 @property (readonly, strong, nonatomic) NSURL *sourceURL;
-@property (readonly, strong, nonatomic) NSString *outputFilePath;
+@property (readonly, copy, nonatomic) NSString *outputFilePath;
+@property (readonly, strong, nonatomic) NSDate *sourceModification;
 @property (readonly) float progress;
 @property (readonly) BOOL complete;
 
 + (NSString *)downloadsPath;
 
-- (id)initWithSourceURL:(NSURL *)sourceURL subdirectory:(NSString *)subdirectory progressHandler:(ILobbyFileDownloadHandler)handler;
+- (id)initWithSourceURL:(NSURL *)sourceURL subdirectory:(NSString *)subdirectory archivePath:(NSString *)archivePath progressHandler:(ILobbyFileDownloadHandler)handler;
 - (void)cancel;
 
 @end
