@@ -121,40 +121,48 @@ static NSString *DOWNLOADS_PATH = nil;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	self.response = response;
+	long long remoteFileSize = self.response.expectedContentLength;
 
-	// get the remote file's modification date
-	NSString *modified = [(NSHTTPURLResponse *)response allHeaderFields][@"Last-Modified"];
-	NSDateFormatter *formatter = [NSDateFormatter new];
-	formatter.dateFormat = @"EEE, d MMM yyyy K:mm:ss z";
-	[formatter setLenient:YES];
-	NSDate *sourceModification = [formatter dateFromString:modified];
+	// if there is an archive path, use it as an alternative to downloading if the file is fresh enough and the file sizes match
+	if ( self.archivePath ) {
+		// get the remote file's modification date
+		NSString *modified = [(NSHTTPURLResponse *)response allHeaderFields][@"Last-Modified"];
+		NSDateFormatter *formatter = [NSDateFormatter new];
+		formatter.dateFormat = @"EEE, d MMM yyyy K:mm:ss z";
+		[formatter setLenient:YES];
+		NSDate *sourceModification = [formatter dateFromString:modified];
 
-	// attempt to locate the same file in the local archive
-	NSString *archiveFilePath = [self.archivePath stringByAppendingPathComponent:self.sourceURL.relativePath];
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if ( [fileManager fileExistsAtPath:archiveFilePath] ) {
-		NSError *fileError;
-		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:archiveFilePath error:&fileError];
-		if ( !fileError ) {
-			// get the local file's creation date and compare it with the source file's modification date plus 10 minutes to be conservative
-			NSDate *archiveModification = [fileAttributes fileCreationDate];
-			NSComparisonResult comparison = [archiveModification compare:[NSDate dateWithTimeInterval:600 sinceDate:sourceModification]];
-			switch ( comparison ) {
-				case NSOrderedDescending:
-					// if the local file is newer than the remote file, just copy the local file and cancel the download
-					[fileManager copyItemAtPath:archiveFilePath toPath:self.outputFilePath error:&fileError];
-					if ( !fileError ) {
-						[connection cancel];
-						self.progress = 1.0f;
-						self.complete = YES;
-						self.progressHandler( self, nil );
+		// attempt to locate the same file in the local archive
+		NSString *archiveFilePath = [self.archivePath stringByAppendingPathComponent:self.sourceURL.relativePath];
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		if ( [fileManager fileExistsAtPath:archiveFilePath] ) {
+			NSError *fileError;
+			NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:archiveFilePath error:&fileError];
+			if ( !fileError ) {
+				long long archiveFileSize = [fileAttributes fileSize];
+				// verify that the remote file size matches the archive file size
+				if ( archiveFileSize == remoteFileSize ) {
+					// get the local file's creation date and compare it with the source file's modification date
+					NSDate *archiveModification = [fileAttributes fileCreationDate];
+					NSComparisonResult comparison = [archiveModification compare:sourceModification];
+					switch ( comparison ) {
+						case NSOrderedDescending:
+							// if the local file is newer than the remote file, just copy the local file and cancel the download
+							[fileManager copyItemAtPath:archiveFilePath toPath:self.outputFilePath error:&fileError];
+							if ( !fileError ) {
+								[connection cancel];
+								self.progress = 1.0f;
+								self.complete = YES;
+								self.progressHandler( self, nil );
+							}
+							else {
+								NSLog( @"File error: %@", fileError );
+							}
+							break;
+						default:
+							break;
 					}
-					else {
-						NSLog( @"File error: %@", fileError );
-					}
-					break;
-				default:
-					break;
+				}
 			}
 		}
 	}
