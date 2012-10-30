@@ -33,12 +33,12 @@ static NSString *PRESENTATION_PATH;
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSError *error;
 
-		NSURL *libraryURL = [fileManager URLForDirectory:NSLibraryDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+		NSURL *documentDirectoryURL = [fileManager URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
 		if ( error ) {
-			NSLog( @"Error getting to library: %@", error );
+			NSLog( @"Error getting to document directory: %@", error );
 		}
 
-		PRESENTATION_PATH = [[libraryURL path] stringByAppendingPathComponent:@"Presentation"];
+		PRESENTATION_PATH = [[documentDirectoryURL path] stringByAppendingPathComponent:@"Presentation"];
 	}
 }
 
