@@ -179,8 +179,11 @@ static NSString *PRESENTATION_PATH;
 }
 
 
-- (void)downloadPresentation {
-	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation archivePath:PRESENTATION_PATH completionHandler:^(ILobbyPresentationDownloader *downloader) {
+- (void)downloadPresentationForcingFullDownload:(BOOL)forceFullDownload {
+	// if updating files based on staleness, then use the current presentation as an archive
+	NSString *archivePath = forceFullDownload ? nil : PRESENTATION_PATH;
+
+	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation archivePath:archivePath completionHandler:^(ILobbyPresentationDownloader *downloader) {
 		if ( self.presentationDownloader.complete ) {
 			// stop observing progress
 			[downloader removeObserver:self forKeyPath:@"progress"];
@@ -199,6 +202,11 @@ static NSString *PRESENTATION_PATH;
 		}
 	}];
 	[self.presentationDownloader addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+
+- (void)cancelPresentationDownload {
+	[self.presentationDownloader cancel];
 }
 
 

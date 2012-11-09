@@ -22,5 +22,7 @@ typedef void (^ILobbyPresentationDownloadHandler)(ILobbyPresentationDownloader *
 
 + (NSString *)presentationPath;
 
+- (void)cancel;
+
 @end
 

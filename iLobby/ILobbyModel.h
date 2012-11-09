@@ -21,7 +21,10 @@
 @property (strong, readonly) ILobbyTrack *currentTrack;
 @property (weak, readwrite, nonatomic) id<ILobbyPresentationDelegate> presentationDelegate;
 
-- (void)downloadPresentation;
+// Download the presenation from the web server. If fullDownload then force a download of all media regardless of date; otherwise, download only stale media.
+- (void)downloadPresentationForcingFullDownload:(BOOL)forceFullDownload;
+- (void)cancelPresentationDownload;
+
 - (BOOL)play;
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;
 - (void)performShutdown;

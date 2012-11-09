@@ -30,8 +30,19 @@
 
 
 // download the presentation now
-- (IBAction)downloadPresentation:(id)sender {
-	[self.lobbyModel downloadPresentation];
+- (IBAction)downloadFullPresentation:(id)sender {
+	[self.lobbyModel downloadPresentationForcingFullDownload:YES];
+}
+
+
+// download the presentation now
+- (IBAction)downloadPresentationUpdates:(id)sender {
+	[self.lobbyModel downloadPresentationForcingFullDownload:NO];
+}
+
+
+- (IBAction)cancelPresentationDownload:(id)sender {
+	[self.lobbyModel cancelPresentationDownload];
 }
 
 
@@ -56,7 +67,7 @@
 - (IBAction)presentationLocationChanged:(id)sender {
 	NSString *location = self.presentationLocationField.text;
 	self.lobbyModel.presentationLocation = location != nil ? [NSURL URLWithString:location] : nil;
-	if ( location )  [self downloadPresentation:sender];
+	if ( location )  [self downloadFullPresentation:sender];
 }
 
 

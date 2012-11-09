@@ -17,7 +17,10 @@
 
 @property (nonatomic, strong) ILobbyModel *lobbyModel;
 
-- (IBAction)downloadPresentation:(id)sender;
+- (IBAction)downloadFullPresentation:(id)sender;
+- (IBAction)downloadPresentationUpdates:(id)sender;
+- (IBAction)cancelPresentationDownload:(id)sender;
+
 - (IBAction)presentationLocationChanged:(id)sender;
 
 @end

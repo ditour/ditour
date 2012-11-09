@@ -66,6 +66,12 @@
 }
 
 
+- (void)cancel {
+	[self.currentFileDownloader cancel];
+	self.progress = [ILobbyProgress progressWithFraction:0.0f label:@"Download Canceled..."];
+}
+
+
 -(void)handleIndexDownload:(ILobbyFileDownloader *)downloader error:(NSError *)error {
 //	NSLog( @"index download complete to %@", downloader.outputFilePath );	
 	NSError *jsonError;
