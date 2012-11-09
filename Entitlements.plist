@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>application-identifier</key>
-	<string>Z7ZZ2K2K8Y.gov.ornl.sns.iLobby</string>
+	<string>2DBHJL4HWE.gov.ornl.sns.iLobby</string>
 	<key>get-task-allow</key>
-	<true/>
+	<false/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>Z7ZZ2K2K8Y.gov.ornl.sns.iLobby</string>
+		<string>2DBHJL4HWE.gov.ornl.sns.iLobby</string>
 	</array>
 </dict>
 </plist>

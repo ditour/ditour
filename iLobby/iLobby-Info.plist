@@ -20,7 +20,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>Z7ZZ2K2K8Y.gov.ornl.sns.${PRODUCT_NAME}</string>
+	<string>gov.ornl.sns.${PRODUCT_NAME}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
