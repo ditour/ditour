@@ -14,13 +14,17 @@
 @property (nonatomic, weak) IBOutlet UITextField *presentationLocationField;
 @property (nonatomic, weak) IBOutlet UILabel *downloadProgressLabel;
 @property (nonatomic, weak) IBOutlet UIProgressView *downloadProgressView;
+@property (weak, nonatomic) IBOutlet UISwitch *staleDownloadSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *delayInstallSwitch;
+@property (weak, nonatomic) IBOutlet UIButton *downloadButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelDownloadButton;
 
 @property (nonatomic, strong) ILobbyModel *lobbyModel;
 
-- (IBAction)downloadFullPresentation:(id)sender;
-- (IBAction)downloadPresentationUpdates:(id)sender;
+- (IBAction)downloadPresentation:(id)sender;
 - (IBAction)cancelPresentationDownload:(id)sender;
 
+- (IBAction)delayInstallSwitchChanged:(id)sender;
 - (IBAction)presentationLocationChanged:(id)sender;
 
 @end

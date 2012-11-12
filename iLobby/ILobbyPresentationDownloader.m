@@ -18,6 +18,7 @@
 @property (readwrite, copy) ILobbyPresentationDownloadHandler completionHandler;
 @property (readwrite, strong, nonatomic) NSArray *trackConfigs;
 @property (assign, readwrite) BOOL complete;
+@property (assign, readwrite) BOOL canceled;
 @property (strong, readwrite) ILobbyProgress *progress;
 @property (strong) ILobbyFileDownloader *currentFileDownloader;
 @property (readwrite, copy, nonatomic) NSString *archivePath;
@@ -33,6 +34,7 @@
 		self.archivePath = archivePath;
 		self.completionHandler = handler;
 		self.complete = NO;
+		self.canceled = NO;
 		self.progress = [ILobbyProgress progressWithFraction:0.0f label:@"Download starting..."];
 
 		NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -67,6 +69,7 @@
 
 
 - (void)cancel {
+	self.canceled = YES;
 	[self.currentFileDownloader cancel];
 	self.progress = [ILobbyProgress progressWithFraction:0.0f label:@"Download Canceled..."];
 }

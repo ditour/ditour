@@ -25,7 +25,7 @@
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Presentation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C0r-LU-aDG">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="101" id="8us-2f-BOD"/>
+                                    <constraint firstAttribute="width" constant="109" type="user" id="ktn-Uj-NoR"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -33,13 +33,19 @@
                             </label>
                             <progressView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lpi-pH-2DQ"/>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Download Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbu-mn-EmG">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="xag-gv-n9x"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dzp-I0-aUK">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="92" id="5IN-e8-8hr"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Download Updates">
+                                <state key="normal" title="Download">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -47,29 +53,16 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="downloadPresentationUpdates:" destination="2" eventType="touchUpInside" id="T8k-Z2-lc9"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yaa-VQ-W7h">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Download All">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="downloadFullPresentation:" destination="2" eventType="touchUpInside" id="eZM-H5-Zql"/>
+                                    <action selector="downloadPresentation:" destination="2" eventType="touchUpInside" id="7M8-sU-Mka"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wgZ-Os-mBk">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="103" id="OBI-lG-ciD"/>
+                                    <constraint firstAttribute="width" constant="66" id="kfx-WE-uPP"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Cancel">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -79,40 +72,63 @@
                                     <action selector="cancelPresentationDownload:" destination="2" eventType="touchUpInside" id="4vU-uN-bnx"/>
                                 </connections>
                             </button>
+                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Da-aO-ATY"/>
+                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lnh-gk-ov5">
+                                <connections>
+                                    <action selector="delayInstallSwitchChanged:" destination="2" eventType="valueChanged" id="cXm-LS-tTl"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Use Staleness:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tcq-bS-PPq">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Delay Install:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dqu-gt-tHM">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Yaa-VQ-W7h" firstAttribute="baseline" secondItem="Dzp-I0-aUK" secondAttribute="baseline" type="default" id="0kS-ki-wsb"/>
-                            <constraint firstItem="C0r-LU-aDG" firstAttribute="top" secondItem="3" secondAttribute="top" constant="12" type="user" id="2r1-jd-nnl"/>
-                            <constraint firstItem="tbu-mn-EmG" firstAttribute="top" secondItem="Dzp-I0-aUK" secondAttribute="bottom" constant="13" type="user" id="6N5-xu-4fr"/>
-                            <constraint firstItem="ETh-D7-lRq" firstAttribute="leading" secondItem="C0r-LU-aDG" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="IEJ-2J-nuO"/>
-                            <constraint firstItem="tbu-mn-EmG" firstAttribute="leading" secondItem="Dzp-I0-aUK" secondAttribute="leading" type="user" id="JLN-w1-qx7"/>
-                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="14" type="user" id="Nnj-nE-XRG"/>
-                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="top" secondItem="tbu-mn-EmG" secondAttribute="bottom" constant="18" type="user" id="TLn-G5-0FM"/>
-                            <constraint firstItem="tbu-mn-EmG" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="14" type="user" id="V1n-Bv-Chi"/>
-                            <constraint firstAttribute="trailing" secondItem="ETh-D7-lRq" secondAttribute="trailing" constant="9" type="user" id="X0P-BD-avv"/>
-                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="top" secondItem="ETh-D7-lRq" secondAttribute="bottom" constant="19" type="user" id="YaX-RN-mDK"/>
-                            <constraint firstItem="tbu-mn-EmG" firstAttribute="leading" secondItem="lpi-pH-2DQ" secondAttribute="leading" type="user" id="Yv5-bQ-cDp"/>
-                            <constraint firstItem="tbu-mn-EmG" firstAttribute="top" secondItem="3" secondAttribute="top" constant="117" type="user" id="ZxT-fo-5SY"/>
-                            <constraint firstItem="Yaa-VQ-W7h" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="191" type="user" id="aok-IT-veJ"/>
-                            <constraint firstItem="ETh-D7-lRq" firstAttribute="top" secondItem="C0r-LU-aDG" secondAttribute="top" type="user" id="b2Q-xl-GlV"/>
-                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="leading" secondItem="C0r-LU-aDG" secondAttribute="leading" type="user" id="dhr-ks-l6K"/>
-                            <constraint firstItem="tbu-mn-EmG" firstAttribute="trailing" secondItem="ETh-D7-lRq" secondAttribute="trailing" type="default" id="fgt-92-K9c"/>
-                            <constraint firstItem="Yaa-VQ-W7h" firstAttribute="leading" secondItem="Dzp-I0-aUK" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="jSF-C6-ZYl"/>
-                            <constraint firstItem="wgZ-Os-mBk" firstAttribute="baseline" secondItem="Yaa-VQ-W7h" secondAttribute="baseline" type="default" id="mb6-PL-cUm"/>
-                            <constraint firstItem="wgZ-Os-mBk" firstAttribute="leading" secondItem="Yaa-VQ-W7h" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="wV8-yx-R8X"/>
+                            <constraint firstItem="tcq-bS-PPq" firstAttribute="top" secondItem="C0r-LU-aDG" secondAttribute="bottom" constant="24" type="user" id="1eb-P6-HfS"/>
+                            <constraint firstItem="Lnh-gk-ov5" firstAttribute="top" secondItem="4Da-aO-ATY" secondAttribute="top" type="default" id="23n-Ex-Sdk"/>
+                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="top" secondItem="3" secondAttribute="top" constant="98" type="user" id="2qi-go-SrV"/>
+                            <constraint firstItem="Lnh-gk-ov5" firstAttribute="leading" secondItem="dqu-gt-tHM" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="4Fs-xu-jzW"/>
+                            <constraint firstItem="4Da-aO-ATY" firstAttribute="centerY" secondItem="tcq-bS-PPq" secondAttribute="centerY" type="user" id="4Iq-yH-75z"/>
+                            <constraint firstItem="tbu-mn-EmG" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="5Jd-DU-7hF"/>
+                            <constraint firstItem="ETh-D7-lRq" firstAttribute="top" secondItem="3" secondAttribute="top" constant="8" type="user" id="EOo-Zi-Won"/>
+                            <constraint firstItem="ETh-D7-lRq" firstAttribute="centerY" secondItem="C0r-LU-aDG" secondAttribute="centerY" type="user" id="Iew-Ly-CIz"/>
+                            <constraint firstItem="wgZ-Os-mBk" firstAttribute="baseline" secondItem="Dzp-I0-aUK" secondAttribute="baseline" type="user" id="T8d-3g-m5A"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="top" secondItem="tbu-mn-EmG" secondAttribute="bottom" constant="8" symbolic="YES" type="user" id="TLn-G5-0FM"/>
+                            <constraint firstItem="C0r-LU-aDG" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="user" id="V1v-uF-0jJ"/>
+                            <constraint firstAttribute="trailing" secondItem="tbu-mn-EmG" secondAttribute="trailing" constant="20" symbolic="YES" type="user" id="Vax-aD-14I"/>
+                            <constraint firstItem="4Da-aO-ATY" firstAttribute="centerY" secondItem="dqu-gt-tHM" secondAttribute="centerY" type="user" id="Wdf-t5-shh"/>
+                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="centerY" secondItem="wgZ-Os-mBk" secondAttribute="centerY" type="user" id="Ws4-UD-FeZ"/>
+                            <constraint firstItem="wgZ-Os-mBk" firstAttribute="leading" secondItem="Dzp-I0-aUK" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="eaZ-oz-aiS"/>
+                            <constraint firstItem="dqu-gt-tHM" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="238" id="fDf-Am-cwB"/>
+                            <constraint firstItem="4Da-aO-ATY" firstAttribute="leading" secondItem="tcq-bS-PPq" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="gem-pU-MxT"/>
+                            <constraint firstItem="tcq-bS-PPq" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="nbn-qz-oqK"/>
+                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="q7m-sL-h7s"/>
+                            <constraint firstAttribute="trailing" secondItem="ETh-D7-lRq" secondAttribute="trailing" constant="12" type="user" id="qmN-xw-IQl"/>
+                            <constraint firstItem="ETh-D7-lRq" firstAttribute="leading" secondItem="C0r-LU-aDG" secondAttribute="trailing" constant="8" symbolic="YES" type="user" id="scS-0G-FUu"/>
+                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="uIc-0v-lqa"/>
+                            <constraint firstItem="tbu-mn-EmG" firstAttribute="top" secondItem="Dzp-I0-aUK" secondAttribute="bottom" constant="8" symbolic="YES" type="user" id="urT-zw-S7g"/>
+                            <constraint firstItem="dqu-gt-tHM" firstAttribute="baseline" secondItem="tcq-bS-PPq" secondAttribute="baseline" type="user" id="waA-Xk-c8w"/>
                             <constraint firstAttribute="trailing" secondItem="lpi-pH-2DQ" secondAttribute="trailing" constant="20" symbolic="YES" type="user" id="xlu-QH-RLU"/>
-                            <constraint firstItem="Dzp-I0-aUK" firstAttribute="top" secondItem="3" secondAttribute="top" constant="61" type="user" id="yDI-Xr-oVy"/>
-                            <constraint firstItem="lpi-pH-2DQ" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="14" type="user" id="yDz-2U-lkB"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="Configuration" id="xrb-Yu-Vu8"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
+                        <outlet property="cancelDownloadButton" destination="wgZ-Os-mBk" id="1Pl-IR-u2X"/>
+                        <outlet property="delayInstallSwitch" destination="Lnh-gk-ov5" id="68N-LK-Tvk"/>
+                        <outlet property="downloadButton" destination="Dzp-I0-aUK" id="Y12-di-0eV"/>
                         <outlet property="downloadProgressLabel" destination="tbu-mn-EmG" id="6zh-yS-dib"/>
                         <outlet property="downloadProgressView" destination="lpi-pH-2DQ" id="8Wb-3T-9y4"/>
                         <outlet property="presentationLocationField" destination="ETh-D7-lRq" id="hWC-Ja-JXo"/>
+                        <outlet property="staleDownloadSwitch" destination="4Da-aO-ATY" id="zcE-hX-3fR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -212,12 +228,16 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ILobbyConfigurationController.h"/>
             <relationships>
                 <relationship kind="action" name="cancelPresentationDownload:"/>
-                <relationship kind="action" name="downloadFullPresentation:"/>
-                <relationship kind="action" name="downloadPresentationUpdates:"/>
+                <relationship kind="action" name="delayInstallSwitchChanged:"/>
+                <relationship kind="action" name="downloadPresentation:"/>
                 <relationship kind="action" name="presentationLocationChanged:"/>
+                <relationship kind="outlet" name="cancelDownloadButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="delayInstallSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="downloadButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="downloadProgressLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="downloadProgressView" candidateClass="UIProgressView"/>
                 <relationship kind="outlet" name="presentationLocationField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="staleDownloadSwitch" candidateClass="UISwitch"/>
             </relationships>
         </class>
         <class className="ILobbyTrackViewCell" superclassName="UICollectionViewCell">
@@ -244,6 +264,9 @@
         </class>
         <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UICollectionViewLayout" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

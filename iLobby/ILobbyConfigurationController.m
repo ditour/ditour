@@ -30,14 +30,9 @@
 
 
 // download the presentation now
-- (IBAction)downloadFullPresentation:(id)sender {
-	[self.lobbyModel downloadPresentationForcingFullDownload:YES];
-}
-
-
-// download the presentation now
-- (IBAction)downloadPresentationUpdates:(id)sender {
-	[self.lobbyModel downloadPresentationForcingFullDownload:NO];
+- (IBAction)downloadPresentation:(id)sender {
+	BOOL forceFullDownload = !self.staleDownloadSwitch.on;
+	[self.lobbyModel downloadPresentationForcingFullDownload:forceFullDownload];
 }
 
 
@@ -55,11 +50,20 @@
 
 - (void)updateProgress {
 	ILobbyProgress *progress = self.lobbyModel.downloadProgress;
+	BOOL downloading = self.lobbyModel.downloading;
 
 	dispatch_async( dispatch_get_main_queue(), ^{
 		self.downloadProgressLabel.text = progress.label;
 		self.downloadProgressView.progress = progress.fraction;
+
+		self.downloadButton.enabled = !downloading;
+		self.cancelDownloadButton.enabled = downloading;
 	});
+}
+
+
+- (IBAction)delayInstallSwitchChanged:(id)sender {
+	self.lobbyModel.delayInstall = self.delayInstallSwitch.on;
 }
 
 
@@ -67,7 +71,7 @@
 - (IBAction)presentationLocationChanged:(id)sender {
 	NSString *location = self.presentationLocationField.text;
 	self.lobbyModel.presentationLocation = location != nil ? [NSURL URLWithString:location] : nil;
-	if ( location )  [self downloadFullPresentation:sender];
+	if ( location )  [self.lobbyModel downloadPresentationForcingFullDownload:YES];
 }
 
 
@@ -79,6 +83,8 @@
 	if ( presentationLocation ) {
 		self.presentationLocationField.text = [presentationLocation description];
 	}
+
+	self.delayInstallSwitch.on = self.lobbyModel.delayInstall;
 
 	[self updateProgress];
 }

@@ -179,34 +179,67 @@ static NSString *PRESENTATION_PATH;
 }
 
 
+- (BOOL)delayInstall {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:@"delayInstall"];
+}
+
+
+- (void)setDelayInstall:(BOOL)delayInstall {
+	[[NSUserDefaults standardUserDefaults] setBool:delayInstall forKey:@"delayInstall"];
+}
+
+
+- (BOOL)downloading {
+	ILobbyPresentationDownloader *currentDowloader = self.presentationDownloader;
+	return currentDowloader != nil && !currentDowloader.complete && !currentDowloader.canceled;
+}
+
+
 - (void)downloadPresentationForcingFullDownload:(BOOL)forceFullDownload {
+	ILobbyPresentationDownloader *currentDownloader = self.presentationDownloader;
+	if ( currentDownloader && !currentDownloader.complete ) {
+		[self cancelPresentationDownload];
+	}
+
+
 	// if updating files based on staleness, then use the current presentation as an archive
 	NSString *archivePath = forceFullDownload ? nil : PRESENTATION_PATH;
 
 	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation archivePath:archivePath completionHandler:^(ILobbyPresentationDownloader *downloader) {
-		if ( self.presentationDownloader.complete ) {
-			// stop observing progress
-			[downloader removeObserver:self forKeyPath:@"progress"];
-			
+		if ( downloader.complete ) {			
 			[self updateProgress:downloader];
 
 			// mark that a new presentation is awaiting to be loaded during the next default slideshow cycle (if playing)
 			self.hasPresentationUpdate = YES;
+			BOOL installImmediately = !self.delayInstall;
 
 			// if we are not playing (e.g. starting from scratch) then automatically install, load and begin playing the presentation
-			if ( !self.playing ) {
+			if ( !self.playing || installImmediately ) {
 				[self installPresentation];
 				[self loadPresentation];
 				[self play];
 			}
 		}
 	}];
-	[self.presentationDownloader addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+
+- (void)setPresentationDownloader:(ILobbyPresentationDownloader *)presentationDownloader {
+	ILobbyPresentationDownloader *oldDownloader = self.presentationDownloader;
+	if ( oldDownloader != nil ) {
+		[oldDownloader removeObserver:self forKeyPath:@"progress"];
+	}
+
+	if ( presentationDownloader != nil ) {
+		[presentationDownloader addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
+	}
+	_presentationDownloader = presentationDownloader;
 }
 
 
 - (void)cancelPresentationDownload {
 	[self.presentationDownloader cancel];
+	[self updateProgress:self.presentationDownloader];
 }
 
 
