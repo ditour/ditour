@@ -35,14 +35,21 @@
 }
 
 
+- (void)beginTransition:(CATransition *)transition {
+	if ( transition != nil && self.externalWindow != nil ) {
+		[self.contentView.layer addAnimation:transition forKey:nil];
+	}
+}
+
+
 - (void)displayImage:(UIImage *)image {
-	if ( self.externalWindow ) {
+	if ( self.externalWindow ) {		
 		self.imageLayer.contents = (__bridge id)([image CGImage]);
 
 		if ( self.mediaLayer != self.imageLayer ) {
 			[self.contentView.layer replaceSublayer:self.mediaLayer with:self.imageLayer];
+			self.mediaLayer = self.imageLayer;
 		}
-		self.mediaLayer = self.imageLayer;
 	}
 }
 
@@ -52,7 +59,7 @@
 	videoLayer.contentsGravity = kCAGravityResizeAspect;
 	videoLayer.frame = self.contentView.frame;
 	videoLayer.backgroundColor = [[UIColor blackColor] CGColor];
-	
+
 	[self.contentView.layer replaceSublayer:self.mediaLayer with:videoLayer];
 	self.mediaLayer = videoLayer;
 

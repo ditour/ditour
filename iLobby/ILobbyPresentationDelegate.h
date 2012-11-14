@@ -13,6 +13,8 @@
 
 @property( strong, readwrite ) id currentRunID;
 
+- (void)beginTransition:(CATransition *)transition;
+
 - (void)displayImage:(UIImage *)image;
 - (void)displayVideo:(AVPlayer *)player;
 

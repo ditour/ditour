@@ -8,10 +8,12 @@
 
 #import "ILobbySlide.h"
 #import <AVFoundation/AVFoundation.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface ILobbySlide ()
 @property (nonatomic, readwrite) float duration;
 @property (nonatomic, readwrite, copy) NSString *mediaFile;
+- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
 @end
 
 
@@ -102,7 +104,20 @@
 }
 
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {}
+- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+	ILobbyTransitionSource *transitionSource = self.transitionSource;
+	if ( transitionSource ) {
+		CATransition *transition = [transitionSource generate];
+		if ( transition ) {
+			[presenter beginTransition:transition];
+		}
+	}
+
+	[self displayTo:presenter completionHandler:handler];
+}
+
+
+- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {}
 
 - (void)cancelPresentation {}
 
@@ -126,7 +141,7 @@ static NSArray *IMAGE_EXTENSIONS;
 }
 
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	[presenter displayImage:[UIImage imageWithContentsOfFile:self.mediaFile]];
 	
 	int64_t delayInSeconds = self.duration;
@@ -156,7 +171,7 @@ static NSArray *VIDEO_EXTENSIONS;
 }
 
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.completionHandler = handler;
 	
 	NSURL *mediaURL = [NSURL fileURLWithPath:self.mediaFile];

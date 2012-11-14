@@ -19,6 +19,7 @@
 @property (nonatomic, readwrite, assign) float defaultSlideDuration;
 @property (nonatomic, readwrite, strong) NSArray *slides;
 @property (nonatomic, readwrite, strong) ILobbySlide *currentSlide;
+@property (nonatomic, readwrite, strong) ILobbyTransitionSource *defaultTransitionSource;
 @end
 
 
@@ -40,6 +41,9 @@
 
 		NSNumber *defaultDuration = trackConfig[@"defaultDuration"];
 		self.defaultSlideDuration = defaultDuration != nil ? [defaultDuration floatValue] : DEFAULT_SLIDE_DURATION;
+
+		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:trackConfig[@"defaultTransition"]];
+		self.defaultTransitionSource = defaultTransitionSource;
 		
 		ILobbyDirectory *trackDirectory = [ILobbyDirectory localDirectoryWithPath:trackPath];
 		NSArray *slidesConfigs = trackConfig[@"slides"];
@@ -49,6 +53,7 @@
 			for ( NSString *slideFile in slideFiles ) {
 				ILobbySlide *slide = [ILobbySlide slideWithFile:[trackPath stringByAppendingPathComponent:slideFile] duration:self.defaultSlideDuration];
 				if ( slide ) {
+					slide.transitionSource = defaultTransitionSource;
 					[slides addObject:slide];
 				}
 				else {
