@@ -130,6 +130,42 @@ static NSString *PRESENTATION_PATH;
 }
 
 
+- (BOOL)validateDownload:(NSError **)error {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *downloadPath = [ILobbyPresentationDownloader presentationPath];
+
+	if ( [fileManager fileExistsAtPath:downloadPath] ) {
+		NSString *indexPath = [downloadPath stringByAppendingPathComponent:@"index.json"];
+		if ( [fileManager fileExistsAtPath:indexPath] ) {
+			NSError *jsonError;
+			NSData *indexData = [NSData dataWithContentsOfFile:indexPath];
+			[NSJSONSerialization JSONObjectWithData:indexData options:0 error:&jsonError];
+			if ( jsonError ) {
+				if ( error ) {
+					*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File is corrupted" }];
+				}
+				return NO;
+			}
+			else {
+				return YES;
+			}
+		}
+		else {
+			if ( error ) {
+				*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File Missing" }];
+			}
+			return NO;
+		}
+	}
+	else {
+		if ( error ) {
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Download Directory Missing" }];
+		}
+		return NO;
+	}
+}
+
+
 - (void)installPresentation {
 	NSError *error;
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -206,18 +242,27 @@ static NSString *PRESENTATION_PATH;
 	NSString *archivePath = forceFullDownload ? nil : PRESENTATION_PATH;
 
 	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation archivePath:archivePath completionHandler:^(ILobbyPresentationDownloader *downloader) {
-		if ( downloader.complete ) {			
-			[self updateProgress:downloader];
-
+		if ( downloader.complete ) {
 			// mark that a new presentation is awaiting to be loaded during the next default slideshow cycle (if playing)
-			self.hasPresentationUpdate = YES;
-			BOOL installImmediately = !self.delayInstall;
+			NSError *downloadError = nil;
+			self.hasPresentationUpdate = [self validateDownload:&downloadError];
+			if ( downloadError ) {
+				NSString *message = downloadError.userInfo[@"message"];
+				NSLog( @"Download Error: %@", message );
+				self.downloadProgress = [ILobbyProgress progressWithFraction:0.0 label:message];
+			}
+			else {
+				[self updateProgress:downloader];
+			}
 
-			// if we are not playing (e.g. starting from scratch) then automatically install, load and begin playing the presentation
-			if ( !self.playing || installImmediately ) {
-				[self installPresentation];
-				[self loadPresentation];
-				[self play];
+			if ( self.hasPresentationUpdate ) {
+				// if we are not playing (e.g. starting from scratch) then automatically install, load and begin playing the presentation
+				BOOL installImmediately = !self.delayInstall;
+				if ( !self.playing || installImmediately ) {
+					[self installPresentation];
+					[self loadPresentation];
+					[self play];
+				}
 			}
 		}
 	}];

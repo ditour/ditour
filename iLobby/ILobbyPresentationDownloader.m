@@ -76,12 +76,11 @@
 
 
 -(void)handleIndexDownload:(ILobbyFileDownloader *)downloader error:(NSError *)error {
-//	NSLog( @"index download complete to %@", downloader.outputFilePath );	
 	NSError *jsonError;
 	NSData *data = [NSData dataWithContentsOfFile:downloader.outputFilePath];
 	NSDictionary *config = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
 
-//	NSLog( @"index: %@", config );
+	//	NSLog( @"index: %@", config );
 	if ( jsonError ) {
 		NSLog( @"Error: %@", jsonError );
 	}
