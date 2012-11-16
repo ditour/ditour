@@ -62,7 +62,7 @@
 	NSString *pattern = config[@"pattern"];
 
 	if ( pattern ) {
-		if ( [source isEqualToString:@"directory"] ) {
+		if ( source != nil && [source isEqualToString:@"directory"] ) {
 			// grab all files in the directory matching the pattern
 			return [directory filesMatching:pattern];
 		}
