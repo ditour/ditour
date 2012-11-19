@@ -14,6 +14,7 @@
 		4C01BD581637150700065A97 /* ILobbyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C01BD571637150700065A97 /* ILobbyTrack.m */; };
 		4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */; };
 		4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */; };
+		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
 		4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
 		4C937D7B1631AAE200F251FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7A1631AAE200F251FF /* Foundation.framework */; };
@@ -52,6 +53,7 @@
 		4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackViewCell.m; sourceTree = "<group>"; };
 		4C2E3A28163B070100A832C4 /* ILobbyDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDirectory.h; sourceTree = "<group>"; };
 		4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDirectory.m; sourceTree = "<group>"; };
+		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTransitionSource.h; sourceTree = "<group>"; };
 		4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTransitionSource.m; sourceTree = "<group>"; };
 		4C937D741631AAE200F251FF /* iLobby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iLobby.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -175,6 +177,7 @@
 		4C937D7F1631AAE200F251FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C42A5E2165A96F100B64970 /* README.rtf */,
 				4CA582D51638432F009ACF37 /* Entitlements.plist */,
 				4CA582D61638432F009ACF37 /* Icon-Retina.png */,
 				4CA582D71638432F009ACF37 /* Icon.png */,
@@ -249,6 +252,7 @@
 				4CA582D81638432F009ACF37 /* Entitlements.plist in Resources */,
 				4CA582D91638432F009ACF37 /* Icon-Retina.png in Resources */,
 				4CA582DA1638432F009ACF37 /* Icon.png in Resources */,
+				4C42A5E3165A96F100B64970 /* README.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
