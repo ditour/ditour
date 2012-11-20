@@ -102,14 +102,46 @@
 
 
 
-@interface ILobbyRemoteDirectoryFetch : NSObject
-- (id)initWithURL:(NSURL *)location;
-- (NSArray *)fetchFiles;
+@interface NSString (ILobbyMatching)
+- (NSRange)findMatch:(NSString *)regex inRange:(NSRange)range;
+- (NSArray *)findMatches:(NSString *)regex;
+@end
+
+
+@implementation NSString (ILobbyMatching)
+
+- (NSRange)findMatch:(NSString *)regex inRange:(NSRange)searchRange {
+	return [self rangeOfString:regex options:(NSRegularExpressionSearch|NSCaseInsensitiveSearch) range:searchRange];
+}
+
+
+- (NSArray *)findMatches:(NSString *)regex {
+	if ( self.length == 0 )  return @[];
+
+	NSMutableArray *matches = [NSMutableArray new];
+	NSRange searchRange = NSMakeRange( 0, self.length );
+	while ( searchRange.length > 0 ) {
+		NSRange matchRange = [self findMatch:regex inRange:searchRange];
+		if ( matchRange.length == 0 )  break;
+
+		NSString *match = [self substringWithRange:matchRange];
+		[matches addObject:match];
+
+		NSUInteger nextLocation = matchRange.location + matchRange.length;
+
+		if ( self.length <= nextLocation )  break;
+
+		searchRange = NSMakeRange( nextLocation, self.length - nextLocation );
+	}
+
+	return [NSArray arrayWithArray:matches];
+}
+
 @end
 
 
 
-@interface ILobbyRemoteDirectory () <NSXMLParserDelegate>
+@interface ILobbyRemoteDirectory ()
 @end
 
 
@@ -128,54 +160,34 @@
 	NSArray *files = _files;
 	
 	if ( !files ) {
-		ILobbyRemoteDirectoryFetch *fetch = [[ILobbyRemoteDirectoryFetch alloc] initWithURL:self.location];
-		_files = [fetch fetchFiles];
+		_files = [self fetchFiles];
 	}
 
 	return _files;
 }
 
-@end
-
-
-
-@interface ILobbyRemoteDirectoryFetch () <NSXMLParserDelegate>
-@property (strong, nonatomic, readwrite) NSURL *location;
-@property (strong, nonatomic, readwrite) NSMutableArray *files;
-@end
-
-
-@implementation ILobbyRemoteDirectoryFetch
-- (id)initWithURL:(NSURL *)location {
-    self = [super init];
-    if (self) {
-        self.location = location;
-		self.files = [NSMutableArray new];
-    }
-    return self;
-}
-
 
 - (NSArray *)fetchFiles {
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:self.location];
-	parser.delegate = self;
+	NSStringEncoding usedEncoding;
+	NSError *error;
+	NSString *directoryIndex = [NSString stringWithContentsOfURL:self.location usedEncoding:&usedEncoding error:&error];
 
-	// parser will fail due to unclosed <br> tags when closing </pre> tag is encountered, but after the directory files have been parsed
-	[parser parse];
+	if ( error )  return nil;
 
-	return [NSArray arrayWithArray:self.files];
-}
+	const NSUInteger length = directoryIndex.length;
+	if ( length == 0 )  return @[];
 
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-	if ( [elementName isEqualToString:@"A"] ) {
-		NSString *href = attributeDict[@"HREF"];
-
+	// URL is the text preceded by <a href=" and followed by ">
+	NSArray *hrefs = [directoryIndex findMatches:@"(?<=<a href=\")[^\"]+(?=\">)"];
+	NSMutableArray *files = [NSMutableArray new];
+	for ( NSString *href in hrefs ) {
 		if ( ![href hasSuffix:@"/"] ) {		// only accept files (reject directories)
 			NSString *file = [href lastPathComponent];	// strip any leading references
-			[_files addObject:file];
+			[files addObject:file];
 		}
 	}
+
+	return [NSArray arrayWithArray:files];
 }
 
 @end
