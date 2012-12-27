@@ -79,8 +79,6 @@
 		4CA2F152163588C10082ADFF /* ILobbyFileDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyFileDownloader.m; sourceTree = "<group>"; };
 		4CA2F15416359FBF0082ADFF /* ILobbyPresentationDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDownloader.h; sourceTree = "<group>"; };
 		4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDownloader.m; sourceTree = "<group>"; };
-		4CA582D116384307009ACF37 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		4CA582D316384310009ACF37 /* Icon-Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Retina.png"; sourceTree = "<group>"; };
 		4CA582D51638432F009ACF37 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = SOURCE_ROOT; };
 		4CA582D61638432F009ACF37 /* Icon-Retina.png */ = {isa = PBXFileReference; explicitFileType = image.icns; path = "Icon-Retina.png"; sourceTree = SOURCE_ROOT; };
 		4CA582D71638432F009ACF37 /* Icon.png */ = {isa = PBXFileReference; explicitFileType = image.icns; path = Icon.png; sourceTree = SOURCE_ROOT; };
@@ -111,8 +109,6 @@
 		4C937D691631AAE200F251FF = {
 			isa = PBXGroup;
 			children = (
-				4CA582D316384310009ACF37 /* Icon-Retina.png */,
-				4CA582D116384307009ACF37 /* Icon.png */,
 				4C937D7E1631AAE200F251FF /* iLobby */,
 				4C937D771631AAE200F251FF /* Frameworks */,
 				4C937D751631AAE200F251FF /* Products */,
