@@ -55,15 +55,17 @@
 
 
 - (void)displayVideo:(AVPlayer *)player {
-	CALayer *videoLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-	videoLayer.contentsGravity = kCAGravityResizeAspect;
-	videoLayer.frame = self.contentView.frame;
-	videoLayer.backgroundColor = [[UIColor blackColor] CGColor];
+	if ( self.externalWindow ) {
+		CALayer *videoLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+		videoLayer.contentsGravity = kCAGravityResizeAspect;
+		videoLayer.frame = self.contentView.frame;
+		videoLayer.backgroundColor = [[UIColor blackColor] CGColor];
 
-	[self.contentView.layer replaceSublayer:self.mediaLayer with:videoLayer];
-	self.mediaLayer = videoLayer;
+		[self.contentView.layer replaceSublayer:self.mediaLayer with:videoLayer];
+		self.mediaLayer = videoLayer;
 
-	[player play];
+		[player play];
+	}
 }
 
 
