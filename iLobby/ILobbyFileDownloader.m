@@ -175,11 +175,25 @@ static NSString *DOWNLOADS_PATH = nil;
 	if ( ![fileManager fileExistsAtPath:self.outputFilePath]) {
 		[fileManager createFileAtPath:self.outputFilePath contents:nil attributes:nil];
 	}
-	
-	NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.outputFilePath];
-	[fileHandle seekToEndOfFile];
-	[fileHandle writeData:data];
-	[fileHandle closeFile];
+
+	NSOutputStream *downloadStream = [NSOutputStream outputStreamToFileAtPath:self.outputFilePath append:YES];
+	NSUInteger bytesRemaining = [data length];
+	const unsigned char *buffer = [data bytes];
+	[downloadStream open];
+	while ( bytesRemaining > 0 ) {
+//		NSLog( @"writing %u bytes...", bytesRemaining );
+		NSInteger bytesWritten = [downloadStream write:buffer maxLength:bytesRemaining];
+//		NSLog( @"Wrote %d bytes.", bytesWritten );
+		if ( bytesWritten >= 0 ) {
+			bytesRemaining -= bytesWritten;
+			buffer += bytesWritten;
+		}
+		else {
+			break;
+		}
+	}
+	[downloadStream close];
+
 //	NSLog( @"Wrote data to: %@", self.outputFilePath );
 
 	[self updateProgress];
@@ -188,7 +202,7 @@ static NSString *DOWNLOADS_PATH = nil;
 
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//	NSLog( @"Connection finished loading: %@", self.outputFilePath );
+//	NSLog( @"Connection finished loading: %@", self.outputFilePath );	
 	self.progress = 1.0f;
 	self.complete = YES;
 	self.progressHandler( self, nil );
