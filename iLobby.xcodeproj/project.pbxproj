@@ -220,6 +220,16 @@
 				CLASSPREFIX = ILobby;
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "UT-Battelle ORNL";
+				TargetAttributes = {
+					4C937D731631AAE200F251FF = {
+						DevelopmentTeam = 8A84E55QYK;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 4C937D6E1631AAE200F251FF /* Build configuration list for PBXProject "iLobby" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -363,8 +373,9 @@
 		4C937D991631AAE200F251FF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
@@ -379,6 +390,7 @@
 		4C937D9A1631AAE200F251FF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
