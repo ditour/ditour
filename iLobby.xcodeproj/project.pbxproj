@@ -16,6 +16,7 @@
 		4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */; };
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
 		4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */; };
+		4C82BEC217D7899200740BD1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C82BEC117D7899200740BD1 /* Images.xcassets */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
 		4C937D7B1631AAE200F251FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7A1631AAE200F251FF /* Foundation.framework */; };
 		4C937D7D1631AAE200F251FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7C1631AAE200F251FF /* CoreGraphics.framework */; };
@@ -56,6 +57,7 @@
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTransitionSource.h; sourceTree = "<group>"; };
 		4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTransitionSource.m; sourceTree = "<group>"; };
+		4C82BEC117D7899200740BD1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4C937D741631AAE200F251FF /* iLobby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iLobby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C937D781631AAE200F251FF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C937D7A1631AAE200F251FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -166,6 +168,7 @@
 				4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */,
 				4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */,
 				4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */,
+				4C82BEC117D7899200740BD1 /* Images.xcassets */,
 			);
 			path = iLobby;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C937D831631AAE200F251FF /* InfoPlist.strings in Resources */,
+				4C82BEC217D7899200740BD1 /* Images.xcassets in Resources */,
 				4C937D8B1631AAE200F251FF /* Default.png in Resources */,
 				4C937D8D1631AAE200F251FF /* Default@2x.png in Resources */,
 				4C937D8F1631AAE200F251FF /* Default-568h@2x.png in Resources */,
@@ -369,6 +373,8 @@
 		4C937D991631AAE200F251FF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -386,6 +392,8 @@
 		4C937D9A1631AAE200F251FF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
