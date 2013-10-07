@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 UT-Battelle ORNL. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @class ILobbyFileDownloader;
 typedef void (^ILobbyFileDownloadHandler)(ILobbyFileDownloader *, NSError *);

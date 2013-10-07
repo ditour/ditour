@@ -7,8 +7,8 @@
 //
 
 #import "ILobbySlide.h"
-#import <AVFoundation/AVFoundation.h>
-#import <QuartzCore/QuartzCore.h>
+@import AVFoundation;
+@import QuartzCore;
 
 @interface ILobbySlide ()
 @property (nonatomic, readwrite) float duration;
@@ -56,7 +56,7 @@
 
 
 + (NSArray *)filesFromConfig:(id)config inDirectory:(ILobbyDirectory *)directory {
-	if ( [config isKindOfClass:[NSString class]] )  return [NSArray arrayWithObject:config];
+	if ( [config isKindOfClass:[NSString class]] )  return @[config];
 
 	NSString *source = config[@"source"];
 	NSString *pattern = config[@"pattern"];
@@ -80,7 +80,7 @@
 			// generate the files by iterating over the index and substituting into the pattern
 			NSMutableArray *files = [NSMutableArray new];
 			for ( NSUInteger index = start ; index <= end ; index += increment ) {
-				NSString *rawIndexString = [[NSNumber numberWithUnsignedInteger:index] description];
+				NSString *rawIndexString = [@(index) description];
 				NSInteger zeroPaddingNeeded = zeroPadding - [rawIndexString length];
 				NSMutableString *indexString = [NSMutableString new];
 				while ( zeroPaddingNeeded > indexString.length ) {

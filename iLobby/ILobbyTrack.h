@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 UT-Battelle ORNL. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+@import Foundation;
+@import UIKit;
 #import "ILobbyPresentationDelegate.h"
 #import "ILobbyTransitionSource.h"
 

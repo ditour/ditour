@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 UT-Battelle ORNL. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
+@import Foundation;
+@import QuartzCore;
 
 @interface ILobbyTransitionSource : NSObject
 

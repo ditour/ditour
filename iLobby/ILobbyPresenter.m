@@ -7,8 +7,8 @@
 //
 
 #import "ILobbyPresenter.h"
-#import <QuartzCore/QuartzCore.h>
-#import <UIKit/UIKit.h>
+@import QuartzCore;
+@import UIKit;
 
 
 @interface ILobbyPresenter ()
@@ -81,7 +81,7 @@
 	NSUInteger screenCount = [screens count];
 
 	if ( screenCount > 1 ) {
-		UIScreen *externalScreen = [screens objectAtIndex:1];
+		UIScreen *externalScreen = screens[1];
 		externalScreen.currentMode = externalScreen.preferredMode;
 
 		self.externalWindow = [[UIWindow alloc] initWithFrame:externalScreen.bounds];

@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 UT-Battelle ORNL. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
+@import Foundation;
+@import AVFoundation;
 #import "ILobbyProgress.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
