@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QLJ-oh-VMg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="QLJ-oh-VMg">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
         <!--Lobby Configuration Controller - Configuration-->
@@ -203,7 +203,7 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="Presentations" id="xU4-Ys-9KI">
-                        <barButtonItem key="rightBarButtonItem" systemItem="organize" id="USG-ZS-uMH">
+                        <barButtonItem key="rightBarButtonItem" title="Configure" id="USG-ZS-uMH">
                             <connections>
                                 <segue destination="2" kind="push" identifier="ShowConfiguration" id="TVQ-iC-2n6"/>
                             </connections>
