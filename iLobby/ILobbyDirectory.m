@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyDirectory.h"
+#import "ILobbyXMLAttributeParser.h"
 
 @class ILobbyDirectory;
 
@@ -168,26 +169,46 @@
 
 
 - (NSArray *)fetchFiles {
-	NSStringEncoding usedEncoding;
-	NSError *error;
-	NSString *directoryIndex = [NSString stringWithContentsOfURL:self.location usedEncoding:&usedEncoding error:&error];
+	NSArray *pageLinks = [self.class linksOnPageURL:self.location];
 
-	if ( error )  return nil;
+	if ( pageLinks == nil )  return nil;
 
-	const NSUInteger length = directoryIndex.length;
-	if ( length == 0 )  return @[];
-
-	// URL is the text preceded by <a href=" and followed by ">
-	NSArray *hrefs = [directoryIndex findMatches:@"(?<=<a href=\")[^\"]+(?=\">)"];
 	NSMutableArray *files = [NSMutableArray new];
-	for ( NSString *href in hrefs ) {
-		if ( ![href hasSuffix:@"/"] ) {		// only accept files (reject directories)
-			NSString *file = [href lastPathComponent];	// strip any leading references
+	for ( NSURL *link in pageLinks ) {
+		NSString *path = link.path;
+		if ( ![path hasSuffix:@"/"] ) {		// only accept files (reject directories)
+			NSString *file = [path lastPathComponent];	// strip any leading references
 			[files addObject:file];
 		}
 	}
 
-	return [NSArray arrayWithArray:files];
+	return [files copy];
+}
+
+
+// Get the links on the page using a regular expression to fetch each anchor element and the XML Parser to fetch the href attribute inside the element
++ (NSArray *)linksOnPageURL:(NSURL *)pageURL {
+	NSError * __autoreleasing error;
+	NSStringEncoding usedEncoding;
+	NSString *page = [NSString stringWithContentsOfURL:pageURL.absoluteURL usedEncoding:&usedEncoding error:&error];
+
+	if ( error ) {
+		return nil;
+	}
+
+	if ( page == nil || page.length == 0 )  return @[];
+
+	// pattern is:  anchor tag - one space - any characters except < - closing angle bracket - any characters except < - closing anchor tag
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<a\\s[^<]+?>[^<]+?</a>" options:NSRegularExpressionCaseInsensitive error:nil];
+	NSMutableArray *pageLinks = [NSMutableArray new];
+	[regex enumerateMatchesInString:page options:0 range:NSMakeRange( 0, page.length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+		NSString *anchorElementXML = [page substringWithRange:match.range];
+		NSDictionary *attributeCache = [ILobbyXMLAttributeParser fetchElementsAttributesForXML:anchorElementXML error:nil];
+		NSString *href = attributeCache[@"A"][@"HREF"];
+		[pageLinks addObject:[NSURL URLWithString:href relativeToURL:pageURL]];
+	}];
+
+	return [pageLinks copy];
 }
 
 @end

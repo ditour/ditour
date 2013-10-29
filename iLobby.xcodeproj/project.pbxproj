@@ -15,6 +15,7 @@
 		4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */; };
 		4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */; };
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
+		4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */; };
 		4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */; };
 		4C82BEC217D7899200740BD1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C82BEC117D7899200740BD1 /* Images.xcassets */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
@@ -49,6 +50,8 @@
 		4C2E3A28163B070100A832C4 /* ILobbyDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDirectory.h; sourceTree = "<group>"; };
 		4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDirectory.m; sourceTree = "<group>"; };
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
+		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
+		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
 		4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTransitionSource.h; sourceTree = "<group>"; };
 		4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTransitionSource.m; sourceTree = "<group>"; };
 		4C82BEC117D7899200740BD1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -94,6 +97,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C690BD2181EED4D00A823CC /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				4C2E3A28163B070100A832C4 /* ILobbyDirectory.h */,
+				4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */,
+				4CA2F151163588C10082ADFF /* ILobbyFileDownloader.h */,
+				4CA2F152163588C10082ADFF /* ILobbyFileDownloader.m */,
+				4CA2F15416359FBF0082ADFF /* ILobbyPresentationDownloader.h */,
+				4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */,
+				4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */,
+				4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */,
+			);
+			name = Download;
+			sourceTree = "<group>";
+		};
+		4C690BD3181EED5D00A823CC /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4C01BD4D1636F69100065A97 /* ILobbyViewController.h */,
+				4C01BD4E1636F69100065A97 /* ILobbyViewController.m */,
+				4C01BD491636F34C00065A97 /* ILobbyConfigurationController.h */,
+				4C01BD4A1636F34C00065A97 /* ILobbyConfigurationController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		4C690BD4181EED8800A823CC /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				4CA582E116397A0C009ACF37 /* ILobbyPresentationDelegate.h */,
+				4C937DA61631BA8F00F251FF /* ILobbyPresenter.h */,
+				4C937DA71631BA8F00F251FF /* ILobbyPresenter.m */,
+				4C01BD53163702CD00065A97 /* ILobbyProgress.h */,
+				4C01BD54163702CD00065A97 /* ILobbyProgress.m */,
+				4CE1D6C61638219C00026847 /* ILobbySlide.h */,
+				4CE1D6C71638219C00026847 /* ILobbySlide.m */,
+				4C01BD561637150700065A97 /* ILobbyTrack.h */,
+				4C01BD571637150700065A97 /* ILobbyTrack.m */,
+				4C01BD5C16371E1A00065A97 /* ILobbyTrackViewCell.h */,
+				4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */,
+				4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */,
+				4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */,
+			);
+			name = Presentation;
+			sourceTree = "<group>";
+		};
 		4C937D691631AAE200F251FF = {
 			isa = PBXGroup;
 			children = (
@@ -127,35 +176,15 @@
 		4C937D7E1631AAE200F251FF /* iLobby */ = {
 			isa = PBXGroup;
 			children = (
+				4C690BD3181EED5D00A823CC /* View Controllers */,
+				4C690BD2181EED4D00A823CC /* Download */,
+				4C690BD4181EED8800A823CC /* Presentation */,
 				4C01BD501636F88500065A97 /* ILobbyModel.h */,
 				4C01BD511636F88500065A97 /* ILobbyModel.m */,
 				4C937D871631AAE200F251FF /* ILobbyAppDelegate.h */,
 				4C937D881631AAE200F251FF /* ILobbyAppDelegate.m */,
-				4C01BD4D1636F69100065A97 /* ILobbyViewController.h */,
-				4C01BD4E1636F69100065A97 /* ILobbyViewController.m */,
-				4C01BD5C16371E1A00065A97 /* ILobbyTrackViewCell.h */,
-				4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */,
-				4C01BD491636F34C00065A97 /* ILobbyConfigurationController.h */,
-				4C01BD4A1636F34C00065A97 /* ILobbyConfigurationController.m */,
-				4CA582E116397A0C009ACF37 /* ILobbyPresentationDelegate.h */,
-				4C937DA61631BA8F00F251FF /* ILobbyPresenter.h */,
-				4C937DA71631BA8F00F251FF /* ILobbyPresenter.m */,
-				4CA2F151163588C10082ADFF /* ILobbyFileDownloader.h */,
-				4CA2F152163588C10082ADFF /* ILobbyFileDownloader.m */,
-				4CA2F15416359FBF0082ADFF /* ILobbyPresentationDownloader.h */,
-				4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */,
 				4C937D901631AAE200F251FF /* MainStoryboard.storyboard */,
-				4C01BD53163702CD00065A97 /* ILobbyProgress.h */,
-				4C01BD54163702CD00065A97 /* ILobbyProgress.m */,
-				4C01BD561637150700065A97 /* ILobbyTrack.h */,
-				4C01BD571637150700065A97 /* ILobbyTrack.m */,
-				4CE1D6C61638219C00026847 /* ILobbySlide.h */,
-				4CE1D6C71638219C00026847 /* ILobbySlide.m */,
 				4C937D7F1631AAE200F251FF /* Supporting Files */,
-				4C2E3A28163B070100A832C4 /* ILobbyDirectory.h */,
-				4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */,
-				4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */,
-				4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */,
 				4C82BEC117D7899200740BD1 /* Images.xcassets */,
 			);
 			path = iLobby;
@@ -259,6 +288,7 @@
 				4C01BD521636F88600065A97 /* ILobbyModel.m in Sources */,
 				4C01BD55163702CD00065A97 /* ILobbyProgress.m in Sources */,
 				4C01BD581637150700065A97 /* ILobbyTrack.m in Sources */,
+				4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */,
 				4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */,
 				4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */,
 				4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */,
@@ -353,6 +383,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -372,6 +403,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
