@@ -10,7 +10,7 @@
 
 
 @interface ILobbyXMLAttributeParser ()
-@property NSMutableDictionary *attributeCache;
+@property(nonatomic) NSMutableDictionary *attributeCache;
 @end
 
 
