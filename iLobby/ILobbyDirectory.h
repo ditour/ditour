@@ -16,7 +16,7 @@
 
 @property (strong, nonatomic, readonly) NSArray *files;
 
-+ (ILobbyDirectory *)remoteDirectoryWithURL:(NSURL *)location;
++ (ILobbyDirectory *)serverDirectoryWithURL:(NSURL *)location;
 + (ILobbyDirectory *)localDirectoryWithPath:(NSString *)path;
 
 - (NSArray *)filesMatching:(NSString *)pattern;

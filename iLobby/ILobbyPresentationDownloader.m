@@ -92,7 +92,7 @@
 		NSString *trackLocation = trackConfig[@"location"];
 		NSString *relativeTrackPath = [@"tracks" stringByAppendingPathComponent:trackLocation];
 		NSURL *trackURL = [NSURL URLWithString:relativeTrackPath relativeToURL:self.baseURL];
-		ILobbyDirectory *trackDirectory = [ILobbyDirectory remoteDirectoryWithURL:trackURL];
+		ILobbyDirectory *trackDirectory = [ILobbyDirectory serverDirectoryWithURL:trackURL];
 
 		NSString *iconFile = trackConfig[@"icon"];
 		NSURL *iconURL = [self itemURLForFile:iconFile inTrack:trackConfig];

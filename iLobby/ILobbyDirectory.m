@@ -8,11 +8,12 @@
 
 #import "ILobbyDirectory.h"
 #import "ILobbyXMLAttributeParser.h"
+#import "ILobbyRemoteDirectory.h"
 
 @class ILobbyDirectory;
 
 
-@interface ILobbyRemoteDirectory : ILobbyDirectory
+@interface ILobbyServerDirectory : ILobbyDirectory
 
 @property (strong, nonatomic, readwrite) NSURL *location;
 
@@ -47,8 +48,8 @@
 }
 
 
-+ (ILobbyDirectory *)remoteDirectoryWithURL:(NSURL *)location {
-	return [[ILobbyRemoteDirectory alloc] initWithURL:location];
++ (ILobbyDirectory *)serverDirectoryWithURL:(NSURL *)location {
+	return [[ILobbyServerDirectory alloc] initWithURL:location];
 }
 
 
@@ -142,11 +143,11 @@
 
 
 
-@interface ILobbyRemoteDirectory ()
+@interface ILobbyServerDirectory ()
 @end
 
 
-@implementation ILobbyRemoteDirectory
+@implementation ILobbyServerDirectory
 
 - (id)initWithURL:(NSURL *)location {
     self = [super init];
@@ -169,6 +170,11 @@
 
 
 - (NSArray *)fetchFiles {
+	NSError * __autoreleasing error;
+	id remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:self.location error:&error];
+	if ( error )  NSLog( @"Remote directory error: %@", error );
+	NSLog( @"Remote Directory: %@", remoteDirectory );
+
 	NSArray *pageLinks = [self.class linksOnPageURL:self.location];
 
 	if ( pageLinks == nil )  return nil;
