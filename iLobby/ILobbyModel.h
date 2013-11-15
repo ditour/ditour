@@ -8,6 +8,8 @@
 
 @import Foundation;
 @import AVFoundation;
+@import CoreData;
+
 #import "ILobbyProgress.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
@@ -30,5 +32,10 @@
 - (BOOL)play;
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;
 - (void)performShutdown;
+
+// managed object support
+@property (readonly) NSManagedObjectModel *managedObjectModel;
+@property (readonly) NSManagedObjectContext *managedObjectContext;
+@property (readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end

@@ -22,6 +22,9 @@ static NSString *PRESENTATION_PATH;
 @property (strong, readwrite) NSArray *tracks;
 @property (strong, readwrite) ILobbyTrack *defaultTrack;
 @property (strong, readwrite) ILobbyTrack *currentTrack;
+
+// managed object support
+@property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
 @end
 
 
@@ -49,9 +52,61 @@ static NSString *PRESENTATION_PATH;
 		self.playing = NO;
 		
 		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
+		[self setupDataModel];
+
 		[self loadPresentation];
     }
     return self;
+}
+
+
+- (void)setupDataModel {
+	// load the managed object model from the main bundle
+    NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+
+	// setup the persistent store
+    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"Presentations.db"]];
+
+	NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @YES, NSInferMappingModelAutomaticallyOption : @YES };
+
+    NSError * __autoreleasing error = nil;
+    NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModel];
+    if ( ![persistentStoreCoordinator addPersistentStoreWithType:NSBinaryStoreType configuration:nil URL:storeUrl options:options error:&error] ) {
+        /*
+         Replace this implementation with code to handle the error appropriately.
+
+         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
+
+         Typical reasons for an error here include:
+         * The persistent store is not accessible
+         * The schema for the persistent store is incompatible with current managed object model
+         Check the error message to determine what the actual problem was.
+         */
+        NSLog( @"Unresolved error %@, %@", error, [error userInfo] );
+        abort();
+    }
+
+	// setup the managed object context
+    if ( persistentStoreCoordinator != nil ) {
+        self.managedObjectContext = [NSManagedObjectContext new];
+		self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
+    }
+}
+
+
+/** Returns the path to the application's Documents directory. */
+- (NSString *)applicationDocumentsDirectory {
+    return [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES ) lastObject];
+}
+
+
+- (NSManagedObjectModel *)managedObjectModel {
+	return self.persistentStoreCoordinator.managedObjectModel;
+}
+
+
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+	return self.managedObjectContext.persistentStoreCoordinator;
 }
 
 

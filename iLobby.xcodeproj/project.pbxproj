@@ -34,6 +34,7 @@
 		4CA2F153163588C10082ADFF /* ILobbyFileDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA2F152163588C10082ADFF /* ILobbyFileDownloader.m */; };
 		4CA2F15616359FBF0082ADFF /* ILobbyPresentationDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */; };
 		4CA582DC16386913009ACF37 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA582DB16386913009ACF37 /* CoreMedia.framework */; };
+		4CD0ED7C182978380090EFE5 /* Presentations.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */; };
 		4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1D6C71638219C00026847 /* ILobbySlide.m */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,7 @@
 		4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDownloader.m; sourceTree = "<group>"; };
 		4CA582DB16386913009ACF37 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		4CA582E116397A0C009ACF37 /* ILobbyPresentationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDelegate.h; sourceTree = "<group>"; };
+		4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Presentations.xcdatamodel; sourceTree = "<group>"; };
 		4CE1D6C61638219C00026847 /* ILobbySlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbySlide.h; sourceTree = "<group>"; };
 		4CE1D6C71638219C00026847 /* ILobbySlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbySlide.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,6 +135,7 @@
 		4C690BD3181EED5D00A823CC /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4C937D901631AAE200F251FF /* MainStoryboard.storyboard */,
 				4C01BD4D1636F69100065A97 /* ILobbyViewController.h */,
 				4C01BD4E1636F69100065A97 /* ILobbyViewController.m */,
 				4C01BD491636F34C00065A97 /* ILobbyConfigurationController.h */,
@@ -206,14 +209,12 @@
 		4C937D7E1631AAE200F251FF /* iLobby */ = {
 			isa = PBXGroup;
 			children = (
+				4C937D871631AAE200F251FF /* ILobbyAppDelegate.h */,
+				4C937D881631AAE200F251FF /* ILobbyAppDelegate.m */,
 				4C690BD3181EED5D00A823CC /* View Controllers */,
 				4C690BD2181EED4D00A823CC /* Download */,
 				4C690BD4181EED8800A823CC /* Presentation */,
-				4C01BD501636F88500065A97 /* ILobbyModel.h */,
-				4C01BD511636F88500065A97 /* ILobbyModel.m */,
-				4C937D871631AAE200F251FF /* ILobbyAppDelegate.h */,
-				4C937D881631AAE200F251FF /* ILobbyAppDelegate.m */,
-				4C937D901631AAE200F251FF /* MainStoryboard.storyboard */,
+				4CD0ED79182977AA0090EFE5 /* Model */,
 				4C937D7F1631AAE200F251FF /* Supporting Files */,
 				4C82BEC117D7899200740BD1 /* Images.xcassets */,
 			);
@@ -230,6 +231,16 @@
 				4C937D861631AAE200F251FF /* iLobby-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4CD0ED79182977AA0090EFE5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4C01BD501636F88500065A97 /* ILobbyModel.h */,
+				4C01BD511636F88500065A97 /* ILobbyModel.m */,
+				4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -313,6 +324,7 @@
 				4C937DA81631BA8F00F251FF /* ILobbyPresenter.m in Sources */,
 				4CA2F153163588C10082ADFF /* ILobbyFileDownloader.m in Sources */,
 				4CA2F15616359FBF0082ADFF /* ILobbyPresentationDownloader.m in Sources */,
+				4CD0ED7C182978380090EFE5 /* Presentations.xcdatamodeld in Sources */,
 				4C01BD4B1636F34C00065A97 /* ILobbyConfigurationController.m in Sources */,
 				4C01BD4F1636F69100065A97 /* ILobbyViewController.m in Sources */,
 				4C690BEC18229DEE00A823CC /* ILobbyRemoteFile.m in Sources */,
@@ -419,6 +431,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
@@ -439,6 +452,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
@@ -472,6 +486,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */,
+			);
+			currentVersion = 4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */;
+			path = Presentations.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4C937D6B1631AAE200F251FF /* Project object */;
 }
