@@ -15,6 +15,7 @@
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) CALayer *mediaLayer;
 @property (strong, nonatomic) CALayer *imageLayer;
+@property (strong, nonatomic) UIImage *currentImage;
 @end
 
 
@@ -42,20 +43,33 @@
 }
 
 
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)graphicsContext {
+	if ( self.currentImage ) {
+		UIGraphicsPushContext( graphicsContext );
+		[self.currentImage drawInRect:self.imageLayer.bounds];
+		UIGraphicsPopContext();
+	}
+}
+
+
 - (void)displayImage:(UIImage *)image {
-	if ( self.externalWindow ) {		
-		self.imageLayer.contents = (__bridge id)([image CGImage]);
+	if ( self.externalWindow ) {
+		self.currentImage = image;
 
 		if ( self.mediaLayer != self.imageLayer ) {
 			[self.contentView.layer replaceSublayer:self.mediaLayer with:self.imageLayer];
 			self.mediaLayer = self.imageLayer;
 		}
+
+		[self.imageLayer setNeedsDisplay];
 	}
 }
 
 
 - (void)displayVideo:(AVPlayer *)player {
 	if ( self.externalWindow ) {
+		self.currentImage = nil;
+
 		CALayer *videoLayer = [AVPlayerLayer playerLayerWithPlayer:player];
 		videoLayer.contentsGravity = kCAGravityResizeAspect;
 		videoLayer.frame = self.contentView.frame;
@@ -93,6 +107,7 @@
 		self.contentView = contentView;
 
 		self.imageLayer = [CALayer new];
+		self.imageLayer.delegate = self;
 		self.imageLayer.contentsGravity = kCAGravityResizeAspect;
 		self.imageLayer.frame = contentView.frame;
 		self.imageLayer.backgroundColor = [[UIColor blackColor] CGColor];
