@@ -40,7 +40,6 @@
     </entity>
     <entity name="Slide" representedClassName="ILobbyStoreSlide" parentEntity="TrackItem" syncable="YES">
         <relationship name="localMedia" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMedia" inverseName="slide" inverseEntity="LocalMedia" syncable="YES"/>
-        <relationship name="track" maxCount="1" deletionRule="Nullify" destinationEntity="Track" syncable="YES"/>
     </entity>
     <entity name="Track" representedClassName="ILobbyStoreTrack" parentEntity="TrackItem" syncable="YES">
         <attribute name="slideDuration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -59,7 +58,7 @@
         <element name="Main" positionX="-542" positionY="-828" width="128" height="73"/>
         <element name="Presentation" positionX="-290" positionY="-738" width="128" height="163"/>
         <element name="RemoteMedia" positionX="-1055" positionY="-160" width="128" height="88"/>
-        <element name="Slide" positionX="-1143" positionY="-288" width="128" height="73"/>
+        <element name="Slide" positionX="-1143" positionY="-288" width="128" height="58"/>
         <element name="Configuration" positionX="-848" positionY="-730" width="128" height="133"/>
         <element name="ILobbyStoreSlideTransition" positionX="-1064" positionY="-715" width="128" height="103"/>
         <element name="Track" positionX="-945" positionY="-522" width="128" height="148"/>
