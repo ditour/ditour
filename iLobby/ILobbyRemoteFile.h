@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ILobbyRemoteDirectoryItem.h"
 
-@interface ILobbyRemoteFile : NSObject
 
-@property(readonly, copy) NSURL *location;
+@interface ILobbyRemoteFile : NSObject <ILobbyRemoteDirectoryItem>
+
 @property(readonly, copy) NSString *info;
 
 - (instancetype)initWithLocation:(NSURL *)location info:(NSString *)info;

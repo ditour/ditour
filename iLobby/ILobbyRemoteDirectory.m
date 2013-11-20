@@ -18,8 +18,7 @@
 
 @interface ILobbyRemoteDirectory ()
 @property(readwrite) NSURL *location;			// URL location for this directory
-@property(readwrite) NSArray *files;				// array of ILobbyRemoteFile instances for each file linked in this remote directory
-@property(readwrite) NSArray *subdirectories;	// array of ILobbyRemoteDirectory instances for each subdirectory linked in this remote directory
+@property(readwrite) NSArray *items;	// array of ILobbyRemoteDirectoryItem (files and subdirectories)
 @end
 
 
@@ -38,7 +37,7 @@
 
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"{ location: %@, files: %@, subdirectories: %@ }", self.location.absoluteString, self.files, self.subdirectories ];
+	return [NSString stringWithFormat:@"{ location: %@, items: %@ }", self.location.absoluteString, self.items ];
 }
 
 @end
@@ -48,8 +47,8 @@
 @interface ILobbyRemoteDirectoryParser () <NSXMLParserDelegate>
 @property(copy, nonatomic) NSURL *directoryURL;
 
-@property(nonatomic) NSMutableArray *remoteFiles;
-@property(nonatomic) NSMutableArray *subdirectoryURLs;
+// an item may either be ILobbyRemoteFile (ordinary file) or NSURL (subdirectory)
+@property(nonatomic) NSMutableArray *items;
 
 @property(copy, nonatomic) NSURL *currentFileLink;
 @property(copy, nonatomic) NSString *currentFileLinkText;		// text of element sibling of the current anchor element being parsed
@@ -62,15 +61,14 @@
     self = [super init];
     if (self) {
 		self.directoryURL = directoryURL;
-        self.subdirectoryURLs = [NSMutableArray new];
-		self.remoteFiles = [NSMutableArray new];
+		self.items = [NSMutableArray new];
     }
     return self;
 }
 
 
 - (BOOL)isEmpty {
-	return self.remoteFiles.count == 0 && self.subdirectoryURLs == 0;
+	return self.items.count == 0;
 }
 
 
@@ -108,18 +106,27 @@
 	ILobbyRemoteDirectoryParser *directoryParser = [[ILobbyRemoteDirectoryParser alloc] initWithDirectoryURL:directoryURL];
 	xmlParser.delegate = directoryParser;
 
+	// if parsing succeeds construct the remote directory
 	if ( [xmlParser parse] ) {
-		NSMutableArray *subdirectories = [NSMutableArray new];
-		for ( NSURL *subdirectoryURL in directoryParser.subdirectoryURLs ) {
-			NSError *subError;
-			NSLog( @"Parsing subdirectory URL: %@", subdirectoryURL );
-			ILobbyRemoteDirectory *subdirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:subdirectoryURL error:&subError];
-			NSLog( @"Subdirectory: %@", subdirectory );
-			if ( subError )  NSLog( @"sub error: %@", subError );
-			if ( subdirectory )  [subdirectories addObject:subdirectory];
+		// a remote item may either be a ILobbyRemoteFile (ordinary file) or ILobbyRemoteDirectory (subdirectory)
+		NSMutableArray *directoryItems = [NSMutableArray new];
+
+		// pass files to remote directory and parse subdirectory URLs converting them to subdirectories and passing them on to the remote directory
+		for ( id parserItem in directoryParser.items ) {
+			if ( [parserItem isKindOfClass:[NSURL class]] ) {		// must be a subdirectory
+				NSURL *subdirectoryURL = (NSURL *)parserItem;
+				NSError *subError;
+				NSLog( @"Parsing subdirectory URL: %@", subdirectoryURL );
+				ILobbyRemoteDirectory *subdirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:subdirectoryURL error:&subError];
+				NSLog( @"Subdirectory: %@", subdirectory );
+				if ( subError )  NSLog( @"sub error: %@", subError );
+				if ( subdirectory )  [directoryItems addObject:subdirectory];
+			}
+			else {		// ordinary file
+				[directoryItems addObject:parserItem];
+			}
 		}
-		remoteDirectory.subdirectories = subdirectories;
-		remoteDirectory.files = directoryParser.remoteFiles;
+		remoteDirectory.items = directoryItems;
 	}
 	else {
 		if ( errorPtr ) {
@@ -154,7 +161,7 @@
 				if ( [[anchorURL.path stringByDeletingLastPathComponent] isEqualToString:self.directoryURL.path] ) {
 					if ( [anchorURL.absoluteString hasSuffix:@"/"] ) {	// it is a directory
 						[self closeFileLinkInfo];
-						[self.subdirectoryURLs addObject:anchorURL];
+						[self.items addObject:anchorURL];
 					}
 					else {
 						self.currentFileLink = anchorURL;
@@ -176,7 +183,7 @@
 - (void)closeFileLinkInfo {
 	if ( self.currentFileLink ) {
 		ILobbyRemoteFile *remoteFile = [[ILobbyRemoteFile alloc] initWithLocation:self.currentFileLink info:self.currentFileLinkText];
-		[self.remoteFiles addObject:remoteFile];
+		[self.items addObject:remoteFile];
 		self.currentFileLink = nil;
 	}
 	self.currentFileLinkText = nil;

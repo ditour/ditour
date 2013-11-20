@@ -89,6 +89,7 @@
 		4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDownloader.m; sourceTree = "<group>"; };
 		4CA582DB16386913009ACF37 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		4CA582E116397A0C009ACF37 /* ILobbyPresentationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDelegate.h; sourceTree = "<group>"; };
+		4CC09883183D0DDE006755C8 /* ILobbyRemoteDirectoryItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectoryItem.h; sourceTree = "<group>"; };
 		4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Presentations.xcdatamodel; sourceTree = "<group>"; };
 		4CE1D6C61638219C00026847 /* ILobbySlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbySlide.h; sourceTree = "<group>"; };
 		4CE1D6C71638219C00026847 /* ILobbySlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbySlide.m; sourceTree = "<group>"; };
@@ -121,6 +122,7 @@
 				4CA2F152163588C10082ADFF /* ILobbyFileDownloader.m */,
 				4CA2F15416359FBF0082ADFF /* ILobbyPresentationDownloader.h */,
 				4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */,
+				4CC09883183D0DDE006755C8 /* ILobbyRemoteDirectoryItem.h */,
 				4C690BE718229DD100A823CC /* ILobbyRemoteDirectory.h */,
 				4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */,
 				4C690BEA18229DEE00A823CC /* ILobbyRemoteFile.h */,
@@ -215,6 +217,7 @@
 				4C690BD2181EED4D00A823CC /* Download */,
 				4C690BD4181EED8800A823CC /* Presentation */,
 				4CD0ED79182977AA0090EFE5 /* Model */,
+				4CC09884183D3C48006755C8 /* Store */,
 				4C937D7F1631AAE200F251FF /* Supporting Files */,
 				4C82BEC117D7899200740BD1 /* Images.xcassets */,
 			);
@@ -233,12 +236,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4CC09884183D3C48006755C8 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */,
+			);
+			name = Store;
+			sourceTree = "<group>";
+		};
 		4CD0ED79182977AA0090EFE5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				4C01BD501636F88500065A97 /* ILobbyModel.h */,
 				4C01BD511636F88500065A97 /* ILobbyModel.m */,
-				4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */,
 			);
 			name = Model;
 			sourceTree = "<group>";

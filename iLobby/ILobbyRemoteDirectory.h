@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ILobbyRemoteDirectoryItem.h"
 
-@interface ILobbyRemoteDirectory : NSObject
-@property(readonly, copy) NSURL *location;			// URL location for this directory
-@property(readonly, copy) NSArray *files;				// array of ILobbyRemoteFile instances for each file linked in this remote directory
-@property(readonly, copy) NSArray *subdirectories;	// array of ILobbyRemoteDirectory instances for each subdirectory linked in this remote directory
+
+@interface ILobbyRemoteDirectory : NSObject <ILobbyRemoteDirectoryItem>
+@property(readonly, copy) NSArray *items;	// array of ILobbyRemoteDirectoryItem (files and subdirectories)
 
 + (ILobbyRemoteDirectory *)parseDirectoryAtURL:(NSURL *)directoryURL error:(NSError * __autoreleasing *)errorPtr;
 
