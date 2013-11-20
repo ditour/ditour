@@ -6,13 +6,7 @@
         <relationship name="mainConfig" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Main" inverseName="configuraton" inverseEntity="Main" syncable="YES"/>
         <relationship name="presentation" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentation" inverseName="configuration" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="track" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="configuration" inverseEntity="Track" syncable="YES"/>
-        <relationship name="transition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ILobbyStoreSlideTransition" inverseName="configuration" inverseEntity="ILobbyStoreSlideTransition" syncable="YES"/>
-    </entity>
-    <entity name="ILobbyStoreSlideTransition" representedClassName="ILobbyModelSlideTransition" syncable="YES">
-        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.5" syncable="YES"/>
-        <attribute name="subType" optional="YES" attributeType="String" defaultValueString="fromRight" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" defaultValueString="fade" syncable="YES"/>
-        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="transition" inverseEntity="Configuration" syncable="YES"/>
+        <relationship name="transition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SlideTransition" inverseName="configuration" inverseEntity="SlideTransition" syncable="YES"/>
     </entity>
     <entity name="LocalMedia" representedClassName="ILobbyStoreLocalMedia" syncable="YES">
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
@@ -40,11 +34,14 @@
     <entity name="Slide" representedClassName="ILobbyStoreSlide" parentEntity="TrackItem" syncable="YES">
         <relationship name="localMedia" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalMedia" inverseName="slide" inverseEntity="LocalMedia" syncable="YES"/>
     </entity>
+    <entity name="SlideTransition" representedClassName="ILobbyStoreSlideTransition" syncable="YES">
+        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.5" syncable="YES"/>
+        <attribute name="subType" optional="YES" attributeType="String" defaultValueString="fromRight" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" defaultValueString="fade" syncable="YES"/>
+        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="transition" inverseEntity="Configuration" syncable="YES"/>
+    </entity>
     <entity name="Track" representedClassName="ILobbyStoreTrack" parentEntity="TrackItem" syncable="YES">
-        <attribute name="slideDuration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="transitionSubtype" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="transitionType" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="children" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackItem" inverseName="parentTrack" inverseEntity="TrackItem" syncable="YES"/>
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="track" inverseEntity="Configuration" syncable="YES"/>
         <relationship name="presentation" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="tracks" inverseEntity="Presentation" syncable="YES"/>
@@ -59,8 +56,8 @@
         <element name="RemoteMedia" positionX="-1055" positionY="-160" width="128" height="88"/>
         <element name="Slide" positionX="-1143" positionY="-288" width="128" height="58"/>
         <element name="Configuration" positionX="-848" positionY="-730" width="128" height="133"/>
-        <element name="ILobbyStoreSlideTransition" positionX="-1064" positionY="-715" width="128" height="103"/>
-        <element name="Track" positionX="-945" positionY="-522" width="128" height="148"/>
+        <element name="SlideTransition" positionX="-1064" positionY="-715" width="128" height="103"/>
+        <element name="Track" positionX="-945" positionY="-522" width="128" height="103"/>
         <element name="TrackItem" positionX="-1143" positionY="-418" width="128" height="58"/>
     </elements>
 </model>
