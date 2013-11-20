@@ -21,16 +21,15 @@
     </entity>
     <entity name="Main" representedClassName="ILobbyStoreMain" syncable="YES">
         <relationship name="configuraton" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="mainConfig" inverseEntity="Configuration" syncable="YES"/>
-        <relationship name="defaultPresentation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="mainConfig" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="defaultPresentation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="mainStore" inverseEntity="Presentation" syncable="YES"/>
     </entity>
     <entity name="Presentation" representedClassName="ILobbyStorePresentation" syncable="YES">
-        <attribute name="lastUpdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="remoteLocation" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="slideDuration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="transitionSubtype" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="transitionType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="presentation" inverseEntity="Configuration" syncable="YES"/>
-        <relationship name="mainConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Main" inverseName="defaultPresentation" inverseEntity="Main" syncable="YES"/>
+        <relationship name="mainStore" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Main" inverseName="defaultPresentation" inverseEntity="Main" syncable="YES"/>
+        <relationship name="origin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="revision" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="revision" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="origin" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Track" inverseName="presentation" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="RemoteMedia" representedClassName="ILobbyStoreRemoteMedia" syncable="YES">
@@ -56,7 +55,7 @@
     <elements>
         <element name="LocalMedia" positionX="-1244" positionY="-162" width="128" height="88"/>
         <element name="Main" positionX="-542" positionY="-828" width="128" height="73"/>
-        <element name="Presentation" positionX="-290" positionY="-738" width="128" height="163"/>
+        <element name="Presentation" positionX="-290" positionY="-738" width="128" height="148"/>
         <element name="RemoteMedia" positionX="-1055" positionY="-160" width="128" height="88"/>
         <element name="Slide" positionX="-1143" positionY="-288" width="128" height="58"/>
         <element name="Configuration" positionX="-848" positionY="-730" width="128" height="133"/>
