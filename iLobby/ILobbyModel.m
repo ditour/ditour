@@ -8,13 +8,12 @@
 
 #import "ILobbyModel.h"
 #import "ILobbyPresentationDownloader.h"
-
-
-// path to the installed presentation
-static NSString *PRESENTATION_PATH;
+#import "ILobbyStoreUserConfig.h"
+#import "ILobbyStorePresentation.h"
 
 
 @interface ILobbyModel ()
+@property (strong, nonatomic) ILobbyStoreUserConfig *userConfig;
 @property (strong, nonatomic) ILobbyPresentationDownloader *presentationDownloader;
 @property (strong, readwrite) ILobbyProgress *downloadProgress;
 @property (readwrite) BOOL hasPresentationUpdate;
@@ -33,15 +32,36 @@ static NSString *PRESENTATION_PATH;
 // class initializer
 +(void)initialize {
 	if ( self == [ILobbyModel class] ) {
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSError *error;
+		[self purgeVersion1Data];
+	}
+}
 
-		NSURL *documentDirectoryURL = [fileManager URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+
+// purge version 1.x data
++(void)purgeVersion1Data {
+	NSString *oldPresentationPath = [[self.documentDirectoryURL path] stringByAppendingPathComponent:@"Presentation"];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if ( [fileManager fileExistsAtPath:oldPresentationPath] ) {
+		NSError * __autoreleasing error;
+		[fileManager removeItemAtPath:oldPresentationPath error:&error];
 		if ( error ) {
-			NSLog( @"Error getting to document directory: %@", error );
+			NSLog( @"Error removing version 1.0 presentation directory." );
 		}
+	}
+}
 
-		PRESENTATION_PATH = [[documentDirectoryURL path] stringByAppendingPathComponent:@"Presentation"];
+
++ (NSURL *)documentDirectoryURL {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSError * __autoreleasing error;
+
+	NSURL *documentDirectoryURL = [fileManager URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+	if ( error ) {
+		NSLog( @"Error getting to document directory: %@", error );
+		return nil;
+	}
+	else {
+		return documentDirectoryURL;
 	}
 }
 
@@ -54,7 +74,8 @@ static NSString *PRESENTATION_PATH;
 		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
 		[self setupDataModel];
 
-		[self loadPresentation];
+		self.userConfig = [self fetchUserConfig];
+		[self loadDefaultPresentation];
     }
     return self;
 }
@@ -65,7 +86,7 @@ static NSString *PRESENTATION_PATH;
     NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
 
 	// setup the persistent store
-    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"Presentations.db"]];
+    NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"iLobby.db"]];
 
 	NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @YES, NSInferMappingModelAutomaticallyOption : @YES };
 
@@ -73,7 +94,7 @@ static NSString *PRESENTATION_PATH;
     NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModel];
     if ( ![persistentStoreCoordinator addPersistentStoreWithType:NSBinaryStoreType configuration:nil URL:storeUrl options:options error:&error] ) {
         /*
-         Replace this implementation with code to handle the error appropriately.
+         TODO: Replace this implementation with code to handle the error appropriately.
 
          abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
 
@@ -88,7 +109,7 @@ static NSString *PRESENTATION_PATH;
 
 	// setup the managed object context
     if ( persistentStoreCoordinator != nil ) {
-        self.managedObjectContext = [NSManagedObjectContext new];
+        self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 		self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
     }
 }
@@ -146,7 +167,7 @@ static NSString *PRESENTATION_PATH;
 	// check to see if there are any pending installations to install
 	if ( self.hasPresentationUpdate ) {
 		[self installPresentation];
-		[self loadPresentation];
+		[self loadDefaultPresentation];
 	}
 }
 
@@ -172,7 +193,7 @@ static NSString *PRESENTATION_PATH;
 				if ( self.hasPresentationUpdate ) {
 					[self stop];
 					[self installPresentation];
-					[self loadPresentation];
+					[self loadDefaultPresentation];
 					[self play];
 				}
 				else {
@@ -222,40 +243,53 @@ static NSString *PRESENTATION_PATH;
 
 
 - (void)installPresentation {
-	NSError *error;
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-
-	// if a presentation is already installed, delete it
-	if ( [fileManager fileExistsAtPath:PRESENTATION_PATH] ) {
-		[fileManager removeItemAtPath:PRESENTATION_PATH error:&error];
-	}
-
-	NSString *downloadPath = [ILobbyPresentationDownloader presentationPath];
-	[fileManager moveItemAtPath:downloadPath toPath:PRESENTATION_PATH error:&error];
-
+	// TODO: implement installation logic
 	self.hasPresentationUpdate = NO;
 }
 
 
-- (void)loadPresentation {
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSString *indexPath = [PRESENTATION_PATH stringByAppendingPathComponent:@"index.json"];
+- (ILobbyStoreUserConfig *)fetchUserConfig {
+	NSFetchRequest *mainFetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"UserConfig"];
 
-	if ( [fileManager fileExistsAtPath:indexPath] ) {
-		NSError *jsonError;
-		NSData *data = [NSData dataWithContentsOfFile:indexPath];
-		NSDictionary *config = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-//		NSLog( @"Presentation config: %@", config );
+	ILobbyStoreUserConfig *userConfig = nil;
+	NSError * __autoreleasing error = nil;
+	NSArray *userConfigs = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
+	switch ( userConfigs.count ) {
+		case 0:
+			userConfig = [ILobbyStoreUserConfig new];
+			[self.managedObjectContext insertObject:userConfig];
+			[self.managedObjectContext save:&error];
+		case 1:
+			userConfig = userConfigs[0];
+		default:
+			break;
+	}
 
+	return userConfig;
+}
+
+
+- (BOOL)loadDefaultPresentation {
+	return [self loadPresentation:self.userConfig.defaultPresentation];
+}
+
+
+- (BOOL)loadPresentation:(ILobbyStorePresentation *)presentationStore {
+	if ( presentationStore != nil && presentationStore.isReady ) {
 		NSMutableArray *tracks = [NSMutableArray new];
-		NSString *trackPath = [PRESENTATION_PATH stringByAppendingPathComponent:@"tracks"];
-		for ( NSDictionary *trackConfig in config[@"tracks"] ) {
-			ILobbyTrack *track = [[ILobbyTrack alloc] initWithConfiguration:trackConfig relativeTo:trackPath];
-			[tracks addObject:track];
+
+		// create a new track from each track store
+		for ( ILobbyStoreTrack *trackStore in presentationStore.tracks ) {
+			// TODO: instantiate a new track configured against the store
 		}
 
 		self.tracks = [NSArray arrayWithArray:tracks];
 		self.defaultTrack = tracks.count > 0 ? tracks[0] : nil;
+
+		return YES;
+	}
+	else {
+		return NO;
 	}
 }
 
@@ -292,35 +326,7 @@ static NSString *PRESENTATION_PATH;
 		[self cancelPresentationDownload];
 	}
 
-
-	// if updating files based on staleness, then use the current presentation as an archive
-	NSString *archivePath = forceFullDownload ? nil : PRESENTATION_PATH;
-
-	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithIndexURL:self.presentationLocation archivePath:archivePath completionHandler:^(ILobbyPresentationDownloader *downloader) {
-		if ( downloader.complete ) {
-			// mark that a new presentation is awaiting to be loaded during the next default slideshow cycle (if playing)
-			NSError *downloadError = nil;
-			self.hasPresentationUpdate = [self validateDownload:&downloadError];
-			if ( downloadError ) {
-				NSString *message = downloadError.userInfo[@"message"];
-				NSLog( @"Download Error: %@", message );
-				self.downloadProgress = [ILobbyProgress progressWithFraction:0.0 label:message];
-			}
-			else {
-				[self updateProgress:downloader];
-			}
-
-			if ( self.hasPresentationUpdate ) {
-				// if we are not playing (e.g. starting from scratch) then automatically install, load and begin playing the presentation
-				BOOL installImmediately = !self.delayInstall;
-				if ( !self.playing || installImmediately ) {
-					[self installPresentation];
-					[self loadPresentation];
-					[self play];
-				}
-			}
-		}
-	}];
+	//TODO: download the presentation
 }
 
 
