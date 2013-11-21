@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5029" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Configuration" representedClassName="ILobbyStoreSlideConfiguration" syncable="YES">
         <attribute name="slideDuration" optional="YES" attributeType="Double" defaultValueString="5" syncable="YES"/>
         <attribute name="trackChangeDelay" optional="YES" attributeType="Double" defaultValueString="900" syncable="YES"/>
-        <relationship name="mainConfig" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Main" inverseName="configuraton" inverseEntity="Main" syncable="YES"/>
         <relationship name="presentation" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentation" inverseName="configuration" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="track" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Track" inverseName="configuration" inverseEntity="Track" syncable="YES"/>
         <relationship name="transition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SlideTransition" inverseName="configuration" inverseEntity="SlideTransition" syncable="YES"/>
+        <relationship name="userConfig" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="configuraton" inverseEntity="UserConfig" syncable="YES"/>
     </entity>
     <entity name="LocalMedia" representedClassName="ILobbyStoreLocalMedia" syncable="YES">
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="remoteMedia" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteMedia" inverseName="localMedia" inverseEntity="RemoteMedia" syncable="YES"/>
         <relationship name="slide" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Slide" inverseName="localMedia" inverseEntity="Slide" syncable="YES"/>
     </entity>
-    <entity name="Main" representedClassName="ILobbyStoreMain" syncable="YES">
-        <relationship name="configuraton" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="mainConfig" inverseEntity="Configuration" syncable="YES"/>
-        <relationship name="defaultPresentation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="mainStore" inverseEntity="Presentation" syncable="YES"/>
-    </entity>
     <entity name="Presentation" representedClassName="ILobbyStorePresentation" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteLocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="presentation" inverseEntity="Configuration" syncable="YES"/>
-        <relationship name="mainStore" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Main" inverseName="defaultPresentation" inverseEntity="Main" syncable="YES"/>
         <relationship name="origin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="revision" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="revision" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="origin" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Track" inverseName="presentation" inverseEntity="Track" syncable="YES"/>
+        <relationship name="userConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="defaultPresentation" inverseEntity="UserConfig" syncable="YES"/>
     </entity>
     <entity name="RemoteMedia" representedClassName="ILobbyStoreRemoteMedia" syncable="YES">
         <attribute name="remoteInfo" optional="YES" attributeType="String" syncable="YES"/>
@@ -49,15 +48,19 @@
     <entity name="TrackItem" representedClassName="IlobbyStoreTrackItem" isAbstract="YES" syncable="YES">
         <relationship name="parentTrack" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="children" inverseEntity="Track" syncable="YES"/>
     </entity>
+    <entity name="UserConfig" representedClassName="ILobbyStoreUserConfig" syncable="YES">
+        <relationship name="configuraton" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="userConfig" inverseEntity="Configuration" syncable="YES"/>
+        <relationship name="defaultPresentation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="userConfig" inverseEntity="Presentation" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="LocalMedia" positionX="-1244" positionY="-162" width="128" height="88"/>
-        <element name="Main" positionX="-542" positionY="-828" width="128" height="73"/>
-        <element name="Presentation" positionX="-290" positionY="-738" width="128" height="148"/>
-        <element name="RemoteMedia" positionX="-1055" positionY="-160" width="128" height="88"/>
-        <element name="Slide" positionX="-1143" positionY="-288" width="128" height="58"/>
-        <element name="Configuration" positionX="-848" positionY="-730" width="128" height="133"/>
-        <element name="SlideTransition" positionX="-1064" positionY="-715" width="128" height="103"/>
-        <element name="Track" positionX="-945" positionY="-522" width="128" height="103"/>
-        <element name="TrackItem" positionX="-1143" positionY="-418" width="128" height="58"/>
+        <element name="Configuration" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="LocalMedia" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="UserConfig" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Presentation" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="RemoteMedia" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Slide" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="SlideTransition" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Track" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="TrackItem" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

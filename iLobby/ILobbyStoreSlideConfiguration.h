@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStoreMain, ILobbyStorePresentation, ILobbyStoreSlideTransition, ILobbyStoreTrack;
+@class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreSlideTransition, ILobbyStoreTrack;
 
 @interface ILobbyStoreSlideConfiguration : NSManagedObject
 
@@ -23,8 +23,8 @@
 
 @interface ILobbyStoreSlideConfiguration (CoreDataGeneratedAccessors)
 
-- (void)addMainConfigObject:(ILobbyStoreMain *)value;
-- (void)removeMainConfigObject:(ILobbyStoreMain *)value;
+- (void)addMainConfigObject:(ILobbyStoreUserConfig *)value;
+- (void)removeMainConfigObject:(ILobbyStoreUserConfig *)value;
 - (void)addMainConfig:(NSSet *)values;
 - (void)removeMainConfig:(NSSet *)values;
 

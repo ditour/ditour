@@ -11,7 +11,7 @@
 
 @class ILobbyStorePresentation, ILobbyStoreSlideConfiguration;
 
-@interface ILobbyStoreMain : NSManagedObject
+@interface ILobbyStoreUserConfig : NSManagedObject
 
 @property (nonatomic, retain) ILobbyStorePresentation *defaultPresentation;
 @property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuraton;

@@ -9,17 +9,25 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStoreMain, ILobbyStorePresentation, ILobbyStoreSlideConfiguration, ILobbyStoreTrack;
+
+typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, PRESENTATION_STATUS_READY, PRESENTATION_STATUS_CANCELED };
+
+
+@class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreSlideConfiguration, ILobbyStoreTrack;
 
 @interface ILobbyStorePresentation : NSManagedObject
-
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * path;
+@property (nonatomic, retain) NSNumber * status;
 @property (nonatomic, retain) NSDate * timestamp;
 @property (nonatomic, retain) NSString * remoteLocation;
-@property (nonatomic, retain) ILobbyStoreMain *mainStore;
+@property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
 @property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuration;
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @property (nonatomic, retain) ILobbyStorePresentation *origin;
 @property (nonatomic, retain) ILobbyStorePresentation *revision;
+
+@property (nonatomic, readonly) BOOL isReady;
 @end
 
 @interface ILobbyStorePresentation (CoreDataGeneratedAccessors)

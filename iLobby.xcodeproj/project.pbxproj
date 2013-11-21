@@ -39,11 +39,11 @@
 		4CC0988D183D4CBF006755C8 /* ILobbyStoreSlideConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0988C183D4CBF006755C8 /* ILobbyStoreSlideConfiguration.m */; };
 		4CC09890183D4CBF006755C8 /* ILobbyStoreRemoteMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0988F183D4CBF006755C8 /* ILobbyStoreRemoteMedia.m */; };
 		4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09892183D4CBF006755C8 /* ILobbyStoreSlide.m */; };
-		4CC09896183D4CC0006755C8 /* ILobbyStoreMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09895183D4CC0006755C8 /* ILobbyStoreMain.m */; };
+		4CC09896183D4CC0006755C8 /* ILobbyStoreUserConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09895183D4CC0006755C8 /* ILobbyStoreUserConfig.m */; };
 		4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */; };
 		4CC0989C183D4CC0006755C8 /* ILobbyStoreLocalMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989B183D4CC0006755C8 /* ILobbyStoreLocalMedia.m */; };
 		4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */; };
-		4CD0ED7C182978380090EFE5 /* Presentations.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */; };
+		4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */; };
 		4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1D6C71638219C00026847 /* ILobbySlide.m */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +53,7 @@
 		4C01BD4D1636F69100065A97 /* ILobbyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyViewController.h; sourceTree = "<group>"; };
 		4C01BD4E1636F69100065A97 /* ILobbyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyViewController.m; sourceTree = "<group>"; };
 		4C01BD501636F88500065A97 /* ILobbyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyModel.h; sourceTree = "<group>"; };
-		4C01BD511636F88500065A97 /* ILobbyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyModel.m; sourceTree = "<group>"; };
+		4C01BD511636F88500065A97 /* ILobbyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyModel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C01BD53163702CD00065A97 /* ILobbyProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyProgress.h; sourceTree = "<group>"; };
 		4C01BD54163702CD00065A97 /* ILobbyProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyProgress.m; sourceTree = "<group>"; };
 		4C01BD561637150700065A97 /* ILobbyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrack.h; sourceTree = "<group>"; };
@@ -109,15 +109,15 @@
 		4CC0988F183D4CBF006755C8 /* ILobbyStoreRemoteMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreRemoteMedia.m; sourceTree = "<group>"; };
 		4CC09891183D4CBF006755C8 /* ILobbyStoreSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreSlide.h; sourceTree = "<group>"; };
 		4CC09892183D4CBF006755C8 /* ILobbyStoreSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreSlide.m; sourceTree = "<group>"; };
-		4CC09894183D4CC0006755C8 /* ILobbyStoreMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreMain.h; sourceTree = "<group>"; };
-		4CC09895183D4CC0006755C8 /* ILobbyStoreMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreMain.m; sourceTree = "<group>"; };
+		4CC09894183D4CC0006755C8 /* ILobbyStoreUserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreUserConfig.h; sourceTree = "<group>"; };
+		4CC09895183D4CC0006755C8 /* ILobbyStoreUserConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreUserConfig.m; sourceTree = "<group>"; };
 		4CC09897183D4CC0006755C8 /* ILobbyStorePresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentation.h; sourceTree = "<group>"; };
 		4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentation.m; sourceTree = "<group>"; };
 		4CC0989A183D4CC0006755C8 /* ILobbyStoreLocalMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreLocalMedia.h; sourceTree = "<group>"; };
 		4CC0989B183D4CC0006755C8 /* ILobbyStoreLocalMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreLocalMedia.m; sourceTree = "<group>"; };
 		4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreTrack.h; sourceTree = "<group>"; };
 		4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreTrack.m; sourceTree = "<group>"; };
-		4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Presentations.xcdatamodel; sourceTree = "<group>"; };
+		4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iLobby.xcdatamodel; sourceTree = "<group>"; };
 		4CE1D6C61638219C00026847 /* ILobbySlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbySlide.h; sourceTree = "<group>"; };
 		4CE1D6C71638219C00026847 /* ILobbySlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbySlide.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -266,15 +266,15 @@
 		4CC09884183D3C48006755C8 /* Store */ = {
 			isa = PBXGroup;
 			children = (
-				4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */,
+				4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */,
 				4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */,
 				4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */,
 				4CC0989A183D4CC0006755C8 /* ILobbyStoreLocalMedia.h */,
 				4CC0989B183D4CC0006755C8 /* ILobbyStoreLocalMedia.m */,
 				4CC09897183D4CC0006755C8 /* ILobbyStorePresentation.h */,
 				4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */,
-				4CC09894183D4CC0006755C8 /* ILobbyStoreMain.h */,
-				4CC09895183D4CC0006755C8 /* ILobbyStoreMain.m */,
+				4CC09894183D4CC0006755C8 /* ILobbyStoreUserConfig.h */,
+				4CC09895183D4CC0006755C8 /* ILobbyStoreUserConfig.m */,
 				4CC09891183D4CBF006755C8 /* ILobbyStoreSlide.h */,
 				4CC09892183D4CBF006755C8 /* ILobbyStoreSlide.m */,
 				4CC0988E183D4CBF006755C8 /* ILobbyStoreRemoteMedia.h */,
@@ -381,7 +381,7 @@
 				4C937DA81631BA8F00F251FF /* ILobbyPresenter.m in Sources */,
 				4CA2F153163588C10082ADFF /* ILobbyFileDownloader.m in Sources */,
 				4CA2F15616359FBF0082ADFF /* ILobbyPresentationDownloader.m in Sources */,
-				4CD0ED7C182978380090EFE5 /* Presentations.xcdatamodeld in Sources */,
+				4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */,
 				4CC09887183D4CBF006755C8 /* ILobbyStoreSlideTransition.m in Sources */,
 				4C01BD4B1636F34C00065A97 /* ILobbyConfigurationController.m in Sources */,
 				4C01BD4F1636F69100065A97 /* ILobbyViewController.m in Sources */,
@@ -400,7 +400,7 @@
 				4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */,
 				4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */,
 				4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */,
-				4CC09896183D4CC0006755C8 /* ILobbyStoreMain.m in Sources */,
+				4CC09896183D4CC0006755C8 /* ILobbyStoreUserConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,13 +546,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		4CD0ED7A182978380090EFE5 /* Presentations.xcdatamodeld */ = {
+		4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */,
+				4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */,
 			);
-			currentVersion = 4CD0ED7B182978380090EFE5 /* Presentations.xcdatamodel */;
-			path = Presentations.xcdatamodeld;
+			currentVersion = 4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */;
+			path = iLobby.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

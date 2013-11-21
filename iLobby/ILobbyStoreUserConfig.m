@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyStoreMain.h"
+#import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyStoreSlideConfiguration.h"
 
 
-@implementation ILobbyStoreMain
+@implementation ILobbyStoreUserConfig
 
 @dynamic defaultPresentation;
 @dynamic configuraton;
