@@ -21,13 +21,18 @@ typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, P
 @property (nonatomic, retain) NSNumber * status;
 @property (nonatomic, retain) NSDate * timestamp;
 @property (nonatomic, retain) NSString * remoteLocation;
-@property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
-@property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuration;
-@property (nonatomic, retain) NSOrderedSet *tracks;
+
 @property (nonatomic, retain) ILobbyStorePresentation *origin;
 @property (nonatomic, retain) ILobbyStorePresentation *revision;
+@property (nonatomic, retain) ILobbyStoreSlideConfiguration *slideConfiguration;
+@property (nonatomic, retain) NSOrderedSet *tracks;
+@property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
+
 
 @property (nonatomic, readonly) BOOL isReady;
+
++ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end
 
 @interface ILobbyStorePresentation (CoreDataGeneratedAccessors)
@@ -42,4 +47,6 @@ typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, P
 - (void)removeTracksObject:(ILobbyStoreTrack *)value;
 - (void)addTracks:(NSOrderedSet *)values;
 - (void)removeTracks:(NSOrderedSet *)values;
+
 @end
+

@@ -256,11 +256,12 @@
 	NSArray *userConfigs = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
 	switch ( userConfigs.count ) {
 		case 0:
-			userConfig = [ILobbyStoreUserConfig new];
-			[self.managedObjectContext insertObject:userConfig];
+			userConfig = [ILobbyStoreUserConfig insertNewUserConfigInContext:self.managedObjectContext];
 			[self.managedObjectContext save:&error];
+			break;
 		case 1:
 			userConfig = userConfigs[0];
+			break;
 		default:
 			break;
 	}

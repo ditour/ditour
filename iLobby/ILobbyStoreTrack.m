@@ -19,4 +19,10 @@
 @dynamic configuration;
 @dynamic children;
 
+
++ (instancetype)insertNewTrackInContext:(NSManagedObjectContext *)managedObjectContext {
+	return [NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:managedObjectContext];
+}
+
+
 @end

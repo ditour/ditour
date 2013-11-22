@@ -41,7 +41,6 @@
 		4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09892183D4CBF006755C8 /* ILobbyStoreSlide.m */; };
 		4CC09896183D4CC0006755C8 /* ILobbyStoreUserConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09895183D4CC0006755C8 /* ILobbyStoreUserConfig.m */; };
 		4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */; };
-		4CC0989C183D4CC0006755C8 /* ILobbyStoreLocalMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989B183D4CC0006755C8 /* ILobbyStoreLocalMedia.m */; };
 		4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */; };
 		4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */; };
 		4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1D6C71638219C00026847 /* ILobbySlide.m */; };
@@ -113,8 +112,6 @@
 		4CC09895183D4CC0006755C8 /* ILobbyStoreUserConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreUserConfig.m; sourceTree = "<group>"; };
 		4CC09897183D4CC0006755C8 /* ILobbyStorePresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentation.h; sourceTree = "<group>"; };
 		4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentation.m; sourceTree = "<group>"; };
-		4CC0989A183D4CC0006755C8 /* ILobbyStoreLocalMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreLocalMedia.h; sourceTree = "<group>"; };
-		4CC0989B183D4CC0006755C8 /* ILobbyStoreLocalMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreLocalMedia.m; sourceTree = "<group>"; };
 		4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreTrack.h; sourceTree = "<group>"; };
 		4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreTrack.m; sourceTree = "<group>"; };
 		4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iLobby.xcdatamodel; sourceTree = "<group>"; };
@@ -269,8 +266,6 @@
 				4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */,
 				4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */,
 				4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */,
-				4CC0989A183D4CC0006755C8 /* ILobbyStoreLocalMedia.h */,
-				4CC0989B183D4CC0006755C8 /* ILobbyStoreLocalMedia.m */,
 				4CC09897183D4CC0006755C8 /* ILobbyStorePresentation.h */,
 				4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */,
 				4CC09894183D4CC0006755C8 /* ILobbyStoreUserConfig.h */,
@@ -387,7 +382,6 @@
 				4C01BD4F1636F69100065A97 /* ILobbyViewController.m in Sources */,
 				4C690BEC18229DEE00A823CC /* ILobbyRemoteFile.m in Sources */,
 				4C01BD521636F88600065A97 /* ILobbyModel.m in Sources */,
-				4CC0989C183D4CC0006755C8 /* ILobbyStoreLocalMedia.m in Sources */,
 				4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */,
 				4C01BD55163702CD00065A97 /* ILobbyProgress.m in Sources */,
 				4CC09890183D4CBF006755C8 /* ILobbyStoreRemoteMedia.m in Sources */,
@@ -497,7 +491,7 @@
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -517,7 +511,7 @@
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -22,4 +22,9 @@
 @dynamic track;
 @dynamic transition;
 
+
++ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext {
+    return [NSEntityDescription insertNewObjectForEntityForName:@"SlideConfiguration" inManagedObjectContext:managedObjectContext];
+}
+
 @end

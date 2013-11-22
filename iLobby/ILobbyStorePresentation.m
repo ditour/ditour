@@ -20,11 +20,17 @@
 @dynamic status;
 @dynamic timestamp;
 @dynamic remoteLocation;
-@dynamic userConfig;
-@dynamic configuration;
-@dynamic tracks;
+
 @dynamic origin;
 @dynamic revision;
+@dynamic slideConfiguration;
+@dynamic tracks;
+@dynamic userConfig;
+
+
++ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {
+    return [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
+}
 
 
 - (BOOL)isReady {

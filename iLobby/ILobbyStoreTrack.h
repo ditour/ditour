@@ -19,4 +19,7 @@
 @property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuration;
 @property (nonatomic, retain) IlobbyStoreTrackItem *children;
 
+
++ (instancetype)insertNewTrackInContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end

@@ -19,6 +19,9 @@
 @property (nonatomic, retain) NSSet *presentation;
 @property (nonatomic, retain) NSSet *track;
 @property (nonatomic, retain) ILobbyStoreSlideTransition *transition;
+
++ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end
 
 @interface ILobbyStoreSlideConfiguration (CoreDataGeneratedAccessors)

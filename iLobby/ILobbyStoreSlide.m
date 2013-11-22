@@ -7,11 +7,16 @@
 //
 
 #import "ILobbyStoreSlide.h"
-#import "ILobbyStoreLocalMedia.h"
 
 
 @implementation ILobbyStoreSlide
 
-@dynamic localMedia;
+@dynamic path;
+@dynamic remoteMedia;
+
+
++ (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext {
+    return [NSEntityDescription insertNewObjectForEntityForName:@"Slide" inManagedObjectContext:managedObjectContext];
+}
 
 @end

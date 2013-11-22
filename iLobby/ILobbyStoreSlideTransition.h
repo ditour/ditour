@@ -18,4 +18,6 @@
 @property (nonatomic, retain) NSString * type;
 @property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuration;
 
++ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end

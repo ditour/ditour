@@ -17,4 +17,9 @@
 @dynamic type;
 @dynamic configuration;
 
+
++ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext {
+    return [NSEntityDescription insertNewObjectForEntityForName:@"SlideTransition" inManagedObjectContext:managedObjectContext];
+}
+
 @end

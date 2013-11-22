@@ -10,10 +10,14 @@
 #import <CoreData/CoreData.h>
 #import "IlobbyStoreTrackItem.h"
 
-@class ILobbyStoreLocalMedia;
+@class ILobbyStoreRemoteMedia;
+
 
 @interface ILobbyStoreSlide : IlobbyStoreTrackItem
 
-@property (nonatomic, retain) ILobbyStoreLocalMedia *localMedia;
+@property (nonatomic, retain) NSString * path;
+@property (nonatomic, retain) ILobbyStoreRemoteMedia *remoteMedia;
+
++ (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

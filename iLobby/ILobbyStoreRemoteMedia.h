@@ -9,25 +9,26 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStoreLocalMedia;
+@class ILobbyStoreTrack;
+@class ILobbyStoreSlide;
+
 
 @interface ILobbyStoreRemoteMedia : NSManagedObject
 
 @property (nonatomic, retain) NSString * remoteInfo;
 @property (nonatomic, retain) NSString * remoteLocation;
-@property (nonatomic, retain) NSOrderedSet *localMedia;
+@property (nonatomic, retain) NSSet *slides;
+@property (nonatomic, retain) ILobbyStoreTrack *track;
+
++ (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end
 
 @interface ILobbyStoreRemoteMedia (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(ILobbyStoreLocalMedia *)value inLocalMediaAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromLocalMediaAtIndex:(NSUInteger)idx;
-- (void)insertLocalMedia:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeLocalMediaAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInLocalMediaAtIndex:(NSUInteger)idx withObject:(ILobbyStoreLocalMedia *)value;
-- (void)replaceLocalMediaAtIndexes:(NSIndexSet *)indexes withLocalMedia:(NSArray *)values;
-- (void)addLocalMediaObject:(ILobbyStoreLocalMedia *)value;
-- (void)removeLocalMediaObject:(ILobbyStoreLocalMedia *)value;
-- (void)addLocalMedia:(NSOrderedSet *)values;
-- (void)removeLocalMedia:(NSOrderedSet *)values;
+- (void)addSlidesObject:(ILobbyStoreSlide *)value;
+- (void)removeSlidesObject:(ILobbyStoreSlide *)value;
+- (void)addSlides:(NSSet *)values;
+- (void)removeSlides:(NSSet *)values;
+
 @end

@@ -16,4 +16,7 @@
 @property (nonatomic, retain) ILobbyStorePresentation *defaultPresentation;
 @property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuraton;
 
+
++ (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end

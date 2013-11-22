@@ -7,13 +7,21 @@
 //
 
 #import "ILobbyStoreRemoteMedia.h"
-#import "ILobbyStoreLocalMedia.h"
 
 
 @implementation ILobbyStoreRemoteMedia
 
+// attributes
 @dynamic remoteInfo;
 @dynamic remoteLocation;
-@dynamic localMedia;
+
+// relationships
+@dynamic slides;
+@dynamic track;
+
+
++ (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext {
+    return [NSEntityDescription insertNewObjectForEntityForName:@"RemoteMedia" inManagedObjectContext:managedObjectContext];
+}
 
 @end
