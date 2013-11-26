@@ -8,7 +8,7 @@
 
 #import "ILobbyStoreTrack.h"
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStoreSlideConfiguration.h"
+#import "ILobbyStoreTrackConfiguration.h"
 #import "IlobbyStoreTrackItem.h"
 
 

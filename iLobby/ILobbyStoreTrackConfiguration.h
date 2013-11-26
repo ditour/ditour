@@ -1,5 +1,5 @@
 //
-//  ILobbyStoreSlideConfiguration.h
+//  ILobbyStoreTrackConfiguration.h
 //  iLobby
 //
 //  Created by Pelaia II, Tom on 11/20/13.
@@ -11,7 +11,7 @@
 
 @class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreSlideTransition, ILobbyStoreTrack;
 
-@interface ILobbyStoreSlideConfiguration : NSManagedObject
+@interface ILobbyStoreTrackConfiguration : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * slideDuration;
 @property (nonatomic, retain) NSNumber * trackChangeDelay;
@@ -20,11 +20,11 @@
 @property (nonatomic, retain) NSSet *track;
 @property (nonatomic, retain) ILobbyStoreSlideTransition *transition;
 
-+ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
++ (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end
 
-@interface ILobbyStoreSlideConfiguration (CoreDataGeneratedAccessors)
+@interface ILobbyStoreTrackConfiguration (CoreDataGeneratedAccessors)
 
 - (void)addMainConfigObject:(ILobbyStoreUserConfig *)value;
 - (void)removeMainConfigObject:(ILobbyStoreUserConfig *)value;

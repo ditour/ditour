@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStoreSlideConfiguration;
+@class ILobbyStoreTrackConfiguration;
 
 @interface ILobbyStoreSlideTransition : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * duration;
 @property (nonatomic, retain) NSString * subType;
 @property (nonatomic, retain) NSString * type;
-@property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuration;
+@property (nonatomic, retain) ILobbyStoreTrackConfiguration *configuration;
 
-+ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
++ (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

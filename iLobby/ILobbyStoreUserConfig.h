@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStorePresentation, ILobbyStoreSlideConfiguration;
+@class ILobbyStorePresentation, ILobbyStoreTrackConfiguration;
 
 @interface ILobbyStoreUserConfig : NSManagedObject
 
 @property (nonatomic, retain) ILobbyStorePresentation *defaultPresentation;
-@property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuraton;
+@property (nonatomic, retain) ILobbyStoreTrackConfiguration *configuraton;
 
 
 + (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext;

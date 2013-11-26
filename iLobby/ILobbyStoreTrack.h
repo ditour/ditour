@@ -10,13 +10,13 @@
 #import <CoreData/CoreData.h>
 #import "IlobbyStoreTrackItem.h"
 
-@class ILobbyStorePresentation, ILobbyStoreSlideConfiguration, IlobbyStoreTrackItem;
+@class ILobbyStorePresentation, ILobbyStoreTrackConfiguration, IlobbyStoreTrackItem;
 
 @interface ILobbyStoreTrack : IlobbyStoreTrackItem
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) ILobbyStorePresentation *presentation;
-@property (nonatomic, retain) ILobbyStoreSlideConfiguration *configuration;
+@property (nonatomic, retain) ILobbyStoreTrackConfiguration *configuration;
 @property (nonatomic, retain) IlobbyStoreTrackItem *children;
 
 

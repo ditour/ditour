@@ -13,7 +13,7 @@
 typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, PRESENTATION_STATUS_READY, PRESENTATION_STATUS_CANCELED };
 
 
-@class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreSlideConfiguration, ILobbyStoreTrack;
+@class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStoreTrack;
 
 @interface ILobbyStorePresentation : NSManagedObject
 @property (nonatomic, retain) NSString * name;
@@ -24,7 +24,7 @@ typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, P
 
 @property (nonatomic, retain) ILobbyStorePresentation *origin;
 @property (nonatomic, retain) ILobbyStorePresentation *revision;
-@property (nonatomic, retain) ILobbyStoreSlideConfiguration *slideConfiguration;
+@property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
 

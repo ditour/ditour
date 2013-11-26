@@ -8,7 +8,7 @@
 
 #import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStoreSlideConfiguration.h"
+#import "ILobbyStoreTrackConfiguration.h"
 
 
 @implementation ILobbyStoreUserConfig

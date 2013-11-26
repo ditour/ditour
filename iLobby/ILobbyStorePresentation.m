@@ -9,7 +9,7 @@
 #import "ILobbyStorePresentation.h"
 #import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStoreSlideConfiguration.h"
+#import "ILobbyStoreTrackConfiguration.h"
 #import "ILobbyStoreTrack.h"
 
 
@@ -23,7 +23,7 @@
 
 @dynamic origin;
 @dynamic revision;
-@dynamic slideConfiguration;
+@dynamic trackConfiguration;
 @dynamic tracks;
 @dynamic userConfig;
 
