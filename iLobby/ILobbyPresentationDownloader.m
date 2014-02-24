@@ -10,6 +10,7 @@
 #import "ILobbyFileDownloader.h"
 #import "ILobbySlide.h"
 #import "ILobbyDirectory.h"
+#import "ILobbyRemoteDirectory.h"
 
 #define PRESENTATION_SUBDIRECTORY @"Presentation"
 
@@ -28,10 +29,14 @@
 @implementation ILobbyPresentationDownloader
 
 
--(id)initWithIndexURL:(NSURL *)indexAbsoluteURL archivePath:(NSString *)archivePath completionHandler:(ILobbyPresentationDownloadHandler)handler {
+-(instancetype)initWithPresentation:(ILobbyStorePresentation *)presentation completionHandler:(ILobbyPresentationDownloadHandler)handler {
     self = [super init];
     if (self) {
-		self.archivePath = archivePath;
+		[[presentation managedObjectContext] performBlockAndWait:^{
+			self.archivePath = presentation.path;
+			self.baseURL = [NSURL URLWithString:presentation.remoteLocation];
+		}];
+		
 		self.completionHandler = handler;
 		self.complete = NO;
 		self.canceled = NO;
@@ -47,16 +52,8 @@
 			}
 		}
 
-		self.baseURL = [indexAbsoluteURL URLByDeletingLastPathComponent];
-		NSString *indexPath = [indexAbsoluteURL lastPathComponent];
-		NSURL *indexURL = [NSURL URLWithString:indexPath relativeToURL:self.baseURL];
-
-		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:indexURL subdirectory:PRESENTATION_SUBDIRECTORY archivePath:archivePath progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
-			self.progress = [ILobbyProgress progressWithFraction:downloader.progress label:[NSString stringWithFormat:@"Downloading: %@", downloader.sourceURL]];
-			if ( downloader.complete ) {
-				[self handleIndexDownload:downloader error:error];
-			}
-		}];
+		ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:self.baseURL error:nil];
+		NSLog( @"Remote directory: %@", remoteDirectory );
     }
     return self;
 }

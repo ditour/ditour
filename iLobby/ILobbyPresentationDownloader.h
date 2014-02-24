@@ -8,6 +8,7 @@
 
 @import Foundation;
 #import "ILobbyProgress.h"
+#import "ILobbyStorePresentation.h"
 
 @class ILobbyPresentationDownloader;
 typedef void (^ILobbyPresentationDownloadHandler)(ILobbyPresentationDownloader *);
@@ -19,7 +20,7 @@ typedef void (^ILobbyPresentationDownloadHandler)(ILobbyPresentationDownloader *
 @property (strong, readonly) ILobbyProgress *progress;
 @property (assign, readonly) BOOL canceled;
 
--(id)initWithIndexURL:(NSURL *)indexAbsoluteURL archivePath:(NSString *)archivePath completionHandler:(ILobbyPresentationDownloadHandler)handler;
+-(instancetype)initWithPresentation:(ILobbyStorePresentation *)presentation completionHandler:(ILobbyPresentationDownloadHandler)handler;
 
 + (NSString *)presentationPath;
 

@@ -110,7 +110,7 @@
 
 	// setup the managed object context
     if ( persistentStoreCoordinator != nil ) {
-        self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 		self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
     }
 }
@@ -328,12 +328,20 @@
 		[self cancelPresentationDownload];
 	}
 
-	//TODO: replace the diagnostic code below with the real code to download the presentation
-	NSURL *location = [NSURL URLWithString:@"http://ilobby.ornl.gov/dev/lobby2/tracks/"];
-	ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:location error:nil];
-	printf( "\n----------------------------------------------------------------------------------\n" );
-	NSLog( @"Remote directory: %@", remoteDirectory );
-	printf( "----------------------------------------------------------------------------------\n\n" );
+	__block ILobbyStorePresentation *presentation;
+	[self.managedObjectContext performBlockAndWait:^{
+		presentation = [ILobbyStorePresentation insertNewPresentationInContext:self.managedObjectContext];
+
+		//TODO: remote location should be from user instead of hard coded
+		presentation.remoteLocation = @"http://ilobby.ornl.gov/dev/lobby2/tracks/";
+
+		//TODO: local presentation path should be computed instead of hard coded
+		presentation.path = [[ILobbyModel.documentDirectoryURL path] stringByAppendingPathComponent:@"Presentation"];
+	}];
+
+	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithPresentation:presentation completionHandler:^(ILobbyPresentationDownloader *downloader) {
+		NSLog( @"presentation dowload complete..." );
+	}];
 }
 
 
