@@ -203,6 +203,7 @@
 // Convert raw HTML to XHTML based on example code at: http://tidy.sourceforge.net/libintro.html#example
 + (NSString *)toXHTML:(NSString *)rawHTML error:(NSError * __autoreleasing *)errorPtr {
 	const char* input = [rawHTML UTF8String];
+
 	TidyBuffer output = {0};
 	TidyBuffer errbuf = {0};
 	int returnCode = -1;
@@ -233,10 +234,15 @@
 		outbuffer = (char *)malloc( outputSize + 1 );
 		returnCode = tidySaveString( tdoc, outbuffer, &outputSize );
 	}
+	else {
+		NSLog( @"Error with return code: %d", returnCode );
+	}
 
 	NSString *outputXHTML = nil;
 	if ( returnCode >= 0 ) {
-		outputXHTML = [NSString stringWithFormat:@"%s", outbuffer];
+//		NSLog( @"Output size: %u, output length: %lu", outputSize, (unsigned long)strlen(outbuffer) );
+		// need to be careful as the outbuffer is not null terminated and so we must make sure to only copy the characters specified by the output size
+		outputXHTML = [[NSString alloc] initWithBytes:outbuffer length:outputSize encoding:NSUTF8StringEncoding];
 	}
 	else if ( errorPtr ) {
 		*errorPtr = [NSError errorWithDomain:@"Tidy XML processing error" code:returnCode userInfo:nil];
