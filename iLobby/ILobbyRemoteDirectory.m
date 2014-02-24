@@ -37,7 +37,14 @@
 
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"{ location: %@, items: %@ }", self.location.absoluteString, self.items ];
+	NSMutableString *description = [NSMutableString stringWithCapacity:100];
+	[description appendFormat:@"location: %@\n", self.location.absoluteString];
+	[description appendString:@"[\n"];
+	for ( id<ILobbyRemoteDirectoryItem> item in self.items ) {
+		[description appendFormat:@"\t%@\n", item];
+	}
+	[description appendString:@"]\n"];
+	return [description copy];
 }
 
 @end
@@ -79,9 +86,9 @@
 	NSError * __autoreleasing error;
 	NSStringEncoding usedEncoding;
 	NSString *rawDirectoryContents = [NSString stringWithContentsOfURL:directoryURL usedEncoding:&usedEncoding error:errorPtr];
-	printf( "\n------------------------------------------------\n" );
-	NSLog( @"Raw Directory Contents for %@:\n %@\n\n\n", directoryURL, rawDirectoryContents );
-	printf( "------------------------------------------------\n\n" );
+//	printf( "\n------------------------------------------------\n" );
+//	NSLog( @"Raw Directory Contents for %@:\n %@\n\n\n", directoryURL, rawDirectoryContents );
+//	printf( "------------------------------------------------\n\n" );
 
 	// if there was an error then propagate the error if necessary and return nil
 	if ( error ) {
@@ -95,9 +102,9 @@
 	}
 
 	NSString *directoryContents = [self toXHTML:rawDirectoryContents error:&error];
-	printf( "\n------------------------------------------------\n" );
-	NSLog( @"XHTML Directory Contents:\n %@\n\n\n", directoryContents );
-	printf( "------------------------------------------------\n\n" );
+//	printf( "\n------------------------------------------------\n" );
+//	NSLog( @"XHTML Directory Contents:\n %@\n\n\n", directoryContents );
+//	printf( "------------------------------------------------\n\n" );
 	if ( error ) {
 		if ( errorPtr ) {
 			*errorPtr = error;

@@ -27,7 +27,7 @@
 
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"{ location: %@, info: %@ }", self.location.absoluteString, self.info ];
+	return [NSString stringWithFormat:@"location: %@, info: %@", self.location.absoluteString, self.info ];
 }
 
 @end

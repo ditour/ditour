@@ -331,7 +331,9 @@
 	//TODO: replace the diagnostic code below with the real code to download the presentation
 	NSURL *location = [NSURL URLWithString:@"http://ilobby.ornl.gov/dev/lobby2/tracks/"];
 	ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:location error:nil];
+	printf( "\n----------------------------------------------------------------------------------\n" );
 	NSLog( @"Remote directory: %@", remoteDirectory );
+	printf( "----------------------------------------------------------------------------------\n\n" );
 }
 
 
