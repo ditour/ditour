@@ -79,7 +79,9 @@
 	NSError * __autoreleasing error;
 	NSStringEncoding usedEncoding;
 	NSString *rawDirectoryContents = [NSString stringWithContentsOfURL:directoryURL usedEncoding:&usedEncoding error:errorPtr];
+	printf( "\n------------------------------------------------\n" );
 	NSLog( @"Raw Directory Contents for %@:\n %@\n\n\n", directoryURL, rawDirectoryContents );
+	printf( "------------------------------------------------\n\n" );
 
 	// if there was an error then propagate the error if necessary and return nil
 	if ( error ) {
@@ -93,7 +95,9 @@
 	}
 
 	NSString *directoryContents = [self toXHTML:rawDirectoryContents error:&error];
-	NSLog( @"Directory Contents:\n %@\n\n\n", directoryContents );
+	printf( "\n------------------------------------------------\n" );
+	NSLog( @"XHTML Directory Contents:\n %@\n\n\n", directoryContents );
+	printf( "------------------------------------------------\n\n" );
 	if ( error ) {
 		if ( errorPtr ) {
 			*errorPtr = error;

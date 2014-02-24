@@ -10,6 +10,7 @@
 #import "ILobbyPresentationDownloader.h"
 #import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentation.h"
+#import "ILobbyRemoteDirectory.h"
 
 
 @interface ILobbyModel ()
@@ -327,7 +328,10 @@
 		[self cancelPresentationDownload];
 	}
 
-	//TODO: download the presentation
+	//TODO: replace the diagnostic code below with the real code to download the presentation
+	NSURL *location = [NSURL URLWithString:@"http://ilobby.ornl.gov/dev/lobby2/tracks/"];
+	ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:location error:nil];
+	NSLog( @"Remote directory: %@", remoteDirectory );
 }
 
 
