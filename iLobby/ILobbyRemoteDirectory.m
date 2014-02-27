@@ -243,6 +243,7 @@
 		outputSize = 0;
 		returnCode = tidySaveString( tdoc, nil, &outputSize );			// need this to get the output size
 		outbuffer = (char *)malloc( outputSize + 1 );
+		outbuffer[outputSize] = '\0';			// terminate the string with a null character
 		returnCode = tidySaveString( tdoc, outbuffer, &outputSize );
 	}
 	else {
