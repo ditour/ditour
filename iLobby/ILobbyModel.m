@@ -208,38 +208,39 @@
 
 
 - (BOOL)validateDownload:(NSError **)error {
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSString *downloadPath = [ILobbyPresentationDownloader presentationPath];
-
-	if ( [fileManager fileExistsAtPath:downloadPath] ) {
-		NSString *indexPath = [downloadPath stringByAppendingPathComponent:@"index.json"];
-		if ( [fileManager fileExistsAtPath:indexPath] ) {
-			NSError *jsonError;
-			NSData *indexData = [NSData dataWithContentsOfFile:indexPath];
-			[NSJSONSerialization JSONObjectWithData:indexData options:0 error:&jsonError];
-			if ( jsonError ) {
-				if ( error ) {
-					*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File is corrupted" }];
-				}
-				return NO;
-			}
-			else {
-				return YES;
-			}
-		}
-		else {
-			if ( error ) {
-				*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File Missing" }];
-			}
-			return NO;
-		}
-	}
-	else {
-		if ( error ) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Download Directory Missing" }];
-		}
-		return NO;
-	}
+//	NSFileManager *fileManager = [NSFileManager defaultManager];
+//	NSString *downloadPath = [ILobbyPresentationDownloader presentationPath];
+//
+//	if ( [fileManager fileExistsAtPath:downloadPath] ) {
+//		NSString *indexPath = [downloadPath stringByAppendingPathComponent:@"index.json"];
+//		if ( [fileManager fileExistsAtPath:indexPath] ) {
+//			NSError *jsonError;
+//			NSData *indexData = [NSData dataWithContentsOfFile:indexPath];
+//			[NSJSONSerialization JSONObjectWithData:indexData options:0 error:&jsonError];
+//			if ( jsonError ) {
+//				if ( error ) {
+//					*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File is corrupted" }];
+//				}
+//				return NO;
+//			}
+//			else {
+//				return YES;
+//			}
+//		}
+//		else {
+//			if ( error ) {
+//				*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File Missing" }];
+//			}
+//			return NO;
+//		}
+//	}
+//	else {
+//		if ( error ) {
+//			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Download Directory Missing" }];
+//		}
+//		return NO;
+//	}
+	return YES;
 }
 
 

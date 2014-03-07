@@ -33,6 +33,10 @@
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;
 - (void)performShutdown;
 
+// document information
++ (NSURL *)documentDirectoryURL;
+
+
 // managed object support
 @property (readonly) NSManagedObjectModel *managedObjectModel;
 @property (readonly) NSManagedObjectContext *managedObjectContext;

@@ -12,7 +12,6 @@
 #import "ILobbyDirectory.h"
 #import "ILobbyRemoteDirectory.h"
 
-#define PRESENTATION_SUBDIRECTORY @"Presentation"
 
 @interface ILobbyPresentationDownloader ()
 @property (readwrite, strong, nonatomic) NSURL *baseURL;
@@ -33,6 +32,8 @@
     self = [super init];
     if (self) {
 		[[presentation managedObjectContext] performBlockAndWait:^{
+			presentation.name = [presentation.remoteLocation lastPathComponent];
+			presentation.path = [ILobbyPresentationDownloader pathForPresentation:presentation];
 			self.archivePath = presentation.path;
 			self.baseURL = [NSURL URLWithString:presentation.remoteLocation];
 		}];
@@ -44,7 +45,7 @@
 
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSError *error;
-		NSString *presentationDirectory = [ILobbyPresentationDownloader presentationPath];
+		NSString *presentationDirectory = [ILobbyPresentationDownloader pathForPresentation:presentation];
 		if ( [fileManager fileExistsAtPath:presentationDirectory] ) {
 			[fileManager removeItemAtPath:presentationDirectory error:&error];
 			if ( error ) {
@@ -53,15 +54,22 @@
 		}
 
 		ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:self.baseURL error:nil];
-		NSLog( @"Remote directory: %@", remoteDirectory );
+		//NSLog( @"Remote directory: %@", remoteDirectory );
+		NSLog( @"Will download presenation to: %@", self.archivePath );
     }
     return self;
 }
 
 
 // path to the downloaded presentation
-+ (NSString *)presentationPath {
-	return [[ILobbyFileDownloader downloadsPath] stringByAppendingPathComponent:PRESENTATION_SUBDIRECTORY];
++ (NSString *)pathForPresentation:(ILobbyStorePresentation *)presentation {
+	NSString *presentationsDirectory = [[[ILobbyModel documentDirectoryURL] path] stringByAppendingPathComponent:@"Presentations"];
+	NSDateFormatter *timestampFormatter = [NSDateFormatter new];
+	[timestampFormatter setDateFormat:@"yyyyMMddHHmmss"];
+	NSString *timestamp = [timestampFormatter stringFromDate:presentation.timestamp];
+	NSString *presentationPath = [[presentationsDirectory stringByAppendingPathComponent:presentation.name] stringByAppendingPathComponent:timestamp];
+
+	return presentationPath;
 }
 
 
@@ -109,21 +117,21 @@
 
 
 -(void)downloadItemIn:(NSArray *)itemURLs atIndex:(NSUInteger)index {
-	NSUInteger count = [itemURLs count];
-	if ( count > index ) {
-		NSURL *itemURL = itemURLs[index];
-		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:itemURL subdirectory:PRESENTATION_SUBDIRECTORY archivePath:self.archivePath progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
-			[self updateProgressForCount:count index:index downloader:downloader];
-			if ( downloader.complete ) {
-				[self downloadItemIn:itemURLs atIndex:(index+1)];
-			}
-		}];
-	}
-	else {
-		self.complete = YES;
-		self.progress = [ILobbyProgress progressWithFraction:1.0f label:@"Download Complete"];
-		self.completionHandler( self );
-	}
+//	NSUInteger count = [itemURLs count];
+//	if ( count > index ) {
+//		NSURL *itemURL = itemURLs[index];
+//		self.currentFileDownloader = [[ILobbyFileDownloader alloc] initWithSourceURL:itemURL subdirectory:PRESENTATION_SUBDIRECTORY archivePath:self.archivePath progressHandler:^(ILobbyFileDownloader *downloader, NSError * error) {
+//			[self updateProgressForCount:count index:index downloader:downloader];
+//			if ( downloader.complete ) {
+//				[self downloadItemIn:itemURLs atIndex:(index+1)];
+//			}
+//		}];
+//	}
+//	else {
+//		self.complete = YES;
+//		self.progress = [ILobbyProgress progressWithFraction:1.0f label:@"Download Complete"];
+//		self.completionHandler( self );
+//	}
 }
 
 

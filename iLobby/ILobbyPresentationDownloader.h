@@ -22,8 +22,6 @@ typedef void (^ILobbyPresentationDownloadHandler)(ILobbyPresentationDownloader *
 
 -(instancetype)initWithPresentation:(ILobbyStorePresentation *)presentation completionHandler:(ILobbyPresentationDownloadHandler)handler;
 
-+ (NSString *)presentationPath;
-
 - (void)cancel;
 
 @end

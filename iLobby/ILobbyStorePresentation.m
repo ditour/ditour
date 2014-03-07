@@ -29,7 +29,9 @@
 
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {
-    return [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
+    ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
+	presentation.timestamp = [NSDate date];
+	return presentation;
 }
 
 
