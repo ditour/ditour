@@ -15,17 +15,12 @@
 
 @implementation ILobbyStorePresentation
 
-@dynamic name;
 @dynamic path;
 @dynamic status;
 @dynamic timestamp;
-@dynamic remoteLocation;
-
-@dynamic origin;
-@dynamic revision;
-@dynamic trackConfiguration;
+@dynamic master;
 @dynamic tracks;
-@dynamic userConfig;
+@dynamic trackConfiguration;
 
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {

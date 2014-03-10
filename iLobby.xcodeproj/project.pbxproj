@@ -42,6 +42,8 @@
 		4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */; };
 		4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */; };
 		4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */; };
+		4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDF9AE318CE5467001E26B0 /* ILobbyStorePresentationGroup.m */; };
+		4CDF9AE718CE5476001E26B0 /* ILobbyStorePresentationMaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDF9AE618CE5476001E26B0 /* ILobbyStorePresentationMaster.m */; };
 		4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1D6C71638219C00026847 /* ILobbySlide.m */; };
 /* End PBXBuildFile section */
 
@@ -112,6 +114,10 @@
 		4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreTrack.h; sourceTree = "<group>"; };
 		4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreTrack.m; sourceTree = "<group>"; };
 		4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iLobby.xcdatamodel; sourceTree = "<group>"; };
+		4CDF9AE218CE5467001E26B0 /* ILobbyStorePresentationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentationGroup.h; sourceTree = "<group>"; };
+		4CDF9AE318CE5467001E26B0 /* ILobbyStorePresentationGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentationGroup.m; sourceTree = "<group>"; };
+		4CDF9AE518CE5476001E26B0 /* ILobbyStorePresentationMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentationMaster.h; sourceTree = "<group>"; };
+		4CDF9AE618CE5476001E26B0 /* ILobbyStorePresentationMaster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentationMaster.m; sourceTree = "<group>"; };
 		4CE1D6C61638219C00026847 /* ILobbySlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbySlide.h; sourceTree = "<group>"; };
 		4CE1D6C71638219C00026847 /* ILobbySlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbySlide.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -263,6 +269,10 @@
 				4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */,
 				4CC09897183D4CC0006755C8 /* ILobbyStorePresentation.h */,
 				4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */,
+				4CDF9AE218CE5467001E26B0 /* ILobbyStorePresentationGroup.h */,
+				4CDF9AE318CE5467001E26B0 /* ILobbyStorePresentationGroup.m */,
+				4CDF9AE518CE5476001E26B0 /* ILobbyStorePresentationMaster.h */,
+				4CDF9AE618CE5476001E26B0 /* ILobbyStorePresentationMaster.m */,
 				4CC09891183D4CBF006755C8 /* ILobbyStoreSlide.h */,
 				4CC09892183D4CBF006755C8 /* ILobbyStoreSlide.m */,
 				4CC09885183D4CBF006755C8 /* ILobbyStoreSlideTransition.h */,
@@ -368,6 +378,7 @@
 				4CC0988D183D4CBF006755C8 /* ILobbyStoreTrackConfiguration.m in Sources */,
 				4C937D851631AAE200F251FF /* main.m in Sources */,
 				4C937D891631AAE200F251FF /* ILobbyAppDelegate.m in Sources */,
+				4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */,
 				4C937DA81631BA8F00F251FF /* ILobbyPresenter.m in Sources */,
 				4CA2F153163588C10082ADFF /* ILobbyFileDownloader.m in Sources */,
 				4CA2F15616359FBF0082ADFF /* ILobbyPresentationDownloader.m in Sources */,
@@ -376,6 +387,7 @@
 				4C01BD4B1636F34C00065A97 /* ILobbyConfigurationController.m in Sources */,
 				4C01BD4F1636F69100065A97 /* ILobbyViewController.m in Sources */,
 				4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */,
+				4CDF9AE718CE5476001E26B0 /* ILobbyStorePresentationMaster.m in Sources */,
 				4C690BEC18229DEE00A823CC /* ILobbyRemoteFile.m in Sources */,
 				4C01BD521636F88600065A97 /* ILobbyModel.m in Sources */,
 				4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */,

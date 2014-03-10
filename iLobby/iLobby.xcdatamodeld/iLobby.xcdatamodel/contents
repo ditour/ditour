@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5059" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Presentation" representedClassName="ILobbyStorePresentation" parentEntity="RemoteItem" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="Presentation" representedClassName="ILobbyStorePresentation" syncable="YES">
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="origin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="revision" inverseEntity="Presentation" syncable="YES"/>
-        <relationship name="revision" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="origin" inverseEntity="Presentation" syncable="YES"/>
-        <relationship name="trackConfiguration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackConfiguration" inverseName="presentation" inverseEntity="TrackConfiguration" syncable="YES"/>
+        <relationship name="master" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationMaster" inverseName="presentations" inverseEntity="PresentationMaster" syncable="YES"/>
+        <relationship name="masterForCurrent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationMaster" inverseName="currentPresentation" inverseEntity="PresentationMaster" syncable="YES"/>
+        <relationship name="trackConfiguration" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TrackConfiguration" inverseName="presentation" inverseEntity="TrackConfiguration" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Track" inverseName="presentation" inverseEntity="Track" syncable="YES"/>
-        <relationship name="userConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="defaultPresentation" inverseEntity="UserConfig" syncable="YES"/>
+    </entity>
+    <entity name="PresentationGroup" representedClassName="ILobbyStorePresentationGroup" parentEntity="RemoteItem" syncable="YES">
+        <attribute name="selected" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="currentPresentationMaster" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationMaster" inverseName="groupForCurrent" inverseEntity="PresentationMaster" syncable="YES"/>
+        <relationship name="presentationMasters" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PresentationMaster" inverseName="group" inverseEntity="PresentationMaster" syncable="YES"/>
+        <relationship name="userConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="groups" inverseEntity="UserConfig" syncable="YES"/>
+        <relationship name="userConfigForCurrent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="currentGroup" inverseEntity="UserConfig" syncable="YES"/>
+    </entity>
+    <entity name="PresentationMaster" representedClassName="ILobbyStorePresentationMaster" parentEntity="RemoteItem" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="masterForCurrent" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="group" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="presentationMasters" inverseEntity="PresentationGroup" syncable="YES"/>
+        <relationship name="groupForCurrent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="currentPresentationMaster" inverseEntity="PresentationGroup" syncable="YES"/>
+        <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Presentation" inverseName="master" inverseEntity="Presentation" syncable="YES"/>
     </entity>
     <entity name="RemoteItem" representedClassName="IlobbyStoreRemoteItem" isAbstract="YES" syncable="YES">
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
@@ -25,9 +38,8 @@
         <relationship name="trackConfiguration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackConfiguration" inverseName="transition" inverseEntity="TrackConfiguration" syncable="YES"/>
     </entity>
     <entity name="Track" representedClassName="ILobbyStoreTrack" parentEntity="RemoteItem" syncable="YES">
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="presentation" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="tracks" inverseEntity="Presentation" syncable="YES"/>
-        <relationship name="slides" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Slide" inverseName="track" inverseEntity="Slide" syncable="YES"/>
+        <relationship name="slides" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Slide" inverseName="track" inverseEntity="Slide" syncable="YES"/>
         <relationship name="trackConfiguration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackConfiguration" inverseName="track" inverseEntity="TrackConfiguration" syncable="YES"/>
     </entity>
     <entity name="TrackConfiguration" representedClassName="ILobbyStoreTrackConfiguration" syncable="YES">
@@ -39,17 +51,19 @@
         <relationship name="userConfig" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="trackConfiguration" inverseEntity="UserConfig" syncable="YES"/>
     </entity>
     <entity name="UserConfig" representedClassName="ILobbyStoreUserConfig" syncable="YES">
-        <attribute name="rootLocation" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="defaultPresentation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="userConfig" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="currentGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="userConfigForCurrent" inverseEntity="PresentationGroup" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="PresentationGroup" inverseName="userConfig" inverseEntity="PresentationGroup" syncable="YES"/>
         <relationship name="trackConfiguration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackConfiguration" inverseName="userConfig" inverseEntity="TrackConfiguration" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Presentation" positionX="0" positionY="0" width="128" height="163"/>
+        <element name="PresentationMaster" positionX="0" positionY="0" width="128" height="118"/>
+        <element name="PresentationGroup" positionX="9" positionY="72" width="128" height="118"/>
+        <element name="Presentation" positionX="18" positionY="90" width="128" height="148"/>
+        <element name="RemoteItem" positionX="0" positionY="0" width="128" height="88"/>
         <element name="Slide" positionX="0" positionY="0" width="128" height="58"/>
         <element name="SlideTransition" positionX="0" positionY="0" width="128" height="105"/>
-        <element name="Track" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="Track" positionX="0" positionY="0" width="128" height="88"/>
         <element name="TrackConfiguration" positionX="0" positionY="0" width="128" height="133"/>
-        <element name="RemoteItem" positionX="0" positionY="0" width="128" height="88"/>
         <element name="UserConfig" positionX="0" positionY="0" width="128" height="88"/>
     </elements>
 </model>

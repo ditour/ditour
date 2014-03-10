@@ -8,29 +8,30 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "ILobbyStoreRemoteItem.h"
 
 
-typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, PRESENTATION_STATUS_READY, PRESENTATION_STATUS_CANCELED };
+@class ILobbyStorePresentationMaster;
+
+
+typedef enum : NSInteger {
+	PRESENTATION_STATUS_NEW,
+	PRESENTATION_STATUS_READY,
+	PRESENTATION_STATUS_CANCELED
+} PresentationStatus;
 
 
 @class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStoreTrack;
 
-@interface ILobbyStorePresentation : ILobbyStoreRemoteItem
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * status;
+@interface ILobbyStorePresentation : NSManagedObject
+@property (nonatomic, retain) NSString * path;
 @property (nonatomic, retain) NSDate * timestamp;
+@property (nonatomic, retain) NSNumber * status;
 
-@property (nonatomic, retain) ILobbyStorePresentation *origin;
-@property (nonatomic, retain) ILobbyStorePresentation *revision;
-@property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
+@property (nonatomic, retain) ILobbyStorePresentationMaster *master;
 @property (nonatomic, retain) NSOrderedSet *tracks;
-@property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
+@property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
 
 @property (nonatomic, readonly) BOOL isReady;
-
-+ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
-
 @end
 
 
@@ -48,5 +49,6 @@ typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, P
 - (void)addTracks:(NSOrderedSet *)values;
 - (void)removeTracks:(NSOrderedSet *)values;
 
-@end
++ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
 
+@end
