@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "ILobbyStoreRemoteItem.h"
 
 
 typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, PRESENTATION_STATUS_READY, PRESENTATION_STATUS_CANCELED };
@@ -15,12 +16,10 @@ typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, P
 
 @class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStoreTrack;
 
-@interface ILobbyStorePresentation : NSManagedObject
+@interface ILobbyStorePresentation : ILobbyStoreRemoteItem
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSString * path;
 @property (nonatomic, retain) NSNumber * status;
 @property (nonatomic, retain) NSDate * timestamp;
-@property (nonatomic, retain) NSString * remoteLocation;
 
 @property (nonatomic, retain) ILobbyStorePresentation *origin;
 @property (nonatomic, retain) ILobbyStorePresentation *revision;
@@ -28,12 +27,13 @@ typedef NS_ENUM( NSInteger, PRESENTATION_STATUS	) { PRESENTATION_STATUS_NEW=0, P
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
 
-
 @property (nonatomic, readonly) BOOL isReady;
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end
+
+
 
 @interface ILobbyStorePresentation (CoreDataGeneratedAccessors)
 

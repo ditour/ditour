@@ -11,8 +11,7 @@
 
 @implementation ILobbyStoreSlide
 
-@dynamic path;
-@dynamic remoteMedia;
+@dynamic track;
 
 
 + (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext {

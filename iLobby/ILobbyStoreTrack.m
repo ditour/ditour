@@ -9,7 +9,6 @@
 #import "ILobbyStoreTrack.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyStoreTrackConfiguration.h"
-#import "IlobbyStoreTrackItem.h"
 
 
 @implementation ILobbyStoreTrack
@@ -17,7 +16,7 @@
 @dynamic title;
 @dynamic presentation;
 @dynamic configuration;
-@dynamic children;
+@dynamic slides;
 
 
 + (instancetype)insertNewTrackInContext:(NSManagedObjectContext *)managedObjectContext {

@@ -13,12 +13,19 @@
 
 @implementation ILobbyStoreUserConfig
 
+@dynamic rootLocation;
 @dynamic defaultPresentation;
 @dynamic configuraton;
 
 
 + (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext {
     return [NSEntityDescription insertNewObjectForEntityForName:@"UserConfig" inManagedObjectContext:managedObjectContext];
+}
+
+
+- (NSURL *)rootURL {
+	NSString *rootLocation = self.rootLocation;
+	return rootLocation ? [NSURL URLWithString:rootLocation] : nil;
 }
 
 @end

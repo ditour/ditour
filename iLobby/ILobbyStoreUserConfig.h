@@ -13,9 +13,11 @@
 
 @interface ILobbyStoreUserConfig : NSManagedObject
 
+@property (nonatomic, retain) NSString * rootLocation;
 @property (nonatomic, retain) ILobbyStorePresentation *defaultPresentation;
 @property (nonatomic, retain) ILobbyStoreTrackConfiguration *configuraton;
 
+@property (nonatomic, readonly) NSURL *rootURL;
 
 + (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext;
 
