@@ -10,6 +10,7 @@
 
 
 @protocol ILobbyRemoteDirectoryItem <NSObject>
-@property(readonly, copy) NSURL *location;			// URL location for this directory
+@property(readonly, copy) NSURL *location;			// URL location for this item
+@property(readonly) BOOL isDirectory;				// indicates whether this item is a directory rather than just a simple file
 
 @end

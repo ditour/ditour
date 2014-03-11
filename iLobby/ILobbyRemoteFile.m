@@ -30,4 +30,9 @@
 	return [NSString stringWithFormat:@"location: %@, info: %@", self.location.absoluteString, self.info ];
 }
 
+
+- (BOOL)isDirectory {
+	return NO;
+}
+
 @end

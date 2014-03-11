@@ -18,7 +18,9 @@
 
 @interface ILobbyRemoteDirectory ()
 @property(readwrite) NSURL *location;			// URL location for this directory
-@property(readwrite) NSArray *items;	// array of ILobbyRemoteDirectoryItem (files and subdirectories)
+@property(readwrite) NSArray *items;			// array of ILobbyRemoteDirectoryItem (files and subdirectories)
+@property(readwrite) NSArray *files;			// array of items that are simple files
+@property(readwrite) NSArray *subdirectories;	// array of items that are sudirectories
 @end
 
 
@@ -46,6 +48,12 @@
 	[description appendString:@"]\n"];
 	return [description copy];
 }
+
+
+- (BOOL)isDirectory {
+	return YES;
+}
+
 
 @end
 
@@ -121,6 +129,8 @@
 	if ( [xmlParser parse] ) {
 		// a remote item may either be a ILobbyRemoteFile (ordinary file) or ILobbyRemoteDirectory (subdirectory)
 		NSMutableArray *directoryItems = [NSMutableArray new];
+		NSMutableArray *files = [NSMutableArray new];
+		NSMutableArray *subdirectories = [NSMutableArray new];
 
 		// pass files to remote directory and parse subdirectory URLs converting them to subdirectories and passing them on to the remote directory
 		for ( id parserItem in directoryParser.items ) {
@@ -130,14 +140,22 @@
 				NSLog( @"Parsing subdirectory URL: %@", subdirectoryURL );
 				ILobbyRemoteDirectory *subdirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:subdirectoryURL error:&subError];
 				NSLog( @"Subdirectory: %@", subdirectory );
+
 				if ( subError )  NSLog( @"sub error: %@", subError );
-				if ( subdirectory )  [directoryItems addObject:subdirectory];
+
+				if ( subdirectory ) {
+					[directoryItems addObject:subdirectory];
+					[subdirectories addObject:subdirectory];
+				}
 			}
 			else {		// ordinary file
 				[directoryItems addObject:parserItem];
+				[files addObject:parserItem];
 			}
 		}
 		remoteDirectory.items = directoryItems;
+		remoteDirectory.files = files;
+		remoteDirectory.subdirectories = subdirectories;
 	}
 	else {
 		if ( errorPtr ) {
