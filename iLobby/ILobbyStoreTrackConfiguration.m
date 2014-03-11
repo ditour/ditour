@@ -7,10 +7,6 @@
 //
 
 #import "ILobbyStoreTrackConfiguration.h"
-#import "ILobbyStoreUserConfig.h"
-#import "ILobbyStorePresentation.h"
-#import "ILobbyStoreSlideTransition.h"
-#import "ILobbyStoreTrack.h"
 
 
 @implementation ILobbyStoreTrackConfiguration

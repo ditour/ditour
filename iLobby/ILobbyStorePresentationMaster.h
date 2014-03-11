@@ -14,7 +14,7 @@
 
 
 @interface ILobbyStorePresentationMaster : ILobbyStoreRemoteItem
-
+@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) ILobbyStorePresentation *currentPresentation;
 @property (nonatomic, retain) NSOrderedSet *presentations;
 @property (nonatomic, retain) ILobbyStorePresentationGroup *group;

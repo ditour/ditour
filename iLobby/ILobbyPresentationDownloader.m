@@ -32,10 +32,9 @@
     self = [super init];
     if (self) {
 		[[presentation managedObjectContext] performBlockAndWait:^{
-			presentation.name = [presentation.remoteLocation lastPathComponent];
 			presentation.path = [ILobbyPresentationDownloader pathForPresentation:presentation];
 			self.archivePath = presentation.path;
-			self.baseURL = [NSURL URLWithString:presentation.remoteLocation];
+			self.baseURL = presentation.remoteURL;
 		}];
 		
 		self.completionHandler = handler;

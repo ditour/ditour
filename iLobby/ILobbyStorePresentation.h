@@ -23,6 +23,7 @@ typedef enum : NSInteger {
 @class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStoreTrack;
 
 @interface ILobbyStorePresentation : NSManagedObject
+// data properties
 @property (nonatomic, retain) NSString * path;
 @property (nonatomic, retain) NSDate * timestamp;
 @property (nonatomic, retain) NSNumber * status;
@@ -30,6 +31,12 @@ typedef enum : NSInteger {
 @property (nonatomic, retain) ILobbyStorePresentationMaster *master;
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
+
+
+// custom additions
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSString *remoteLocation;
+@property (nonatomic, readonly) NSURL *remoteURL;
 
 @property (nonatomic, readonly) BOOL isReady;
 @end

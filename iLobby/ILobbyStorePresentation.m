@@ -7,10 +7,7 @@
 //
 
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStoreUserConfig.h"
-#import "ILobbyStorePresentation.h"
-#import "ILobbyStoreTrackConfiguration.h"
-#import "ILobbyStoreTrack.h"
+#import "ILobbyStorePresentationMaster.h"
 
 
 @implementation ILobbyStorePresentation
@@ -27,6 +24,22 @@
     ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
 	presentation.timestamp = [NSDate date];
 	return presentation;
+}
+
+
+- (NSString *)name {
+	return self.master.name;
+}
+
+
+- (NSString *)remoteLocation {
+	return self.master.remoteLocation;
+}
+
+
+- (NSURL *)remoteURL {
+	NSString *remoteLocation = self.remoteLocation;
+	return remoteLocation ? [NSURL URLWithString:remoteLocation] : nil;
 }
 
 

@@ -334,7 +334,6 @@
 		presentation = [ILobbyStorePresentation insertNewPresentationInContext:self.managedObjectContext];
 
 		//TODO: remote location should be from user instead of hard coded
-		presentation.remoteLocation = @"http://ilobby.ornl.gov/dev/lobby2";
 
 		//TODO: local presentation path should be computed instead of hard coded
 		presentation.path = [[ILobbyModel.documentDirectoryURL path] stringByAppendingPathComponent:@"Presentation"];
