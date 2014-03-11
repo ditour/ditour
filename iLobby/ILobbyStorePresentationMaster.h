@@ -15,11 +15,10 @@
 
 @interface ILobbyStorePresentationMaster : ILobbyStoreRemoteItem
 
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) ILobbyStorePresentation *currentVersion;
+@property (nonatomic, retain) ILobbyStorePresentation *currentPresentation;
 @property (nonatomic, retain) NSOrderedSet *presentations;
 @property (nonatomic, retain) ILobbyStorePresentationGroup *group;
-
+@property (nonatomic, retain) ILobbyStorePresentationGroup *groupForCurrent;
 @end
 
 
@@ -37,3 +36,6 @@
 - (void)addPresentations:(NSOrderedSet *)values;
 - (void)removePresentations:(NSOrderedSet *)values;
 @end
+
+
+

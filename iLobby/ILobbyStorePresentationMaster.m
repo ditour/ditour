@@ -9,9 +9,10 @@
 #import "ILobbyStorePresentationMaster.h"
 
 @implementation ILobbyStorePresentationMaster
-@dynamic name;
-@dynamic currentVersion;
+
+@dynamic currentPresentation;
 @dynamic presentations;
 @dynamic group;
+@dynamic groupForCurrent;
 
 @end
