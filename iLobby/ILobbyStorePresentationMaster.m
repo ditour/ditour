@@ -10,6 +10,7 @@
 
 @implementation ILobbyStorePresentationMaster
 
+@dynamic name;
 @dynamic currentPresentation;
 @dynamic presentations;
 @dynamic group;

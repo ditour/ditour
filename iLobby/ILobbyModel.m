@@ -9,6 +9,8 @@
 #import "ILobbyModel.h"
 #import "ILobbyPresentationDownloader.h"
 #import "ILobbyStoreUserConfig.h"
+#import "ILobbyStorePresentationGroup.h"
+#import "ILobbyStorePresentationMaster.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyRemoteDirectory.h"
 
@@ -273,7 +275,7 @@
 
 
 - (BOOL)loadDefaultPresentation {
-	return [self loadPresentation:self.userConfig.defaultPresentation];
+	return [self loadPresentation:self.userConfig.currentGroup.currentPresentationMaster.currentPresentation];
 }
 
 
