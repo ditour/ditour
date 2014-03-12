@@ -110,7 +110,7 @@
 
 	// setup the managed object context
     if ( persistentStoreCoordinator != nil ) {
-        self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 		self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
     }
 }
