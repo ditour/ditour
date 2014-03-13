@@ -7,10 +7,8 @@
 //
 
 @import UIKit;
-#import "ILobbyModel.h"
+#import "ILobbyModelContainer.h"
 
-@interface ILobbyViewController : UICollectionViewController
-
-@property (nonatomic, strong) ILobbyModel *lobbyModel;
+@interface ILobbyViewController : UICollectionViewController <ILobbyModelContainer>
 
 @end

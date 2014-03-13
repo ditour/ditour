@@ -15,6 +15,7 @@
 @property (nonatomic, retain) NSNumber * selected;
 @property (nonatomic, retain) ILobbyStorePresentationMaster *currentPresentationMaster;
 @property (nonatomic, retain) NSSet *presentationMasters;
+@property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
 
 @end
 
@@ -26,5 +27,14 @@
 - (void)removePresentationMastersObject:(ILobbyStorePresentationMaster *)value;
 - (void)addPresentationMasters:(NSSet *)values;
 - (void)removePresentationMasters:(NSSet *)values;
+
+@end
+
+
+
+// custom additions
+@interface ILobbyStorePresentationGroup ()
+
++ (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

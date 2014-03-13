@@ -32,13 +32,6 @@ typedef enum : NSInteger {
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
 
-
-// custom additions
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSString *remoteLocation;
-@property (nonatomic, readonly) NSURL *remoteURL;
-
-@property (nonatomic, readonly) BOOL isReady;
 @end
 
 
@@ -55,6 +48,21 @@ typedef enum : NSInteger {
 - (void)removeTracksObject:(ILobbyStoreTrack *)value;
 - (void)addTracks:(NSOrderedSet *)values;
 - (void)removeTracks:(NSOrderedSet *)values;
+
++ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
+
+@end
+
+
+
+// custom additions
+@interface ILobbyStorePresentation ()
+
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSString *remoteLocation;
+@property (nonatomic, readonly) NSURL *remoteURL;
+
+@property (nonatomic, readonly) BOOL isReady;
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
 

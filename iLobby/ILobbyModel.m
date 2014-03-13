@@ -8,7 +8,6 @@
 
 #import "ILobbyModel.h"
 #import "ILobbyPresentationDownloader.h"
-#import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyStorePresentationMaster.h"
 #import "ILobbyStorePresentation.h"
@@ -16,7 +15,6 @@
 
 
 @interface ILobbyModel ()
-@property (strong, nonatomic) ILobbyStoreUserConfig *userConfig;
 @property (strong, nonatomic) ILobbyPresentationDownloader *presentationDownloader;
 @property (strong, readwrite) ILobbyProgress *downloadProgress;
 @property (readwrite) BOOL hasPresentationUpdate;
@@ -284,9 +282,9 @@
 		NSMutableArray *tracks = [NSMutableArray new];
 
 		// create a new track from each track store
-		for ( ILobbyStoreTrack *trackStore in presentationStore.tracks ) {
-			// TODO: instantiate a new track configured against the store
-		}
+//		for ( ILobbyStoreTrack *trackStore in presentationStore.tracks ) {
+//			// TODO: instantiate a new track configured against the store
+//		}
 
 		self.tracks = [NSArray arrayWithArray:tracks];
 		self.defaultTrack = tracks.count > 0 ? tracks[0] : nil;

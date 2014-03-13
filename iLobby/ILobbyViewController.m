@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyViewController.h"
-#import "ILobbyConfigurationController.h"
 #import "ILobbyTrackViewCell.h"
 #import "ILobbyTrack.h"
 
@@ -20,6 +19,8 @@ static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
 
 
 @implementation ILobbyViewController
+@synthesize lobbyModel=_lobbyModel;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -137,8 +138,7 @@ static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
     NSString *segueID = [segue identifier];
 
     if ( [segueID isEqualToString:SHOW_CONFIGURATION_SEGUE_ID] ) {
-        ILobbyConfigurationController *configurationController = [segue destinationViewController];
-		configurationController.lobbyModel = self.lobbyModel;
+		NSLog( @"Configuration segue is obsolete..." );
     }
     else {
         NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );

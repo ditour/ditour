@@ -13,10 +13,12 @@
 #import "ILobbyProgress.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
+#import "ILobbyStoreUserConfig.h"
 
 
 @interface ILobbyModel : NSObject
 
+@property (strong, nonatomic) ILobbyStoreUserConfig *userConfig;
 @property (strong, nonatomic) NSURL *presentationLocation;
 @property (strong, readonly) ILobbyProgress *downloadProgress;
 @property (strong, readonly) NSArray *tracks;

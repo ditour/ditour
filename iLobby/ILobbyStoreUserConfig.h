@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup;
+@class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup;
 
 
 @interface ILobbyStoreUserConfig : NSManagedObject
@@ -36,5 +36,14 @@
 - (void)removeGroupsObject:(ILobbyStorePresentationGroup *)value;
 - (void)addGroups:(NSOrderedSet *)values;
 - (void)removeGroups:(NSOrderedSet *)values;
+
+@end
+
+
+
+// custom additions
+@interface ILobbyStoreUserConfig ()
+
+- (ILobbyStorePresentationGroup *)addNewPresentationGroup;
 
 @end

@@ -12,5 +12,12 @@
 @dynamic selected;
 @dynamic currentPresentationMaster;
 @dynamic presentationMasters;
+@dynamic userConfig;
+
+
++ (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext {
+    ILobbyStorePresentationGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"PresentationGroup" inManagedObjectContext:managedObjectContext];
+	return group;
+}
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "ILobbyAppDelegate.h"
-#import "ILobbyModel.h"
+#import "ILobbyModelContainer.h"
 #import "ILobbyViewController.h"
 #import "ILobbyPresenter.h"
 
@@ -38,14 +38,12 @@
 
 // propagate the probe model to the view controller and any of its subcontrollers
 - (void)propagateLobbyModel:(id)viewController {
-	if ( [viewController respondsToSelector:@selector(setLobbyModel:)] ) {
+	if ( [viewController conformsToProtocol:@protocol(ILobbyModelContainer)] ) {
 		[viewController setLobbyModel:self.lobbyModel];
 	}
 
-	if ( [viewController respondsToSelector:@selector(viewControllers)] ) {
-		for ( id subController in [viewController viewControllers] ) {
-			[self propagateLobbyModel:subController];
-		}
+	for ( id subController in [viewController childViewControllers] ) {
+		[self propagateLobbyModel:subController];
 	}
 }
 

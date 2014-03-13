@@ -52,7 +52,7 @@
 			}
 		}
 
-		ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:self.baseURL error:nil];
+//		ILobbyRemoteDirectory *remoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:self.baseURL error:nil];
 		//NSLog( @"Remote directory: %@", remoteDirectory );
 		NSLog( @"Will download presenation to: %@", self.archivePath );
     }
