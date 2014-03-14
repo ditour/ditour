@@ -127,11 +127,19 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 	self.editingGroup.remoteLocation = self.editingCell.locationField.text;
 
 	NSError *error = nil;
+
+	// saves the changes to the parent context
 	BOOL success = [self.editContext save:&error];
 	if ( !success ) {
-		NSLog( @"Failed to save group edit: %@", error );
+		NSLog( @"Failed to save group edit to edit context: %@", error );
 	}
-	
+
+	// saves the changes to the parent's persistent store
+	success = [self.editContext.parentContext save:&error];
+	if ( !success ) {
+		NSLog( @"Failed to save main context after group edit: %@", error );
+	}
+
 	[self.editingCell.locationField resignFirstResponder];
 
 	self.editingGroup = nil;
