@@ -12,4 +12,6 @@
 
 @interface ILobbyPresentationGroupCell : UITableViewCell
 
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+
 @end

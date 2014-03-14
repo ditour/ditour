@@ -34,35 +34,28 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationGroupCell" rowHeight="45" id="zVb-pA-es3" customClass="ILobbyPresentationGroupCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationGroupCell" rowHeight="45" id="zVb-pA-es3" customClass="ILobbyPresentationGroupCell">
                                 <rect key="frame" x="0.0" y="86" width="1024" height="45"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zVb-pA-es3" id="TRb-70-vNx">
-                                    <rect key="frame" x="0.0" y="0.0" width="991" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="977" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="URL for Group" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZeP-jS-8oF">
-                                            <rect key="frame" x="20" y="7" width="878" height="19"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group URL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fZA-2T-bgu">
+                                            <rect key="frame" x="20" y="11" width="87" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits" keyboardType="URL"/>
-                                        </textField>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y86-7s-6d4">
-                                            <rect key="frame" x="918" y="2" width="53" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Refresh">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                        </button>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="Y86-7s-6d4" secondAttribute="trailing" constant="20" id="DUV-fj-8K4"/>
-                                        <constraint firstItem="Y86-7s-6d4" firstAttribute="leading" secondItem="ZeP-jS-8oF" secondAttribute="trailing" constant="20" id="GYe-M8-FTJ"/>
-                                        <constraint firstItem="ZeP-jS-8oF" firstAttribute="top" secondItem="TRb-70-vNx" secondAttribute="top" constant="7" id="dOd-D9-vYU"/>
-                                        <constraint firstItem="ZeP-jS-8oF" firstAttribute="centerY" secondItem="Y86-7s-6d4" secondAttribute="centerY" id="uBB-Ha-oug"/>
-                                        <constraint firstItem="ZeP-jS-8oF" firstAttribute="leading" secondItem="TRb-70-vNx" secondAttribute="leading" constant="20" id="zIE-wO-QoQ"/>
+                                        <constraint firstAttribute="centerY" secondItem="fZA-2T-bgu" secondAttribute="centerY" id="NGk-a9-OxF"/>
+                                        <constraint firstItem="fZA-2T-bgu" firstAttribute="leading" secondItem="TRb-70-vNx" secondAttribute="leading" constant="20" id="dCb-Xm-Bu4"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="locationLabel" destination="fZA-2T-bgu" id="nMD-B1-Oqu"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PresentationGroupEditCell" id="hSR-8T-xft" customClass="ILobbyPresentationGroupEditCell">
                                 <rect key="frame" x="0.0" y="131" width="1024" height="45"/>
@@ -72,7 +65,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Group URL" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sTc-Fg-mUe">
-                                            <rect key="frame" x="474" y="14" width="77" height="17"/>
+                                            <rect key="frame" x="20" y="14" width="984" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
@@ -80,9 +73,13 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="sTc-Fg-mUe" secondAttribute="centerY" id="8xa-w4-64G"/>
-                                        <constraint firstAttribute="centerX" secondItem="sTc-Fg-mUe" secondAttribute="centerX" id="hWh-b4-Pfz"/>
+                                        <constraint firstAttribute="trailing" secondItem="sTc-Fg-mUe" secondAttribute="trailing" constant="20" id="NCj-gb-6Kc"/>
+                                        <constraint firstItem="sTc-Fg-mUe" firstAttribute="leading" secondItem="fxL-cX-hxs" secondAttribute="leading" constant="20" id="SnS-pk-TTS"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="locationField" destination="sTc-Fg-mUe" id="10e-4z-cx8"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PresentationGroupAddCell" id="tWt-Rn-0I2">
                                 <rect key="frame" x="0.0" y="176" width="1024" height="45"/>

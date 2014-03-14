@@ -10,6 +10,7 @@
 #import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyPresentationGroupCell.h"
+#import "ILobbyPresentationGroupEditCell.h"
 
 
 // enum of table sections
@@ -31,6 +32,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 // indicates which group is being edited
 @property (nonatomic, readwrite, strong) ILobbyStorePresentationGroup *editingGroup;
+@property (nonatomic, readwrite, strong) ILobbyPresentationGroupEditCell *editingCell;
 
 @end
 
@@ -53,6 +55,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 	// initialize instance variables
 	self.editingGroup = nil;
+	self.editingCell = nil;
 
 	// setup the local edit context and its managed objects
 	[self setupEditContext];
@@ -74,14 +77,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 	void (^transferCall)() = ^{
 		userConfigID = self.lobbyModel.userConfig.objectID;
 	};
-
-	// if the master context is on the main queue then perform the transfer directly otherwise perform on the context's queue
-	if ( self.lobbyModel.managedObjectContext.concurrencyType == NSMainQueueConcurrencyType ) {
-		transferCall();
-	}
-	else {
-		[self.lobbyModel.managedObjectContext performBlockAndWait:transferCall];
-	}
+	[self.lobbyModel.managedObjectContext performBlockAndWait:transferCall];
 
 	NSError *error = nil;
 	self.userConfig = (ILobbyStoreUserConfig *)[self.editContext existingObjectWithID:userConfigID error:&error];
@@ -99,8 +95,8 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 - (void)updateControls {
 	if ( self.editingGroup ) {
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAdd)];
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(confirmAdd)];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelGroupEditing)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(confirmGroupEditing)];
 	}
 	else {
 		if ( self.editing ) {
@@ -112,6 +108,36 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 			self.navigationItem.rightBarButtonItem = nil;
 		}
 	}
+}
+
+
+- (void)cancelGroupEditing {
+	[self.editContext rollback];
+
+	[self.editingCell.locationField resignFirstResponder];
+
+	self.editingGroup = nil;
+	self.editingCell = nil;
+	[self updateControls];
+	[self.tableView reloadData];
+}
+
+
+- (void)confirmGroupEditing {
+	self.editingGroup.remoteLocation = self.editingCell.locationField.text;
+
+	NSError *error = nil;
+	BOOL success = [self.editContext save:&error];
+	if ( !success ) {
+		NSLog( @"Failed to save group edit: %@", error );
+	}
+	
+	[self.editingCell.locationField resignFirstResponder];
+
+	self.editingGroup = nil;
+	self.editingCell = nil;
+	[self updateControls];
+	[self.tableView reloadData];
 }
 
 
@@ -171,8 +197,27 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 
 - (UITableViewCell *)groupViewCellAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyPresentationGroupCell *cell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_VIEW_CELL_ID forIndexPath:indexPath];
-	return cell;
+	ILobbyStorePresentationGroup *group = self.userConfig.groups[indexPath.row];
+	if ( group == self.editingGroup ) {
+		if ( !self.editingCell ) {
+			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
+		}
+
+		// configure the editing cell
+		ILobbyPresentationGroupEditCell *editingCell = self.editingCell;
+		editingCell.locationField.text = group.remoteLocation;
+		[editingCell.locationField becomeFirstResponder];
+
+		return editingCell;
+	}
+	else {
+		ILobbyPresentationGroupCell *viewCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_VIEW_CELL_ID forIndexPath:indexPath];
+		viewCell.locationLabel.text = group.remoteLocation;
+		return viewCell;
+	}
+
+	// should never reach here
+	return nil;
 }
 
 
@@ -188,15 +233,22 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 	switch ( indexPath.section ) {
 		case GROUP_ADD_SECTION:
+			// create a new group and enable editing
 			self.editingGroup = [self.userConfig addNewPresentationGroup];
-			[self updateControls];
-			[self.tableView reloadData];
+			break;
+
+		case GROUP_VIEW_SECTION:
+			// enable editing for the corresponding group
+			self.editingGroup = self.userConfig.groups[indexPath.row];
 			break;
 
 		default:
 			NSLog( @"Did select data row at path: %@", indexPath );
 			break;
 	}
+
+	[self updateControls];
+	[self.tableView reloadData];
 }
 
 
