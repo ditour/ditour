@@ -11,6 +11,9 @@
 #import "ILobbyStoreTrackConfiguration.h"
 
 
+static NSString *GROUPS_KEY = @"Groups";
+
+
 @implementation ILobbyStoreUserConfig
 
 @dynamic currentGroup;
@@ -29,6 +32,24 @@
 	ILobbyStorePresentationGroup *group = [ILobbyStorePresentationGroup insertNewPresentationGroupInContext:self.managedObjectContext];
 	group.userConfig = self;
 	return group;
+}
+
+
+// implement group removal and setting the current group to nil if necessary
+- (void)removeObjectFromGroupsAtIndex:(NSUInteger)index {
+	NSMutableOrderedSet *groups = [self mutableOrderedSetValueForKey:GROUPS_KEY];
+
+	ILobbyStorePresentationGroup *group = [groups objectAtIndex:index];
+
+	// if the current group is the group to remove then set the current group to nil
+	if ( self.currentGroup == group ) {
+		self.currentGroup = nil;
+	}
+
+	[groups removeObjectAtIndex:index];
+
+	// the group no longer has a user config, so remove it
+	[group.managedObjectContext deleteObject:group];
 }
 
 
