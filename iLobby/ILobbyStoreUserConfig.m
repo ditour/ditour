@@ -53,4 +53,9 @@ static NSString *GROUPS_KEY = @"Groups";
 }
 
 
+- (void)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
+	NSMutableOrderedSet *groups = [self mutableOrderedSetValueForKey:GROUPS_KEY];
+	[groups moveObjectsAtIndexes:[NSIndexSet indexSetWithIndex:fromIndex] toIndex:toIndex];
+}
+
 @end

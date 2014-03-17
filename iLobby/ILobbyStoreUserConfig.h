@@ -45,5 +45,6 @@
 @interface ILobbyStoreUserConfig ()
 
 - (ILobbyStorePresentationGroup *)addNewPresentationGroup;
+- (void)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 
 @end

@@ -190,6 +190,12 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 }
 
 
+- (BOOL)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
+	[self.userConfig moveGroupAtIndex:fromIndex toIndex:toIndex];
+	return [self saveChanges];
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -327,6 +333,14 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+	switch ( fromIndexPath.section ) {
+		case GROUP_VIEW_SECTION:
+			[self moveGroupAtIndex:fromIndexPath.row toIndex:toIndexPath.row];
+			break;
+
+		default:
+			break;
+	}
 }
 
 
