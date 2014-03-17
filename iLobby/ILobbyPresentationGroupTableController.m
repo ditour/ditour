@@ -104,8 +104,8 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(deleteSelectedRows)];
 		}
 		else {
-			self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTable)];;
-			self.navigationItem.rightBarButtonItem = nil;
+			self.navigationItem.leftBarButtonItem = nil;
+			self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTable)];;
 		}
 	}
 }

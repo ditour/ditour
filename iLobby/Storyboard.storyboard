@@ -17,7 +17,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="J4K-xb-7m0" kind="relationship" relationship="rootViewController" id="X1p-lR-qNX"/>
+                        <segue destination="dmv-Dt-LNm" kind="relationship" relationship="rootViewController" id="aNu-yo-YaS"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tN5-S7-pqs" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -112,7 +112,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K6y-cj-s6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="941" y="-221"/>
+            <point key="canvasLocation" x="2227" y="-221"/>
         </scene>
         <!--Lobby View Controller - Presentations-->
         <scene sceneID="g29-gM-USr">
@@ -130,7 +130,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TrackCell" id="kDi-V4-nxc" customClass="ILobbyTrackViewCell">
-                                <rect key="frame" x="0.0" y="0.0" width="189" height="167"/>
+                                <rect key="frame" x="0.0" y="64" width="189" height="167"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="189" height="167"/>
@@ -172,12 +172,18 @@
                             <outlet property="delegate" destination="dmv-Dt-LNm" id="rm8-Hf-OE9"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Presentations" id="ATr-XS-G5I"/>
+                    <navigationItem key="navigationItem" title="Presentations" id="ATr-XS-G5I">
+                        <barButtonItem key="rightBarButtonItem" systemItem="organize" id="g5F-aO-8JZ">
+                            <connections>
+                                <segue destination="J4K-xb-7m0" kind="push" identifier="ShowConfiguration" id="1hV-E4-sjv"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dt6-0H-03u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2159" y="-221"/>
+            <point key="canvasLocation" x="1007" y="-221"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

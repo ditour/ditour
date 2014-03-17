@@ -9,6 +9,8 @@
 #import "ILobbyViewController.h"
 #import "ILobbyTrackViewCell.h"
 #import "ILobbyTrack.h"
+#import "ILobbyPresentationGroupTableController.h"
+
 
 static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
 
@@ -138,7 +140,8 @@ static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
     NSString *segueID = [segue identifier];
 
     if ( [segueID isEqualToString:SHOW_CONFIGURATION_SEGUE_ID] ) {
-		NSLog( @"Configuration segue is obsolete..." );
+		ILobbyPresentationGroupTableController *configController = segue.destinationViewController;
+		configController.lobbyModel = self.lobbyModel;
     }
     else {
         NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
