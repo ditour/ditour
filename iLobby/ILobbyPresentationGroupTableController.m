@@ -116,6 +116,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 	[self.editingCell.locationField resignFirstResponder];
 
+	self.editing = NO;
 	self.editingGroup = nil;
 	self.editingCell = nil;
 	[self updateControls];
@@ -126,24 +127,11 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 - (void)confirmGroupEditing {
 	self.editingGroup.remoteLocation = self.editingCell.locationField.text;
 
-	// saves the changes to the parent context
-	NSError *error = nil;
-	BOOL success = [self.editContext save:&error];
-	if ( !success ) {
-		NSLog( @"Failed to save group edit to edit context: %@", error );
-	}
-
-	// saves the changes to the parent's persistent store
-	[self.editContext performBlockAndWait:^{
-		NSError *parentError = nil;
-		BOOL parentSuccess = [self.editContext.parentContext save:&parentError];
-		if ( !parentSuccess ) {
-			NSLog( @"Failed to save main context after group edit: %@", parentError );
-		}
-	}];
+	[self saveChanges];
 
 	[self.editingCell.locationField resignFirstResponder];
 
+	self.editing = NO;
 	self.editingGroup = nil;
 	self.editingCell = nil;
 	[self updateControls];
@@ -151,16 +139,54 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 }
 
 
-- (void)editTable {
-	self.editing = YES;
+- (BOOL)saveChanges {
+	// saves the changes to the parent context
+	__block NSError *error = nil;
+	__block BOOL success;
+
+	success = [self.editContext save:&error];
+	if ( !success ) {
+		NSLog( @"Failed to save group edit to edit context: %@", error );
+		return NO;
+	}
+
+	// saves the changes to the parent's persistent store
+	[self.editContext performBlockAndWait:^{
+		success = [self.editContext.parentContext save:&error];
+		if ( !success ) {
+			NSLog( @"Failed to save main context after group edit: %@", error );
+		}
+	}];
+
+	return success;
+}
+
+
+- (void)setEditing:(BOOL)editing {
+	[super setEditing:editing];
 	[self updateControls];
 	[self.tableView reloadData];
 }
 
 
+- (void)editTable {
+	self.editing = YES;
+}
+
+
 - (void)dismissEditing {
 	self.editing = NO;
-	[self updateControls];
+}
+
+
+- (BOOL)deleteGroupAtIndex:(NSInteger)index {
+	if ( index >= 0 ) {
+		[self.userConfig removeObjectFromGroupsAtIndex:index];
+		return [self saveChanges];
+	}
+	else {
+		return NO;
+	}
 }
 
 
@@ -255,7 +281,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 			break;
 
 		default:
-			NSLog( @"Did select data row at path: %@", indexPath );
+			NSLog( @"Error. Did select data row for unknown section at path: %@", indexPath );
 			break;
 	}
 
@@ -279,33 +305,36 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 }
 
 
-/*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+		switch ( indexPath.section ) {
+			case GROUP_VIEW_SECTION:
+				[self deleteGroupAtIndex:indexPath.row];
+				[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+				break;
+
+			default:
+				return;
+		}
+    }
+	else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-*/
 
 
-/*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 }
-*/
 
 
-/*
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the item to be re-orderable.
     return YES;
 }
-*/
 
 
 /*
