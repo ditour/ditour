@@ -154,6 +154,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 - (void)editTable {
 	self.editing = YES;
 	[self updateControls];
+	[self.tableView reloadData];
 }
 
 
@@ -179,7 +180,8 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 			return self.userConfig.groups.count;
 
 		case GROUP_ADD_SECTION:
-			return 1;
+			// if we are editing the table or a cell, hide the "add" cell
+			return self.editing || self.editingGroup != nil ? 0 : 1;
 
 		default:
 			break;
