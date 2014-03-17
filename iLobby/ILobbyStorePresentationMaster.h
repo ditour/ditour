@@ -15,27 +15,28 @@
 
 @interface ILobbyStorePresentationMaster : ILobbyStoreRemoteItem
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) ILobbyStorePresentation *currentPresentation;
-@property (nonatomic, retain) NSOrderedSet *presentations;
 @property (nonatomic, retain) ILobbyStorePresentationGroup *group;
-@property (nonatomic, retain) ILobbyStorePresentationGroup *groupForCurrent;
+@property (nonatomic, retain) NSSet *presentations;
 @end
-
 
 
 @interface ILobbyStorePresentationMaster (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(ILobbyStorePresentation *)value inPresentationsAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromPresentationsAtIndex:(NSUInteger)idx;
-- (void)insertPresentations:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removePresentationsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInPresentationsAtIndex:(NSUInteger)idx withObject:(ILobbyStorePresentation *)value;
-- (void)replacePresentationsAtIndexes:(NSIndexSet *)indexes withPresentations:(NSArray *)values;
 - (void)addPresentationsObject:(ILobbyStorePresentation *)value;
 - (void)removePresentationsObject:(ILobbyStorePresentation *)value;
-- (void)addPresentations:(NSOrderedSet *)values;
-- (void)removePresentations:(NSOrderedSet *)values;
+- (void)addPresentations:(NSSet *)values;
+- (void)removePresentations:(NSSet *)values;
+
 @end
+
+
+
+@interface ILobbyStorePresentationMaster ()
+
+@property (nonatomic, readonly) ILobbyStorePresentation *currentPresentation;
+
+@end
+
 
 
 

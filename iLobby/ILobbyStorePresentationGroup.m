@@ -9,8 +9,7 @@
 #import "ILobbyStorePresentationGroup.h"
 
 @implementation ILobbyStorePresentationGroup
-@dynamic selected;
-@dynamic currentPresentationMaster;
+
 @dynamic presentationMasters;
 @dynamic userConfig;
 

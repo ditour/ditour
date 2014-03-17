@@ -16,8 +16,8 @@
 @dynamic status;
 @dynamic timestamp;
 @dynamic master;
-@dynamic tracks;
 @dynamic trackConfiguration;
+@dynamic tracks;
 
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {

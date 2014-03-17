@@ -273,7 +273,7 @@
 
 
 - (BOOL)loadDefaultPresentation {
-	return [self loadPresentation:self.userConfig.currentGroup.currentPresentationMaster.currentPresentation];
+	return [self loadPresentation:self.userConfig.currentPresentationMaster.currentPresentation];
 }
 
 

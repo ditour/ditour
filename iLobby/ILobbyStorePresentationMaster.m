@@ -7,13 +7,23 @@
 //
 
 #import "ILobbyStorePresentationMaster.h"
+#import "ILobbyStorePresentation.h"
+
 
 @implementation ILobbyStorePresentationMaster
 
 @dynamic name;
-@dynamic currentPresentation;
-@dynamic presentations;
 @dynamic group;
-@dynamic groupForCurrent;
+@dynamic presentations;
+
+
+- (ILobbyStorePresentation *)currentPresentation {
+	for ( ILobbyStorePresentation *presentation in self.presentations ) {
+		if ( presentation.isReady ) {
+			return presentation;
+		}
+	}
+	return nil;
+}
 
 @end

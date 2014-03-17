@@ -9,16 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup;
+@class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup, ILobbyStorePresentationMaster;
 
 
 @interface ILobbyStoreUserConfig : NSManagedObject
 
-@property (nonatomic, retain) ILobbyStorePresentationGroup *currentGroup;
+@property (nonatomic, retain) ILobbyStorePresentationMaster *currentPresentationMaster;
 @property (nonatomic, retain) NSOrderedSet *groups;
 @property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
-
-+ (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end
 
@@ -36,13 +34,16 @@
 - (void)removeGroupsObject:(ILobbyStorePresentationGroup *)value;
 - (void)addGroups:(NSOrderedSet *)values;
 - (void)removeGroups:(NSOrderedSet *)values;
-
 @end
+
+
 
 
 
 // custom additions
 @interface ILobbyStoreUserConfig ()
+
++ (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext;
 
 - (ILobbyStorePresentationGroup *)addNewPresentationGroup;
 - (void)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;

@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyStoreUserConfig.h"
+#import "ILobbyStorePresentationMaster.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyStoreTrackConfiguration.h"
 
@@ -16,9 +17,10 @@ static NSString *GROUPS_KEY = @"Groups";
 
 @implementation ILobbyStoreUserConfig
 
-@dynamic currentGroup;
+@dynamic currentPresentationMaster;
 @dynamic groups;
 @dynamic trackConfiguration;
+
 
 
 // create a new user configuration in the specified context
@@ -41,9 +43,9 @@ static NSString *GROUPS_KEY = @"Groups";
 
 	ILobbyStorePresentationGroup *group = [groups objectAtIndex:index];
 
-	// if the current group is the group to remove then set the current group to nil
-	if ( self.currentGroup == group ) {
-		self.currentGroup = nil;
+	// if the group for the current presentation is the group marked for removal then remove set the current master to nil
+	if ( self.currentPresentationMaster.group == group ) {
+		self.currentPresentationMaster = nil;
 	}
 
 	[groups removeObjectAtIndex:index];

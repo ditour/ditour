@@ -29,11 +29,9 @@ typedef enum : NSInteger {
 @property (nonatomic, retain) NSNumber * status;
 
 @property (nonatomic, retain) ILobbyStorePresentationMaster *master;
-@property (nonatomic, retain) NSOrderedSet *tracks;
 @property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
-
+@property (nonatomic, retain) NSOrderedSet *tracks;
 @end
-
 
 
 @interface ILobbyStorePresentation (CoreDataGeneratedAccessors)
@@ -48,10 +46,9 @@ typedef enum : NSInteger {
 - (void)removeTracksObject:(ILobbyStoreTrack *)value;
 - (void)addTracks:(NSOrderedSet *)values;
 - (void)removeTracks:(NSOrderedSet *)values;
-
-+ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
-
 @end
+
+
 
 
 

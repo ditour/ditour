@@ -10,10 +10,9 @@
 #import "ILobbyStorePresentationMaster.h"
 #import "ILobbyStoreRemoteItem.h"
 
+
 @interface ILobbyStorePresentationGroup : ILobbyStoreRemoteItem
 
-@property (nonatomic, retain) NSNumber * selected;
-@property (nonatomic, retain) ILobbyStorePresentationMaster *currentPresentationMaster;
 @property (nonatomic, retain) NSSet *presentationMasters;
 @property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
 

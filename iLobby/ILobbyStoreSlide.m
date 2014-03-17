@@ -11,6 +11,8 @@
 
 @implementation ILobbyStoreSlide
 
+@dynamic path;
+@dynamic remoteMedia;
 @dynamic track;
 
 
