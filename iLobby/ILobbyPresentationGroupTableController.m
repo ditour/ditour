@@ -25,6 +25,7 @@ static NSString * const GROUP_VIEW_CELL_ID = @"PresentationGroupCell";
 static NSString * const GROUP_EDIT_CELL_ID = @"PresentationGroupEditCell";
 static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
+static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMasters";
 
 @interface ILobbyPresentationGroupTableController ()
 @property (nonatomic, readwrite, strong) ILobbyStoreUserConfig *userConfig;
@@ -333,6 +334,20 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 }
 
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+	if ( !self.editing ) {
+		switch ( indexPath.section ) {
+			case GROUP_VIEW_SECTION:
+				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.userConfig.groups[indexPath.row]];
+				break;
+
+			default:
+				break;
+		}
+	}
+}
+
+
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
@@ -388,14 +403,25 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 }
 
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+
+    NSString *segueID = [segue identifier];
+
+    if ( [segueID isEqualToString:SEGUE_SHOW_PRESENTAION_MASTERS_ID] ) {
+		ILobbyStorePresentationGroup *group = sender;
+
+//		ILobbyPresentationGroupTableController *configController = segue.destinationViewController;
+//		configController.lobbyModel = self.lobbyModel;
+		NSLog( @"Prepare segue to show masters for group: %@", group.remoteLocation );
+    }
+    else {
+        NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
+    }
 }
-*/
 
 @end

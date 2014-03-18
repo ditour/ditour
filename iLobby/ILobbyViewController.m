@@ -12,7 +12,7 @@
 #import "ILobbyPresentationGroupTableController.h"
 
 
-static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
+static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
 
 @interface ILobbyViewController ()
@@ -139,7 +139,7 @@ static NSString *SHOW_CONFIGURATION_SEGUE_ID = @"ShowConfiguration";
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString *segueID = [segue identifier];
 
-    if ( [segueID isEqualToString:SHOW_CONFIGURATION_SEGUE_ID] ) {
+    if ( [segueID isEqualToString:SEGUE_SHOW_CONFIGURATION_ID] ) {
 		ILobbyPresentationGroupTableController *configController = segue.destinationViewController;
 		configController.lobbyModel = self.lobbyModel;
     }
