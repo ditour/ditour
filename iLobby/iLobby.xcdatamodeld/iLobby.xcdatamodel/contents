@@ -15,7 +15,7 @@
     <entity name="PresentationMaster" representedClassName="ILobbyStorePresentationMaster" parentEntity="RemoteItem" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="group" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="presentationMasters" inverseEntity="PresentationGroup" syncable="YES"/>
-        <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentation" inverseName="master" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Presentation" inverseName="master" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="userConfigForMaster" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserConfig" inverseName="currentPresentationMaster" inverseEntity="UserConfig" syncable="YES"/>
     </entity>
     <entity name="RemoteItem" representedClassName="IlobbyStoreRemoteItem" isAbstract="YES" syncable="YES">

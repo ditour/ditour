@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-269" y="-221"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Lobby Presentation Master Table Controller-->
         <scene sceneID="zF6-rG-KUl">
             <objects>
-                <tableViewController id="0xE-St-MOE" sceneMemberID="viewController">
+                <tableViewController id="0xE-St-MOE" customClass="ILobbyPresentationMasterTableController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Hj8-HD-Wur">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

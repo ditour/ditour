@@ -11,6 +11,7 @@
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupEditCell.h"
+#import "ILobbyPresentationMasterTableController.h"
 
 
 // enum of table sections
@@ -379,9 +380,9 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
     if ( [segueID isEqualToString:SEGUE_SHOW_PRESENTAION_MASTERS_ID] ) {
 		ILobbyStorePresentationGroup *group = sender;
 
-//		ILobbyPresentationGroupTableController *configController = segue.destinationViewController;
-//		configController.lobbyModel = self.lobbyModel;
-		NSLog( @"Prepare segue to show masters for group: %@", group.remoteLocation );
+		ILobbyPresentationMasterTableController *masterTableController = segue.destinationViewController;
+		masterTableController.lobbyModel = self.lobbyModel;
+		masterTableController.group = group;
     }
     else {
         NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
