@@ -53,6 +53,8 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+	self.tableView.allowsMultipleSelectionDuringEditing = YES;
+
 	// initialize instance variables
 	self.editingGroup = nil;
 	self.editingCell = nil;
@@ -179,6 +181,32 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 }
 
 
+- (void)deleteSelectedRows {
+	NSMutableIndexSet *groupsToDeleteIndexes = [NSMutableIndexSet new];
+	for ( NSIndexPath *path in self.tableView.indexPathsForSelectedRows ) {
+		switch ( path.section ) {
+			case GROUP_VIEW_SECTION:
+				[groupsToDeleteIndexes addIndex:path.row];
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	if ( groupsToDeleteIndexes.count > 0 ) {
+		[self.userConfig removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
+		if ( [self saveChanges] ) {
+			[self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
+		}
+		else {
+			NSLog( @"Error deleting selected rows..." );
+			[self.editContext rollback];
+		}
+	}
+}
+
+
 - (BOOL)deleteGroupAtIndex:(NSInteger)index {
 	if ( index >= 0 ) {
 		[self.userConfig removeObjectFromGroupsAtIndex:index];
@@ -273,26 +301,28 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+	if ( !self.editing ) {		// only allow editing of a group if the table is not in the editing mode (i.e. delete/move mode)
+		[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 
-	switch ( indexPath.section ) {
-		case GROUP_ADD_SECTION:
-			// create a new group and enable editing
-			self.editingGroup = [self.userConfig addNewPresentationGroup];
-			break;
+		switch ( indexPath.section ) {
+			case GROUP_ADD_SECTION:
+				// create a new group and enable editing
+				self.editingGroup = [self.userConfig addNewPresentationGroup];
+				break;
 
-		case GROUP_VIEW_SECTION:
-			// enable editing for the corresponding group
-			self.editingGroup = self.userConfig.groups[indexPath.row];
-			break;
+			case GROUP_VIEW_SECTION:
+				// enable editing for the corresponding group
+				self.editingGroup = self.userConfig.groups[indexPath.row];
+				break;
 
-		default:
-			NSLog( @"Error. Did select data row for unknown section at path: %@", indexPath );
-			break;
+			default:
+				NSLog( @"Error. Did select data row for unknown section at path: %@", indexPath );
+				break;
+		}
+
+		[self updateControls];
+		[self.tableView reloadData];
 	}
-
-	[self updateControls];
-	[self.tableView reloadData];
 }
 
 

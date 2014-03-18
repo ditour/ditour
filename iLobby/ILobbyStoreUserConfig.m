@@ -55,6 +55,15 @@ static NSString *GROUPS_KEY = @"Groups";
 }
 
 
+// remove the groups corresponding to the specified indexes
+- (void)removeGroupsAtIndexes:(NSIndexSet *)indexes {
+	[indexes enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger index, BOOL *stop) {
+		[self removeObjectFromGroupsAtIndex:index];
+	}];
+}
+
+
+// move the group from the fromIndex to the toIndex
 - (void)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
 	NSMutableOrderedSet *groups = [self mutableOrderedSetValueForKey:GROUPS_KEY];
 	[groups moveObjectsAtIndexes:[NSIndexSet indexSetWithIndex:fromIndex] toIndex:toIndex];
