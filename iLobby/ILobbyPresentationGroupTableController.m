@@ -273,6 +273,13 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 	if ( group == self.editingGroup ) {
 		if ( !self.editingCell ) {
 			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
+			ILobbyPresentationGroupTableController * __weak weakSelf = self;
+			[self.editingCell setDoneHandler:^(ILobbyPresentationGroupEditCell *source, NSString *text) {
+				ILobbyPresentationGroupTableController *strongSelf = weakSelf;
+				if ( strongSelf ) {
+					[strongSelf confirmGroupEditing];
+				}
+			}];
 		}
 
 		// configure the editing cell

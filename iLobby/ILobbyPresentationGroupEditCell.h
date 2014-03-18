@@ -11,4 +11,6 @@
 @interface ILobbyPresentationGroupEditCell : UITableViewCell
 @property (nonatomic, weak) IBOutlet UITextField *locationField;
 
+@property (nonatomic, strong) void (^doneHandler)( ILobbyPresentationGroupEditCell *source, NSString *text );
+
 @end
