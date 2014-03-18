@@ -61,32 +61,14 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	self.editingCell = nil;
 
 	// setup the local edit context and its managed objects
-	[self setupEditContext];
+	self.editContext = self.lobbyModel.mainManagedObjectContext;
+	self.userConfig = self.lobbyModel.mainUserConfig;
 
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 	[self updateControls];
-}
-
-
-- (void)setupEditContext {
-	// create an edit context using the main queue and backed by the model context
-	self.editContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-	self.editContext.parentContext = self.lobbyModel.managedObjectContext;
-
-	__block NSManagedObjectID *userConfigID = nil;
-	void (^transferCall)() = ^{
-		userConfigID = self.lobbyModel.userConfig.objectID;
-	};
-	[self.lobbyModel.managedObjectContext performBlockAndWait:transferCall];
-
-	NSError *error = nil;
-	self.userConfig = (ILobbyStoreUserConfig *)[self.editContext existingObjectWithID:userConfigID error:&error];
-	if ( error ) {
-		NSLog( @"Error getting user config in edit context: %@", error );
-	}
 }
 
 
@@ -130,7 +112,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 - (void)confirmGroupEditing {
 	self.editingGroup.remoteLocation = self.editingCell.locationField.text;
 
-	[self saveChanges];
+	[self saveChanges:nil];
 
 	[self.editingCell.locationField resignFirstResponder];
 
@@ -142,26 +124,8 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 }
 
 
-- (BOOL)saveChanges {
-	// saves the changes to the parent context
-	__block NSError *error = nil;
-	__block BOOL success;
-
-	success = [self.editContext save:&error];
-	if ( !success ) {
-		NSLog( @"Failed to save group edit to edit context: %@", error );
-		return NO;
-	}
-
-	// saves the changes to the parent's persistent store
-	[self.editContext performBlockAndWait:^{
-		success = [self.editContext.parentContext save:&error];
-		if ( !success ) {
-			NSLog( @"Failed to save main context after group edit: %@", error );
-		}
-	}];
-
-	return success;
+- (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr {
+	return [self.lobbyModel saveChanges:errorPtr];
 }
 
 
@@ -197,7 +161,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	if ( groupsToDeleteIndexes.count > 0 ) {
 		[self.userConfig removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
-		if ( [self saveChanges] ) {
+		if ( [self saveChanges:nil] ) {
 			[self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
 		else {
@@ -211,7 +175,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 - (BOOL)deleteGroupAtIndex:(NSInteger)index {
 	if ( index >= 0 ) {
 		[self.userConfig removeObjectFromGroupsAtIndex:index];
-		return [self saveChanges];
+		return [self saveChanges:nil];
 	}
 	else {
 		return NO;
@@ -221,7 +185,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 - (BOOL)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
 	[self.userConfig moveGroupAtIndex:fromIndex toIndex:toIndex];
-	return [self saveChanges];
+	return [self saveChanges:nil];
 }
 
 

@@ -18,7 +18,9 @@
 
 @interface ILobbyModel : NSObject
 
-@property (strong, nonatomic) ILobbyStoreUserConfig *userConfig;
+@property (strong, nonatomic) ILobbyStoreUserConfig *userConfig;			// user config for persistent store context
+@property (nonatomic, readonly) ILobbyStoreUserConfig *mainUserConfig;		// user config for main queue context
+
 @property (strong, nonatomic) NSURL *presentationLocation;
 @property (strong, readonly) ILobbyProgress *downloadProgress;
 @property (strong, readonly) NSArray *tracks;
@@ -40,8 +42,12 @@
 
 
 // managed object support
+- (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr;
+
+@property (readonly) NSManagedObjectContext *managedObjectContext;		// context for persistent store context
+@property (readonly) NSManagedObjectContext *mainManagedObjectContext;	// context for the main queue
+
 @property (readonly) NSManagedObjectModel *managedObjectModel;
-@property (readonly) NSManagedObjectContext *managedObjectContext;
 @property (readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end

@@ -24,7 +24,9 @@
 @property (strong, readwrite) ILobbyTrack *currentTrack;
 
 // managed object support
+@property (nonatomic, readwrite) ILobbyStoreUserConfig *mainUserConfig;
 @property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, readwrite) NSManagedObjectContext *mainManagedObjectContext;
 @end
 
 
@@ -82,6 +84,47 @@
 }
 
 
+// set the user config for the managed object context on the persistent store
+- (void)setUserConfig:(ILobbyStoreUserConfig *)userConfig {
+	_userConfig = userConfig;
+
+	// get the corresponding user config on the main managed object context
+	__block NSManagedObjectID *userConfigID = nil;
+	void (^transferCall)() = ^{
+		userConfigID = self.userConfig.objectID;
+	};
+	[self.managedObjectContext performBlockAndWait:transferCall];
+
+	NSError *error = nil;
+	self.mainUserConfig = (ILobbyStoreUserConfig *)[self.mainManagedObjectContext existingObjectWithID:userConfigID error:&error];
+	if ( error ) {
+		NSLog( @"Error getting user config in edit context: %@", error );
+	}
+}
+
+
+- (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr {
+	// saves the changes to the parent context
+	__block BOOL success;
+
+	success = [self.mainManagedObjectContext save:errorPtr];
+	if ( !success ) {
+		NSLog( @"Failed to save group edit to edit context: %@", *errorPtr );
+		return NO;
+	}
+
+	// saves the changes to the parent's persistent store
+	[self.managedObjectContext performBlockAndWait:^{
+		success = [self.managedObjectContext save:errorPtr];
+		if ( !success ) {
+			NSLog( @"Failed to save main context after group edit: %@", *errorPtr );
+		}
+	}];
+
+	return success;
+}
+
+
 - (void)setupDataModel {
 	// load the managed object model from the main bundle
     NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
@@ -113,6 +156,10 @@
         self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 		self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
     }
+
+	// create an edit context using the main queue and backed by the model context
+	self.mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+	self.mainManagedObjectContext.parentContext = self.managedObjectContext;
 }
 
 
