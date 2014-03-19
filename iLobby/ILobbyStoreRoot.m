@@ -24,7 +24,7 @@ static NSString *GROUPS_KEY = @"Groups";
 
 
 // create a new user configuration in the specified context
-+ (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext {
++ (instancetype)insertNewRootStoreInContext:(NSManagedObjectContext *)managedObjectContext {
     return [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
 }
 

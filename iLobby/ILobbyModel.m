@@ -76,7 +76,7 @@
 		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
 		[self setupDataModel];
 
-		self.storeRoot = [self fetchUserConfig];
+		self.storeRoot = [self fetchRootStore];
 		[self loadDefaultPresentation];
     }
     return self;
@@ -84,18 +84,18 @@
 
 
 // set the user config for the managed object context on the persistent store
-- (void)setStoreRoot:(ILobbyStoreRoot *)userConfig {
-	_storeRoot = userConfig;
+- (void)setStoreRoot:(ILobbyStoreRoot *)rootStore {
+	_storeRoot = rootStore;
 
 	// get the corresponding user config on the main managed object context
-	__block NSManagedObjectID *userConfigID = nil;
+	__block NSManagedObjectID *rootStoreID = nil;
 	void (^transferCall)() = ^{
-		userConfigID = self.storeRoot.objectID;
+		rootStoreID = self.storeRoot.objectID;
 	};
 	[self.managedObjectContext performBlockAndWait:transferCall];
 
 	NSError *error = nil;
-	self.mainStoreRoot = (ILobbyStoreRoot *)[self.mainManagedObjectContext existingObjectWithID:userConfigID error:&error];
+	self.mainStoreRoot = (ILobbyStoreRoot *)[self.mainManagedObjectContext existingObjectWithID:rootStoreID error:&error];
 	if ( error ) {
 		NSLog( @"Error getting user config in edit context: %@", error );
 	}
@@ -296,25 +296,25 @@
 }
 
 
-- (ILobbyStoreRoot *)fetchUserConfig {
+- (ILobbyStoreRoot *)fetchRootStore {
 	NSFetchRequest *mainFetchRequest = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStoreRoot entityName]];
 
-	ILobbyStoreRoot *userConfig = nil;
+	ILobbyStoreRoot *rootStore = nil;
 	NSError * __autoreleasing error = nil;
-	NSArray *userConfigs = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
-	switch ( userConfigs.count ) {
+	NSArray *rootStores = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
+	switch ( rootStores.count ) {
 		case 0:
-			userConfig = [ILobbyStoreRoot insertNewUserConfigInContext:self.managedObjectContext];
+			rootStore = [ILobbyStoreRoot insertNewRootStoreInContext:self.managedObjectContext];
 			[self.managedObjectContext save:&error];
 			break;
 		case 1:
-			userConfig = userConfigs[0];
+			rootStore = rootStores[0];
 			break;
 		default:
 			break;
 	}
 
-	return userConfig;
+	return rootStore;
 }
 
 

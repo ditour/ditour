@@ -45,7 +45,7 @@
 // custom additions
 @interface ILobbyStoreRoot ()
 
-+ (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext;
++ (instancetype)insertNewRootStoreInContext:(NSManagedObjectContext *)managedObjectContext;
 + (NSString *)entityName;
 
 - (ILobbyStorePresentationGroup *)addNewPresentationGroup;

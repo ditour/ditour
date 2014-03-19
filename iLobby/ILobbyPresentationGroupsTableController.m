@@ -29,7 +29,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMasters";
 
 @interface ILobbyPresentationGroupsTableController ()
-@property (nonatomic, readwrite, strong) ILobbyStoreRoot *userConfig;
+@property (nonatomic, readwrite, strong) ILobbyStoreRoot *rootStore;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *editContext;
 
 // indicates which group is being edited
@@ -63,7 +63,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	// setup the local edit context and its managed objects
 	self.editContext = self.lobbyModel.mainManagedObjectContext;
-	self.userConfig = self.lobbyModel.mainStoreRoot;
+	self.rootStore = self.lobbyModel.mainStoreRoot;
 
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -161,7 +161,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	}
 
 	if ( groupsToDeleteIndexes.count > 0 ) {
-		[self.userConfig removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
+		[self.rootStore removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
 		if ( [self saveChanges:nil] ) {
 			[self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
@@ -175,7 +175,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 - (BOOL)deleteGroupAtIndex:(NSInteger)index {
 	if ( index >= 0 ) {
-		[self.userConfig removeObjectFromGroupsAtIndex:index];
+		[self.rootStore removeObjectFromGroupsAtIndex:index];
 		return [self saveChanges:nil];
 	}
 	else {
@@ -185,7 +185,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (BOOL)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
-	[self.userConfig moveGroupAtIndex:fromIndex toIndex:toIndex];
+	[self.rootStore moveGroupAtIndex:fromIndex toIndex:toIndex];
 	return [self saveChanges:nil];
 }
 
@@ -203,7 +203,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	switch ( section ) {
 		case GROUP_VIEW_SECTION:
-			return self.userConfig.groups.count;
+			return self.rootStore.groups.count;
 
 		case GROUP_ADD_SECTION:
 			// if we are editing the table or a cell, hide the "add" cell
@@ -235,7 +235,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (UITableViewCell *)groupViewCellAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStorePresentationGroup *group = self.userConfig.groups[indexPath.row];
+	ILobbyStorePresentationGroup *group = self.rootStore.groups[indexPath.row];
 	if ( group == self.editingGroup ) {
 		if ( !self.editingCell ) {
 			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
@@ -280,12 +280,12 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		switch ( indexPath.section ) {
 			case GROUP_ADD_SECTION:
 				// create a new group and enable editing
-				self.editingGroup = [self.userConfig addNewPresentationGroup];
+				self.editingGroup = [self.rootStore addNewPresentationGroup];
 				break;
 
 			case GROUP_VIEW_SECTION:
 				// enable editing for the corresponding group
-				self.editingGroup = self.userConfig.groups[indexPath.row];
+				self.editingGroup = self.rootStore.groups[indexPath.row];
 				break;
 
 			default:
@@ -303,7 +303,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	if ( !self.editing ) {
 		switch ( indexPath.section ) {
 			case GROUP_VIEW_SECTION:
-				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.userConfig.groups[indexPath.row]];
+				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.rootStore.groups[indexPath.row]];
 				break;
 
 			default:
