@@ -10,8 +10,8 @@
 
 @implementation ILobbyStorePresentationGroup
 
-@dynamic presentationMasters;
-@dynamic userConfig;
+@dynamic presentations;
+@dynamic root;
 
 
 + (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext {

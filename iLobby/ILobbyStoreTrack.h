@@ -8,15 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "ILobbyStoreRemoteItem.h"
 
-@class ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStoreSlide;
+#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreSlide.h"
+
+
+@class ILobbyStorePresentation;
 
 @interface ILobbyStoreTrack : ILobbyStoreRemoteItem
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) ILobbyStorePresentation *presentation;
-@property (nonatomic, retain) ILobbyStoreTrackConfiguration *configuration;
 @property (nonatomic, retain) NSOrderedSet *slides;
 
 @end

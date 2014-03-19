@@ -9,29 +9,35 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreTrack.h"
 
-@class ILobbyStorePresentationMaster;
 
-
-typedef enum : NSInteger {
+typedef enum : short {
 	PRESENTATION_STATUS_NEW,
 	PRESENTATION_STATUS_READY,
 	PRESENTATION_STATUS_CANCELED
 } PresentationStatus;
 
 
-@class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreTrackConfiguration, ILobbyStoreTrack;
+@class ILobbyStoreRoot, ILobbyStorePresentationGroup;
 
-@interface ILobbyStorePresentation : NSManagedObject
-// data properties
-@property (nonatomic, retain) NSString * path;
-@property (nonatomic, retain) NSDate * timestamp;
+
+@interface ILobbyStorePresentation : ILobbyStoreRemoteItem
+
+// attributes
+@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * status;
+@property (nonatomic, retain) NSDate * timestamp;
 
-@property (nonatomic, retain) ILobbyStorePresentationMaster *master;
-@property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;
+// relationships
+@property (nonatomic, retain) ILobbyStorePresentationGroup *group;
+@property (nonatomic, retain) ILobbyStorePresentation *parent;
+@property (nonatomic, retain) ILobbyStorePresentation *revision;
+@property (nonatomic, retain) ILobbyStoreRoot *root;
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @end
+
 
 
 @interface ILobbyStorePresentation (CoreDataGeneratedAccessors)
@@ -46,18 +52,13 @@ typedef enum : NSInteger {
 - (void)removeTracksObject:(ILobbyStoreTrack *)value;
 - (void)addTracks:(NSOrderedSet *)values;
 - (void)removeTracks:(NSOrderedSet *)values;
+
 @end
-
-
 
 
 
 // custom additions
 @interface ILobbyStorePresentation ()
-
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSString *remoteLocation;
-@property (nonatomic, readonly) NSURL *remoteURL;
 
 @property (nonatomic, readonly) BOOL isReady;
 

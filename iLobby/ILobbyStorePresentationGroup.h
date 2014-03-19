@@ -7,26 +7,24 @@
 //
 
 #import <CoreData/CoreData.h>
-#import "ILobbyStorePresentationMaster.h"
+#import "ILobbyStorePresentation.h"
 #import "ILobbyStoreRemoteItem.h"
 
 
 @interface ILobbyStorePresentationGroup : ILobbyStoreRemoteItem
 
-@property (nonatomic, retain) NSSet *presentationMasters;
-@property (nonatomic, retain) ILobbyStoreUserConfig *userConfig;
-
+@property (nonatomic, retain) NSSet *presentations;
+@property (nonatomic, retain) ILobbyStoreRoot *root;
 @end
 
 
 
 @interface ILobbyStorePresentationGroup (CoreDataGeneratedAccessors)
 
-- (void)addPresentationMastersObject:(ILobbyStorePresentationMaster *)value;
-- (void)removePresentationMastersObject:(ILobbyStorePresentationMaster *)value;
-- (void)addPresentationMasters:(NSSet *)values;
-- (void)removePresentationMasters:(NSSet *)values;
-
+- (void)addPresentationsObject:(ILobbyStorePresentation *)value;
+- (void)removePresentationsObject:(ILobbyStorePresentation *)value;
+- (void)addPresentations:(NSSet *)values;
+- (void)removePresentations:(NSSet *)values;
 @end
 
 

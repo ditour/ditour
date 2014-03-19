@@ -7,7 +7,7 @@
 //
 
 #import "ILobbyPresentationGroupsTableController.h"
-#import "ILobbyStoreUserConfig.h"
+#import "ILobbyStoreRoot.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupEditCell.h"
@@ -29,7 +29,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMasters";
 
 @interface ILobbyPresentationGroupsTableController ()
-@property (nonatomic, readwrite, strong) ILobbyStoreUserConfig *userConfig;
+@property (nonatomic, readwrite, strong) ILobbyStoreRoot *userConfig;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *editContext;
 
 // indicates which group is being edited
@@ -63,7 +63,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	// setup the local edit context and its managed objects
 	self.editContext = self.lobbyModel.mainManagedObjectContext;
-	self.userConfig = self.lobbyModel.mainUserConfig;
+	self.userConfig = self.lobbyModel.mainStoreRoot;
 
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;

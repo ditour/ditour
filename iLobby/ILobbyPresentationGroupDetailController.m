@@ -10,7 +10,7 @@
 
 
 enum : NSInteger {
-	SECTION_MASTER_VIEW,
+	SECTION_PRESENTATIONS_VIEW,
 	SECTION_COUNT
 };
 
@@ -63,8 +63,8 @@ enum : NSInteger {
     // Return the number of rows in the section.
 
 	switch ( section ) {
-		case SECTION_MASTER_VIEW:
-			return self.group.presentationMasters.count;
+		case SECTION_PRESENTATIONS_VIEW:
+			return self.group.presentations.count;
 
 		default:
 			break;

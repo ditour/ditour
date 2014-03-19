@@ -13,10 +13,7 @@
 
 @dynamic slideDuration;
 @dynamic trackChangeDelay;
-@dynamic mainConfig;
-@dynamic presentation;
-@dynamic track;
-@dynamic transition;
+@dynamic configuration;
 
 
 + (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext {

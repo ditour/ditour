@@ -13,13 +13,13 @@
 #import "ILobbyProgress.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
-#import "ILobbyStoreUserConfig.h"
+#import "ILobbyStoreRoot.h"
 
 
 @interface ILobbyModel : NSObject
 
-@property (strong, nonatomic) ILobbyStoreUserConfig *userConfig;			// user config for persistent store context
-@property (nonatomic, readonly) ILobbyStoreUserConfig *mainUserConfig;		// user config for main queue context
+@property (strong, nonatomic) ILobbyStoreRoot *storeRoot;			// user config for persistent store context
+@property (nonatomic, readonly) ILobbyStoreRoot *mainStoreRoot;		// user config for main queue context
 
 @property (strong, nonatomic) NSURL *presentationLocation;
 @property (strong, readonly) ILobbyProgress *downloadProgress;

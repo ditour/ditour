@@ -13,6 +13,7 @@
 @dynamic remoteInfo;
 @dynamic remoteLocation;
 @dynamic path;
+@dynamic configuration;
 
 
 - (NSURL *)remoteURL {

@@ -9,36 +9,22 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ILobbyStoreUserConfig, ILobbyStorePresentation, ILobbyStoreSlideTransition, ILobbyStoreTrack;
+
+@class ILobbyStoreConfiguration;
+
 
 @interface ILobbyStoreTrackConfiguration : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * slideDuration;
 @property (nonatomic, retain) NSNumber * trackChangeDelay;
-@property (nonatomic, retain) NSSet *mainConfig;
-@property (nonatomic, retain) NSSet *presentation;
-@property (nonatomic, retain) NSSet *track;
-@property (nonatomic, retain) ILobbyStoreSlideTransition *transition;
 
-+ (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
-
+@property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
 @end
 
-@interface ILobbyStoreTrackConfiguration (CoreDataGeneratedAccessors)
 
-- (void)addMainConfigObject:(ILobbyStoreUserConfig *)value;
-- (void)removeMainConfigObject:(ILobbyStoreUserConfig *)value;
-- (void)addMainConfig:(NSSet *)values;
-- (void)removeMainConfig:(NSSet *)values;
 
-- (void)addPresentationObject:(ILobbyStorePresentation *)value;
-- (void)removePresentationObject:(ILobbyStorePresentation *)value;
-- (void)addPresentation:(NSSet *)values;
-- (void)removePresentation:(NSSet *)values;
+// custom additions
+@interface ILobbyStoreTrackConfiguration ()
 
-- (void)addTrackObject:(ILobbyStoreTrack *)value;
-- (void)removeTrackObject:(ILobbyStoreTrack *)value;
-- (void)addTrack:(NSSet *)values;
-- (void)removeTrack:(NSSet *)values;
-
++ (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
 @end

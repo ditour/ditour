@@ -14,7 +14,6 @@
 
 @dynamic title;
 @dynamic presentation;
-@dynamic configuration;
 @dynamic slides;
 
 

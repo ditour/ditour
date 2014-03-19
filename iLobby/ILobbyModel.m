@@ -9,7 +9,6 @@
 #import "ILobbyModel.h"
 #import "ILobbyPresentationDownloader.h"
 #import "ILobbyStorePresentationGroup.h"
-#import "ILobbyStorePresentationMaster.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyRemoteDirectory.h"
 
@@ -24,7 +23,7 @@
 @property (strong, readwrite) ILobbyTrack *currentTrack;
 
 // managed object support
-@property (nonatomic, readwrite) ILobbyStoreUserConfig *mainUserConfig;
+@property (nonatomic, readwrite) ILobbyStoreRoot *mainStoreRoot;
 @property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readwrite) NSManagedObjectContext *mainManagedObjectContext;
 @end
@@ -77,7 +76,7 @@
 		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
 		[self setupDataModel];
 
-		self.userConfig = [self fetchUserConfig];
+		self.storeRoot = [self fetchUserConfig];
 		[self loadDefaultPresentation];
     }
     return self;
@@ -85,18 +84,18 @@
 
 
 // set the user config for the managed object context on the persistent store
-- (void)setUserConfig:(ILobbyStoreUserConfig *)userConfig {
-	_userConfig = userConfig;
+- (void)setStoreRoot:(ILobbyStoreRoot *)userConfig {
+	_storeRoot = userConfig;
 
 	// get the corresponding user config on the main managed object context
 	__block NSManagedObjectID *userConfigID = nil;
 	void (^transferCall)() = ^{
-		userConfigID = self.userConfig.objectID;
+		userConfigID = self.storeRoot.objectID;
 	};
 	[self.managedObjectContext performBlockAndWait:transferCall];
 
 	NSError *error = nil;
-	self.mainUserConfig = (ILobbyStoreUserConfig *)[self.mainManagedObjectContext existingObjectWithID:userConfigID error:&error];
+	self.mainStoreRoot = (ILobbyStoreRoot *)[self.mainManagedObjectContext existingObjectWithID:userConfigID error:&error];
 	if ( error ) {
 		NSLog( @"Error getting user config in edit context: %@", error );
 	}
@@ -297,15 +296,15 @@
 }
 
 
-- (ILobbyStoreUserConfig *)fetchUserConfig {
-	NSFetchRequest *mainFetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"UserConfig"];
+- (ILobbyStoreRoot *)fetchUserConfig {
+	NSFetchRequest *mainFetchRequest = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStoreRoot entityName]];
 
-	ILobbyStoreUserConfig *userConfig = nil;
+	ILobbyStoreRoot *userConfig = nil;
 	NSError * __autoreleasing error = nil;
 	NSArray *userConfigs = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
 	switch ( userConfigs.count ) {
 		case 0:
-			userConfig = [ILobbyStoreUserConfig insertNewUserConfigInContext:self.managedObjectContext];
+			userConfig = [ILobbyStoreRoot insertNewUserConfigInContext:self.managedObjectContext];
 			[self.managedObjectContext save:&error];
 			break;
 		case 1:
@@ -320,7 +319,7 @@
 
 
 - (BOOL)loadDefaultPresentation {
-	return [self loadPresentation:self.userConfig.currentPresentationMaster.currentPresentation];
+	return [self loadPresentation:self.storeRoot.currentPresentation];
 }
 
 

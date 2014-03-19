@@ -6,33 +6,38 @@
 //  Copyright (c) 2013 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyStoreUserConfig.h"
-#import "ILobbyStorePresentationMaster.h"
+#import "ILobbyStoreRoot.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyStoreTrackConfiguration.h"
 
 
+// managed object IDs
+static NSString *ENTITY_NAME = @"Root";
 static NSString *GROUPS_KEY = @"Groups";
 
 
-@implementation ILobbyStoreUserConfig
+@implementation ILobbyStoreRoot
 
-@dynamic currentPresentationMaster;
+@dynamic currentPresentation;
 @dynamic groups;
-@dynamic trackConfiguration;
 
 
 
 // create a new user configuration in the specified context
 + (instancetype)insertNewUserConfigInContext:(NSManagedObjectContext *)managedObjectContext {
-    return [NSEntityDescription insertNewObjectForEntityForName:@"UserConfig" inManagedObjectContext:managedObjectContext];
+    return [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
+}
+
+
++ (NSString *)entityName {
+	return ENTITY_NAME;
 }
 
 
 // create a new presentation group and add it to this user configuration
 - (ILobbyStorePresentationGroup *)addNewPresentationGroup {
 	ILobbyStorePresentationGroup *group = [ILobbyStorePresentationGroup insertNewPresentationGroupInContext:self.managedObjectContext];
-	group.userConfig = self;
+	group.root = self;
 	return group;
 }
 
@@ -44,8 +49,8 @@ static NSString *GROUPS_KEY = @"Groups";
 	ILobbyStorePresentationGroup *group = [groups objectAtIndex:index];
 
 	// if the group for the current presentation is the group marked for removal then remove set the current master to nil
-	if ( self.currentPresentationMaster.group == group ) {
-		self.currentPresentationMaster = nil;
+	if ( self.currentPresentation.group == group ) {
+		self.currentPresentation = nil;
 	}
 
 	[groups removeObjectAtIndex:index];

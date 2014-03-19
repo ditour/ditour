@@ -7,44 +7,33 @@
 //
 
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStorePresentationMaster.h"
 
 
 @implementation ILobbyStorePresentation
 
-@dynamic path;
+// attributes
+@dynamic name;
 @dynamic status;
 @dynamic timestamp;
-@dynamic master;
-@dynamic trackConfiguration;
+
+// relationships
+@dynamic group;
+@dynamic parent;
+@dynamic revision;
+@dynamic root;
 @dynamic tracks;
 
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {
     ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
+	presentation.status = PRESENTATION_STATUS_NEW;
 	presentation.timestamp = [NSDate date];
 	return presentation;
 }
 
 
-- (NSString *)name {
-	return self.master.name;
-}
-
-
-- (NSString *)remoteLocation {
-	return self.master.remoteLocation;
-}
-
-
-- (NSURL *)remoteURL {
-	NSString *remoteLocation = self.remoteLocation;
-	return remoteLocation ? [NSURL URLWithString:remoteLocation] : nil;
-}
-
-
 - (BOOL)isReady {
-	return self.status.intValue == PRESENTATION_STATUS_READY;
+	return self.status.shortValue == PRESENTATION_STATUS_READY;
 }
 
 @end

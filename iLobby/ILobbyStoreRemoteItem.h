@@ -8,12 +8,22 @@
 
 #import <CoreData/CoreData.h>
 
+
+@class ILobbyStoreConfiguration;
+
+
 @interface ILobbyStoreRemoteItem : NSManagedObject
 
 @property (nonatomic, retain) NSString * remoteInfo;
 @property (nonatomic, retain) NSString * remoteLocation;
 @property (nonatomic, retain) NSString * path;
+@property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
+@end
+
+
+
+// custom additions
+@interface ILobbyStoreRemoteItem ()
 
 @property (nonatomic, readonly) NSURL *remoteURL;
-
 @end
