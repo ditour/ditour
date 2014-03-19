@@ -9,7 +9,7 @@
 #import "ILobbyViewController.h"
 #import "ILobbyTrackViewCell.h"
 #import "ILobbyTrack.h"
-#import "ILobbyPresentationGroupTableController.h"
+#import "ILobbyPresentationGroupsTableController.h"
 
 
 static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
@@ -140,7 +140,7 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
     NSString *segueID = [segue identifier];
 
     if ( [segueID isEqualToString:SEGUE_SHOW_CONFIGURATION_ID] ) {
-		ILobbyPresentationGroupTableController *configController = segue.destinationViewController;
+		ILobbyPresentationGroupsTableController *configController = segue.destinationViewController;
 		configController.lobbyModel = self.lobbyModel;
     }
     else {

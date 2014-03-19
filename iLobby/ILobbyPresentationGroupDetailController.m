@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyPresentationMasterTableController.h"
+#import "ILobbyPresentationGroupDetailController.h"
 
 
 enum : NSInteger {
@@ -16,12 +16,12 @@ enum : NSInteger {
 
 
 
-@interface ILobbyPresentationMasterTableController ()
+@interface ILobbyPresentationGroupDetailController ()
 
 @end
 
 
-@implementation ILobbyPresentationMasterTableController
+@implementation ILobbyPresentationGroupDetailController
 @synthesize lobbyModel=_lobbyModel;
 
 

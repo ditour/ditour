@@ -12,7 +12,7 @@
 #import "ILobbyStorePresentationGroup.h"
 
 
-@interface ILobbyPresentationMasterTableController : UITableViewController <ILobbyModelContainer>
+@interface ILobbyPresentationGroupDetailController : UITableViewController <ILobbyModelContainer>
 
 @property (nonatomic, readwrite) ILobbyStorePresentationGroup *group;
 

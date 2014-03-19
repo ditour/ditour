@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-269" y="-221"/>
         </scene>
-        <!--Lobby Presentation Master Table Controller-->
+        <!--Lobby Presentation Group Detail Controller-->
         <scene sceneID="zF6-rG-KUl">
             <objects>
-                <tableViewController id="0xE-St-MOE" customClass="ILobbyPresentationMasterTableController" sceneMemberID="viewController">
+                <tableViewController id="0xE-St-MOE" customClass="ILobbyPresentationGroupDetailController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Hj8-HD-Wur">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -54,10 +54,10 @@
             </objects>
             <point key="canvasLocation" x="3549" y="-221"/>
         </scene>
-        <!--Lobby Presentation Group Table Controller - Presentation Groups-->
+        <!--Lobby Presentation Groups Table Controller - Presentation Groups-->
         <scene sceneID="0Qw-Lp-c9S">
             <objects>
-                <tableViewController id="J4K-xb-7m0" customClass="ILobbyPresentationGroupTableController" sceneMemberID="viewController">
+                <tableViewController id="J4K-xb-7m0" customClass="ILobbyPresentationGroupsTableController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="45" sectionHeaderHeight="22" sectionFooterHeight="22" id="mc1-Ef-Edv">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

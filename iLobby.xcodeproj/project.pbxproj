@@ -13,7 +13,7 @@
 		4C01BD581637150700065A97 /* ILobbyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C01BD571637150700065A97 /* ILobbyTrack.m */; };
 		4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */; };
 		4C1B0D3F18D0971C001B0B00 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B0D3E18D0971C001B0B00 /* Storyboard.storyboard */; };
-		4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupTableController.m */; };
+		4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */; };
 		4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */; };
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
 		4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */; };
@@ -47,7 +47,7 @@
 		4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDF9AE318CE5467001E26B0 /* ILobbyStorePresentationGroup.m */; };
 		4CDF9AE718CE5476001E26B0 /* ILobbyStorePresentationMaster.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDF9AE618CE5476001E26B0 /* ILobbyStorePresentationMaster.m */; };
 		4CE0DC5318D763B90092C700 /* ILobbyStoreRemoteMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE0DC5218D763B90092C700 /* ILobbyStoreRemoteMedia.m */; };
-		4CE0DC5A18D8D7AD0092C700 /* ILobbyPresentationMasterTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationMasterTableController.m */; };
+		4CE0DC5A18D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m */; };
 		4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1D6C71638219C00026847 /* ILobbySlide.m */; };
 /* End PBXBuildFile section */
 
@@ -63,8 +63,8 @@
 		4C01BD5C16371E1A00065A97 /* ILobbyTrackViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackViewCell.h; sourceTree = "<group>"; };
 		4C01BD5D16371E1A00065A97 /* ILobbyTrackViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackViewCell.m; sourceTree = "<group>"; };
 		4C1B0D3E18D0971C001B0B00 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		4C1B0D4618D0AD30001B0B00 /* ILobbyPresentationGroupTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupTableController.h; sourceTree = "<group>"; };
-		4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationGroupTableController.m; sourceTree = "<group>"; };
+		4C1B0D4618D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupsTableController.h; sourceTree = "<group>"; };
+		4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationGroupsTableController.m; sourceTree = "<group>"; };
 		4C2E3A28163B070100A832C4 /* ILobbyDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDirectory.h; sourceTree = "<group>"; };
 		4C2E3A29163B070100A832C4 /* ILobbyDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDirectory.m; sourceTree = "<group>"; };
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
@@ -129,8 +129,8 @@
 		4CDF9AE618CE5476001E26B0 /* ILobbyStorePresentationMaster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentationMaster.m; sourceTree = "<group>"; };
 		4CE0DC5118D763B90092C700 /* ILobbyStoreRemoteMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreRemoteMedia.h; sourceTree = "<group>"; };
 		4CE0DC5218D763B90092C700 /* ILobbyStoreRemoteMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreRemoteMedia.m; sourceTree = "<group>"; };
-		4CE0DC5818D8D7AD0092C700 /* ILobbyPresentationMasterTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationMasterTableController.h; sourceTree = "<group>"; };
-		4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationMasterTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationMasterTableController.m; sourceTree = "<group>"; };
+		4CE0DC5818D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupDetailController.h; sourceTree = "<group>"; };
+		4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationGroupDetailController.m; sourceTree = "<group>"; };
 		4CE1D6C61638219C00026847 /* ILobbySlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbySlide.h; sourceTree = "<group>"; };
 		4CE1D6C71638219C00026847 /* ILobbySlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbySlide.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -180,10 +180,10 @@
 				4C1B0D3E18D0971C001B0B00 /* Storyboard.storyboard */,
 				4C01BD4D1636F69100065A97 /* ILobbyViewController.h */,
 				4C01BD4E1636F69100065A97 /* ILobbyViewController.m */,
-				4C1B0D4618D0AD30001B0B00 /* ILobbyPresentationGroupTableController.h */,
-				4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupTableController.m */,
-				4CE0DC5818D8D7AD0092C700 /* ILobbyPresentationMasterTableController.h */,
-				4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationMasterTableController.m */,
+				4C1B0D4618D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.h */,
+				4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */,
+				4CE0DC5818D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.h */,
+				4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -415,7 +415,7 @@
 				4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */,
 				4CC09887183D4CBF006755C8 /* ILobbyStoreSlideTransition.m in Sources */,
 				4CA2E44C18D0F233004C0489 /* ILobbyPresentationGroupCell.m in Sources */,
-				4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupTableController.m in Sources */,
+				4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m in Sources */,
 				4C01BD4F1636F69100065A97 /* ILobbyViewController.m in Sources */,
 				4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */,
 				4CDF9AE718CE5476001E26B0 /* ILobbyStorePresentationMaster.m in Sources */,
@@ -433,7 +433,7 @@
 				4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */,
 				4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */,
 				4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */,
-				4CE0DC5A18D8D7AD0092C700 /* ILobbyPresentationMasterTableController.m in Sources */,
+				4CE0DC5A18D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m in Sources */,
 				4CC09896183D4CC0006755C8 /* ILobbyStoreUserConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

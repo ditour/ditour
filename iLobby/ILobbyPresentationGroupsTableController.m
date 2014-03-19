@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyPresentationGroupTableController.h"
+#import "ILobbyPresentationGroupsTableController.h"
 #import "ILobbyStoreUserConfig.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupEditCell.h"
-#import "ILobbyPresentationMasterTableController.h"
+#import "ILobbyPresentationGroupDetailController.h"
 
 
 // enum of table sections
@@ -28,7 +28,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 
 static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMasters";
 
-@interface ILobbyPresentationGroupTableController ()
+@interface ILobbyPresentationGroupsTableController ()
 @property (nonatomic, readwrite, strong) ILobbyStoreUserConfig *userConfig;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *editContext;
 
@@ -39,7 +39,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 @end
 
 
-@implementation ILobbyPresentationGroupTableController
+@implementation ILobbyPresentationGroupsTableController
 @synthesize lobbyModel=_lobbyModel;
 
 
@@ -239,9 +239,9 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	if ( group == self.editingGroup ) {
 		if ( !self.editingCell ) {
 			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
-			ILobbyPresentationGroupTableController * __weak weakSelf = self;
+			ILobbyPresentationGroupsTableController * __weak weakSelf = self;
 			[self.editingCell setDoneHandler:^(ILobbyPresentationGroupEditCell *source, NSString *text) {
-				ILobbyPresentationGroupTableController *strongSelf = weakSelf;
+				ILobbyPresentationGroupsTableController *strongSelf = weakSelf;
 				if ( strongSelf ) {
 					[strongSelf confirmGroupEditing];
 				}
@@ -380,7 +380,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
     if ( [segueID isEqualToString:SEGUE_SHOW_PRESENTAION_MASTERS_ID] ) {
 		ILobbyStorePresentationGroup *group = sender;
 
-		ILobbyPresentationMasterTableController *masterTableController = segue.destinationViewController;
+		ILobbyPresentationGroupDetailController *masterTableController = segue.destinationViewController;
 		masterTableController.lobbyModel = self.lobbyModel;
 		masterTableController.group = group;
     }

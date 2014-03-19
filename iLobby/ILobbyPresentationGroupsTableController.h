@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ILobbyModelContainer.h"
 
-@interface ILobbyPresentationGroupTableController : UITableViewController <ILobbyModelContainer>
+@interface ILobbyPresentationGroupsTableController : UITableViewController <ILobbyModelContainer>
 
 @end
