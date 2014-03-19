@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyStoreSlideTransition.h"
-#import "ILobbyStoreTrackConfiguration.h"
 
 
 @implementation ILobbyStoreSlideTransition
@@ -18,7 +17,7 @@
 @dynamic configuration;
 
 
-+ (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext {
++ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext {
     return [NSEntityDescription insertNewObjectForEntityForName:@"SlideTransition" inManagedObjectContext:managedObjectContext];
 }
 

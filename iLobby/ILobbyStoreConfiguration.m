@@ -11,8 +11,8 @@
 
 @implementation ILobbyStoreConfiguration
 @dynamic refreshPeriod;
-@dynamic remoteItem;
+@dynamic slideDuration;
+@dynamic trackChangeDelay;
 @dynamic slideTransition;
-@dynamic trackConfiguration;
 
 @end

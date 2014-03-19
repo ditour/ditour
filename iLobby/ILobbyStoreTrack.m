@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyStoreTrack.h"
-#import "ILobbyStoreTrackConfiguration.h"
 
 
 @implementation ILobbyStoreTrack

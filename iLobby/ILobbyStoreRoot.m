@@ -8,7 +8,6 @@
 
 #import "ILobbyStoreRoot.h"
 #import "ILobbyStorePresentationGroup.h"
-#import "ILobbyStoreTrackConfiguration.h"
 
 
 // managed object IDs

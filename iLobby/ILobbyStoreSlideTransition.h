@@ -21,6 +21,6 @@
 // relationships
 @property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
 
-+ (instancetype)insertNewtrackConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
++ (instancetype)insertNewSlideConfigurationInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end
