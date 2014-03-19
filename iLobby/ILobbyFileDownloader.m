@@ -34,7 +34,7 @@ static NSString *DOWNLOADS_PATH = nil;
 //		NSLog( @"Performing File Downloader class initialization..." );
 
 		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSError *error;
+		NSError * __autoreleasing error;
 		
 		LIBRARY_FOLDER_URL = [fileManager URLForDirectory:NSLibraryDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
 		if ( error ) {
@@ -79,7 +79,7 @@ static NSString *DOWNLOADS_PATH = nil;
 			// get the full path to the directory which will contain the output file and create it if necessary
 			NSString *contentDirectory = [self.outputFilePath stringByDeletingLastPathComponent];
 			if ( ![fileManager fileExistsAtPath:contentDirectory] ) {
-				NSError *error;
+				NSError * __autoreleasing error;
 				[fileManager createDirectoryAtPath:contentDirectory withIntermediateDirectories:YES attributes:nil error:&error];
 			}
 
@@ -135,7 +135,7 @@ static NSString *DOWNLOADS_PATH = nil;
 		NSString *archiveFilePath = [self.archivePath stringByAppendingPathComponent:self.sourceURL.relativePath];
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		if ( [fileManager fileExistsAtPath:archiveFilePath] ) {
-			NSError *fileError;
+			NSError * __autoreleasing fileError;
 			NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:archiveFilePath error:&fileError];
 			if ( !fileError ) {
 				long long archiveFileSize = [fileAttributes fileSize];

@@ -90,7 +90,7 @@
 	NSArray *files = _files;
 
 	if ( !files ) {
-		NSError *error;
+		NSError * __autoreleasing error;
 		_files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.directory error:&error];
 		if ( error ) {
 			NSLog( @"Error getting contents of directory: %@ resulting in error: %@", self.directory, error );

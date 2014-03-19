@@ -136,7 +136,7 @@
 		for ( id parserItem in directoryParser.items ) {
 			if ( [parserItem isKindOfClass:[NSURL class]] ) {		// must be a subdirectory
 				NSURL *subdirectoryURL = (NSURL *)parserItem;
-				NSError *subError;
+				NSError * __autoreleasing subError;
 				NSLog( @"Parsing subdirectory URL: %@", subdirectoryURL );
 				ILobbyRemoteDirectory *subdirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:subdirectoryURL error:&subError];
 				NSLog( @"Subdirectory: %@", subdirectory );

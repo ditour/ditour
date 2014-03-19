@@ -94,7 +94,7 @@
 	};
 	[self.managedObjectContext performBlockAndWait:transferCall];
 
-	NSError *error = nil;
+	NSError * __autoreleasing error = nil;
 	self.mainStoreRoot = (ILobbyStoreRoot *)[self.mainManagedObjectContext existingObjectWithID:rootStoreID error:&error];
 	if ( error ) {
 		NSLog( @"Error getting user config in edit context: %@", error );

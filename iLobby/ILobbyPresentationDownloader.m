@@ -43,7 +43,7 @@
 		self.progress = [ILobbyProgress progressWithFraction:0.0f label:@"Download starting..."];
 
 		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSError *error;
+		NSError * __autoreleasing error;
 		NSString *presentationDirectory = [ILobbyPresentationDownloader pathForPresentation:presentation];
 		if ( [fileManager fileExistsAtPath:presentationDirectory] ) {
 			[fileManager removeItemAtPath:presentationDirectory error:&error];
@@ -80,7 +80,7 @@
 
 
 -(void)handleIndexDownload:(ILobbyFileDownloader *)downloader error:(NSError *)error {
-	NSError *jsonError;
+	NSError * __autoreleasing jsonError;
 	NSData *data = [NSData dataWithContentsOfFile:downloader.outputFilePath];
 	NSDictionary *config = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
 
