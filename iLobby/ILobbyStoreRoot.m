@@ -18,6 +18,7 @@ static NSString *GROUPS_KEY = @"Groups";
 
 @implementation ILobbyStoreRoot
 
+@dynamic configuration;
 @dynamic currentPresentation;
 @dynamic groups;
 

@@ -15,6 +15,10 @@
 
 @interface ILobbyStoreConfiguration : ILobbyStoreRemoteItem
 
+// attributes
+@property (nonatomic, retain) NSNumber * refreshPeriod;		// refresh period in minutes (applies to active presentation)
+
+// relationships
 @property (nonatomic, retain) ILobbyStoreRemoteItem *remoteItem;
 @property (nonatomic, retain) ILobbyStoreSlideTransition *slideTransition;
 @property (nonatomic, retain) ILobbyStoreTrackConfiguration *trackConfiguration;

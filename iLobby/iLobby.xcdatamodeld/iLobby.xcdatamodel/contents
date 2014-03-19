@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Configuration" representedClassName="ILobbyStoreConfiguration" parentEntity="RemoteItem" syncable="YES">
+        <attribute name="refreshPeriod" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="remoteItem" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteItem" inverseName="configuration" inverseEntity="RemoteItem" syncable="YES"/>
+        <relationship name="root" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="configuration" inverseEntity="Root" syncable="YES"/>
         <relationship name="slideTransition" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SlideTransition" inverseName="configuration" inverseEntity="SlideTransition" syncable="YES"/>
         <relationship name="trackConfiguration" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TrackConfiguration" inverseName="configuration" inverseEntity="TrackConfiguration" syncable="YES"/>
     </entity>
@@ -29,6 +31,7 @@
         <relationship name="slides" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Slide" inverseName="remoteMedia" inverseEntity="Slide" syncable="YES"/>
     </entity>
     <entity name="Root" representedClassName="ILobbyStoreRoot" syncable="YES">
+        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="root" inverseEntity="Configuration" syncable="YES"/>
         <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Presentation" inverseName="root" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="PresentationGroup" inverseName="root" inverseEntity="PresentationGroup" syncable="YES"/>
     </entity>
@@ -54,12 +57,12 @@
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="trackConfiguration" inverseEntity="Configuration" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Configuration" positionX="27" positionY="72" width="128" height="90"/>
+        <element name="Configuration" positionX="27" positionY="72" width="128" height="118"/>
         <element name="Presentation" positionX="0" positionY="0" width="128" height="163"/>
         <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="73"/>
         <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
         <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="58"/>
-        <element name="Root" positionX="0" positionY="0" width="128" height="73"/>
+        <element name="Root" positionX="0" positionY="0" width="128" height="88"/>
         <element name="Slide" positionX="0" positionY="0" width="128" height="90"/>
         <element name="SlideTransition" positionX="0" positionY="0" width="128" height="103"/>
         <element name="Track" positionX="0" positionY="0" width="128" height="88"/>

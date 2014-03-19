@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#import "ILobbyStoreConfiguration.h"
+
+
 @class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup, ILobbyStorePresentation;
 
 
@@ -16,6 +19,7 @@
 
 @property (nonatomic, retain) ILobbyStorePresentation *currentPresentation;
 @property (nonatomic, retain) NSOrderedSet *groups;
+@property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
 @end
 
 
