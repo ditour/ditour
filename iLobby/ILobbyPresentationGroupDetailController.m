@@ -128,6 +128,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     ILobbyGroupDetailActivePresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
+	ILobbyStorePresentation *presentation = self.group.activePresentations[indexPath.row];
+	cell.nameLabel.text = presentation.name;
 
     return cell;
 }
@@ -137,6 +139,9 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     ILobbyGroupDetailPendingPresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:PENDING_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
+	ILobbyStorePresentation *presentation = self.group.pendingPresentations[indexPath.row];
+	cell.nameLabel.text = presentation.name;
+	cell.progressView.progress = 0.25;
 
     return cell;
 }

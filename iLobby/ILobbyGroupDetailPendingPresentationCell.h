@@ -10,4 +10,6 @@
 
 @interface ILobbyGroupDetailPendingPresentationCell : UITableViewCell
 
+@property (nonatomic, weak) IBOutlet UILabel *nameLabel;
+@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @end

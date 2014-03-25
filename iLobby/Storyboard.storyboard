@@ -51,7 +51,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="ILobbyGroupDetailActivePresentationCell">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="thl-7H-h98" id="z6d-rc-9Ai">
@@ -67,8 +67,11 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="nameLabel" destination="uDc-BQ-P85" id="FSN-gB-MEj"/>
+                                </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="ILobbyGroupDetailPendingPresentationCell">
                                 <rect key="frame" x="0.0" y="174" width="1024" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cKO-m0-obr" id="LmF-KQ-zzD">
@@ -95,6 +98,10 @@
                                         <constraint firstAttribute="trailing" secondItem="VnP-YA-K09" secondAttribute="trailing" constant="20" id="sPe-bF-CIq"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="nameLabel" destination="AgP-2y-IrQ" id="ScV-PK-bIj"/>
+                                    <outlet property="progressView" destination="VnP-YA-K09" id="FhS-N3-bcS"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
