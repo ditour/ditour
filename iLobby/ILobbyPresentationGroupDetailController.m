@@ -10,7 +10,8 @@
 
 
 enum : NSInteger {
-	SECTION_PRESENTATIONS_VIEW,
+	SECTION_ACTIVE_PRESENTATIONS_VIEW,
+	SECTION_PENDING_PRESENTATIONS_VIEW,
 	SECTION_COUNT
 };
 
@@ -39,6 +40,7 @@ enum : NSInteger {
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
+	self.title = [NSString stringWithFormat:@"Group: %@", self.group.shortName];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -63,7 +65,7 @@ enum : NSInteger {
     // Return the number of rows in the section.
 
 	switch ( section ) {
-		case SECTION_PRESENTATIONS_VIEW:
+		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
 			return self.group.presentations.count;
 
 		default:

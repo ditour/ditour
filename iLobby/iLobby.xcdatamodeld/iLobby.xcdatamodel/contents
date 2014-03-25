@@ -21,6 +21,12 @@
     <entity name="PresentationGroup" representedClassName="ILobbyStorePresentationGroup" parentEntity="RemoteItem" syncable="YES">
         <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Presentation" inverseName="group" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="root" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="groups" inverseEntity="Root" syncable="YES"/>
+        <fetchedProperty name="activePresentations" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 1)"/>
+        </fetchedProperty>
+        <fetchedProperty name="pendingPresentations" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 0)"/>
+        </fetchedProperty>
     </entity>
     <entity name="RemoteItem" representedClassName="ILobbyStoreRemoteItem" isAbstract="YES" syncable="YES">
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
@@ -55,7 +61,7 @@
     <elements>
         <element name="Configuration" positionX="27" positionY="72" width="128" height="28"/>
         <element name="Presentation" positionX="0" positionY="0" width="128" height="163"/>
-        <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="73"/>
+        <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="116"/>
         <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
         <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="58"/>
         <element name="Root" positionX="0" positionY="0" width="128" height="88"/>

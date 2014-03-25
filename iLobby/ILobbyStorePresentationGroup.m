@@ -13,10 +13,18 @@
 @dynamic presentations;
 @dynamic root;
 
+@dynamic activePresentations;
+@dynamic pendingPresentations;
+
 
 + (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext {
     ILobbyStorePresentationGroup *group = [NSEntityDescription insertNewObjectForEntityForName:@"PresentationGroup" inManagedObjectContext:managedObjectContext];
 	return group;
+}
+
+
+- (NSString *)shortName {
+	return [self.remoteLocation lastPathComponent];
 }
 
 @end

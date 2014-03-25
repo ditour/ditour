@@ -26,7 +26,7 @@
 
 + (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {
     ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
-	presentation.status = PRESENTATION_STATUS_NEW;
+	presentation.status = PRESENTATION_STATUS_PENDING;
 	presentation.timestamp = [NSDate date];
 	return presentation;
 }

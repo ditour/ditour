@@ -32,6 +32,10 @@
 // custom additions
 @interface ILobbyStorePresentationGroup ()
 
+@property (nonatomic, readonly) NSString *shortName;
+@property (nonatomic, strong) NSArray *activePresentations;
+@property (nonatomic, strong) NSArray *pendingPresentations;
+
 + (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end
