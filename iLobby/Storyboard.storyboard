@@ -24,7 +24,7 @@
             </objects>
             <point key="canvasLocation" x="-269" y="-221"/>
         </scene>
-        <!--Lobby Presentation Group Detail Controller-->
+        <!--Lobby Presentation Group Detail Controller - Group Detail-->
         <scene sceneID="zF6-rG-KUl">
             <objects>
                 <tableViewController id="0xE-St-MOE" customClass="ILobbyPresentationGroupDetailController" sceneMemberID="viewController">
@@ -33,12 +33,76 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="ufv-NO-jXp">
+                            <rect key="frame" x="0.0" y="64" width="1024" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eO1-5G-eRJ">
+                                    <rect key="frame" x="20" y="7" width="69" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Download">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="downloadPresentations:" destination="0xE-St-MOE" eventType="touchUpInside" id="Vgf-qh-MaL"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98">
+                                <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="thl-7H-h98" id="z6d-rc-9Ai">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Active Presentation Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDc-BQ-P85">
+                                            <rect key="frame" x="20" y="11" width="199" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr">
+                                <rect key="frame" x="0.0" y="174" width="1024" height="66"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cKO-m0-obr" id="LmF-KQ-zzD">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="65"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Presentation Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AgP-2y-IrQ">
+                                            <rect key="frame" x="20" y="11" width="215" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="VnP-YA-K09">
+                                            <rect key="frame" x="20" y="49" width="951" height="2"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </progressView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="VnP-YA-K09" firstAttribute="leading" secondItem="LmF-KQ-zzD" secondAttribute="leading" constant="20" id="4dO-jR-qgz"/>
+                                        <constraint firstItem="AgP-2y-IrQ" firstAttribute="top" secondItem="LmF-KQ-zzD" secondAttribute="top" constant="11" id="SdS-2h-mij"/>
+                                        <constraint firstItem="AgP-2y-IrQ" firstAttribute="leading" secondItem="VnP-YA-K09" secondAttribute="leading" id="Z4E-Bi-CVJ"/>
+                                        <constraint firstItem="VnP-YA-K09" firstAttribute="top" secondItem="AgP-2y-IrQ" secondAttribute="bottom" constant="17" id="jki-72-RsB"/>
+                                        <constraint firstAttribute="trailing" secondItem="VnP-YA-K09" secondAttribute="trailing" constant="20" id="sPe-bF-CIq"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="0xE-St-MOE" id="amu-sN-lV3"/>
                             <outlet property="delegate" destination="0xE-St-MOE" id="UG9-dQ-FND"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="cmk-aA-Lmf"/>
+                    <navigationItem key="navigationItem" title="Group Detail" id="cmk-aA-Lmf"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYL-dD-06O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

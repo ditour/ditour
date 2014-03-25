@@ -7,6 +7,8 @@
 //
 
 #import "ILobbyPresentationGroupDetailController.h"
+#import "ILobbyGroupDetailActivePresentationCell.h"
+#import "ILobbyGroupDetailPendingPresentationCell.h"
 
 
 enum : NSInteger {
@@ -16,8 +18,14 @@ enum : NSInteger {
 };
 
 
+static NSString *ACTIVE_PRESENTATION_CELL_ID = @"GroupDetailActivePresentationCell";
+static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentationCell";
+
+
 
 @interface ILobbyPresentationGroupDetailController ()
+
+- (IBAction)downloadPresentations:(id)sender;
 
 @end
 
@@ -41,7 +49,7 @@ enum : NSInteger {
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 	self.title = [NSString stringWithFormat:@"Group: %@", self.group.shortName];
-    
+
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -50,6 +58,11 @@ enum : NSInteger {
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+- (IBAction)downloadPresentations:(id)sender {
+	NSLog( @"Download presentatinos..." );
 }
 
 
@@ -66,7 +79,10 @@ enum : NSInteger {
 
 	switch ( section ) {
 		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
-			return self.group.presentations.count;
+			return self.group.activePresentations.count;
+
+		case SECTION_PENDING_PRESENTATIONS_VIEW:
+			return self.group.pendingPresentations.count;
 
 		default:
 			break;
@@ -76,54 +92,55 @@ enum : NSInteger {
 }
 
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	switch ( section ) {
+		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+			return @"Active Presentations";
+
+		case SECTION_PENDING_PRESENTATIONS_VIEW:
+			return @"Pending Presentations";
+
+		default:
+			break;
+	}
+
+	return nil;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+			return [self tableView:tableView activePresentationCellForRowAtIndexPath:indexPath];
+
+		case SECTION_PENDING_PRESENTATIONS_VIEW:
+			return [self tableView:tableView pendingPresentationCellForRowAtIndexPath:indexPath];
+
+		default:
+			break;
+	}
+
+	return nil;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView activePresentationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ILobbyGroupDetailActivePresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
+
     // Configure the cell...
-    
+
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+- (UITableViewCell *)tableView:(UITableView *)tableView pendingPresentationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ILobbyGroupDetailPendingPresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:PENDING_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+    // Configure the cell...
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    return cell;
 }
-*/
+
 
 /*
 #pragma mark - Navigation

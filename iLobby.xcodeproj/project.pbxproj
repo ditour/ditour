@@ -23,6 +23,8 @@
 		4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */; };
 		4C82BEC217D7899200740BD1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C82BEC117D7899200740BD1 /* Images.xcassets */; };
 		4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C865F8018CE0F7F00F66913 /* ILobbyStoreRemoteItem.m */; };
+		4C9248C018E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9248BF18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m */; };
+		4C9248C318E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9248C218E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
 		4C937D7B1631AAE200F251FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7A1631AAE200F251FF /* Foundation.framework */; };
 		4C937D7D1631AAE200F251FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7C1631AAE200F251FF /* CoreGraphics.framework */; };
@@ -83,6 +85,10 @@
 		4C82BEC117D7899200740BD1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4C865F7F18CE0F7F00F66913 /* ILobbyStoreRemoteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreRemoteItem.h; sourceTree = "<group>"; };
 		4C865F8018CE0F7F00F66913 /* ILobbyStoreRemoteItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreRemoteItem.m; sourceTree = "<group>"; };
+		4C9248BE18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyGroupDetailActivePresentationCell.h; sourceTree = "<group>"; };
+		4C9248BF18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyGroupDetailActivePresentationCell.m; sourceTree = "<group>"; };
+		4C9248C118E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyGroupDetailPendingPresentationCell.h; sourceTree = "<group>"; };
+		4C9248C218E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyGroupDetailPendingPresentationCell.m; sourceTree = "<group>"; };
 		4C937D741631AAE200F251FF /* iLobby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iLobby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C937D781631AAE200F251FF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C937D7A1631AAE200F251FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -283,6 +289,10 @@
 				4CA2E44B18D0F233004C0489 /* ILobbyPresentationGroupCell.m */,
 				4CB41D6318D24D710028F1DF /* ILobbyPresentationGroupEditCell.h */,
 				4CB41D6418D24D710028F1DF /* ILobbyPresentationGroupEditCell.m */,
+				4C9248BE18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.h */,
+				4C9248BF18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m */,
+				4C9248C118E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.h */,
+				4C9248C218E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -402,9 +412,11 @@
 				4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */,
 				4C937D851631AAE200F251FF /* main.m in Sources */,
 				4C937D891631AAE200F251FF /* ILobbyAppDelegate.m in Sources */,
+				4C9248C018E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m in Sources */,
 				4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */,
 				4C937DA81631BA8F00F251FF /* ILobbyPresenter.m in Sources */,
 				4CA2F153163588C10082ADFF /* ILobbyFileDownloader.m in Sources */,
+				4C9248C318E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m in Sources */,
 				4CA2F15616359FBF0082ADFF /* ILobbyPresentationDownloader.m in Sources */,
 				4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */,
 				4CC09887183D4CBF006755C8 /* ILobbyStoreSlideTransition.m in Sources */,
