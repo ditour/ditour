@@ -44,7 +44,6 @@
 // custom additions
 @interface ILobbyStoreTrack ()
 
-+ (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation location:(NSURL *)remoteURL;
-- (void)fetchRemoteMediaFrom:(ILobbyRemoteDirectory *)remoteDirectory;
++ (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation from:(ILobbyRemoteDirectory *)remoteDirectory;
 
 @end

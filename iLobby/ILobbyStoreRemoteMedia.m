@@ -14,20 +14,15 @@
 @dynamic slides;
 
 
-+ (instancetype)newRemoteMediaInTrack:(ILobbyStoreTrack *)track location:(NSURL *)remoteURL {
++ (instancetype)newRemoteMediaInTrack:(ILobbyStoreTrack *)track at:(ILobbyRemoteFile *)remoteFile {
 	ILobbyStoreRemoteMedia *remoteMedia = [NSEntityDescription insertNewObjectForEntityForName:@"RemoteMedia" inManagedObjectContext:track.managedObjectContext];
 
 	remoteMedia.track = track;
-	remoteMedia.remoteLocation = remoteURL.absoluteString;
-//	remoteMedia.remoteInfo = nil;
-	NSLog( @"Media: %@", remoteMedia.remoteLocation );
+	remoteMedia.remoteLocation = remoteFile.location.absoluteString;
+	remoteMedia.remoteInfo = remoteFile.info;
+	NSLog( @"Fetching Media: %@", remoteMedia.remoteURL.lastPathComponent );
 
 	return remoteMedia;
-}
-
-
-- (void)fetchSlidesFrom:(ILobbyRemoteFile *)remoteFile {
-
 }
 
 

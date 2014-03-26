@@ -17,25 +17,22 @@
 @dynamic remoteMedia;
 
 
-+ (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation location:(NSURL *)remoteURL {
++ (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation from:(ILobbyRemoteDirectory *)remoteDirectory {
 	ILobbyStoreTrack *track = [NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:presentation.managedObjectContext];
 
 	track.presentation = presentation;
-	track.remoteLocation = remoteURL.absoluteString;
+	track.remoteLocation = remoteDirectory.location.absoluteString;
 
 	// TODO: remove any leading numbers used for ordering and handle spaces and capitalization
-	track.title = remoteURL.lastPathComponent;
+	track.title = remoteDirectory.location.lastPathComponent;
+
+	NSLog( @"Fetching Track: %@", track.title );
+
+	for ( ILobbyRemoteFile *remoteMediaFile in remoteDirectory.files ) {
+		[ILobbyStoreRemoteMedia newRemoteMediaInTrack:track at:remoteMediaFile];
+	}
 
 	return track;
-}
-
-
-- (void)fetchRemoteMediaFrom:(ILobbyRemoteDirectory *)remoteDirectory {
-	NSLog( @"Fetching remote media for track: %@", self.title );
-	
-	for ( ILobbyRemoteFile *remoteMediaFile in remoteDirectory.files ) {
-		[ILobbyStoreRemoteMedia newRemoteMediaInTrack:self location:remoteMediaFile.location];
-	}
 }
 
 

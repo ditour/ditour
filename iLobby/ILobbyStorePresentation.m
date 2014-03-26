@@ -24,14 +24,23 @@
 @dynamic tracks;
 
 
-+ (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group location:(NSURL *)remoteURL {
++ (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group from:(ILobbyRemoteDirectory *)remoteDirectory {
+
     ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:group.managedObjectContext];
 
 	presentation.status = @( PRESENTATION_STATUS_PENDING );
 	presentation.timestamp = [NSDate date];
-	presentation.remoteLocation = remoteURL.absoluteString;
-	presentation.name = remoteURL.lastPathComponent;
+	presentation.remoteLocation = remoteDirectory.location.absoluteString;
+	presentation.name = remoteDirectory.location.lastPathComponent;
 	presentation.group = group;
+
+	NSLog( @"Fetching presentation: %@", presentation.name );
+
+	// fetch the tracks
+	for ( ILobbyRemoteDirectory *remoteTrackDirectory in remoteDirectory.subdirectories ) {
+		[ILobbyStoreTrack newTrackInPresentation:presentation from:remoteTrackDirectory];
+	}
+
 
 	return presentation;
 }
@@ -39,15 +48,6 @@
 
 - (BOOL)isReady {
 	return self.status.shortValue == PRESENTATION_STATUS_READY;
-}
-
-
-- (void)fetchRemoteTracksFrom:(ILobbyRemoteDirectory *)remoteDirectory {
-	for ( ILobbyRemoteDirectory *remoteTrackDirectory in remoteDirectory.subdirectories ) {
-		ILobbyStoreTrack *track = [ILobbyStoreTrack newTrackInPresentation:self location:remoteTrackDirectory.location];
-		NSLog( @"Fetched track: %@", track.title );
-		[track fetchRemoteMediaFrom:remoteTrackDirectory];
-	}
 }
 
 @end

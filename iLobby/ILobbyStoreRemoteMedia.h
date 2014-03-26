@@ -41,7 +41,6 @@
 // custom additions
 @interface ILobbyStoreRemoteMedia ()
 
-+ (instancetype)newRemoteMediaInTrack:(ILobbyStoreTrack *)track location:(NSURL *)remoteURL;
-- (void)fetchSlidesFrom:(ILobbyRemoteFile *)remoteFile;
++ (instancetype)newRemoteMediaInTrack:(ILobbyStoreTrack *)track at:(ILobbyRemoteFile *)remoteFile;
 
 @end

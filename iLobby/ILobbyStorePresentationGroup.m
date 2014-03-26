@@ -38,8 +38,7 @@
 		if ( !error ) {
 			[self.managedObjectContext performBlockAndWait:^{
 				for ( ILobbyRemoteDirectory *remotePresentationDirectory in remoteGroup.subdirectories ) {
-					ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:self location:remotePresentationDirectory.location];
-					[presentation fetchRemoteTracksFrom:remotePresentationDirectory];
+					[ILobbyStorePresentation newPresentationInGroup:self from:remotePresentationDirectory];
 				}
 				[self.managedObjectContext refreshObject:self mergeChanges:YES];
 			}];

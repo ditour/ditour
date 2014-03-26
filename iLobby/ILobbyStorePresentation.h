@@ -62,7 +62,6 @@ typedef enum : short {
 
 @property (nonatomic, readonly) BOOL isReady;
 
-+ (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group location:(NSURL *)remoteURL;
-- (void)fetchRemoteTracksFrom:(ILobbyRemoteDirectory *)remoteDirectory;
++ (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group from:(ILobbyRemoteDirectory *)remoteDirectory;
 
 @end
