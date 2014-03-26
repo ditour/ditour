@@ -15,7 +15,7 @@
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="presentations" inverseEntity="PresentationGroup" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="revision" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="revision" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="parent" inverseEntity="Presentation" syncable="YES"/>
-        <relationship name="root" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="currentPresentation" inverseEntity="Root" syncable="YES"/>
+        <relationship name="rootForCurrent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="currentPresentation" inverseEntity="Root" syncable="YES"/>
         <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Track" inverseName="presentation" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="PresentationGroup" representedClassName="ILobbyStorePresentationGroup" parentEntity="RemoteItem" syncable="YES">
@@ -39,7 +39,7 @@
     </entity>
     <entity name="Root" representedClassName="ILobbyStoreRoot" syncable="YES">
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="root" inverseEntity="Configuration" syncable="YES"/>
-        <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Presentation" inverseName="root" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Presentation" inverseName="rootForCurrent" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="PresentationGroup" inverseName="root" inverseEntity="PresentationGroup" syncable="YES"/>
     </entity>
     <entity name="Slide" representedClassName="ILobbyStoreSlide" syncable="YES">

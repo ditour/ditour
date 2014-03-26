@@ -62,7 +62,11 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 
 - (IBAction)downloadPresentations:(id)sender {
-	NSLog( @"Download presentatinos..." );
+	[self.group fetchPresentationsWithCompletion:^(ILobbyStorePresentationGroup *group, NSError *error) {
+		dispatch_async( dispatch_get_main_queue(), ^{
+			[self.tableView reloadData];
+		});
+	}];
 }
 
 

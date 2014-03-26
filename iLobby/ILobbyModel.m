@@ -375,19 +375,10 @@
 		[self cancelPresentationDownload];
 	}
 
-	__block ILobbyStorePresentation *presentation;
-	[self.managedObjectContext performBlockAndWait:^{
-		presentation = [ILobbyStorePresentation insertNewPresentationInContext:self.managedObjectContext];
 
-		//TODO: remote location should be from user instead of hard coded
-
-		//TODO: local presentation path should be computed instead of hard coded
-		presentation.path = [[ILobbyModel.documentDirectoryURL path] stringByAppendingPathComponent:@"Presentation"];
-	}];
-
-	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithPresentation:presentation completionHandler:^(ILobbyPresentationDownloader *downloader) {
-		NSLog( @"presentation dowload complete..." );
-	}];
+//	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithPresentation:presentation completionHandler:^(ILobbyPresentationDownloader *downloader) {
+//		NSLog( @"presentation dowload complete..." );
+//	}];
 }
 
 

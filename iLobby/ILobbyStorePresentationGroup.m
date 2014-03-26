@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyStorePresentationGroup.h"
+#import "ILobbyRemoteDirectory.h"
 
 @implementation ILobbyStorePresentationGroup
 
@@ -25,6 +26,27 @@
 
 - (NSString *)shortName {
 	return [self.remoteLocation lastPathComponent];
+}
+
+
+- (void)fetchPresentationsWithCompletion:(void (^)(ILobbyStorePresentationGroup *group, NSError *error))completionBlock {
+	dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^{
+		NSError *error = nil;
+		ILobbyRemoteDirectory *remoteGroup = [ILobbyRemoteDirectory parseDirectoryAtURL:self.remoteURL error:&error];
+
+		if ( !error ) {
+			[self.managedObjectContext performBlockAndWait:^{
+				NSArray *remotePresentations = remoteGroup.subdirectories;
+				for ( ILobbyRemoteDirectory *remotePresentation in remotePresentations ) {
+					[ILobbyStorePresentation newPresentationInGroup:self location:remotePresentation.location];
+				}
+				[self.managedObjectContext refreshObject:self mergeChanges:YES];
+				NSLog( @"group presentations: %@", self.presentations );
+			}];
+		}
+
+		completionBlock( self, error );
+	});
 }
 
 @end

@@ -34,7 +34,6 @@ typedef enum : short {
 @property (nonatomic, retain) ILobbyStorePresentationGroup *group;
 @property (nonatomic, retain) ILobbyStorePresentation *parent;
 @property (nonatomic, retain) ILobbyStorePresentation *revision;
-@property (nonatomic, retain) ILobbyStoreRoot *root;
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @end
 
@@ -62,6 +61,6 @@ typedef enum : short {
 
 @property (nonatomic, readonly) BOOL isReady;
 
-+ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext;
++ (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group location:(NSURL *)remoteURL;
 
 @end

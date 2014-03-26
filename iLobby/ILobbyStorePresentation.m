@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyStorePresentation.h"
+#import "ILobbyStorePresentationGroup.h"
 
 
 @implementation ILobbyStorePresentation
@@ -20,14 +21,18 @@
 @dynamic group;
 @dynamic parent;
 @dynamic revision;
-@dynamic root;
 @dynamic tracks;
 
 
-+ (instancetype)insertNewPresentationInContext:(NSManagedObjectContext *)managedObjectContext {
-    ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:managedObjectContext];
-	presentation.status = PRESENTATION_STATUS_PENDING;
++ (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group location:(NSURL *)remoteURL {
+    ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:group.managedObjectContext];
+
+	presentation.status = @( PRESENTATION_STATUS_PENDING );
 	presentation.timestamp = [NSDate date];
+	presentation.remoteLocation = remoteURL.absoluteString;
+	presentation.name = remoteURL.lastPathComponent;
+	presentation.group = group;
+
 	return presentation;
 }
 

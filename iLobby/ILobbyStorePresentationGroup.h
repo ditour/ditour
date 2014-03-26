@@ -38,4 +38,7 @@
 
 + (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext;
 
+// fetch the presentations but don't download them
+- (void)fetchPresentationsWithCompletion:(void (^)(ILobbyStorePresentationGroup *group, NSError *error))completionBlock;
+
 @end
