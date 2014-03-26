@@ -44,10 +44,6 @@
 				[self.managedObjectContext refreshObject:self mergeChanges:YES];
 			}];
 		}
-		else {
-			//TODO: need to advertise this error to the user
-			NSLog( @"Error parsing group: %@", error );
-		}
 
 		completionBlock( self, error );
 	});
