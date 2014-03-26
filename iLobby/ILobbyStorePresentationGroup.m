@@ -30,6 +30,7 @@
 
 
 - (void)fetchPresentationsWithCompletion:(void (^)(ILobbyStorePresentationGroup *group, NSError *error))completionBlock {
+
 	dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^{
 		NSError *error = nil;
 		ILobbyRemoteDirectory *remoteGroup = [ILobbyRemoteDirectory parseDirectoryAtURL:self.remoteURL error:&error];
@@ -41,8 +42,11 @@
 					[presentation fetchRemoteTracksFrom:remotePresentationDirectory];
 				}
 				[self.managedObjectContext refreshObject:self mergeChanges:YES];
-				NSLog( @"group presentations: %@", self.presentations );
 			}];
+		}
+		else {
+			//TODO: need to advertise this error to the user
+			NSLog( @"Error parsing group: %@", error );
 		}
 
 		completionBlock( self, error );

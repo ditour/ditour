@@ -10,7 +10,8 @@
 #import <CoreData/CoreData.h>
 
 #import "ILobbyStoreRemoteItem.h"
-#import "ILobbyStoreSlide.h"
+#import "ILobbyStoreRemoteMedia.h"
+#import "ILobbyRemoteDirectory.h"
 
 
 @class ILobbyStorePresentation;
@@ -19,24 +20,23 @@
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) ILobbyStorePresentation *presentation;
-@property (nonatomic, retain) NSOrderedSet *slides;
-
+@property (nonatomic, retain) NSOrderedSet *remoteMedia;
 @end
 
 
 
 @interface ILobbyStoreTrack (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(ILobbyStoreSlide *)value inSlidesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromSlidesAtIndex:(NSUInteger)idx;
-- (void)insertSlides:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeSlidesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInSlidesAtIndex:(NSUInteger)idx withObject:(ILobbyStoreSlide *)value;
-- (void)replaceSlidesAtIndexes:(NSIndexSet *)indexes withSlides:(NSArray *)values;
-- (void)addSlidesObject:(ILobbyStoreSlide *)value;
-- (void)removeSlidesObject:(ILobbyStoreSlide *)value;
-- (void)addSlides:(NSOrderedSet *)values;
-- (void)removeSlides:(NSOrderedSet *)values;
+- (void)insertObject:(ILobbyStoreRemoteMedia *)value inRemoteMediaAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromRemoteMediaAtIndex:(NSUInteger)idx;
+- (void)insertRemoteMedia:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeRemoteMediaAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInRemoteMediaAtIndex:(NSUInteger)idx withObject:(ILobbyStoreRemoteMedia *)value;
+- (void)replaceRemoteMediaAtIndexes:(NSIndexSet *)indexes withRemoteMedia:(NSArray *)values;
+- (void)addRemoteMediaObject:(ILobbyStoreRemoteMedia *)value;
+- (void)removeRemoteMediaObject:(ILobbyStoreRemoteMedia *)value;
+- (void)addRemoteMedia:(NSOrderedSet *)values;
+- (void)removeRemoteMedia:(NSOrderedSet *)values;
 @end
 
 
@@ -45,5 +45,6 @@
 @interface ILobbyStoreTrack ()
 
 + (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation location:(NSURL *)remoteURL;
+- (void)fetchRemoteMediaFrom:(ILobbyRemoteDirectory *)remoteDirectory;
 
 @end

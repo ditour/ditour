@@ -17,7 +17,6 @@
 
 @property (nonatomic, retain) NSString * path;
 @property (nonatomic, retain) ILobbyStoreRemoteMedia *remoteMedia;
-@property (nonatomic, retain) ILobbyStoreTrack *track;
 
 @end
 
@@ -25,6 +24,6 @@
 
 @interface ILobbyStoreSlide ()
 
-+ (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext;
+//+ (instancetype)newSlideInTrack:(ILobbyStoreTrack *)track location:(NSURL *)remoteURL;
 
 @end

@@ -14,7 +14,7 @@
 
 @dynamic title;
 @dynamic presentation;
-@dynamic slides;
+@dynamic remoteMedia;
 
 
 + (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation location:(NSURL *)remoteURL {
@@ -27,6 +27,15 @@
 	track.title = remoteURL.lastPathComponent;
 
 	return track;
+}
+
+
+- (void)fetchRemoteMediaFrom:(ILobbyRemoteDirectory *)remoteDirectory {
+	NSLog( @"Fetching remote media for track: %@", self.title );
+	
+	for ( ILobbyRemoteFile *remoteMediaFile in remoteDirectory.files ) {
+		[ILobbyStoreRemoteMedia newRemoteMediaInTrack:self location:remoteMediaFile.location];
+	}
 }
 
 

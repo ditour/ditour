@@ -7,8 +7,28 @@
 //
 
 #import "ILobbyStoreRemoteMedia.h"
+#import "ILobbyStoreTrack.h"
 
 @implementation ILobbyStoreRemoteMedia
+@dynamic track;
 @dynamic slides;
+
+
++ (instancetype)newRemoteMediaInTrack:(ILobbyStoreTrack *)track location:(NSURL *)remoteURL {
+	ILobbyStoreRemoteMedia *remoteMedia = [NSEntityDescription insertNewObjectForEntityForName:@"RemoteMedia" inManagedObjectContext:track.managedObjectContext];
+
+	remoteMedia.track = track;
+	remoteMedia.remoteLocation = remoteURL.absoluteString;
+//	remoteMedia.remoteInfo = nil;
+	NSLog( @"Media: %@", remoteMedia.remoteLocation );
+
+	return remoteMedia;
+}
+
+
+- (void)fetchSlidesFrom:(ILobbyRemoteFile *)remoteFile {
+
+}
+
 
 @end

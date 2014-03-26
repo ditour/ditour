@@ -7,17 +7,22 @@
 //
 
 #import "ILobbyStoreSlide.h"
+#import "ILobbyStoreTrack.h"
 
 
 @implementation ILobbyStoreSlide
 
 @dynamic path;
 @dynamic remoteMedia;
-@dynamic track;
 
 
-+ (instancetype)insertNewSlideInContext:(NSManagedObjectContext *)managedObjectContext {
-    return [NSEntityDescription insertNewObjectForEntityForName:@"Slide" inManagedObjectContext:managedObjectContext];
-}
+//+ (instancetype)newSlideInTrack:(ILobbyStoreTrack *)track location:(NSURL *)remoteURL {
+//	ILobbyStoreSlide *slide = [NSEntityDescription insertNewObjectForEntityForName:@"Slide" inManagedObjectContext:track.managedObjectContext];
+//
+//	slide.track = track;
+//	slide.remoteMedia = nil;
+//
+//	return slide;
+//}
 
 @end

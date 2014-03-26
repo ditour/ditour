@@ -44,11 +44,10 @@
 
 - (void)fetchRemoteTracksFrom:(ILobbyRemoteDirectory *)remoteDirectory {
 	for ( ILobbyRemoteDirectory *remoteTrackDirectory in remoteDirectory.subdirectories ) {
-		//NSLog( @"Track URL: %@", remoteTrackDirectory.location );
-		[ILobbyStoreTrack newTrackInPresentation:self location:remoteTrackDirectory.location];
+		ILobbyStoreTrack *track = [ILobbyStoreTrack newTrackInPresentation:self location:remoteTrackDirectory.location];
+		NSLog( @"Fetched track: %@", track.title );
+		[track fetchRemoteMediaFrom:remoteTrackDirectory];
 	}
-
-	NSLog( @"Tracks: %@", self.tracks );
 }
 
 @end
