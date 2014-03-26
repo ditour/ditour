@@ -55,7 +55,7 @@ static NSString *GROUPS_KEY = @"Groups";
 
 	[groups removeObjectAtIndex:index];
 
-	// the group no longer has a user config, so remove it
+	// the group is no longer associated with a root, so remove it
 	[group.managedObjectContext deleteObject:group];
 }
 
