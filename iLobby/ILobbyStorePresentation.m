@@ -41,4 +41,14 @@
 	return self.status.shortValue == PRESENTATION_STATUS_READY;
 }
 
+
+- (void)fetchRemoteTracksFrom:(ILobbyRemoteDirectory *)remoteDirectory {
+	for ( ILobbyRemoteDirectory *remoteTrackDirectory in remoteDirectory.subdirectories ) {
+		//NSLog( @"Track URL: %@", remoteTrackDirectory.location );
+		[ILobbyStoreTrack newTrackInPresentation:self location:remoteTrackDirectory.location];
+	}
+
+	NSLog( @"Tracks: %@", self.tracks );
+}
+
 @end

@@ -11,6 +11,7 @@
 
 #import "ILobbyStoreRemoteItem.h"
 #import "ILobbyStoreTrack.h"
+#import "ILobbyRemoteDirectory.h"
 
 
 typedef enum : short {
@@ -62,5 +63,6 @@ typedef enum : short {
 @property (nonatomic, readonly) BOOL isReady;
 
 + (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group location:(NSURL *)remoteURL;
+- (void)fetchRemoteTracksFrom:(ILobbyRemoteDirectory *)remoteDirectory;
 
 @end

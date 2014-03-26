@@ -41,3 +41,9 @@
 
 
 
+// custom additions
+@interface ILobbyStoreTrack ()
+
++ (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation location:(NSURL *)remoteURL;
+
+@end

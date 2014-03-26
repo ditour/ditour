@@ -36,9 +36,9 @@
 
 		if ( !error ) {
 			[self.managedObjectContext performBlockAndWait:^{
-				NSArray *remotePresentations = remoteGroup.subdirectories;
-				for ( ILobbyRemoteDirectory *remotePresentation in remotePresentations ) {
-					[ILobbyStorePresentation newPresentationInGroup:self location:remotePresentation.location];
+				for ( ILobbyRemoteDirectory *remotePresentationDirectory in remoteGroup.subdirectories ) {
+					ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:self location:remotePresentationDirectory.location];
+					[presentation fetchRemoteTracksFrom:remotePresentationDirectory];
 				}
 				[self.managedObjectContext refreshObject:self mergeChanges:YES];
 				NSLog( @"group presentations: %@", self.presentations );

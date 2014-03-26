@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyStoreTrack.h"
+#import "ILobbyStorePresentation.h"
 
 
 @implementation ILobbyStoreTrack
@@ -16,8 +17,16 @@
 @dynamic slides;
 
 
-+ (instancetype)insertNewTrackInContext:(NSManagedObjectContext *)managedObjectContext {
-	return [NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:managedObjectContext];
++ (instancetype)newTrackInPresentation:(ILobbyStorePresentation *)presentation location:(NSURL *)remoteURL {
+	ILobbyStoreTrack *track = [NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:presentation.managedObjectContext];
+
+	track.presentation = presentation;
+	track.remoteLocation = remoteURL.absoluteString;
+
+	// TODO: remove any leading numbers used for ordering and handle spaces and capitalization
+	track.title = remoteURL.lastPathComponent;
+
+	return track;
 }
 
 
