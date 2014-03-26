@@ -21,6 +21,7 @@
 	ILobbyStoreTrack *track = [NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:presentation.managedObjectContext];
 
 	track.presentation = presentation;
+	track.status = @( REMOTE_ITEM_STATUS_PENDING );
 	track.remoteLocation = remoteDirectory.location.absoluteString;
 
 	// TODO: remove any leading numbers used for ordering and handle spaces and capitalization

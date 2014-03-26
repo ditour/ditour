@@ -14,13 +14,6 @@
 #import "ILobbyRemoteDirectory.h"
 
 
-typedef enum : short {
-	PRESENTATION_STATUS_PENDING,
-	PRESENTATION_STATUS_READY,
-	PRESENTATION_STATUS_CANCELED
-} PresentationStatus;
-
-
 @class ILobbyStoreRoot, ILobbyStorePresentationGroup;
 
 
@@ -59,8 +52,6 @@ typedef enum : short {
 
 // custom additions
 @interface ILobbyStorePresentation ()
-
-@property (nonatomic, readonly) BOOL isReady;
 
 + (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group from:(ILobbyRemoteDirectory *)remoteDirectory;
 

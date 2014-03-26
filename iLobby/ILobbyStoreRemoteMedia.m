@@ -18,6 +18,7 @@
 	ILobbyStoreRemoteMedia *remoteMedia = [NSEntityDescription insertNewObjectForEntityForName:@"RemoteMedia" inManagedObjectContext:track.managedObjectContext];
 
 	remoteMedia.track = track;
+	remoteMedia.status = @( REMOTE_ITEM_STATUS_PENDING );
 	remoteMedia.remoteLocation = remoteFile.location.absoluteString;
 	remoteMedia.remoteInfo = remoteFile.info;
 	NSLog( @"Fetching Media: %@", remoteMedia.remoteURL.lastPathComponent );

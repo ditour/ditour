@@ -10,6 +10,7 @@
 
 @implementation ILobbyStoreRemoteItem
 
+@dynamic status;
 @dynamic remoteInfo;
 @dynamic remoteLocation;
 @dynamic path;
@@ -19,6 +20,11 @@
 - (NSURL *)remoteURL {
 	NSString *remoteLocation = self.remoteLocation;
 	return remoteLocation ? [NSURL URLWithString:remoteLocation] : nil;
+}
+
+
+- (BOOL)isReady {
+	return self.status.shortValue == REMOTE_ITEM_STATUS_READY;
 }
 
 @end

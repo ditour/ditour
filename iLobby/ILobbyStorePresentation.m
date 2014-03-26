@@ -28,7 +28,7 @@
 
     ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:group.managedObjectContext];
 
-	presentation.status = @( PRESENTATION_STATUS_PENDING );
+	presentation.status = @( REMOTE_ITEM_STATUS_PENDING );
 	presentation.timestamp = [NSDate date];
 	presentation.remoteLocation = remoteDirectory.location.absoluteString;
 	presentation.name = remoteDirectory.location.lastPathComponent;
@@ -43,11 +43,6 @@
 
 
 	return presentation;
-}
-
-
-- (BOOL)isReady {
-	return self.status.shortValue == PRESENTATION_STATUS_READY;
 }
 
 @end

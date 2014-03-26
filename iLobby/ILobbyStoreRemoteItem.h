@@ -12,8 +12,16 @@
 @class ILobbyStoreConfiguration;
 
 
+enum : short {
+	REMOTE_ITEM_STATUS_PENDING,
+	REMOTE_ITEM_STATUS_DOWNLOADING,
+	REMOTE_ITEM_STATUS_READY
+};
+
+
 @interface ILobbyStoreRemoteItem : NSManagedObject
 
+@property (nonatomic, retain) NSNumber * status;
 @property (nonatomic, retain) NSString * remoteInfo;
 @property (nonatomic, retain) NSString * remoteLocation;
 @property (nonatomic, retain) NSString * path;
@@ -26,4 +34,6 @@
 @interface ILobbyStoreRemoteItem ()
 
 @property (nonatomic, readonly) NSURL *remoteURL;
+@property (nonatomic, readonly) BOOL isReady;
+
 @end
