@@ -319,16 +319,16 @@
 				4CC09886183D4CBF006755C8 /* ILobbyStoreSlideTransition.m */,
 				4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */,
 				4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */,
+				4C9248C718E45A3400A6CBDA /* ILobbyStoreRemoteContainer.h */,
+				4C9248C818E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m */,
+				4C9248C418E45A1900A6CBDA /* ILobbyStoreRemoteFile.h */,
+				4C9248C518E45A1900A6CBDA /* ILobbyStoreRemoteFile.m */,
 				4C865F7F18CE0F7F00F66913 /* ILobbyStoreRemoteItem.h */,
 				4C865F8018CE0F7F00F66913 /* ILobbyStoreRemoteItem.m */,
 				4CE0DC5118D763B90092C700 /* ILobbyStoreRemoteMedia.h */,
 				4CE0DC5218D763B90092C700 /* ILobbyStoreRemoteMedia.m */,
 				4CC09894183D4CC0006755C8 /* ILobbyStoreRoot.h */,
 				4CC09895183D4CC0006755C8 /* ILobbyStoreRoot.m */,
-				4C9248C418E45A1900A6CBDA /* ILobbyStoreRemoteFile.h */,
-				4C9248C518E45A1900A6CBDA /* ILobbyStoreRemoteFile.m */,
-				4C9248C718E45A3400A6CBDA /* ILobbyStoreRemoteContainer.h */,
-				4C9248C818E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m */,
 			);
 			name = Store;
 			sourceTree = "<group>";

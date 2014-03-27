@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyStoreConfiguration.h"
+#import "ILobbyStoreRemoteContainer.h"
 
 
 @implementation ILobbyStoreConfiguration
@@ -14,6 +15,21 @@
 @dynamic slideDuration;
 @dynamic trackChangeDelay;
 @dynamic slideTransition;
+@dynamic container;
+
+
++ (instancetype)newConfigurationInContainer:(ILobbyStoreRemoteContainer	*)container at:(ILobbyRemoteFile *)remoteFile {
+	ILobbyStoreConfiguration *configuration = [NSEntityDescription insertNewObjectForEntityForName:@"Configuration" inManagedObjectContext:container.managedObjectContext];
+
+	configuration.container = container;
+	configuration.status = @( REMOTE_ITEM_STATUS_PENDING );
+	configuration.remoteLocation = remoteFile.location.absoluteString;
+	configuration.remoteInfo = remoteFile.info;
+	
+	NSLog( @"Fetching Configuration: %@", configuration.remoteURL.lastPathComponent );
+
+	return configuration;
+}
 
 
 // indicates whether the candidate URL matches a type supported by the class

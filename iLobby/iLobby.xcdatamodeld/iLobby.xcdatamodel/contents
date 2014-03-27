@@ -4,7 +4,7 @@
         <attribute name="refreshPeriod" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="slideDuration" optional="YES" attributeType="Double" defaultValueString="5" syncable="YES"/>
         <attribute name="trackChangeDelay" optional="YES" attributeType="Double" defaultValueString="900" syncable="YES"/>
-        <relationship name="remoteContainer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteContainer" inverseName="configuration" inverseEntity="RemoteContainer" syncable="YES"/>
+        <relationship name="container" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteContainer" inverseName="configuration" inverseEntity="RemoteContainer" syncable="YES"/>
         <relationship name="root" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="configuration" inverseEntity="Root" syncable="YES"/>
         <relationship name="slideTransition" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SlideTransition" inverseName="configuration" inverseEntity="SlideTransition" syncable="YES"/>
     </entity>
@@ -28,7 +28,7 @@
         </fetchedProperty>
     </entity>
     <entity name="RemoteContainer" representedClassName="ILobbyStoreRemoteContainer" isAbstract="YES" parentEntity="RemoteItem" syncable="YES">
-        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="remoteContainer" inverseEntity="Configuration" syncable="YES"/>
+        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="container" inverseEntity="Configuration" syncable="YES"/>
     </entity>
     <entity name="RemoteFile" representedClassName="ILobbyStoreRemoteFile" isAbstract="YES" parentEntity="RemoteItem" syncable="YES"/>
     <entity name="RemoteItem" representedClassName="ILobbyStoreRemoteItem" isAbstract="YES" syncable="YES">

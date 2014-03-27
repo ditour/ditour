@@ -8,8 +8,12 @@
 
 #import <CoreData/CoreData.h>
 
+#import "ILobbyRemoteFile.h"
 #import "ILobbyStoreRemoteFile.h"
 #import "ILobbyStoreSlideTransition.h"
+
+
+@class ILobbyStoreRemoteContainer;
 
 
 @interface ILobbyStoreConfiguration : ILobbyStoreRemoteFile
@@ -21,5 +25,15 @@
 
 // relationships
 @property (nonatomic, retain) ILobbyStoreSlideTransition *slideTransition;
+@property (nonatomic, retain) ILobbyStoreRemoteContainer *container;
+
+@end
+
+
+
+// custom additions
+@interface ILobbyStoreConfiguration ()
+
++ (instancetype)newConfigurationInContainer:(ILobbyStoreRemoteContainer	*)container at:(ILobbyRemoteFile *)remoteFile;
 
 @end
