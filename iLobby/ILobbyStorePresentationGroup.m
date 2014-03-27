@@ -46,12 +46,26 @@
 
 		if ( !error ) {
 			[self.managedObjectContext performBlockAndWait:^{
+				// process any files (e.g. config files)
 				for ( ILobbyRemoteFile *remoteFile in remoteGroup.files ) {
 					[self processRemoteFile:remoteFile];
 				}
 
+				// store the active presentations by name so they can be used as parents if necessary
+				NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
+				for ( ILobbyStorePresentation *presentation in self.activePresentations ) {
+					activePresentationsByName[presentation.name] = presentation;
+				}
+
+				// fetch presentations
 				for ( ILobbyRemoteDirectory *remotePresentationDirectory in remoteGroup.subdirectories ) {
-					[ILobbyStorePresentation newPresentationInGroup:self from:remotePresentationDirectory];
+					ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:self from:remotePresentationDirectory];
+
+					// if an active presentation has the same name then assign it as a parent
+					ILobbyStorePresentation *presentationParent = activePresentationsByName[presentation.name];
+					if ( presentationParent != nil ) {
+						presentation.parent = presentationParent;
+					}
 				}
 
 				// updates fetched properties
