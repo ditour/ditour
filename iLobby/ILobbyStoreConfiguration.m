@@ -11,10 +11,6 @@
 
 
 @implementation ILobbyStoreConfiguration
-@dynamic refreshPeriod;
-@dynamic slideDuration;
-@dynamic trackChangeDelay;
-@dynamic slideTransition;
 @dynamic container;
 
 
