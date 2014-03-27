@@ -25,6 +25,8 @@
 		4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C865F8018CE0F7F00F66913 /* ILobbyStoreRemoteItem.m */; };
 		4C9248C018E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9248BF18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m */; };
 		4C9248C318E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9248C218E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m */; };
+		4C9248C618E45A1900A6CBDA /* ILobbyStoreRemoteFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9248C518E45A1900A6CBDA /* ILobbyStoreRemoteFile.m */; };
+		4C9248C918E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9248C818E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
 		4C937D7B1631AAE200F251FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7A1631AAE200F251FF /* Foundation.framework */; };
 		4C937D7D1631AAE200F251FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7C1631AAE200F251FF /* CoreGraphics.framework */; };
@@ -89,6 +91,10 @@
 		4C9248BF18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyGroupDetailActivePresentationCell.m; sourceTree = "<group>"; };
 		4C9248C118E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyGroupDetailPendingPresentationCell.h; sourceTree = "<group>"; };
 		4C9248C218E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyGroupDetailPendingPresentationCell.m; sourceTree = "<group>"; };
+		4C9248C418E45A1900A6CBDA /* ILobbyStoreRemoteFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreRemoteFile.h; sourceTree = "<group>"; };
+		4C9248C518E45A1900A6CBDA /* ILobbyStoreRemoteFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreRemoteFile.m; sourceTree = "<group>"; };
+		4C9248C718E45A3400A6CBDA /* ILobbyStoreRemoteContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreRemoteContainer.h; sourceTree = "<group>"; };
+		4C9248C818E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreRemoteContainer.m; sourceTree = "<group>"; };
 		4C937D741631AAE200F251FF /* iLobby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iLobby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C937D781631AAE200F251FF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C937D7A1631AAE200F251FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -319,6 +325,10 @@
 				4CE0DC5218D763B90092C700 /* ILobbyStoreRemoteMedia.m */,
 				4CC09894183D4CC0006755C8 /* ILobbyStoreRoot.h */,
 				4CC09895183D4CC0006755C8 /* ILobbyStoreRoot.m */,
+				4C9248C418E45A1900A6CBDA /* ILobbyStoreRemoteFile.h */,
+				4C9248C518E45A1900A6CBDA /* ILobbyStoreRemoteFile.m */,
+				4C9248C718E45A3400A6CBDA /* ILobbyStoreRemoteContainer.h */,
+				4C9248C818E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m */,
 			);
 			name = Store;
 			sourceTree = "<group>";
@@ -410,6 +420,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */,
+				4C9248C618E45A1900A6CBDA /* ILobbyStoreRemoteFile.m in Sources */,
 				4C937D851631AAE200F251FF /* main.m in Sources */,
 				4C937D891631AAE200F251FF /* ILobbyAppDelegate.m in Sources */,
 				4C9248C018E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m in Sources */,
@@ -436,6 +447,7 @@
 				4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */,
 				4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */,
 				4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */,
+				4C9248C918E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m in Sources */,
 				4C2E3A2A163B070100A832C4 /* ILobbyDirectory.m in Sources */,
 				4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */,
 				4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */,

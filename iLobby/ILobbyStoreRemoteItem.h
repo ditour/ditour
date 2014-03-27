@@ -9,9 +9,6 @@
 #import <CoreData/CoreData.h>
 
 
-@class ILobbyStoreConfiguration;
-
-
 enum : short {
 	REMOTE_ITEM_STATUS_PENDING,
 	REMOTE_ITEM_STATUS_DOWNLOADING,
@@ -25,7 +22,6 @@ enum : short {
 @property (nonatomic, retain) NSString * remoteInfo;
 @property (nonatomic, retain) NSString * remoteLocation;
 @property (nonatomic, retain) NSString * path;
-@property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
 @end
 
 

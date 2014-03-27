@@ -15,4 +15,10 @@
 @dynamic trackChangeDelay;
 @dynamic slideTransition;
 
+
+// indicates whether the candidate URL matches a type supported by the class
++ (BOOL)matches:(NSURL *)candidateURL {
+	return [[candidateURL.lastPathComponent lowercaseString] isEqualToString:@"config.json"];
+}
+
 @end

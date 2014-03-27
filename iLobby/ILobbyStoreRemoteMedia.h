@@ -7,14 +7,14 @@
 //
 
 #import <CoreData/CoreData.h>
-#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreRemoteFile.h"
 #import "ILobbyRemoteFile.h"
 
 
 @class ILobbyStoreSlide, ILobbyStoreTrack;
 
 
-@interface ILobbyStoreRemoteMedia : ILobbyStoreRemoteItem
+@interface ILobbyStoreRemoteMedia : ILobbyStoreRemoteFile
 
 @property (nonatomic, retain) ILobbyStoreTrack *track;
 @property (nonatomic, retain) NSOrderedSet *slides;

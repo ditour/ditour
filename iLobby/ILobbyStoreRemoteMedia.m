@@ -27,4 +27,16 @@
 }
 
 
+// indicates whether the candidate URL matches a type supported by the class
++ (BOOL)matches:(NSURL *)candidateURL {
+	// TODO: for now just hard code the file types, but need to place this set in a common location
+	static NSSet *supportedExtensions = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		supportedExtensions = [NSSet setWithArray:@[@"png", @"jpg", @"jpeg", @"gif", @"pdf", @"m4v", @"mp4"]];
+	});
+
+	return [supportedExtensions containsObject:[[candidateURL.path pathExtension] lowercaseString]];
+}
+
 @end

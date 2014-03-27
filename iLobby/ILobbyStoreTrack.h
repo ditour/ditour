@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreRemoteContainer.h"
 #import "ILobbyStoreRemoteMedia.h"
 #import "ILobbyRemoteDirectory.h"
 
 
 @class ILobbyStorePresentation;
 
-@interface ILobbyStoreTrack : ILobbyStoreRemoteItem
+@interface ILobbyStoreTrack : ILobbyStoreRemoteContainer
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) ILobbyStorePresentation *presentation;

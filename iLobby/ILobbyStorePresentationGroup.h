@@ -8,10 +8,10 @@
 
 #import <CoreData/CoreData.h>
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreRemoteContainer.h"
 
 
-@interface ILobbyStorePresentationGroup : ILobbyStoreRemoteItem
+@interface ILobbyStorePresentationGroup : ILobbyStoreRemoteContainer
 
 @property (nonatomic, retain) NSSet *presentations;
 @property (nonatomic, retain) ILobbyStoreRoot *root;

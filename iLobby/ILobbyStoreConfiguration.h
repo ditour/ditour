@@ -8,11 +8,11 @@
 
 #import <CoreData/CoreData.h>
 
-#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreRemoteFile.h"
 #import "ILobbyStoreSlideTransition.h"
 
 
-@interface ILobbyStoreConfiguration : ILobbyStoreRemoteItem
+@interface ILobbyStoreConfiguration : ILobbyStoreRemoteFile
 
 // attributes
 @property (nonatomic, retain) NSNumber * refreshPeriod;		// refresh period in minutes (applies to active presentation)

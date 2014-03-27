@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-#import "ILobbyStoreRemoteItem.h"
+#import "ILobbyStoreRemoteContainer.h"
 #import "ILobbyStoreTrack.h"
 #import "ILobbyRemoteDirectory.h"
 
@@ -17,7 +17,7 @@
 @class ILobbyStoreRoot, ILobbyStorePresentationGroup;
 
 
-@interface ILobbyStorePresentation : ILobbyStoreRemoteItem
+@interface ILobbyStorePresentation : ILobbyStoreRemoteContainer
 
 // attributes
 @property (nonatomic, retain) NSString * name;
