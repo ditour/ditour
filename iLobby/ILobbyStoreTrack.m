@@ -24,8 +24,11 @@
 	track.status = @( REMOTE_ITEM_STATUS_PENDING );
 	track.remoteLocation = remoteDirectory.location.absoluteString;
 
+	NSString *rawName = remoteDirectory.location.lastPathComponent;
+	track.path = [presentation.path stringByAppendingPathComponent:rawName];
+
 	// TODO: remove any leading numbers used for ordering and handle spaces and capitalization
-	track.title = remoteDirectory.location.lastPathComponent;
+	track.title = rawName;
 
 	NSLog( @"Fetching Track: %@", track.title );
 

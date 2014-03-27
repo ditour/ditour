@@ -33,6 +33,7 @@
 	presentation.remoteLocation = remoteDirectory.location.absoluteString;
 	presentation.name = remoteDirectory.location.lastPathComponent;
 	presentation.group = group;
+	presentation.path = [group.path stringByAppendingPathComponent:presentation.name];
 
 	NSLog( @"Fetching presentation: %@", presentation.name );
 

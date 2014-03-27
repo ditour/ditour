@@ -14,6 +14,7 @@
 
 
 @interface ILobbyModel ()
+
 @property (strong, nonatomic) ILobbyPresentationDownloader *presentationDownloader;
 @property (strong, readwrite) ILobbyProgress *downloadProgress;
 @property (readwrite) BOOL hasPresentationUpdate;
@@ -26,7 +27,11 @@
 @property (nonatomic, readwrite) ILobbyStoreRoot *mainStoreRoot;
 @property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readwrite) NSManagedObjectContext *mainManagedObjectContext;
+
 @end
+
+
+static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 
 @implementation ILobbyModel
@@ -35,6 +40,7 @@
 +(void)initialize {
 	if ( self == [ILobbyModel class] ) {
 		[self purgeVersion1Data];
+		PRESENTATION_GROUP_ROOT = [self.documentDirectoryURL.path stringByAppendingPathComponent:@"PresentationGroups"];
 	}
 }
 
@@ -68,11 +74,16 @@
 }
 
 
++ (NSString *)presentationGroupsRoot {
+	return PRESENTATION_GROUP_ROOT;
+}
+
+
 - (id)init {
     self = [super init];
     if (self) {
 		self.playing = NO;
-		
+
 		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
 		[self setupDataModel];
 
@@ -80,6 +91,11 @@
 		[self loadDefaultPresentation];
     }
     return self;
+}
+
+
+- (NSString *)presentationGroupsRoot {
+	return PRESENTATION_GROUP_ROOT;
 }
 
 

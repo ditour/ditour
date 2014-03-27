@@ -21,6 +21,8 @@
 @property (strong, nonatomic) ILobbyStoreRoot *storeRoot;			// user config for persistent store context
 @property (nonatomic, readonly) ILobbyStoreRoot *mainStoreRoot;		// user config for main queue context
 
+@property (strong, nonatomic, readonly) NSString *presentationGroupsRoot;	// root location of presentations on the local file system
+
 @property (strong, nonatomic) NSURL *presentationLocation;
 @property (strong, readonly) ILobbyProgress *downloadProgress;
 @property (strong, readonly) NSArray *tracks;
@@ -39,6 +41,7 @@
 
 // document information
 + (NSURL *)documentDirectoryURL;
++ (NSString *)presentationGroupsRoot;
 
 
 // managed object support

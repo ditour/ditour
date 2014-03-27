@@ -21,8 +21,10 @@
 	configuration.status = @( REMOTE_ITEM_STATUS_PENDING );
 	configuration.remoteLocation = remoteFile.location.absoluteString;
 	configuration.remoteInfo = remoteFile.info;
+	configuration.path = [container.path stringByAppendingPathComponent:remoteFile.location.lastPathComponent];
 	
 	NSLog( @"Fetching Configuration: %@", configuration.remoteURL.lastPathComponent );
+	NSLog( @"Config File: %@", configuration.path );
 
 	return configuration;
 }

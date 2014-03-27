@@ -21,7 +21,10 @@
 	remoteMedia.status = @( REMOTE_ITEM_STATUS_PENDING );
 	remoteMedia.remoteLocation = remoteFile.location.absoluteString;
 	remoteMedia.remoteInfo = remoteFile.info;
+	remoteMedia.path = [track.path stringByAppendingPathComponent:remoteFile.location.lastPathComponent];
+
 	NSLog( @"Fetching Media: %@", remoteMedia.remoteURL.lastPathComponent );
+	NSLog( @"Media Path: %@", remoteMedia.path );
 
 	return remoteMedia;
 }
