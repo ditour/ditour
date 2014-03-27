@@ -41,6 +41,9 @@
 		[ILobbyStoreTrack newTrackInPresentation:presentation from:remoteTrackDirectory];
 	}
 
+	for ( ILobbyRemoteFile *remoteFile in remoteDirectory.files ) {
+		[presentation processRemoteFile:remoteFile];
+	}
 
 	return presentation;
 }

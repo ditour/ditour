@@ -37,9 +37,15 @@
 
 		if ( !error ) {
 			[self.managedObjectContext performBlockAndWait:^{
+				for ( ILobbyRemoteFile *remoteFile in remoteGroup.files ) {
+					[self processRemoteFile:remoteFile];
+				}
+
 				for ( ILobbyRemoteDirectory *remotePresentationDirectory in remoteGroup.subdirectories ) {
 					[ILobbyStorePresentation newPresentationInGroup:self from:remotePresentationDirectory];
 				}
+
+				// updates fetched properties
 				[self.managedObjectContext refreshObject:self mergeChanges:YES];
 			}];
 		}

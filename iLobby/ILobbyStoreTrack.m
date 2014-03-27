@@ -30,21 +30,21 @@
 	NSLog( @"Fetching Track: %@", track.title );
 
 	for ( ILobbyRemoteFile *remoteFile in remoteDirectory.files ) {
-		NSURL *location = remoteFile.location;
-		if ( [ILobbyStoreRemoteMedia matches:location] ) {
-			[ILobbyStoreRemoteMedia newRemoteMediaInTrack:track at:remoteFile];
-		}
-		else if ( [ILobbyStoreConfiguration matches:location] ) {
-			// TODO: create a configuration and add it to the track
-		}
-		else {
-			NSLog( @"****************************************************************" );
-			NSLog( @"NO Match for remote file: %@", location.lastPathComponent );
-			NSLog( @"****************************************************************" );
-		}
+		[track processRemoteFile:remoteFile];
 	}
 
 	return track;
+}
+
+
+- (void)processRemoteFile:(ILobbyRemoteFile *)remoteFile {
+	NSURL *location = remoteFile.location;
+	if ( [ILobbyStoreRemoteMedia matches:location] ) {
+		[ILobbyStoreRemoteMedia newRemoteMediaInTrack:self at:remoteFile];
+	}
+	else {
+		[super processRemoteFile:remoteFile];
+	}
 }
 
 

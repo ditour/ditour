@@ -14,3 +14,12 @@
 
 @property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
 @end
+
+
+
+// custom additions
+@interface ILobbyStoreRemoteContainer ()
+
+- (void)processRemoteFile:(ILobbyRemoteFile *)remoteFile;
+
+@end
