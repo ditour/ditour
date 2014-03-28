@@ -13,7 +13,7 @@
 #import "ILobbyRemoteDirectory.h"
 
 
-@interface ILobbyModel ()
+@interface ILobbyModel () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
 
 @property (strong, nonatomic) ILobbyPresentationDownloader *presentationDownloader;
 @property (strong, readwrite) ILobbyProgress *downloadProgress;
@@ -27,6 +27,11 @@
 @property (nonatomic, readwrite) ILobbyStoreRoot *mainStoreRoot;
 @property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readwrite) NSManagedObjectContext *mainManagedObjectContext;
+
+// background URL download session
+@property (copy) void (^backgroundSessionCompletionHandler)();
+@property (nonatomic) NSURLSession *downloadSession;
+@property (nonatomic) NSMutableDictionary *downloadTaskRemoteItems;
 
 @end
 
@@ -88,11 +93,24 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 		[self setupDataModel];
 
 		self.storeRoot = [self fetchRootStore];
+		self.downloadSession = [self backgroundSession];
+		self.downloadTaskRemoteItems = [NSMutableDictionary new];
+
 		[self loadDefaultPresentation];
     }
     return self;
 }
 
+
+/** Returns the path to the application's Documents directory. */
+- (NSString *)applicationDocumentsDirectory {
+    return [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES ) lastObject];
+}
+
+
+
+#pragma mark -
+#pragma mark persistent store support
 
 - (NSString *)presentationGroupsRoot {
 	return PRESENTATION_GROUP_ROOT;
@@ -178,9 +196,25 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 }
 
 
-/** Returns the path to the application's Documents directory. */
-- (NSString *)applicationDocumentsDirectory {
-    return [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES ) lastObject];
+- (ILobbyStoreRoot *)fetchRootStore {
+	NSFetchRequest *mainFetchRequest = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStoreRoot entityName]];
+
+	ILobbyStoreRoot *rootStore = nil;
+	NSError * __autoreleasing error = nil;
+	NSArray *rootStores = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
+	switch ( rootStores.count ) {
+		case 0:
+			rootStore = [ILobbyStoreRoot insertNewRootStoreInContext:self.managedObjectContext];
+			[self.managedObjectContext save:&error];
+			break;
+		case 1:
+			rootStore = rootStores[0];
+			break;
+		default:
+			break;
+	}
+
+	return rootStore;
 }
 
 
@@ -192,6 +226,149 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
 	return self.managedObjectContext.persistentStoreCoordinator;
 }
+
+
+#pragma mark -
+#pragma mark background download session support
+
+- (void)handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
+	self.backgroundSessionCompletionHandler = completionHandler;
+}
+
+
+- (void)downloadGroup:(ILobbyStorePresentationGroup *)group {
+	for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
+		[self downloadPresentation:pendingPresentation];
+	}
+}
+
+
+- (void)downloadPresentation:(ILobbyStorePresentation *)presentation {
+	NSError * __autoreleasing error = nil;
+	[[NSFileManager defaultManager] createDirectoryAtPath:presentation.path withIntermediateDirectories:YES attributes:nil error:&error];
+
+	if ( error ) {
+		NSLog( @"Error creating presentation directory: %@", [error localizedDescription] );
+	}
+	else {
+		for ( ILobbyStoreTrack *track in presentation.tracks ) {
+			[self downloadTrack:track];
+		}
+	}
+}
+
+
+- (void)downloadTrack:(ILobbyStoreTrack	*)track {
+	NSError * __autoreleasing error = nil;
+	[[NSFileManager defaultManager] createDirectoryAtPath:track.path withIntermediateDirectories:YES attributes:nil error:&error];
+
+	if ( error ) {
+		NSLog( @"Error creating track directory: %@", [error localizedDescription] );
+	}
+	else {
+		for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
+			[self downloadRemoteMedia:remoteMedia];
+		}
+	}
+}
+
+
+- (void)downloadRemoteMedia:(ILobbyStoreRemoteMedia *)remoteMedia {
+	//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
+	NSURL *downloadURL = remoteMedia.remoteURL;
+	NSLog( @"scheduling download of remote media from: %@", downloadURL );
+	NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
+	NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
+
+	self.downloadTaskRemoteItems[downloadTask] = remoteMedia;
+
+	[downloadTask resume];
+}
+
+
+- (NSURLSession *)backgroundSession {
+	/*
+	 Using disptach_once here ensures that multiple background sessions with the same identifier are not created in this instance of the application. If you want to support multiple background sessions within a single process, you should create each session with its own identifier.
+	 */
+	static NSURLSession *session = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:@"gov.ornl.neutrons.GroupDownload.BackgroundSession"];
+		configuration.HTTPMaximumConnectionsPerHost = 4;
+		session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+	});
+	return session;
+}
+
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    /*
+     Report progress on the task.
+     If you created more than one task, you might keep references to them and report on them individually.
+     */
+
+//	double progress = (double)totalBytesWritten / (double)totalBytesExpectedToWrite;
+//	NSLog( @"DownloadTask: %@ progress: %lf", downloadTask, progress );
+}
+
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)downloadURL {
+	//TODO: save the downloaded file here...
+	NSLog( @"Finished downloading file to %@", downloadURL );
+
+	// TODO: need to manage thread safety for both dictionary access and remote file access
+	ILobbyStoreRemoteFile *remoteFile = self.downloadTaskRemoteItems[downloadTask];
+	if ( remoteFile ) {
+		NSError * __autoreleasing error = nil;
+		[[NSFileManager defaultManager] copyItemAtPath:downloadURL.path toPath:remoteFile.path error:&error];
+		if ( error ) {
+			NSLog( @"Error copying file: %@", [error localizedDescription] );
+		}
+	}
+}
+
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error == nil) {
+        NSLog(@"Task: %@ completed successfully", task);
+		// TODO: need to manage thread safety for both dictionary access and remote file access
+		ILobbyStoreRemoteFile *remoteFile = self.downloadTaskRemoteItems[task];
+		if ( remoteFile ) {
+			[self.downloadTaskRemoteItems removeObjectForKey:task];
+		}
+    }
+    else {
+        NSLog(@"Task: %@ completed with error: %@", task, [error localizedDescription]);
+    }
+
+    //double progress = (double)task.countOfBytesReceived / (double)task.countOfBytesExpectedToReceive;
+	// TODO: do something with the progress
+
+    //self.downloadTask = nil;
+}
+
+
+/*
+ If an application has received an -application:handleEventsForBackgroundURLSession:completionHandler: message, the session delegate will receive this message to indicate that all messages previously enqueued for this session have been delivered. At this time it is safe to invoke the previously stored completion handler, or to begin any internal updates that will result in invoking the completion handler.
+ */
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
+    if ( self.backgroundSessionCompletionHandler ) {
+        void (^completionHandler)() = self.backgroundSessionCompletionHandler;
+        self.backgroundSessionCompletionHandler = nil;
+        completionHandler();
+    }
+
+    NSLog(@"All tasks are finished");
+}
+
+
+-(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
+	NSLog( @"URL Session did resume..." );
+}
+
+
+#pragma mark -
+#pragma mark playback
 
 
 - (void)setPresentationDelegate:(id<ILobbyPresentationDelegate>)presentationDelegate {
@@ -309,28 +486,6 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 - (void)installPresentation {
 	// TODO: implement installation logic
 	self.hasPresentationUpdate = NO;
-}
-
-
-- (ILobbyStoreRoot *)fetchRootStore {
-	NSFetchRequest *mainFetchRequest = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStoreRoot entityName]];
-
-	ILobbyStoreRoot *rootStore = nil;
-	NSError * __autoreleasing error = nil;
-	NSArray *rootStores = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
-	switch ( rootStores.count ) {
-		case 0:
-			rootStore = [ILobbyStoreRoot insertNewRootStoreInContext:self.managedObjectContext];
-			[self.managedObjectContext save:&error];
-			break;
-		case 1:
-			rootStore = rootStores[0];
-			break;
-		default:
-			break;
-	}
-
-	return rootStore;
 }
 
 
