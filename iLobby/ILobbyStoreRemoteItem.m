@@ -22,6 +22,16 @@
 }
 
 
+- (BOOL)isPending {
+	return self.status.shortValue == REMOTE_ITEM_STATUS_PENDING;
+}
+
+
+- (BOOL)isDownloading {
+	return self.status.shortValue == REMOTE_ITEM_STATUS_DOWNLOADING;
+}
+
+
 - (BOOL)isReady {
 	return self.status.shortValue == REMOTE_ITEM_STATUS_READY;
 }

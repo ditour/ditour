@@ -232,68 +232,90 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 #pragma mark background download session support
 
 - (void)handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
+	NSLog( @"Handle events for background session with ID: %@", identifier );
 	self.backgroundSessionCompletionHandler = completionHandler;
 }
 
 
 - (void)downloadGroup:(ILobbyStorePresentationGroup *)group {
-	for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
-		[self downloadPresentation:pendingPresentation];
-	}
+	[group.managedObjectContext performBlock:^{
+		if ( group.configuration ) {
+			[self downloadRemoteFile:group.configuration];
+		}
+
+		for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
+			[self downloadPresentation:pendingPresentation];
+		}
+	}];
 }
 
 
 - (void)downloadPresentation:(ILobbyStorePresentation *)presentation {
-	NSError * __autoreleasing error = nil;
-	[[NSFileManager defaultManager] createDirectoryAtPath:presentation.path withIntermediateDirectories:YES attributes:nil error:&error];
+	[presentation.managedObjectContext performBlock:^{
+		NSError * __autoreleasing error = nil;
+		[[NSFileManager defaultManager] createDirectoryAtPath:presentation.path withIntermediateDirectories:YES attributes:nil error:&error];
 
-	if ( error ) {
-		NSLog( @"Error creating presentation directory: %@", [error localizedDescription] );
-	}
-	else {
-		for ( ILobbyStoreTrack *track in presentation.tracks ) {
-			[self downloadTrack:track];
+		if ( error ) {
+			NSLog( @"Error creating presentation directory: %@", [error localizedDescription] );
 		}
-	}
+		else {
+			if ( presentation.configuration ) {
+				[self downloadRemoteFile:presentation.configuration];
+			}
+
+			for ( ILobbyStoreTrack *track in presentation.tracks ) {
+				[self downloadTrack:track];
+			}
+		}
+	}];
 }
 
 
 - (void)downloadTrack:(ILobbyStoreTrack	*)track {
-	NSError * __autoreleasing error = nil;
-	[[NSFileManager defaultManager] createDirectoryAtPath:track.path withIntermediateDirectories:YES attributes:nil error:&error];
+	[track.managedObjectContext performBlock:^{
+		NSError * __autoreleasing error = nil;
+		[[NSFileManager defaultManager] createDirectoryAtPath:track.path withIntermediateDirectories:YES attributes:nil error:&error];
 
-	if ( error ) {
-		NSLog( @"Error creating track directory: %@", [error localizedDescription] );
-	}
-	else {
-		for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
-			[self downloadRemoteMedia:remoteMedia];
+		if ( error ) {
+			NSLog( @"Error creating track directory: %@", [error localizedDescription] );
 		}
-	}
+		else {
+			if ( track.configuration ) {
+				[self downloadRemoteFile:track.configuration];
+			}
+
+			for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
+				[self downloadRemoteFile:remoteMedia];
+			}
+		}
+	}];
 }
 
 
-- (void)downloadRemoteMedia:(ILobbyStoreRemoteMedia *)remoteMedia {
-	//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
-	NSURL *downloadURL = remoteMedia.remoteURL;
-	NSLog( @"scheduling download of remote media from: %@", downloadURL );
-	NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
-	NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
+- (void)downloadRemoteFile:(ILobbyStoreRemoteFile *)remoteFile {
+	[remoteFile.managedObjectContext performBlock:^{
+		if ( remoteFile && remoteFile.isPending ) {
+			//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
+			NSURL *downloadURL = remoteFile.remoteURL;
+			NSLog( @"scheduling download of remote file from: %@", downloadURL );
+			NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
+			NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
 
-	self.downloadTaskRemoteItems[downloadTask] = remoteMedia;
+			self.downloadTaskRemoteItems[downloadTask] = remoteFile;
+			remoteFile.status = @( REMOTE_ITEM_STATUS_DOWNLOADING );
 
-	[downloadTask resume];
+			[downloadTask resume];
+		}
+	}];
 }
 
 
 - (NSURLSession *)backgroundSession {
-	/*
-	 Using disptach_once here ensures that multiple background sessions with the same identifier are not created in this instance of the application. If you want to support multiple background sessions within a single process, you should create each session with its own identifier.
-	 */
+	 // If you want to support multiple background sessions within a single process, you should create each session with its own identifier.
 	static NSURLSession *session = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:@"gov.ornl.neutrons.GroupDownload.BackgroundSession"];
+		NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:@"gov.ornl.neutrons.iLobby.PresentationDownloads.BackgroundSession"];
 		configuration.HTTPMaximumConnectionsPerHost = 4;
 		session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
 	});
@@ -329,22 +351,34 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+	ILobbyStoreRemoteFile *remoteFile = self.downloadTaskRemoteItems[task];
+
     if (error == nil) {
         NSLog(@"Task: %@ completed successfully", task);
-		// TODO: need to manage thread safety for both dictionary access and remote file access
-		ILobbyStoreRemoteFile *remoteFile = self.downloadTaskRemoteItems[task];
+
 		if ( remoteFile ) {
-			[self.downloadTaskRemoteItems removeObjectForKey:task];
+			[remoteFile.managedObjectContext performBlock:^{
+				remoteFile.status = @( REMOTE_ITEM_STATUS_READY );
+			}];
 		}
     }
     else {
         NSLog(@"Task: %@ completed with error: %@", task, [error localizedDescription]);
+
+		if ( remoteFile ) {
+			[remoteFile.managedObjectContext performBlock:^{
+				remoteFile.status = @( REMOTE_ITEM_STATUS_PENDING );
+			}];
+		}
     }
+
+	if ( remoteFile ) {
+		// TODO: need to manage thread safety for the dictionary access
+		[self.downloadTaskRemoteItems removeObjectForKey:task];
+	}
 
     //double progress = (double)task.countOfBytesReceived / (double)task.countOfBytesExpectedToReceive;
 	// TODO: do something with the progress
-
-    //self.downloadTask = nil;
 }
 
 

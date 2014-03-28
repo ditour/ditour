@@ -30,6 +30,9 @@ enum : short {
 @interface ILobbyStoreRemoteItem ()
 
 @property (nonatomic, readonly) NSURL *remoteURL;
+
+@property (nonatomic, readonly) BOOL isPending;
+@property (nonatomic, readonly) BOOL isDownloading;
 @property (nonatomic, readonly) BOOL isReady;
 
 @end

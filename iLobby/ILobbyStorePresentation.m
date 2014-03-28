@@ -33,7 +33,12 @@
 	presentation.remoteLocation = remoteDirectory.location.absoluteString;
 	presentation.name = remoteDirectory.location.lastPathComponent;
 	presentation.group = group;
-	presentation.path = [group.path stringByAppendingPathComponent:presentation.name];
+
+	// generate a unique path for the presentation based on the name and timestamp when the presentation was created
+	NSDateFormatter *formatter = [NSDateFormatter new];
+	formatter.dateFormat = @"yyyyMMdd'-'HHmmss";
+	NSString *basePath = [NSString stringWithFormat:@"%@-%@", presentation.name, [formatter stringFromDate:[NSDate date]]];
+	presentation.path = [group.path stringByAppendingPathComponent:basePath];
 
 	NSLog( @"Fetching presentation: %@", presentation.name );
 
