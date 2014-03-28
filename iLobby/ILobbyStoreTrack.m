@@ -10,6 +10,14 @@
 #import "ILobbyStorePresentation.h"
 
 
+@interface NSString (ILobbyTrackTransforms)
+- (NSString *)toTrackTitle;
+- (NSString *)stripLeadingDigitsAndUnderscore;
+- (NSString *)toSpacesFromUnderscores;
+@end
+
+
+
 @implementation ILobbyStoreTrack
 
 @dynamic title;
@@ -27,10 +35,11 @@
 	NSString *rawName = remoteDirectory.location.lastPathComponent;
 	track.path = [presentation.path stringByAppendingPathComponent:rawName];
 
-	// TODO: remove any leading numbers used for ordering and handle spaces and capitalization
-	track.title = rawName;
+	// remove leading digits, replace underscores with spaces and trasnform to title case
+	track.title = [rawName toTrackTitle];
 
 	NSLog( @"Fetching Track: %@", track.title );
+	NSLog( @"Track Path: %@", track.path );
 
 	for ( ILobbyRemoteFile *remoteFile in remoteDirectory.files ) {
 		[track processRemoteFile:remoteFile];
@@ -50,5 +59,44 @@
 	}
 }
 
+
+@end
+
+
+
+@implementation NSString (ILobbyTrackTransforms)
+
+- (NSString *)toTrackTitle {
+	return [[[self stripLeadingDigitsAndUnderscore] toSpacesFromUnderscores] capitalizedString];
+}
+
+
+- (NSString *)stripLeadingDigitsAndUnderscore {
+	static NSRegularExpression *digitsRegex = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		digitsRegex = [NSRegularExpression regularExpressionWithPattern:@"\\d+_" options:NSRegularExpressionCaseInsensitive error:nil];
+	});
+
+	NSTextCheckingResult *match = [digitsRegex firstMatchInString:self options:0 range:NSMakeRange( 0, self.length )];
+
+	if ( match ) {
+		// the match must begin at the start of the string and the string must be strictly longer than the match
+		if ( match.range.location == 0 && match.range.length < self.length ) {
+			return [self substringFromIndex:match.range.length];
+		}
+		else {
+			return self;
+		}
+	}
+	else {
+		return self;
+	}
+}
+
+
+- (NSString *)toSpacesFromUnderscores {
+	return [self stringByReplacingOccurrencesOfString:@"_" withString:@" "];
+}
 
 @end
