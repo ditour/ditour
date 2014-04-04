@@ -45,6 +45,10 @@
 		4CC09896183D4CC0006755C8 /* ILobbyStoreRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09895183D4CC0006755C8 /* ILobbyStoreRoot.m */; };
 		4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */; };
 		4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */; };
+		4CC3919618EC687100B9AA4E /* ILobbyDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3919518EC687100B9AA4E /* ILobbyDownloadManager.m */; };
+		4CC3919918EDF2B500B9AA4E /* ILobbyDownloadStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */; };
+		4CC3919C18EDF72C00B9AA4E /* ILobbyDownloadSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3919B18EDF72C00B9AA4E /* ILobbyDownloadSession.m */; };
+		4CC391A418EF05F300B9AA4E /* ILobbyConcurrentDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC391A318EF05F300B9AA4E /* ILobbyConcurrentDictionary.m */; };
 		4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */; };
 		4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDF9AE318CE5467001E26B0 /* ILobbyStorePresentationGroup.m */; };
 		4CE0DC5318D763B90092C700 /* ILobbyStoreRemoteMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE0DC5218D763B90092C700 /* ILobbyStoreRemoteMedia.m */; };
@@ -128,6 +132,14 @@
 		4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyStorePresentation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreTrack.h; sourceTree = "<group>"; };
 		4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreTrack.m; sourceTree = "<group>"; };
+		4CC3919418EC687100B9AA4E /* ILobbyDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadManager.h; sourceTree = "<group>"; };
+		4CC3919518EC687100B9AA4E /* ILobbyDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadManager.m; sourceTree = "<group>"; };
+		4CC3919718EDF2B500B9AA4E /* ILobbyDownloadStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadStatus.h; sourceTree = "<group>"; };
+		4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadStatus.m; sourceTree = "<group>"; };
+		4CC3919A18EDF72C00B9AA4E /* ILobbyDownloadSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadSession.h; sourceTree = "<group>"; };
+		4CC3919B18EDF72C00B9AA4E /* ILobbyDownloadSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadSession.m; sourceTree = "<group>"; };
+		4CC391A218EF05F300B9AA4E /* ILobbyConcurrentDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyConcurrentDictionary.h; sourceTree = "<group>"; };
+		4CC391A318EF05F300B9AA4E /* ILobbyConcurrentDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyConcurrentDictionary.m; sourceTree = "<group>"; };
 		4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iLobby.xcdatamodel; sourceTree = "<group>"; };
 		4CDF9AE218CE5467001E26B0 /* ILobbyStorePresentationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentationGroup.h; sourceTree = "<group>"; };
 		4CDF9AE318CE5467001E26B0 /* ILobbyStorePresentationGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentationGroup.m; sourceTree = "<group>"; };
@@ -159,7 +171,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C690BD2181EED4D00A823CC /* Download */ = {
+		4C39E70E18EB1592000E4DF8 /* Old Download */ = {
 			isa = PBXGroup;
 			children = (
 				4C2E3A28163B070100A832C4 /* ILobbyDirectory.h */,
@@ -168,6 +180,13 @@
 				4CA2F152163588C10082ADFF /* ILobbyFileDownloader.m */,
 				4CA2F15416359FBF0082ADFF /* ILobbyPresentationDownloader.h */,
 				4CA2F15516359FBF0082ADFF /* ILobbyPresentationDownloader.m */,
+			);
+			name = "Old Download";
+			sourceTree = "<group>";
+		};
+		4C690BD2181EED4D00A823CC /* Download */ = {
+			isa = PBXGroup;
+			children = (
 				4CC09883183D0DDE006755C8 /* ILobbyRemoteDirectoryItem.h */,
 				4C690BE718229DD100A823CC /* ILobbyRemoteDirectory.h */,
 				4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */,
@@ -176,6 +195,12 @@
 				4C690BE21821559F00A823CC /* tidy */,
 				4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */,
 				4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */,
+				4CC3919418EC687100B9AA4E /* ILobbyDownloadManager.h */,
+				4CC3919518EC687100B9AA4E /* ILobbyDownloadManager.m */,
+				4CC3919718EDF2B500B9AA4E /* ILobbyDownloadStatus.h */,
+				4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */,
+				4CC3919A18EDF72C00B9AA4E /* ILobbyDownloadSession.h */,
+				4CC3919B18EDF72C00B9AA4E /* ILobbyDownloadSession.m */,
 			);
 			name = Download;
 			sourceTree = "<group>";
@@ -259,10 +284,12 @@
 		4C937D7E1631AAE200F251FF /* iLobby */ = {
 			isa = PBXGroup;
 			children = (
+				4CC391A118EF05E500B9AA4E /* Utils */,
 				4C937D871631AAE200F251FF /* ILobbyAppDelegate.h */,
 				4C937D881631AAE200F251FF /* ILobbyAppDelegate.m */,
 				4C690BD3181EED5D00A823CC /* View Controllers */,
 				4CA2E44618D0DA31004C0489 /* Cells */,
+				4C39E70E18EB1592000E4DF8 /* Old Download */,
 				4C690BD2181EED4D00A823CC /* Download */,
 				4C690BD4181EED8800A823CC /* Presentation */,
 				4CD0ED79182977AA0090EFE5 /* Model */,
@@ -326,6 +353,15 @@
 				4CC09895183D4CC0006755C8 /* ILobbyStoreRoot.m */,
 			);
 			name = Store;
+			sourceTree = "<group>";
+		};
+		4CC391A118EF05E500B9AA4E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4CC391A218EF05F300B9AA4E /* ILobbyConcurrentDictionary.h */,
+				4CC391A318EF05F300B9AA4E /* ILobbyConcurrentDictionary.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		4CD0ED79182977AA0090EFE5 /* Model */ = {
@@ -414,10 +450,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CC3919618EC687100B9AA4E /* ILobbyDownloadManager.m in Sources */,
 				4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */,
 				4C9248C618E45A1900A6CBDA /* ILobbyStoreRemoteFile.m in Sources */,
 				4C937D851631AAE200F251FF /* main.m in Sources */,
 				4C937D891631AAE200F251FF /* ILobbyAppDelegate.m in Sources */,
+				4CC391A418EF05F300B9AA4E /* ILobbyConcurrentDictionary.m in Sources */,
 				4C9248C018E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m in Sources */,
 				4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */,
 				4C937DA81631BA8F00F251FF /* ILobbyPresenter.m in Sources */,
@@ -431,10 +469,12 @@
 				4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */,
 				4C690BEC18229DEE00A823CC /* ILobbyRemoteFile.m in Sources */,
 				4C01BD521636F88600065A97 /* ILobbyModel.m in Sources */,
+				4CC3919918EDF2B500B9AA4E /* ILobbyDownloadStatus.m in Sources */,
 				4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */,
 				4CE0DC5D18D9E3EE0092C700 /* ILobbyStoreConfiguration.m in Sources */,
 				4C01BD55163702CD00065A97 /* ILobbyProgress.m in Sources */,
 				4CE0DC5318D763B90092C700 /* ILobbyStoreRemoteMedia.m in Sources */,
+				4CC3919C18EDF72C00B9AA4E /* ILobbyDownloadSession.m in Sources */,
 				4C01BD581637150700065A97 /* ILobbyTrack.m in Sources */,
 				4CB41D6518D24D710028F1DF /* ILobbyPresentationGroupEditCell.m in Sources */,
 				4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */,
