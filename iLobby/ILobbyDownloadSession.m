@@ -146,19 +146,6 @@
 }
 
 
-- (NSURLSession *)backgroundSession {
-	// If you want to support multiple background sessions within a single process, you should create each session with its own identifier.
-	static NSURLSession *session = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:@"gov.ornl.neutrons.iLobby.PresentationDownloads.BackgroundSession"];
-		configuration.HTTPMaximumConnectionsPerHost = 4;
-		session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-	});
-	return session;
-}
-
-
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     /*
      Report progress on the task.
