@@ -23,9 +23,11 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 
 
-@interface ILobbyPresentationGroupDetailController ()
+@interface ILobbyPresentationGroupDetailController () <ILobbyDownloadStatusDelegate>
 
 - (IBAction)downloadPresentations:(id)sender;
+
+@property ILobbyDownloadContainerStatus *groupDownloadStatus;
 
 @end
 
@@ -65,9 +67,16 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	[self.group fetchPresentationsWithCompletion:^(ILobbyStorePresentationGroup *group, NSError *error) {
 		dispatch_async( dispatch_get_main_queue(), ^{
 			[self.tableView reloadData];
-			[self.lobbyModel downloadGroup:self.group];
+			self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
 		});
 	}];
+}
+
+
+- (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
+	dispatch_async( dispatch_get_main_queue(), ^{
+		[self.tableView reloadData];
+	});
 }
 
 
@@ -146,7 +155,10 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     // Configure the cell...
 	ILobbyStorePresentation *presentation = self.group.pendingPresentations[indexPath.row];
 	cell.nameLabel.text = presentation.name;
-	cell.progressView.progress = 0.25;
+
+	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
+	float downloadProgress = downloadStatus != nil ? downloadStatus.progress : 0.0;
+	cell.progressView.progress = downloadProgress;
 
     return cell;
 }

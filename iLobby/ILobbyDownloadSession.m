@@ -8,7 +8,6 @@
 
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
-#import "ILobbyDownloadStatus.h"
 
 
 @interface ILobbyDownloadSession () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
@@ -18,7 +17,7 @@
 @property (copy) void (^backgroundSessionCompletionHandler)();
 @property NSURLSession *downloadSession;
 @property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;		// file download status keyed by task
-@property (nonatomic) ILobbyDownloadContainerStatus *groupStatus;
+@property (nonatomic, readwrite) ILobbyDownloadContainerStatus *groupStatus;
 
 @end
 
@@ -75,8 +74,9 @@
 }
 
 
-- (void)downloadGroup:(ILobbyStorePresentationGroup *)group {
+- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate {
 	ILobbyDownloadContainerStatus *status = [[ILobbyDownloadContainerStatus alloc] initWithItem:group container:nil];
+	status.delegate = delegate;
 	self.groupStatus = status;
 
 	[group.managedObjectContext performBlock:^{
@@ -88,6 +88,8 @@
 			[self downloadPresentation:pendingPresentation container:status];
 		}
 	}];
+
+	return status;
 }
 
 

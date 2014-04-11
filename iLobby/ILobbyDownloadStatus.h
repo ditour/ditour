@@ -15,7 +15,7 @@
 
 @protocol ILobbyDownloadStatusDelegate <NSObject>
 
-- (void)statusChanged:(ILobbyDownloadStatus *)status;
+- (void)downloadStatusChanged:(ILobbyDownloadStatus *)status;
 
 @end
 

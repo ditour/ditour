@@ -58,7 +58,7 @@
 
 	id<ILobbyDownloadStatusDelegate> delegate = self.delegate;
 	if ( delegate ) {
-		[delegate statusChanged:self];
+		[delegate downloadStatusChanged:self];
 	}
 }
 

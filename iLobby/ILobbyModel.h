@@ -14,6 +14,7 @@
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
 #import "ILobbyStoreRoot.h"
+#import "ILobbyDownloadStatus.h"
 
 
 @interface ILobbyModel : NSObject
@@ -55,6 +56,6 @@
 
 // background session management
 - (void)handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
-- (void)downloadGroup:(ILobbyStorePresentationGroup *)group;
+- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 
 @end

@@ -8,13 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "ILobbyStorePresentationGroup.h"
+#import "ILobbyDownloadStatus.h"
 
 
 @interface ILobbyDownloadSession : NSObject
 
 @property (readonly, nonatomic, copy) NSString *backgroundIdentifier;
+@property (nonatomic, readonly) ILobbyDownloadContainerStatus *groupStatus;
 
-- (void)downloadGroup:(ILobbyStorePresentationGroup *)group;
+- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (void)cancel;
 
 
@@ -25,5 +27,6 @@
  @return YES if the identifier matches and events will be handled and NO if not
  */
 - (BOOL)handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
+
 
 @end
