@@ -49,6 +49,27 @@
 }
 
 
+// determine whether this object's remote item matches (same objectID) the other remote item
+- (BOOL)matchesRemoteItem:(ILobbyStoreRemoteItem *)otherRemoteItem {
+	if ( self.remoteItem == otherRemoteItem ) {		// pointer identity is sufficient
+		return YES;
+	}
+	else {
+		__block NSManagedObjectID *remoteItemID = nil;
+		[self.remoteItem.managedObjectContext performBlockAndWait:^{
+			remoteItemID = self.remoteItem.objectID;
+		}];
+
+		__block NSManagedObjectID *otherRemoteItemID = nil;
+		[otherRemoteItem.managedObjectContext performBlockAndWait:^{
+			otherRemoteItemID = otherRemoteItem.objectID;
+		}];
+
+		return remoteItemID == otherRemoteItemID;
+	}
+}
+
+
 - (void)setProgress:(float)progress {
 	_progress = progress;
 

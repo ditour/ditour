@@ -12,6 +12,7 @@
 #import "ILobbyStorePresentation.h"
 #import "ILobbyRemoteDirectory.h"
 #import "ILobbyDownloadSession.h"
+#import "ILobbyDownloadStatus.h"
 
 
 @interface ILobbyModel ()
@@ -239,6 +240,18 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 - (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate {
 	self.downloadSession = [ILobbyDownloadSession new];
 	return [self.downloadSession downloadGroup:group withDelegate:delegate];
+}
+
+
+- (ILobbyDownloadContainerStatus *)downloadStatusForGroup:(ILobbyStorePresentationGroup *)group {
+	ILobbyDownloadContainerStatus *status = self.downloadSession.groupStatus;
+
+	if ( status != nil ) {
+		return [status matchesRemoteItem:group] ? status : nil;
+	}
+	else {
+		return nil;
+	}
 }
 
 

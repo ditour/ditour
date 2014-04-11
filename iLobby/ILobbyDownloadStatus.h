@@ -34,6 +34,9 @@
 - (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
 + (instancetype)statusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
 
+// determine whether this object's remote item matches (same objectID) the other remote item
+- (BOOL)matchesRemoteItem:(ILobbyStoreRemoteItem *)otherRemoteItem;
+
 @end
 
 

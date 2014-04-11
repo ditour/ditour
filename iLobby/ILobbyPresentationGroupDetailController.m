@@ -54,6 +54,11 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+	self.groupDownloadStatus = [self.lobbyModel downloadStatusForGroup:self.group];
+	if ( self.groupDownloadStatus != nil ) {
+		self.groupDownloadStatus.delegate = self;
+	}
 }
 
 
