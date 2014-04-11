@@ -41,6 +41,11 @@
 @interface ILobbyDownloadContainerStatus : ILobbyDownloadStatus
 
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus;
+- (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID;
+- (ILobbyDownloadStatus *)childStatusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem;
+
+// set a common delegate for each child
+- (void)setChildrenDelegate:(id<ILobbyDownloadStatusDelegate>)childrenDelegate;
 
 @end
 

@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyDownloadStatus.h"
+#import "ILobbyConcurrentDictionary.h"
 
 
 
@@ -22,7 +23,7 @@
 
 @interface ILobbyDownloadContainerStatus ()
 
-@property (strong) NSMutableSet *childStatusItems;
+@property (strong) ILobbyConcurrentDictionary *childStatusItems;	// child status items keyed by child status' remote item object ID
 - (void)updateProgress;
 
 @end
@@ -70,32 +71,66 @@
 - (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
 	self = [super initWithItem:remoteItem container:container];
 	if ( self ) {
-		self.childStatusItems = [NSMutableSet new];
+		self.childStatusItems = [ILobbyConcurrentDictionary new];
 	}
 
 	return self;
 }
 
 
+- (void)setChildrenDelegate:(id<ILobbyDownloadStatusDelegate>)childrenDelegate {
+	[self.childStatusItems.dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+		ILobbyDownloadStatus *statusItem = (ILobbyDownloadStatus *)object;
+		statusItem.delegate = childrenDelegate;
+	}];
+}
+
+
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus {
-	[self.childStatusItems addObject:childStatus];
+	__block NSManagedObjectID *childID = nil;
+	ILobbyStoreRemoteItem *childItem = childStatus.remoteItem;
+	[childItem.managedObjectContext performBlockAndWait:^{
+		childID = childItem.objectID;
+	}];
+	if ( childID != nil ) {
+		self.childStatusItems[childID] = childStatus;
+	}
+}
+
+
+- (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID {
+	return remoteID != nil ? self.childStatusItems[remoteID] : nil;
+}
+
+
+- (ILobbyDownloadStatus *)childStatusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem {
+	__block NSManagedObjectID *childID = nil;
+	[remoteItem.managedObjectContext performBlockAndWait:^{
+		childID = remoteItem.objectID;
+	}];
+
+	return [self childStatusForRemoteItemID:childID];
 }
 
 
 // update the progress as the average of the current progress of each child status
 - (void)updateProgress {
 	NSInteger count = self.childStatusItems.count;
-	float progressSum = 0.0;
+	__block float progressSum = 0.0;
 
 	if ( count > 0 ) {
-		for ( ILobbyDownloadStatus *statusItem in self.childStatusItems ) {
+		[self.childStatusItems.dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+			ILobbyDownloadStatus *statusItem = (ILobbyDownloadStatus *)object;
 			progressSum += statusItem.progress;
-		}
+		}];
+
 		self.progress = progressSum / count;
 	}
 	else {
 		self.progress = 1.0;
 	}
+
+//	NSLog( @"Container progress: %f", self.progress );
 }
 
 @end

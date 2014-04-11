@@ -33,6 +33,27 @@
 }
 
 
+- (NSDictionary *)dictionary {
+	__block NSDictionary *dictionary = nil;
+
+	dispatch_sync( self.queue, ^{
+		dictionary = [self.store copy];
+	});
+
+	return dictionary;
+}
+
+
+- (NSInteger)count {
+	__block NSInteger count = 0;
+	dispatch_sync( self.queue, ^{
+		count = self.store.count;
+	});
+
+	return count;
+}
+
+
 - (id)objectForKey:(id<NSCopying>)key {
 	__block id value = nil;
 	dispatch_sync( self.queue, ^{

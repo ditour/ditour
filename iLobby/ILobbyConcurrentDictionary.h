@@ -12,6 +12,9 @@
 // Mutable dictionary that is safe for concurrent modifications
 @interface ILobbyConcurrentDictionary : NSObject
 
+- (NSDictionary *)dictionary;	// immutable copy
+- (NSInteger)count;
+
 - (id)objectForKey:(id<NSCopying>)key;
 - (id)objectForKeyedSubscript:(id<NSCopying>)key;
 
