@@ -8,6 +8,7 @@
 
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
+#import "ILobbyDownloadStatus.h"
 
 
 @interface ILobbyDownloadSession () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
@@ -16,7 +17,8 @@
 
 @property (copy) void (^backgroundSessionCompletionHandler)();
 @property NSURLSession *downloadSession;
-@property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;
+@property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;		// file download status keyed by task
+@property (nonatomic) ILobbyDownloadContainerStatus *groupStatus;
 
 @end
 
@@ -74,19 +76,24 @@
 
 
 - (void)downloadGroup:(ILobbyStorePresentationGroup *)group {
+	ILobbyDownloadContainerStatus *status = [[ILobbyDownloadContainerStatus alloc] initWithItem:group container:nil];
+	self.groupStatus = status;
+
 	[group.managedObjectContext performBlock:^{
 		if ( group.configuration ) {
-			[self downloadRemoteFile:group.configuration];
+			[self downloadRemoteFile:group.configuration container:status];
 		}
 
 		for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
-			[self downloadPresentation:pendingPresentation];
+			[self downloadPresentation:pendingPresentation container:status];
 		}
 	}];
 }
 
 
-- (void)downloadPresentation:(ILobbyStorePresentation *)presentation {
+- (void)downloadPresentation:(ILobbyStorePresentation *)presentation container:(ILobbyDownloadContainerStatus *)groupStatus {
+	ILobbyDownloadContainerStatus *status = [ILobbyDownloadContainerStatus statusForRemoteItem:presentation container:groupStatus];
+
 	[presentation.managedObjectContext performBlock:^{
 		NSError * __autoreleasing error = nil;
 		[[NSFileManager defaultManager] createDirectoryAtPath:presentation.path withIntermediateDirectories:YES attributes:nil error:&error];
@@ -96,18 +103,20 @@
 		}
 		else {
 			if ( presentation.configuration ) {
-				[self downloadRemoteFile:presentation.configuration];
+				[self downloadRemoteFile:presentation.configuration container:status];
 			}
 
 			for ( ILobbyStoreTrack *track in presentation.tracks ) {
-				[self downloadTrack:track];
+				[self downloadTrack:track container:status];
 			}
 		}
 	}];
 }
 
 
-- (void)downloadTrack:(ILobbyStoreTrack	*)track {
+- (void)downloadTrack:(ILobbyStoreTrack	*)track container:(ILobbyDownloadContainerStatus *)presentationStatus {
+	ILobbyDownloadContainerStatus *status = [ILobbyDownloadContainerStatus statusForRemoteItem:track container:presentationStatus];
+
 	[track.managedObjectContext performBlock:^{
 		NSError * __autoreleasing error = nil;
 		[[NSFileManager defaultManager] createDirectoryAtPath:track.path withIntermediateDirectories:YES attributes:nil error:&error];
@@ -117,18 +126,20 @@
 		}
 		else {
 			if ( track.configuration ) {
-				[self downloadRemoteFile:track.configuration];
+				[self downloadRemoteFile:track.configuration container:status];
 			}
 
 			for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
-				[self downloadRemoteFile:remoteMedia];
+				[self downloadRemoteFile:remoteMedia container:status];
 			}
 		}
 	}];
 }
 
 
-- (void)downloadRemoteFile:(ILobbyStoreRemoteFile *)remoteFile {
+- (void)downloadRemoteFile:(ILobbyStoreRemoteFile *)remoteFile container:(ILobbyDownloadContainerStatus *)container {
+	ILobbyDownloadFileStatus *status = [ILobbyDownloadFileStatus statusForRemoteItem:remoteFile container:container];
+
 	[remoteFile.managedObjectContext performBlock:^{
 		if ( remoteFile && remoteFile.isPending ) {
 			//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
@@ -137,7 +148,7 @@
 			NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
 			NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
 
-			self.downloadTaskRemoteItems[downloadTask] = remoteFile;
+			self.downloadTaskRemoteItems[downloadTask] = status;
 			remoteFile.status = @( REMOTE_ITEM_STATUS_DOWNLOADING );
 
 			[downloadTask resume];
@@ -147,22 +158,20 @@
 
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-    /*
-     Report progress on the task.
-     If you created more than one task, you might keep references to them and report on them individually.
-     */
+	// report progress on the task
+	double progress = (double)totalBytesWritten / (double)totalBytesExpectedToWrite;
+	ILobbyDownloadFileStatus *downloadStatus = self.downloadTaskRemoteItems[downloadTask];
+	downloadStatus.progress = progress;
 
-	//	double progress = (double)totalBytesWritten / (double)totalBytesExpectedToWrite;
-	//	NSLog( @"DownloadTask: %@ progress: %lf", downloadTask, progress );
+	//NSLog( @"DownloadTask: %@ progress: %lf", downloadTask, progress );
 }
 
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)downloadURL {
-	//TODO: save the downloaded file here...
 	NSLog( @"Finished downloading file to %@", downloadURL );
 
-	// TODO: need to manage thread safety for both dictionary access and remote file access
-	ILobbyStoreRemoteFile *remoteFile = self.downloadTaskRemoteItems[downloadTask];
+	ILobbyDownloadFileStatus *downloadStatus = self.downloadTaskRemoteItems[downloadTask];
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)downloadStatus.remoteItem;
 	if ( remoteFile ) {
 		NSError * __autoreleasing error = nil;
 		[[NSFileManager defaultManager] copyItemAtPath:downloadURL.path toPath:remoteFile.path error:&error];
@@ -170,11 +179,14 @@
 			NSLog( @"Error copying file: %@", [error localizedDescription] );
 		}
 	}
+
+	downloadStatus.progress = 1.0;
 }
 
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-	ILobbyStoreRemoteFile *remoteFile = self.downloadTaskRemoteItems[task];
+	ILobbyDownloadFileStatus *downloadStatus = self.downloadTaskRemoteItems[task];
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)downloadStatus.remoteItem;
 
     if (error == nil) {
         NSLog(@"Task: %@ completed successfully", task);

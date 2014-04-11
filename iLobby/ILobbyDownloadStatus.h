@@ -21,10 +21,33 @@
 
 
 
+@class ILobbyDownloadContainerStatus;
+
+
 @interface ILobbyDownloadStatus : NSObject
 
-@property (strong) ILobbyStoreRemoteItem *remoteItem;
-@property float progress;
+@property (weak, readonly) ILobbyDownloadContainerStatus *container;
+@property (strong, readonly) ILobbyStoreRemoteItem *remoteItem;
+@property (nonatomic, readonly) float progress;
 @property (weak) id<ILobbyDownloadStatusDelegate> delegate;
+
+- (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
++ (instancetype)statusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
+
+@end
+
+
+
+@interface ILobbyDownloadContainerStatus : ILobbyDownloadStatus
+
+- (void)addChildStatus:(ILobbyDownloadStatus *)childStatus;
+
+@end
+
+
+
+@interface ILobbyDownloadFileStatus : ILobbyDownloadStatus
+
+- (void)setProgress:(float)progress;
 
 @end
