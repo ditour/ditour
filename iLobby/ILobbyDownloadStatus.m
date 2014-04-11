@@ -94,6 +94,7 @@
 	}];
 	if ( childID != nil ) {
 		self.childStatusItems[childID] = childStatus;
+		[self updateProgress];
 	}
 }
 
