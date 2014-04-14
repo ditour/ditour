@@ -28,6 +28,7 @@
 @property (nonatomic, retain) ILobbyStorePresentationGroup *group;
 @property (nonatomic, retain) ILobbyStorePresentation *parent;
 @property (nonatomic, retain) ILobbyStorePresentation *revision;
+@property (nonatomic, retain) ILobbyStoreRoot *rootForCurrent;
 @property (nonatomic, retain) NSOrderedSet *tracks;
 @end
 
@@ -53,6 +54,11 @@
 // custom additions
 @interface ILobbyStorePresentation ()
 
+@property (getter = isCurrent) BOOL current;
+
 + (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group from:(ILobbyRemoteDirectory *)remoteDirectory;
+
+// is the current presentation on display
+- (BOOL)isCurrent;
 
 @end

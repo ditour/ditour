@@ -52,4 +52,25 @@
 }
 
 
+- (void)prepareForDeletion {
+	// delete the associated directory if any
+	if ( self.path ) {
+//		NSLog( @"Deleting store item at path: %@", self.path );
+
+		NSError *error = nil;
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+
+		if ( [fileManager fileExistsAtPath:self.path] ) {
+			BOOL success = [fileManager removeItemAtPath:self.path error:&error];
+			if ( !success ) {
+				NSLog( @"Error deleting store remote item at path: %@ due to error: %@", self.path, error );
+			}
+		}
+	}
+
+	// call the default implementation
+	[super prepareForDeletion];
+}
+
+
 @end

@@ -8,6 +8,7 @@
 
 #import "ILobbyStorePresentation.h"
 #import "ILobbyStorePresentationGroup.h"
+#import "ILobbyStoreRoot.h"
 
 
 @implementation ILobbyStorePresentation
@@ -21,6 +22,7 @@
 @dynamic group;
 @dynamic parent;
 @dynamic revision;
+@dynamic rootForCurrent;
 @dynamic tracks;
 
 
@@ -52,6 +54,46 @@
 	}
 
 	return presentation;
+}
+
+
+- (void)markReady {
+	[super markReady];
+
+	// if the presentation has a parent then replace it with this one since it is ready
+	ILobbyStorePresentation *parentPresentation = self.parent;
+	if ( parentPresentation != nil ) {
+		BOOL current = parentPresentation.isCurrent;
+		[self.group removePresentationsObject:parentPresentation];
+
+		// if the parent was current this presentation should also be current
+		if ( current ) {
+			self.current = current;
+		}
+
+		self.parent = nil;
+
+		[parentPresentation.managedObjectContext deleteObject:parentPresentation];
+	}
+}
+
+
+- (void)setCurrent:(BOOL)current {
+	if ( current ) {
+		if ( !self.isCurrent ) {
+			self.group.root.currentPresentation = self;
+		}
+	}
+	else {
+		if ( self.isCurrent ) {
+			self.rootForCurrent = nil;
+		}
+	}
+}
+
+
+- (BOOL)isCurrent {
+	return self.rootForCurrent != nil;
 }
 
 @end

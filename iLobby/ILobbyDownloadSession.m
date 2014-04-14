@@ -87,7 +87,7 @@
 
 		[group markDownloading];
 
-		// first fetch the directory references from the remote URL
+		// ------------- first fetch the directory references from the remote URL
 
 		ILobbyRemoteDirectory *groupRemoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:group.remoteURL error:&error];
 
@@ -113,10 +113,19 @@
 			}
 		}
 
+		// any active presentation which does not have a revision should be removed except for the currently playing one if any
+		for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+			if ( presentation.revision == nil ) {
+				[group removePresentationsObject:presentation];
+				[group.managedObjectContext deleteObject:presentation];
+			}
+		}
+
+
 		// updates fetched properties
 		[group.managedObjectContext refreshObject:group mergeChanges:YES];
 
-		// now begin downloading the files
+		// ----------- now begin downloading the files
 
 		if ( group.configuration ) {
 			// since a configuration file may already exist for the group, we must delete it to make room for any new one
