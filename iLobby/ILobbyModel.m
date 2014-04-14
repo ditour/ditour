@@ -138,13 +138,17 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	// saves the changes to the parent context
 	__block BOOL success;
 
-	success = [self.mainManagedObjectContext save:errorPtr];
+	// first save to the managed object context on Main
+	[self.mainManagedObjectContext performBlockAndWait:^{
+		success = [self.mainManagedObjectContext save:errorPtr];
+	}];
+
 	if ( !success ) {
 		NSLog( @"Failed to save group edit to edit context: %@", *errorPtr );
 		return NO;
 	}
 
-	// saves the changes to the parent's persistent store
+	// saves the changes to the persistent store which backs the main object context
 	[self.managedObjectContext performBlockAndWait:^{
 		success = [self.managedObjectContext save:errorPtr];
 		if ( !success ) {

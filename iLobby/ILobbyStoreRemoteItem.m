@@ -55,7 +55,7 @@
 - (void)prepareForDeletion {
 	// delete the associated directory if any
 	if ( self.path ) {
-//		NSLog( @"Deleting store item at path: %@", self.path );
+	//	NSLog( @"Deleting store item at path: %@", self.path );
 
 		NSError *error = nil;
 		NSFileManager *fileManager = [NSFileManager defaultManager];

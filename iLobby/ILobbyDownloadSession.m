@@ -121,6 +121,8 @@
 			}
 		}
 
+		[self persistentSaveContext:group.managedObjectContext error:&error];
+
 
 		// updates fetched properties
 		[group.managedObjectContext refreshObject:group mergeChanges:YES];
@@ -271,6 +273,8 @@
 
 	downloadStatus.completed = YES;
 	downloadStatus.progress = 1.0;
+
+	[self persistentSaveContext:remoteFile.managedObjectContext error:nil];
 }
 
 
@@ -309,6 +313,8 @@
 		NSLog( @"Download session is complete and will be cancelled..." );
 		[self cancel];
 	}
+	
+	[self persistentSaveContext:remoteFile.managedObjectContext error:nil];
 }
 
 
@@ -329,5 +335,37 @@
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
 //	NSLog( @"URL Session did resume..." );
 }
+
+
+// save the specified context all the way to the root persistent store
+- (BOOL)persistentSaveContext:(NSManagedObjectContext *)context error:(NSError * __autoreleasing *)errorPtr {
+	// saves the changes to the parent context
+	__block BOOL success;
+
+	// first save to the managed object context on Main
+	[context performBlockAndWait:^{
+		success = [context save:errorPtr];
+	}];
+
+	if ( !success ) {
+		NSLog( @"Failed to save to edit context: %@", *errorPtr );
+		return NO;
+	}
+
+	// saves the changes to the persistent store which backs the main object context
+	__block NSManagedObjectContext *parentContext = nil;
+	[context performBlockAndWait:^{
+		 parentContext = context.parentContext;
+	}];
+
+	// perform a deep save as necessary
+	if ( parentContext != nil ) {
+		return [self persistentSaveContext:parentContext error:errorPtr];
+	}
+	else {
+		return success;
+	}
+}
+
 
 @end
