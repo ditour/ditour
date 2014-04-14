@@ -40,8 +40,6 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 @implementation ILobbyPresentationGroupsTableController
-@synthesize lobbyModel=_lobbyModel;
-
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];

@@ -21,8 +21,6 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
 
 @implementation ILobbyViewController
-@synthesize lobbyModel=_lobbyModel;
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

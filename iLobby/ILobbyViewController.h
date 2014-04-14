@@ -11,4 +11,6 @@
 
 @interface ILobbyViewController : UICollectionViewController <ILobbyModelContainer>
 
+@property (nonatomic, strong) ILobbyModel *lobbyModel;
+
 @end

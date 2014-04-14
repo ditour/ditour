@@ -32,8 +32,10 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 @end
 
 
-@implementation ILobbyPresentationGroupDetailController
-@synthesize lobbyModel=_lobbyModel;
+@implementation ILobbyPresentationGroupDetailController {
+	NSArray *_pendingPresentations;
+	NSArray *_activePresentations;
+}
 
 
 - (id)initWithStyle:(UITableViewStyle)style {
@@ -47,6 +49,9 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+	_activePresentations = nil;
+	_pendingPresentations = nil;
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -69,18 +74,15 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 
 - (IBAction)downloadPresentations:(id)sender {
-	[self.group fetchPresentationsWithCompletion:^(ILobbyStorePresentationGroup *group, NSError *error) {
-		dispatch_async( dispatch_get_main_queue(), ^{
-			[self.tableView reloadData];
-			if ( self.lobbyModel.downloading ) {
-				// TODO: need to display alert view
-				NSLog( @"Attempting to download a group when already downloading. You need to cancel first." );
-			}
-			else {
-				self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
-			}
-		});
-	}];
+	[self.tableView reloadData];
+	
+	if ( self.lobbyModel.downloading ) {
+		// TODO: need to display alert view
+		NSLog( @"Attempting to download a group when already downloading. You need to cancel first." );
+	}
+	else {
+		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
+	}
 }
 
 
@@ -94,6 +96,9 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	_activePresentations = [self.group.activePresentations copy];
+	_pendingPresentations = [self.group.pendingPresentations copy];
+
     // Return the number of sections.
     return SECTION_COUNT;
 }
@@ -104,10 +109,10 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 	switch ( section ) {
 		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
-			return self.group.activePresentations.count;
+			return _activePresentations.count;
 
 		case SECTION_PENDING_PRESENTATIONS_VIEW:
-			return self.group.pendingPresentations.count;
+			return _pendingPresentations.count;
 
 		default:
 			break;
@@ -153,7 +158,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     ILobbyGroupDetailActivePresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
-	ILobbyStorePresentation *presentation = self.group.activePresentations[indexPath.row];
+	ILobbyStorePresentation *presentation = _activePresentations[indexPath.row];
 	cell.nameLabel.text = presentation.name;
 //	NSLog( @"Active presentation %@, status: %@", presentation.name, presentation.status );
 
@@ -165,7 +170,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     ILobbyGroupDetailPendingPresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:PENDING_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
-	ILobbyStorePresentation *presentation = self.group.pendingPresentations[indexPath.row];
+	ILobbyStorePresentation *presentation = _pendingPresentations[indexPath.row];
 	cell.nameLabel.text = presentation.name;
 
 	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];

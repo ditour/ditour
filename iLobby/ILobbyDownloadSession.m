@@ -83,13 +83,45 @@
 	self.groupStatus = status;
 
 	[group.managedObjectContext performBlock:^{
+		NSError *error = nil;
+
 		[group markDownloading];
+
+		// first fetch the directory references from the remote URL
+
+		ILobbyRemoteDirectory *groupRemoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:group.remoteURL error:&error];
+
+		// process any files (e.g. config files)
+		for ( ILobbyRemoteFile *remoteFile in groupRemoteDirectory.files ) {
+			[group processRemoteFile:remoteFile];
+		}
+
+		// store the active presentations by name so they can be used as parents if necessary
+		NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
+		for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+			activePresentationsByName[presentation.name] = presentation;
+		}
+
+		// fetch presentations
+		for ( ILobbyRemoteDirectory *remotePresentationDirectory in groupRemoteDirectory.subdirectories ) {
+			ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:group from:remotePresentationDirectory];
+
+			// if an active presentation has the same name then assign it as a parent
+			ILobbyStorePresentation *presentationParent = activePresentationsByName[presentation.name];
+			if ( presentationParent != nil ) {
+				presentation.parent = presentationParent;
+			}
+		}
+
+		// updates fetched properties
+		[group.managedObjectContext refreshObject:group mergeChanges:YES];
+
+		// now begin downloading the files
 
 		if ( group.configuration ) {
 			// since a configuration file may already exist for the group, we must delete it to make room for any new one
 			// however, we don't have to delete an existing config file that no longer is needed since the group will simply ignore it anyway
 			NSFileManager *fileManager = [NSFileManager defaultManager];
-			NSError * __autoreleasing error = nil;
 
 			NSString *configDestination = group.configuration.path;
 			NSURL *configRemoteURL = group.configuration.remoteURL;

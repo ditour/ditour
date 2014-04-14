@@ -11,4 +11,6 @@
 
 @interface ILobbyPresentationGroupsTableController : UITableViewController <ILobbyModelContainer>
 
+@property (nonatomic, readwrite, strong) ILobbyModel *lobbyModel;
+
 @end

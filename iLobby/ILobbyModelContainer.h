@@ -10,6 +10,8 @@
 #import "ILobbyModel.h"
 
 @protocol ILobbyModelContainer <NSObject>
-@property (nonatomic, strong) ILobbyModel *lobbyModel;
+
+- (ILobbyModel *)lobbyModel;
+- (void)setLobbyModel:(ILobbyModel *)model;
 
 @end
