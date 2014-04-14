@@ -35,4 +35,8 @@ enum : short {
 @property (nonatomic, readonly) BOOL isDownloading;
 @property (nonatomic, readonly) BOOL isReady;
 
+- (void)markPending;
+- (void)markDownloading;
+- (void)markReady;
+
 @end

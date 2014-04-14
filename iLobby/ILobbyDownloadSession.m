@@ -83,6 +83,8 @@
 	self.groupStatus = status;
 
 	[group.managedObjectContext performBlock:^{
+		[group markDownloading];
+
 		if ( group.configuration ) {
 			// since a configuration file may already exist for the group, we must delete it to make room for any new one
 			// however, we don't have to delete an existing config file that no longer is needed since the group will simply ignore it anyway
@@ -124,6 +126,8 @@
 			NSLog( @"Error creating presentation directory: %@", [error localizedDescription] );
 		}
 		else {
+			[presentation markDownloading];
+
 			if ( presentation.configuration ) {
 				[self downloadRemoteFile:presentation.configuration container:status];
 			}
@@ -149,6 +153,8 @@
 			NSLog( @"Error creating track directory: %@", [error localizedDescription] );
 		}
 		else {
+			[track markDownloading];
+
 			if ( track.configuration ) {
 				[self downloadRemoteFile:track.configuration container:status];
 			}
@@ -175,7 +181,7 @@
 			NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
 
 			self.downloadTaskRemoteItems[downloadTask] = status;
-			remoteFile.status = @( REMOTE_ITEM_STATUS_DOWNLOADING );
+			[remoteFile markDownloading];
 
 			[downloadTask resume];
 		}
@@ -236,7 +242,7 @@
 
 		if ( remoteFile ) {
 			[remoteFile.managedObjectContext performBlock:^{
-				remoteFile.status = @( REMOTE_ITEM_STATUS_READY );
+				[remoteFile markReady];
 			}];
 		}
     }
@@ -245,7 +251,7 @@
 
 		if ( remoteFile ) {
 			[remoteFile.managedObjectContext performBlock:^{
-				remoteFile.status = @( REMOTE_ITEM_STATUS_PENDING );
+				[remoteFile markPending];
 			}];
 		}
     }

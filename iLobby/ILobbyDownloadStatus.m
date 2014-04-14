@@ -93,7 +93,7 @@
 		[self setProgress:1.0];
 
 		[self.remoteItem.managedObjectContext performBlock:^{
-			self.remoteItem.status = @( REMOTE_ITEM_STATUS_READY );
+			[self.remoteItem markReady];
 			if ( self.container ) {
 				ILobbyStoreRemoteItem *remoteContainer = self.container.remoteItem;
 				if ( remoteContainer ) {

@@ -36,4 +36,20 @@
 	return self.status.shortValue == REMOTE_ITEM_STATUS_READY;
 }
 
+
+- (void)markPending {
+	self.status = @( REMOTE_ITEM_STATUS_PENDING );
+}
+
+
+- (void)markDownloading {
+	self.status = @( REMOTE_ITEM_STATUS_DOWNLOADING );
+}
+
+
+- (void)markReady {
+	self.status = @( REMOTE_ITEM_STATUS_READY );
+}
+
+
 @end
