@@ -40,7 +40,7 @@
 	NSString *basePath = [NSString stringWithFormat:@"%@-%@", presentation.name, [formatter stringFromDate:[NSDate date]]];
 	presentation.path = [group.path stringByAppendingPathComponent:basePath];
 
-	NSLog( @"Fetching presentation: %@", presentation.name );
+//	NSLog( @"Fetching presentation: %@", presentation.name );
 
 	// fetch the tracks
 	for ( ILobbyRemoteDirectory *remoteTrackDirectory in remoteDirectory.subdirectories ) {

@@ -38,8 +38,8 @@
 	// remove leading digits, replace underscores with spaces and trasnform to title case
 	track.title = [rawName toTrackTitle];
 
-	NSLog( @"Fetching Track: %@", track.title );
-	NSLog( @"Track Path: %@", track.path );
+//	NSLog( @"Fetching Track: %@", track.title );
+//	NSLog( @"Track Path: %@", track.path );
 
 	for ( ILobbyRemoteFile *remoteFile in remoteDirectory.files ) {
 		[track processRemoteFile:remoteFile];

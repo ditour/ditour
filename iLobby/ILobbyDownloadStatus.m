@@ -16,6 +16,7 @@
 @property (weak, readwrite) ILobbyDownloadContainerStatus *container;
 @property (nonatomic, strong, readwrite) ILobbyStoreRemoteItem *remoteItem;
 @property (readwrite) float progress;
+@property (readwrite) BOOL completed;
 
 @end
 
@@ -36,6 +37,7 @@
     self = [super init];
     if (self) {
 		self.progress = 0.0;
+		self.completed = NO;
         self.remoteItem = remoteItem;
 		self.container = container;
 		[container addChildStatus:self];
@@ -92,6 +94,7 @@
 - (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
 	self = [super initWithItem:remoteItem container:container];
 	if ( self ) {
+		self.submitted = NO;
 		self.childStatusItems = [ILobbyConcurrentDictionary new];
 	}
 
@@ -137,19 +140,32 @@
 
 // update the progress as the average of the current progress of each child status
 - (void)updateProgress {
-	NSInteger count = self.childStatusItems.count;
+	NSInteger childCount = self.childStatusItems.count;
+
+	__block NSInteger completionCount = 0;
 	__block float progressSum = 0.0;
 
-	if ( count > 0 ) {
+	// WARNING: child items may be added after this is called since they get dispatched for download immediately after being added (verify using self.submitted boolean)
+	if ( childCount > 0 ) {
 		[self.childStatusItems.dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
 			ILobbyDownloadStatus *statusItem = (ILobbyDownloadStatus *)object;
 			progressSum += statusItem.progress;
+
+			// count the number of child items completed
+			if ( statusItem.completed ) {
+				++completionCount;
+			}
 		}];
 
-		self.progress = progressSum / count;
+		self.progress = progressSum / childCount;
+
+		if ( _submitted && completionCount == childCount ) {
+			self.completed = YES;
+		}
 	}
-	else {
+	else if ( _submitted ) {
 		self.progress = 1.0;
+		self.completed = YES;
 	}
 
 //	NSLog( @"Container progress: %f", self.progress );
@@ -163,6 +179,15 @@
 
 - (void)setProgress:(float)progress {
 	super.progress = progress;
+}
+
+
+- (void)setCompleted:(BOOL)completionState {
+	super.completed = completionState;
+	
+	if ( completionState ) {
+		[self setProgress:1.0];
+	}
 }
 
 @end

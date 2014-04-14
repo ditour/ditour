@@ -29,6 +29,7 @@
 @property (weak, readonly) ILobbyDownloadContainerStatus *container;
 @property (strong, readonly) ILobbyStoreRemoteItem *remoteItem;
 @property (nonatomic, readonly) float progress;
+@property (nonatomic, readonly) BOOL completed;
 @property (weak) id<ILobbyDownloadStatusDelegate> delegate;
 
 - (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
@@ -42,6 +43,8 @@
 
 
 @interface ILobbyDownloadContainerStatus : ILobbyDownloadStatus
+
+@property BOOL submitted;
 
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus;
 - (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID;
@@ -57,5 +60,6 @@
 @interface ILobbyDownloadFileStatus : ILobbyDownloadStatus
 
 - (void)setProgress:(float)progress;
+- (void)setCompleted:(BOOL)completionState;
 
 @end

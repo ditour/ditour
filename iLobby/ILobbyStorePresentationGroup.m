@@ -27,7 +27,7 @@
 	formatter.dateFormat = @"yyyyMMdd'-'HHmmss";
 	NSString *basePath = [NSString stringWithFormat:@"Group-%@", [formatter stringFromDate:[NSDate date]]];
 	group.path = [[ILobbyModel presentationGroupsRoot] stringByAppendingPathComponent:basePath];
-	NSLog( @"group path: %@", group.path );
+//	NSLog( @"group path: %@", group.path );
 
 	return group;
 }

@@ -17,11 +17,11 @@
 	if ( [ILobbyStoreConfiguration matches:location] ) {
 		[ILobbyStoreConfiguration newConfigurationInContainer:self at:remoteFile];
 	}
-	else {
-		NSLog( @"****************************************************************" );
-		NSLog( @"NO Match for remote file: %@", location.lastPathComponent );
-		NSLog( @"****************************************************************" );
-	}
+//	else {
+//		NSLog( @"****************************************************************" );
+//		NSLog( @"NO Match for remote file: %@", location.lastPathComponent );
+//		NSLog( @"****************************************************************" );
+//	}
 }
 
 

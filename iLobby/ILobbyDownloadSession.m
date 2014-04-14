@@ -25,7 +25,6 @@
 
 @implementation ILobbyDownloadSession
 
-
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -81,12 +80,29 @@
 
 	[group.managedObjectContext performBlock:^{
 		if ( group.configuration ) {
+			// since a configuration file may already exist for the group, we must delete it to make room for any new one
+			// however, we don't have to delete an existing config file that no longer is needed since the group will simply ignore it anyway
+			NSFileManager *fileManager = [NSFileManager defaultManager];
+			NSError * __autoreleasing error = nil;
+
+			NSString *configDestination = group.configuration.path;
+			NSURL *configRemoteURL = group.configuration.remoteURL;
+			if ( [fileManager fileExistsAtPath:configDestination] ) {
+				[fileManager removeItemAtPath:configDestination error:&error];
+			}
+
+			if ( error ) {
+				NSLog( @"Error deleting existing file at destination %@ for remote %@, %@", configDestination, configRemoteURL, [error localizedDescription] );
+			}
+
 			[self downloadRemoteFile:group.configuration container:status];
 		}
 
 		for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
 			[self downloadPresentation:pendingPresentation container:status];
 		}
+
+		status.submitted = YES;
 	}];
 
 	return status;
@@ -111,6 +127,8 @@
 			for ( ILobbyStoreTrack *track in presentation.tracks ) {
 				[self downloadTrack:track container:status];
 			}
+
+			status.submitted = YES;
 		}
 	}];
 }
@@ -134,6 +152,8 @@
 			for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
 				[self downloadRemoteFile:remoteMedia container:status];
 			}
+
+			status.submitted = YES;
 		}
 	}];
 }
@@ -146,7 +166,7 @@
 		if ( remoteFile && remoteFile.isPending ) {
 			//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
 			NSURL *downloadURL = remoteFile.remoteURL;
-			NSLog( @"scheduling download of remote file from: %@", downloadURL );
+			//NSLog( @"scheduling download of remote file from: %@", downloadURL );
 			NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
 			NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
 
@@ -170,18 +190,35 @@
 
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)downloadURL {
-	NSLog( @"Finished downloading file to %@", downloadURL );
+	//NSLog( @"Finished downloading file to %@", downloadURL );
 
 	ILobbyDownloadFileStatus *downloadStatus = self.downloadTaskRemoteItems[downloadTask];
 	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)downloadStatus.remoteItem;
+
 	if ( remoteFile ) {
+		__block NSString *destination = nil;
+		__block NSURL *remoteURL = nil;
+		[remoteFile.managedObjectContext performBlockAndWait:^{
+			destination = remoteFile.path;
+			remoteURL = remoteFile.remoteURL;
+		}];
+
+		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSError * __autoreleasing error = nil;
-		[[NSFileManager defaultManager] copyItemAtPath:downloadURL.path toPath:remoteFile.path error:&error];
+
+		if ( [fileManager fileExistsAtPath:destination] ) {
+			NSLog( @"Error: Existing file at destination %@ for remote %@", destination, remoteURL );
+		}
+		else {
+			[fileManager copyItemAtPath:downloadURL.path toPath:destination error:&error];
+		}
+
 		if ( error ) {
-			NSLog( @"Error copying file: %@", [error localizedDescription] );
+			NSLog( @"Error copying file from %@ to %@, %@", remoteURL, destination, [error localizedDescription] );
 		}
 	}
 
+	downloadStatus.completed = YES;
 	downloadStatus.progress = 1.0;
 }
 
@@ -191,7 +228,7 @@
 	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)downloadStatus.remoteItem;
 
     if (error == nil) {
-        NSLog(@"Task: %@ completed successfully", task);
+//        NSLog(@"Task: %@ completed successfully", task);
 
 		if ( remoteFile ) {
 			[remoteFile.managedObjectContext performBlock:^{
@@ -209,13 +246,18 @@
 		}
     }
 
+	// download completed whether successful or not
+	downloadStatus.completed = YES;
+
 	if ( remoteFile ) {
-		// TODO: need to manage thread safety for the dictionary access
 		[self.downloadTaskRemoteItems removeObjectForKey:task];
 	}
 
-    //double progress = (double)task.countOfBytesReceived / (double)task.countOfBytesExpectedToReceive;
-	// TODO: do something with the progress
+	// if all tasks have been submitted and no tasks remain then we can cancel the session
+	if ( self.groupStatus.completed && self.downloadTaskRemoteItems.count == 0 ) {
+		NSLog( @"Download session is complete and will be cancelled..." );
+		[self cancel];
+	}
 }
 
 
@@ -229,12 +271,12 @@
         completionHandler();
     }
 
-    NSLog(@"All tasks are finished");
+//    NSLog(@"All tasks are finished");
 }
 
 
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
-	NSLog( @"URL Session did resume..." );
+//	NSLog( @"URL Session did resume..." );
 }
 
 @end
