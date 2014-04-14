@@ -423,8 +423,13 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 
 - (BOOL)downloading {
-	ILobbyPresentationDownloader *currentDowloader = self.presentationDownloader;
-	return currentDowloader != nil && !currentDowloader.complete && !currentDowloader.canceled;
+	return self.downloadSession.active;
+}
+
+
+- (void)cancelDownload {
+	[self.downloadSession cancel];
+	self.downloadSession = nil;
 }
 
 

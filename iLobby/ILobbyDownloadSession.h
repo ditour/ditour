@@ -15,6 +15,7 @@
 
 @property (readonly, nonatomic, copy) NSString *backgroundIdentifier;
 @property (nonatomic, readonly) ILobbyDownloadContainerStatus *groupStatus;
+@property (nonatomic, readonly) BOOL active;
 
 - (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (void)cancel;

@@ -72,7 +72,13 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	[self.group fetchPresentationsWithCompletion:^(ILobbyStorePresentationGroup *group, NSError *error) {
 		dispatch_async( dispatch_get_main_queue(), ^{
 			[self.tableView reloadData];
-			self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
+			if ( self.lobbyModel.downloading ) {
+				// TODO: need to display alert view
+				NSLog( @"Attempting to download a group when already downloading. You need to cancel first." );
+			}
+			else {
+				self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
+			}
 		});
 	}];
 }
@@ -149,6 +155,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     // Configure the cell...
 	ILobbyStorePresentation *presentation = self.group.activePresentations[indexPath.row];
 	cell.nameLabel.text = presentation.name;
+//	NSLog( @"Active presentation %@, status: %@", presentation.name, presentation.status );
 
     return cell;
 }
@@ -164,6 +171,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
 	float downloadProgress = downloadStatus != nil ? downloadStatus.progress : 0.0;
 	cell.progressView.progress = downloadProgress;
+
+//	NSLog( @"Pending presentation %@, status: %@", presentation.name, presentation.status );
 
     return cell;
 }

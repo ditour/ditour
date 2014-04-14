@@ -28,6 +28,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+		_active = YES;
 		self.downloadTaskRemoteItems = [ILobbyConcurrentDictionary new];
 		self.backgroundIdentifier = [self createBackgroundIdenfier];
 		[self createBackgroundSession];
@@ -69,7 +70,10 @@
 
 
 - (void)cancel {
-	[self.downloadSession invalidateAndCancel];
+	if ( _active ) {
+		_active = NO;
+		[self.downloadSession invalidateAndCancel];
+	}
 }
 
 

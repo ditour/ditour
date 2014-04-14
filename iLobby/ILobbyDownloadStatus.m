@@ -85,6 +85,26 @@
 	}
 }
 
+
+- (void)setCompleted:(BOOL)completed {
+	_completed = completed;
+
+	if ( completed ) {
+		[self setProgress:1.0];
+
+		[self.remoteItem.managedObjectContext performBlock:^{
+			self.remoteItem.status = @( REMOTE_ITEM_STATUS_READY );
+			if ( self.container ) {
+				ILobbyStoreRemoteItem *remoteContainer = self.container.remoteItem;
+				if ( remoteContainer ) {
+					// force any fetched properties of the containing object to refresh
+					[self.remoteItem.managedObjectContext refreshObject:remoteContainer mergeChanges:YES];
+				}
+			}
+		}];
+	}
+}
+
 @end
 
 
@@ -164,11 +184,15 @@
 		}
 	}
 	else if ( _submitted ) {
-		self.progress = 1.0;
 		self.completed = YES;
 	}
 
 //	NSLog( @"Container progress: %f", self.progress );
+}
+
+
+- (void)setCompleted:(BOOL)completed {
+	super.completed = completed;
 }
 
 @end
@@ -182,12 +206,8 @@
 }
 
 
-- (void)setCompleted:(BOOL)completionState {
-	super.completed = completionState;
-	
-	if ( completionState ) {
-		[self setProgress:1.0];
-	}
+- (void)setCompleted:(BOOL)completed {
+	super.completed = completed;
 }
 
 @end

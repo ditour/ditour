@@ -54,9 +54,10 @@
 @property (readonly) NSManagedObjectModel *managedObjectModel;
 @property (readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
-// background session management
+// download session management
 - (void)handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;
 - (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (ILobbyDownloadContainerStatus *)downloadStatusForGroup:(ILobbyStorePresentationGroup *)group;
+- (void)cancelDownload;
 
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Configuration" representedClassName="ILobbyStoreConfiguration" parentEntity="RemoteFile" syncable="YES">
         <relationship name="container" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteContainer" inverseName="configuration" inverseEntity="RemoteContainer" syncable="YES"/>
     </entity>
@@ -16,10 +16,10 @@
         <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Presentation" inverseName="group" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="root" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="groups" inverseEntity="Root" syncable="YES"/>
         <fetchedProperty name="activePresentations" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 1)"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 2)"/>
         </fetchedProperty>
         <fetchedProperty name="pendingPresentations" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 0)"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 0 OR status = 1)"/>
         </fetchedProperty>
     </entity>
     <entity name="RemoteContainer" representedClassName="ILobbyStoreRemoteContainer" isAbstract="YES" parentEntity="RemoteItem" syncable="YES">
@@ -53,12 +53,12 @@
         <element name="Configuration" positionX="27" positionY="72" width="128" height="58"/>
         <element name="Presentation" positionX="0" positionY="0" width="128" height="148"/>
         <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="116"/>
+        <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="58"/>
+        <element name="RemoteFile" positionX="27" positionY="81" width="128" height="45"/>
         <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
         <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="73"/>
         <element name="Root" positionX="0" positionY="0" width="128" height="73"/>
         <element name="Slide" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Track" positionX="0" positionY="0" width="128" height="88"/>
-        <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="58"/>
-        <element name="RemoteFile" positionX="27" positionY="81" width="128" height="43"/>
     </elements>
 </model>
