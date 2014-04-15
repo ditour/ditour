@@ -61,4 +61,7 @@
 // is the current presentation on display
 - (BOOL)isCurrent;
 
+// generate a dictionary of ILobbyStoreREmoteFile items keyed by URL spec
+- (NSDictionary *)generateFileDictionaryKeyedByURL;
+
 @end

@@ -96,4 +96,28 @@
 	return self.rootForCurrent != nil;
 }
 
+
+- (NSDictionary *)generateFileDictionaryKeyedByURL {
+	NSMutableDictionary *dictionary = [NSMutableDictionary new];
+
+	if ( self.configuration != nil && self.configuration.isReady ) {
+		dictionary[self.configuration.remoteLocation] = self.configuration;
+	}
+
+	for ( ILobbyStoreTrack *track in self.tracks ) {
+		ILobbyStoreRemoteFile *trackConfig = track.configuration;
+		if ( trackConfig != nil && trackConfig.isReady ) {
+			dictionary[trackConfig.remoteLocation] = trackConfig;
+		}
+
+		for ( ILobbyStoreRemoteMedia *media in track.remoteMedia ) {
+			if ( media.isReady ) {
+				dictionary[media.remoteLocation] = media;
+			}
+		}
+	}
+
+	return [dictionary copy];
+}
+
 @end
