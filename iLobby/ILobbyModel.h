@@ -10,7 +10,6 @@
 @import AVFoundation;
 @import CoreData;
 
-#import "ILobbyProgress.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
 #import "ILobbyStoreRoot.h"
@@ -25,16 +24,11 @@
 @property (strong, nonatomic, readonly) NSString *presentationGroupsRoot;	// root location of presentations on the local file system
 
 @property (strong, nonatomic) NSURL *presentationLocation;
-@property (strong, readonly) ILobbyProgress *downloadProgress;
 @property (strong, readonly) NSArray *tracks;
 @property (strong, readonly) ILobbyTrack *currentTrack;
 @property (weak, readwrite, nonatomic) id<ILobbyPresentationDelegate> presentationDelegate;
 @property BOOL delayInstall;
 @property (readonly) BOOL downloading;
-
-// Download the presenation from the web server. If fullDownload then force a download of all media regardless of date; otherwise, download only stale media.
-- (void)downloadPresentationForcingFullDownload:(BOOL)forceFullDownload;
-- (void)cancelPresentationDownload;
 
 - (BOOL)play;
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;

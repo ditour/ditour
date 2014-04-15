@@ -8,7 +8,6 @@
 
 @import Foundation;
 #import "ILobbyModel.h"
-#import "ILobbyDirectory.h"
 #import "ILobbyTransitionSource.h"
 
 @class ILobbySlide;
@@ -23,8 +22,6 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 
 - (id)initWithFile:(NSString *)file duration:(float)duration;
 + (id)slideWithFile:(NSString *)file duration:(float)duration;
-
-+ (NSArray *)filesFromConfig:(id)config inDirectory:(ILobbyDirectory *)directory;
 
 - (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
 - (void)cancelPresentation;

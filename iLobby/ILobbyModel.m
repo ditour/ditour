@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyModel.h"
-#import "ILobbyPresentationDownloader.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyRemoteDirectory.h"
@@ -17,8 +16,6 @@
 
 @interface ILobbyModel ()
 
-@property (strong, nonatomic) ILobbyPresentationDownloader *presentationDownloader;
-@property (strong, readwrite) ILobbyProgress *downloadProgress;
 @property (readwrite) BOOL hasPresentationUpdate;
 @property (readwrite) BOOL playing;
 @property (strong, readwrite) NSArray *tracks;
@@ -89,7 +86,6 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
     if (self) {
 		self.playing = NO;
 
-		self.downloadProgress = [ILobbyProgress progressWithFraction:0.0f label:@""];
 		[self setupDataModel];
 
 		self.storeRoot = [self fetchRootStore];
@@ -338,43 +334,6 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 }
 
 
-- (BOOL)validateDownload:(NSError **)error {
-//	NSFileManager *fileManager = [NSFileManager defaultManager];
-//	NSString *downloadPath = [ILobbyPresentationDownloader presentationPath];
-//
-//	if ( [fileManager fileExistsAtPath:downloadPath] ) {
-//		NSString *indexPath = [downloadPath stringByAppendingPathComponent:@"index.json"];
-//		if ( [fileManager fileExistsAtPath:indexPath] ) {
-//			NSError *jsonError;
-//			NSData *indexData = [NSData dataWithContentsOfFile:indexPath];
-//			[NSJSONSerialization JSONObjectWithData:indexData options:0 error:&jsonError];
-//			if ( jsonError ) {
-//				if ( error ) {
-//					*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File is corrupted" }];
-//				}
-//				return NO;
-//			}
-//			else {
-//				return YES;
-//			}
-//		}
-//		else {
-//			if ( error ) {
-//				*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Main index File Missing" }];
-//			}
-//			return NO;
-//		}
-//	}
-//	else {
-//		if ( error ) {
-//			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:1 userInfo:@{ @"message" : @"Download Directory Missing" }];
-//		}
-//		return NO;
-//	}
-	return YES;
-}
-
-
 - (void)installPresentation {
 	// TODO: implement installation logic
 	self.hasPresentationUpdate = NO;
@@ -436,48 +395,5 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	self.downloadSession = nil;
 }
 
-
-- (void)downloadPresentationForcingFullDownload:(BOOL)forceFullDownload {
-	ILobbyPresentationDownloader *currentDownloader = self.presentationDownloader;
-	if ( currentDownloader && !currentDownloader.complete ) {
-		[self cancelPresentationDownload];
-	}
-
-
-//	self.presentationDownloader = [[ILobbyPresentationDownloader alloc] initWithPresentation:presentation completionHandler:^(ILobbyPresentationDownloader *downloader) {
-//		NSLog( @"presentation dowload complete..." );
-//	}];
-}
-
-
-- (void)setPresentationDownloader:(ILobbyPresentationDownloader *)presentationDownloader {
-	ILobbyPresentationDownloader *oldDownloader = self.presentationDownloader;
-	if ( oldDownloader != nil ) {
-		[oldDownloader removeObserver:self forKeyPath:@"progress"];
-	}
-
-	if ( presentationDownloader != nil ) {
-		[presentationDownloader addObserver:self forKeyPath:@"progress" options:NSKeyValueObservingOptionNew context:nil];
-	}
-	_presentationDownloader = presentationDownloader;
-}
-
-
-- (void)cancelPresentationDownload {
-	[self.presentationDownloader cancel];
-	[self updateProgress:self.presentationDownloader];
-}
-
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if ( [object isKindOfClass:[ILobbyPresentationDownloader class]] ) {
-		[self updateProgress:(ILobbyPresentationDownloader *)object];
-	}
-}
-
-
-- (void)updateProgress:(ILobbyPresentationDownloader *)downloader {
-	self.downloadProgress = downloader.progress;
-}
 
 @end

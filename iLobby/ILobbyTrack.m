@@ -8,7 +8,6 @@
 
 #import "ILobbyTrack.h"
 #import "ILobbySlide.h"
-#import "ILobbyDirectory.h"
 
 #define DEFAULT_SLIDE_DURATION 5.0f
 
@@ -45,23 +44,23 @@
 		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:trackConfig[@"defaultTransition"]];
 		self.defaultTransitionSource = defaultTransitionSource;
 		
-		ILobbyDirectory *trackDirectory = [ILobbyDirectory localDirectoryWithPath:trackPath];
-		NSArray *slidesConfigs = trackConfig[@"slides"];
-		NSMutableArray *slides = [NSMutableArray new];
-		for ( id slideConfig in slidesConfigs ) {
-			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig inDirectory:trackDirectory];
-			for ( NSString *slideFile in slideFiles ) {
-				ILobbySlide *slide = [ILobbySlide slideWithFile:[trackPath stringByAppendingPathComponent:slideFile] duration:self.defaultSlideDuration];
-				if ( slide ) {
-					slide.transitionSource = defaultTransitionSource;
-					[slides addObject:slide];
-				}
-				else {
-					NSLog( @"Cannot generate slide for file: %@", slideFile );
-				}
-			}
-		}
-		self.slides = [NSArray arrayWithArray:slides];
+//		ILobbyDirectory *trackDirectory = [ILobbyDirectory localDirectoryWithPath:trackPath];
+//		NSArray *slidesConfigs = trackConfig[@"slides"];
+//		NSMutableArray *slides = [NSMutableArray new];
+//		for ( id slideConfig in slidesConfigs ) {
+//			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig inDirectory:trackDirectory];
+//			for ( NSString *slideFile in slideFiles ) {
+//				ILobbySlide *slide = [ILobbySlide slideWithFile:[trackPath stringByAppendingPathComponent:slideFile] duration:self.defaultSlideDuration];
+//				if ( slide ) {
+//					slide.transitionSource = defaultTransitionSource;
+//					[slides addObject:slide];
+//				}
+//				else {
+//					NSLog( @"Cannot generate slide for file: %@", slideFile );
+//				}
+//			}
+//		}
+//		self.slides = [NSArray arrayWithArray:slides];
     }
     return self;
 }

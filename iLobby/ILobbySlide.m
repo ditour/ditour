@@ -55,48 +55,6 @@
 }
 
 
-+ (NSArray *)filesFromConfig:(id)config inDirectory:(ILobbyDirectory *)directory {
-	if ( [config isKindOfClass:[NSString class]] )  return @[config];
-
-	NSString *source = config[@"source"];
-	NSString *pattern = config[@"pattern"];
-
-	if ( pattern ) {
-		if ( source != nil && [source isEqualToString:@"directory"] ) {
-			// grab all files in the directory matching the pattern
-			return [directory filesMatching:pattern];
-		}
-		else {
-			NSNumber *startNumber = config[@"start"];
-			NSNumber *endNumber = config[@"end"];
-			NSNumber *incrementNumber = config[@"increment"];
-			NSNumber *zeroPaddingNumber = config[@"zeropadding"];
-
-			NSUInteger start = startNumber != nil ? [startNumber unsignedIntegerValue] : 1;
-			NSUInteger end = endNumber != nil ? [endNumber unsignedIntegerValue] : start;
-			NSUInteger increment = incrementNumber != nil ? [incrementNumber unsignedIntegerValue] : 1;
-			NSUInteger zeroPadding = zeroPaddingNumber != nil ? [zeroPaddingNumber unsignedIntegerValue] : 0;
-
-			// generate the files by iterating over the index and substituting into the pattern
-			NSMutableArray *files = [NSMutableArray new];
-			for ( NSUInteger index = start ; index <= end ; index += increment ) {
-				NSString *rawIndexString = [@(index) description];
-				NSInteger zeroPaddingNeeded = zeroPadding - [rawIndexString length];
-				NSMutableString *indexString = [NSMutableString new];
-				while ( zeroPaddingNeeded > indexString.length ) {
-					[indexString appendString:@"0"];
-				}
-				[indexString appendString:rawIndexString];
-				NSString *file = [pattern stringByReplacingOccurrencesOfString:@"${index}" withString:indexString];
-				[files addObject:file];
-			}
-			return [NSArray arrayWithArray:files];
-		}
-	}
-	else {
-		return @[];
-	}
-}
 
 
 + (BOOL)matchesExtension:(NSString *)extension {
