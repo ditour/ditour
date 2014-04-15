@@ -41,7 +41,52 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 // class initializer
 +(void)initialize {
 	if ( self == [ILobbyModel class] ) {
-		[self purgeVersion1Data];
+		static NSString *MAJOR_VERSION_KEY = @"majorVersion";
+		static NSString *MINOR_VERSION_KEY = @"minorVersion";
+
+		// get and process version identity so we can migrate from an old version to new version
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		NSInteger majorVersion = [defaults integerForKey:MAJOR_VERSION_KEY];
+		NSInteger minorVersion = [defaults integerForKey:MINOR_VERSION_KEY];
+
+		NSLog( @"Major Version: %ld", (long)majorVersion );
+
+		// ------- Process any migration from earlier versions in the code below
+
+		switch ( majorVersion ) {
+			case 0: case 1:		// version 1 didn't specify the major or minor version so this will be 0 in that case
+				NSLog( @"Cleaning up version 1 data..." );
+				[self purgeVersion1Data];
+
+				[defaults removeObjectForKey:@"delayInstall"];
+				[defaults removeObjectForKey:@"presentationLocation"];
+				break;
+
+			default:
+				break;
+		}
+
+		// ------- Complete any migration from earlier versions in the above code
+
+		// Check and set the major/minor versions if needed
+		BOOL hasChanges = NO;
+		if ( majorVersion != 2 ) {
+			[defaults setInteger:2 forKey:MAJOR_VERSION_KEY];
+			hasChanges = YES;
+		}
+		if ( minorVersion != 0 ) {
+			[defaults setInteger:0 forKey:MINOR_VERSION_KEY];
+			hasChanges = YES;
+		}
+
+		// if there are any user defaults changes to save, save them now
+		if ( hasChanges ) {
+			[defaults synchronize];
+		}
+
+		// --------- Done processing user defaults for app version
+
+		// setup the path to the data for groups
 		PRESENTATION_GROUP_ROOT = [self.documentDirectoryURL.path stringByAppendingPathComponent:@"PresentationGroups"];
 	}
 }
@@ -362,26 +407,6 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	else {
 		return NO;
 	}
-}
-
-
-- (NSURL *)presentationLocation {
-	return [[NSUserDefaults standardUserDefaults] URLForKey:@"presentationLocation"];
-}
-
-
-- (void)setPresentationLocation:(NSURL *)presentationLocation {
-	[[NSUserDefaults standardUserDefaults] setURL:presentationLocation forKey:@"presentationLocation"];
-}
-
-
-- (BOOL)delayInstall {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:@"delayInstall"];
-}
-
-
-- (void)setDelayInstall:(BOOL)delayInstall {
-	[[NSUserDefaults standardUserDefaults] setBool:delayInstall forKey:@"delayInstall"];
 }
 
 
