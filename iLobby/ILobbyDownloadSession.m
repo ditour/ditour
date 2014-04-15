@@ -144,7 +144,7 @@
 				NSLog( @"Error deleting existing file at destination %@ for remote %@, %@", configDestination, configRemoteURL, [error localizedDescription] );
 			}
 
-			[self downloadRemoteFile:group.configuration container:status];
+			[self downloadRemoteFile:group.configuration container:status usingCache:nil];
 		}
 
 		for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
@@ -171,12 +171,15 @@
 		else {
 			[presentation markDownloading];
 
+			// generate the cache of local items in the parent if any keyed by URL spec
+			NSDictionary *localCacheByURL = presentation.parent != nil ? [presentation.parent generateFileDictionaryKeyedByURL] : nil;
+
 			if ( presentation.configuration ) {
-				[self downloadRemoteFile:presentation.configuration container:status];
+				[self downloadRemoteFile:presentation.configuration container:status usingCache:localCacheByURL];
 			}
 
 			for ( ILobbyStoreTrack *track in presentation.tracks ) {
-				[self downloadTrack:track container:status];
+				[self downloadTrack:track container:status usingCache:localCacheByURL];
 			}
 
 			status.submitted = YES;
@@ -185,7 +188,7 @@
 }
 
 
-- (void)downloadTrack:(ILobbyStoreTrack	*)track container:(ILobbyDownloadContainerStatus *)presentationStatus {
+- (void)downloadTrack:(ILobbyStoreTrack	*)track container:(ILobbyDownloadContainerStatus *)presentationStatus usingCache:(NSDictionary *)localCacheByURL {
 	ILobbyDownloadContainerStatus *status = [ILobbyDownloadContainerStatus statusForRemoteItem:track container:presentationStatus];
 
 	[track.managedObjectContext performBlock:^{
@@ -199,11 +202,11 @@
 			[track markDownloading];
 
 			if ( track.configuration ) {
-				[self downloadRemoteFile:track.configuration container:status];
+				[self downloadRemoteFile:track.configuration container:status usingCache:localCacheByURL];
 			}
 
 			for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
-				[self downloadRemoteFile:remoteMedia container:status];
+				[self downloadRemoteFile:remoteMedia container:status usingCache:localCacheByURL];
 			}
 
 			status.submitted = YES;
@@ -212,14 +215,38 @@
 }
 
 
-- (void)downloadRemoteFile:(ILobbyStoreRemoteFile *)remoteFile container:(ILobbyDownloadContainerStatus *)container {
+- (void)downloadRemoteFile:(ILobbyStoreRemoteFile *)remoteFile container:(ILobbyDownloadContainerStatus *)container usingCache:(NSDictionary *)localCacheByURL {
 	ILobbyDownloadFileStatus *status = [ILobbyDownloadFileStatus statusForRemoteItem:remoteFile container:container];
 
 	[remoteFile.managedObjectContext performBlock:^{
 		if ( remoteFile && remoteFile.isPending ) {
+			// first see if the local cache has a current version of the file we want
+			if ( localCacheByURL != nil ) {
+				ILobbyStoreRemoteFile *cachedFile = localCacheByURL[remoteFile.remoteLocation];
+				if ( cachedFile != nil ) {
+					NSString *cacheInfo = cachedFile.remoteInfo;
+					NSString *remoteInfo = remoteFile.remoteInfo;
+					if ( remoteInfo != nil && [remoteInfo isEqualToString:cacheInfo] ) {
+//						NSLog( @"Simply copying file from local cache for: %@", remoteFile.path );
+						NSFileManager *fileManager = [NSFileManager defaultManager];
+						NSError *error = nil;
+						BOOL success = [fileManager linkItemAtPath:cachedFile.path toPath:remoteFile.path error:&error];
+						if ( success ) {
+							[remoteFile markReady];
+							status.completed = YES;
+							return;
+						}
+						else {
+							NSLog( @"Error creating hard link to remote file: %@ from existing file at: %@", remoteFile.path, cachedFile.path );
+						}
+					}
+				}
+			}
+
 			//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
 			NSURL *downloadURL = remoteFile.remoteURL;
 			//NSLog( @"scheduling download of remote file from: %@", downloadURL );
+
 			NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
 			NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
 
