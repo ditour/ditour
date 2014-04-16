@@ -10,12 +10,16 @@
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyDownloadStatus.h"
 
+@class ILobbyModel;
+
 
 @interface ILobbyDownloadSession : NSObject
 
 @property (readonly, nonatomic, copy) NSString *backgroundIdentifier;
 @property (nonatomic, readonly) ILobbyDownloadContainerStatus *groupStatus;
 @property (nonatomic, readonly) BOOL active;
+
+- (instancetype)initWithModel:(ILobbyModel *)lobbyModel;
 
 - (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (void)cancel;

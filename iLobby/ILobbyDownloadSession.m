@@ -18,6 +18,7 @@
 @property NSURLSession *downloadSession;
 @property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;		// file download status keyed by task
 @property (nonatomic, readwrite) ILobbyDownloadContainerStatus *groupStatus;
+@property (nonatomic, readwrite, weak) ILobbyModel *lobbyModel;
 
 @end
 
@@ -25,12 +26,15 @@
 
 @implementation ILobbyDownloadSession
 
-- (instancetype)init {
+- (instancetype)initWithModel:(ILobbyModel *)lobbyModel {
     self = [super init];
     if (self) {
-		_active = YES;
+		self.lobbyModel = lobbyModel;
+
 		self.downloadTaskRemoteItems = [ILobbyConcurrentDictionary new];
 		self.backgroundIdentifier = [self createBackgroundIdenfier];
+
+		_active = YES;
 		[self createBackgroundSession];
     }
     return self;
