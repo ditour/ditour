@@ -71,9 +71,34 @@
 
 - (void)cancel {
 	if ( _active ) {
+//		NSLog( @"Canceling the download session..." );
 		_active = NO;
 		[self.downloadSession invalidateAndCancel];
+		[self publishChanges];
 	}
+}
+
+
+- (void)updateStatus {
+	// if all tasks have been submitted and no tasks remain then we can cancel the session
+	[self.groupStatus updateProgress];
+
+//	NSLog( @"Updating status: %d, download task count: %ld", self.groupStatus.completed, (long)self.downloadTaskRemoteItems.count );
+	if ( self.groupStatus.completed && self.downloadTaskRemoteItems.count == 0 ) {
+//		NSLog( @"Download session is complete and will be cancelled..." );
+		[self cancel];
+		[self publishChanges];
+	}
+}
+
+
+- (void)publishChanges {
+//	NSLog( @"publishing changes..." );
+	ILobbyStorePresentationGroup *group = (ILobbyStorePresentationGroup *)self.groupStatus.remoteItem;
+	[group.managedObjectContext performBlockAndWait:^{
+		[group.managedObjectContext refreshObject:group mergeChanges:YES];
+	}];
+	[self persistentSaveContext:self.groupStatus.remoteItem.managedObjectContext error:nil];
 }
 
 
@@ -87,7 +112,27 @@
 
 		[group markDownloading];
 
-		// ------------- first fetch the directory references from the remote URL
+		// cache information about the initial config so we can reuse the file if possible
+		ILobbyStoreConfiguration *initialConfig = group.configuration;
+		NSString *initialConfigRemoteInfo = nil;
+		NSString *initialConfigPath = nil;
+		if ( initialConfig != nil ) {
+			initialConfigRemoteInfo = initialConfig.remoteInfo;
+			initialConfigPath = initialConfig.path;
+		}
+		initialConfig = nil;
+
+
+		// remove any existing pending presentations as we will create new ones so stale ones are no longer useful
+		[group.managedObjectContext refreshObject:group mergeChanges:YES];
+		for ( ILobbyStorePresentation *presentation in group.pendingPresentations ) {
+			[group removePresentationsObject:presentation];
+			[group.managedObjectContext deleteObject:presentation];
+		}
+		[self persistentSaveContext:group.managedObjectContext error:&error];
+
+
+		// ------------- fetch the directory references from the remote URL
 
 		ILobbyRemoteDirectory *groupRemoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:group.remoteURL error:&error];
 
@@ -99,6 +144,7 @@
 		// store the active presentations by name so they can be used as parents if necessary
 		NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
 		for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+//			NSLog( @"Active presentation at: %@", presentation.path );
 			activePresentationsByName[presentation.name] = presentation;
 		}
 
@@ -129,32 +175,48 @@
 
 		// ----------- now begin downloading the files
 
-		if ( group.configuration ) {
-			// since a configuration file may already exist for the group, we must delete it to make room for any new one
-			// however, we don't have to delete an existing config file that no longer is needed since the group will simply ignore it anyway
+		// if the group has a configuration then determine whether the configuration file can be copied from the initial one
+		if ( group.configuration != nil ) {
+			// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
 			NSFileManager *fileManager = [NSFileManager defaultManager];
-
-			NSString *configDestination = group.configuration.path;
-			NSURL *configRemoteURL = group.configuration.remoteURL;
-			if ( [fileManager fileExistsAtPath:configDestination] ) {
-				[fileManager removeItemAtPath:configDestination error:&error];
+			if ( initialConfigRemoteInfo != nil && [initialConfigRemoteInfo isEqualToString:group.configuration.remoteInfo] && [initialConfigPath isEqualToString:group.configuration.path] && [fileManager fileExistsAtPath:initialConfigPath] ) {
+				[group.configuration markReady];
 			}
-
-			if ( error ) {
-				NSLog( @"Error deleting existing file at destination %@ for remote %@, %@", configDestination, configRemoteURL, [error localizedDescription] );
+			else {
+				if ( initialConfigPath != nil ) {
+					[self removeFileAt:initialConfigPath];
+				}
+				[self downloadRemoteFile:group.configuration container:status usingCache:nil];
 			}
-
-			[self downloadRemoteFile:group.configuration container:status usingCache:nil];
+		}
+		else if ( initialConfig != nil ) {
+			[self removeFileAt:initialConfigPath];
 		}
 
+		// download the presentations
 		for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
 			[self downloadPresentation:pendingPresentation container:status];
 		}
 
 		status.submitted = YES;
+		[self updateStatus];
 	}];
 
 	return status;
+}
+
+
+- (void)removeFileAt:(NSString *)path {
+	NSError *error;
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+
+	if ( [fileManager fileExistsAtPath:path] ) {
+		[fileManager removeItemAtPath:path error:&error];
+	}
+
+	if ( error ) {
+		NSLog( @"Error deleting existing file at destination %@, %@", path, [error localizedDescription] );
+	}
 }
 
 
@@ -234,6 +296,8 @@
 						if ( success ) {
 							[remoteFile markReady];
 							status.completed = YES;
+							status.progress = 1.0;
+							[self updateStatus];
 							return;
 						}
 						else {
@@ -245,7 +309,7 @@
 
 			//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
 			NSURL *downloadURL = remoteFile.remoteURL;
-			//NSLog( @"scheduling download of remote file from: %@", downloadURL );
+//			NSLog( @"scheduling download of remote file from: %@", downloadURL );
 
 			NSURLRequest *request = [NSURLRequest requestWithURL:downloadURL];
 			NSURLSessionDownloadTask *downloadTask = [self.downloadSession downloadTaskWithRequest:request];
@@ -337,7 +401,7 @@
 
 	// if all tasks have been submitted and no tasks remain then we can cancel the session
 	if ( self.groupStatus.completed && self.downloadTaskRemoteItems.count == 0 ) {
-		NSLog( @"Download session is complete and will be cancelled..." );
+//		NSLog( @"Download session is complete and will be cancelled..." );
 		[self cancel];
 	}
 	
@@ -390,6 +454,7 @@
 		return [self persistentSaveContext:parentContext error:errorPtr];
 	}
 	else {
+//		NSLog( @"Saved to persistent store..." );
 		return success;
 	}
 }

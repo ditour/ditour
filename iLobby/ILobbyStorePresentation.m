@@ -71,6 +71,8 @@
 			self.current = current;
 		}
 
+//		NSLog( @"Replacing parent at: %@ with this presentation at: %@", parentPresentation.path, self.path );
+
 		self.parent = nil;
 
 		[parentPresentation.managedObjectContext deleteObject:parentPresentation];
@@ -98,20 +100,21 @@
 
 
 - (NSDictionary *)generateFileDictionaryKeyedByURL {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableDictionary *dictionary = [NSMutableDictionary new];
 
-	if ( self.configuration != nil && self.configuration.isReady ) {
+	if ( self.configuration != nil && self.configuration.isReady && [fileManager fileExistsAtPath:self.configuration.path] ) {
 		dictionary[self.configuration.remoteLocation] = self.configuration;
 	}
 
 	for ( ILobbyStoreTrack *track in self.tracks ) {
 		ILobbyStoreRemoteFile *trackConfig = track.configuration;
-		if ( trackConfig != nil && trackConfig.isReady ) {
+		if ( trackConfig != nil && trackConfig.isReady && [fileManager fileExistsAtPath:trackConfig.path] ) {
 			dictionary[trackConfig.remoteLocation] = trackConfig;
 		}
 
 		for ( ILobbyStoreRemoteMedia *media in track.remoteMedia ) {
-			if ( media.isReady ) {
+			if ( media.isReady && [fileManager fileExistsAtPath:media.path] ) {
 				dictionary[media.remoteLocation] = media;
 			}
 		}

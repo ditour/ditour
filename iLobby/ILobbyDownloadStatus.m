@@ -90,9 +90,8 @@
 	_completed = completed;
 
 	if ( completed ) {
-		[self setProgress:1.0];
-
-		[self.remoteItem.managedObjectContext performBlock:^{
+		// important for the following code to block since marking ready must complete before setting the progress which in turn propagates progress state
+		[self.remoteItem.managedObjectContext performBlockAndWait:^{
 			[self.remoteItem markReady];
 			if ( self.container ) {
 				ILobbyStoreRemoteItem *remoteContainer = self.container.remoteItem;
@@ -102,6 +101,8 @@
 				}
 			}
 		}];
+
+		[self setProgress:1.0];
 	}
 }
 
@@ -180,7 +181,11 @@
 		self.progress = progressSum / childCount;
 
 		if ( _submitted && completionCount == childCount ) {
+//			NSLog( @"%@ is complete", self.remoteItem.remoteLocation );
 			self.completed = YES;
+		}
+		else {
+//			NSLog( @"%@ completed %ld of %ld", self.remoteItem.remoteLocation, (long)completionCount, (long)childCount );
 		}
 	}
 	else if ( _submitted ) {

@@ -160,7 +160,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
     // Configure the cell...
 	ILobbyStorePresentation *presentation = _activePresentations[indexPath.row];
 	cell.nameLabel.text = presentation.name;
-//	NSLog( @"Active presentation %@, status: %@", presentation.name, presentation.status );
+//	NSLog( @"Active presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 
     return cell;
 }
@@ -177,7 +177,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	float downloadProgress = downloadStatus != nil ? downloadStatus.progress : 0.0;
 	cell.progressView.progress = downloadProgress;
 
-//	NSLog( @"Pending presentation %@, status: %@", presentation.name, presentation.status );
+//	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 
     return cell;
 }

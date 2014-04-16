@@ -49,7 +49,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 		NSInteger majorVersion = [defaults integerForKey:MAJOR_VERSION_KEY];
 		NSInteger minorVersion = [defaults integerForKey:MINOR_VERSION_KEY];
 
-		NSLog( @"Major Version: %ld", (long)majorVersion );
+		//NSLog( @"Major Version: %ld", (long)majorVersion );
 
 		// ------- Process any migration from earlier versions in the code below
 
