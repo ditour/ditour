@@ -25,7 +25,10 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 @interface ILobbyPresentationGroupDetailController () <ILobbyDownloadStatusDelegate>
 
+@property (weak, readwrite) IBOutlet UIActivityIndicatorView *downloadIndicator;
+
 - (IBAction)downloadPresentations:(id)sender;
+- (IBAction)cancelGroupDownload:(id)sender;
 
 @property ILobbyDownloadContainerStatus *groupDownloadStatus;
 
@@ -64,6 +67,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	if ( self.groupDownloadStatus != nil ) {
 		self.groupDownloadStatus.delegate = self;
 	}
+
+	[self updateDownloadIndicator];
 }
 
 
@@ -86,10 +91,26 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 }
 
 
+- (IBAction)cancelGroupDownload:(id)sender {
+	[self.lobbyModel cancelDownload];
+}
+
+
 - (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
 	dispatch_async( dispatch_get_main_queue(), ^{
+		[self updateDownloadIndicator];
 		[self.tableView reloadData];
 	});
+}
+
+
+- (void)updateDownloadIndicator {
+	if ( self.lobbyModel.downloading && !self.downloadIndicator.isAnimating ) {
+		[self.downloadIndicator startAnimating];
+	}
+	else if ( !self.lobbyModel.downloading && self.downloadIndicator.isAnimating ) {
+		[self.downloadIndicator stopAnimating];
+	}
 }
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="cmb-RJ-5st">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="cmb-RJ-5st">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -37,8 +37,8 @@
                             <rect key="frame" x="0.0" y="64" width="1024" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eO1-5G-eRJ">
-                                    <rect key="frame" x="20" y="7" width="69" height="30"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eO1-5G-eRJ">
+                                    <rect key="frame" x="48" y="7" width="69" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Download">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -47,8 +47,30 @@
                                         <action selector="downloadPresentations:" destination="0xE-St-MOE" eventType="touchUpInside" id="Vgf-qh-MaL"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q10-zI-GYf">
+                                    <rect key="frame" x="125" y="7" width="48" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Cancel">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="cancelGroupDownload:" destination="0xE-St-MOE" eventType="touchUpInside" id="ird-xJ-dmL"/>
+                                    </connections>
+                                </button>
+                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dUb-d8-gdq">
+                                    <rect key="frame" x="20" y="12" width="20" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </activityIndicatorView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="eO1-5G-eRJ" firstAttribute="baseline" secondItem="q10-zI-GYf" secondAttribute="baseline" id="AEX-KY-gCN"/>
+                                <constraint firstItem="q10-zI-GYf" firstAttribute="leading" secondItem="eO1-5G-eRJ" secondAttribute="trailing" constant="8" symbolic="YES" id="LNP-bU-Va5"/>
+                                <constraint firstItem="dUb-d8-gdq" firstAttribute="leading" secondItem="ufv-NO-jXp" secondAttribute="leading" constant="20" id="Xg6-Ys-5o3"/>
+                                <constraint firstItem="eO1-5G-eRJ" firstAttribute="centerY" secondItem="dUb-d8-gdq" secondAttribute="centerY" id="Zgz-Ry-Ewz"/>
+                                <constraint firstItem="eO1-5G-eRJ" firstAttribute="leading" secondItem="dUb-d8-gdq" secondAttribute="trailing" constant="8" id="qPd-vB-EZt"/>
+                                <constraint firstAttribute="centerY" secondItem="q10-zI-GYf" secondAttribute="centerY" id="yev-ym-2fw"/>
+                            </constraints>
                         </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="ILobbyGroupDetailActivePresentationCell">
@@ -110,6 +132,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Group Detail" id="cmk-aA-Lmf"/>
+                    <connections>
+                        <outlet property="downloadIndicator" destination="dUb-d8-gdq" id="x42-bJ-sfw"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYL-dD-06O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
