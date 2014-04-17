@@ -118,6 +118,30 @@ enum : NSInteger {
 }
 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_TRACKS_VIEW:
+			return [self estimateHeightForTrackAtIndexPath:indexPath];
+
+		default:
+			return 44;
+	}
+}
+
+
+- (CGFloat)estimateHeightForTrackAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreTrack *track = self.tracks[indexPath.row];
+
+	if ( track.isReady ) {
+		return 44;
+	}
+	else {
+		return 68;
+	}
+
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
 		case SECTION_TRACKS_VIEW:
