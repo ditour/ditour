@@ -93,7 +93,6 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	[self.tableView reloadData];
 	
 	if ( self.lobbyModel.downloading ) {
-		// TODO: need to display alert view
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't Download" message:@"You attempted to download a group which is already downloading. You need to cancel first." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
 		[alert show];
 	}
