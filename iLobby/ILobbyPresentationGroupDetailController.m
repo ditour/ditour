@@ -36,7 +36,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 
 @implementation ILobbyPresentationGroupDetailController {
-	BOOL _hasPendingUpdate;
+	BOOL _updateScheduled;		// indicates whether an update has been scheduled
 	NSArray *_pendingPresentations;
 	NSArray *_activePresentations;
 }
@@ -54,7 +54,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	_hasPendingUpdate = NO;
+	_updateScheduled = NO;
 
 	_activePresentations = nil;
 	_pendingPresentations = nil;
@@ -101,14 +101,16 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 }
 
 
+// the download state has changed (can be called at a very high frequency)
 - (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
-	if ( !_hasPendingUpdate ) {
-		_hasPendingUpdate = YES;
+	// throttle the updates to dramatically lower CPU load and reduce backlog of events
+	if ( !_updateScheduled ) {		// skip if an update has already been scheduled since the display will be refreshed
+		_updateScheduled = YES;		// indicate that an update will be scheduled
 
-		static dispatch_time_t delay = 1000 * 1000 * 1000 * 0.2;	// refresh the display every 0.2 seconds
-		dispatch_time_t runTime = dispatch_time( DISPATCH_TIME_NOW, delay );
+		static dispatch_time_t nanoSecondDelay = 1000 * 1000 * 1000 * 0.2;	// refresh the display at most every 0.2 seconds
+		dispatch_time_t runTime = dispatch_time( DISPATCH_TIME_NOW, nanoSecondDelay );
 		dispatch_after( runTime, dispatch_get_main_queue(), ^{
-			_hasPendingUpdate = NO;
+			_updateScheduled = NO;	// allow another update to be scheduled since we will begin processing the current one
 			[self updateDownloadIndicator];
 			[self.tableView reloadData];
 		});
