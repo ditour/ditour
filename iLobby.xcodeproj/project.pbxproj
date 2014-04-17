@@ -36,6 +36,9 @@
 		4CA2E44C18D0F233004C0489 /* ILobbyPresentationGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA2E44B18D0F233004C0489 /* ILobbyPresentationGroupCell.m */; };
 		4CA2F14416357BB90082ADFF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA2F14316357BB90082ADFF /* AVFoundation.framework */; };
 		4CA582DC16386913009ACF37 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA582DB16386913009ACF37 /* CoreMedia.framework */; };
+		4CA7DB7C1900491600CB788A /* ILobbyPresentationDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA7DB7B1900491600CB788A /* ILobbyPresentationDetailController.m */; };
+		4CA7DB7F19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA7DB7E19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.m */; };
+		4CA7DB8219005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA7DB8119005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.m */; };
 		4CB41D6518D24D710028F1DF /* ILobbyPresentationGroupEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB41D6418D24D710028F1DF /* ILobbyPresentationGroupEditCell.m */; };
 		4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09892183D4CBF006755C8 /* ILobbyStoreSlide.m */; };
 		4CC09896183D4CC0006755C8 /* ILobbyStoreRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09895183D4CC0006755C8 /* ILobbyStoreRoot.m */; };
@@ -109,6 +112,12 @@
 		4CA2F14316357BB90082ADFF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4CA582DB16386913009ACF37 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		4CA582E116397A0C009ACF37 /* ILobbyPresentationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDelegate.h; sourceTree = "<group>"; };
+		4CA7DB7A1900491600CB788A /* ILobbyPresentationDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDetailController.h; sourceTree = "<group>"; };
+		4CA7DB7B1900491600CB788A /* ILobbyPresentationDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDetailController.m; sourceTree = "<group>"; };
+		4CA7DB7D19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDetailActiveTrackCell.h; sourceTree = "<group>"; };
+		4CA7DB7E19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDetailActiveTrackCell.m; sourceTree = "<group>"; };
+		4CA7DB8019005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDetailPendingTrackCell.h; sourceTree = "<group>"; };
+		4CA7DB8119005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDetailPendingTrackCell.m; sourceTree = "<group>"; };
 		4CB41D6318D24D710028F1DF /* ILobbyPresentationGroupEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupEditCell.h; sourceTree = "<group>"; };
 		4CB41D6418D24D710028F1DF /* ILobbyPresentationGroupEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationGroupEditCell.m; sourceTree = "<group>"; };
 		4CC09883183D0DDE006755C8 /* ILobbyRemoteDirectoryItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectoryItem.h; sourceTree = "<group>"; };
@@ -190,6 +199,8 @@
 				4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */,
 				4CE0DC5818D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.h */,
 				4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m */,
+				4CA7DB7A1900491600CB788A /* ILobbyPresentationDetailController.h */,
+				4CA7DB7B1900491600CB788A /* ILobbyPresentationDetailController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -295,6 +306,10 @@
 				4C9248BF18E2072E00A6CBDA /* ILobbyGroupDetailActivePresentationCell.m */,
 				4C9248C118E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.h */,
 				4C9248C218E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m */,
+				4CA7DB7D19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.h */,
+				4CA7DB7E19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.m */,
+				4CA7DB8019005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.h */,
+				4CA7DB8119005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -434,6 +449,7 @@
 				4C9248C318E2075D00A6CBDA /* ILobbyGroupDetailPendingPresentationCell.m in Sources */,
 				4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */,
 				4CA2E44C18D0F233004C0489 /* ILobbyPresentationGroupCell.m in Sources */,
+				4CA7DB7F19005F5900CB788A /* ILobbyPresentationDetailActiveTrackCell.m in Sources */,
 				4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m in Sources */,
 				4C01BD4F1636F69100065A97 /* ILobbyViewController.m in Sources */,
 				4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */,
@@ -443,6 +459,8 @@
 				4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */,
 				4CE0DC5D18D9E3EE0092C700 /* ILobbyStoreConfiguration.m in Sources */,
 				4CE0DC5318D763B90092C700 /* ILobbyStoreRemoteMedia.m in Sources */,
+				4CA7DB7C1900491600CB788A /* ILobbyPresentationDetailController.m in Sources */,
+				4CA7DB8219005F7000CB788A /* ILobbyPresentationDetailPendingTrackCell.m in Sources */,
 				4CC3919C18EDF72C00B9AA4E /* ILobbyDownloadSession.m in Sources */,
 				4C01BD581637150700065A97 /* ILobbyTrack.m in Sources */,
 				4CB41D6518D24D710028F1DF /* ILobbyPresentationGroupEditCell.m in Sources */,

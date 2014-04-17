@@ -91,6 +91,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="nameLabel" destination="uDc-BQ-P85" id="FSN-gB-MEj"/>
+                                    <segue destination="jnE-kG-HXj" kind="push" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="ILobbyGroupDetailPendingPresentationCell">
@@ -123,6 +124,7 @@
                                 <connections>
                                     <outlet property="nameLabel" destination="AgP-2y-IrQ" id="ScV-PK-bIj"/>
                                     <outlet property="progressView" destination="VnP-YA-K09" id="FhS-N3-bcS"/>
+                                    <segue destination="jnE-kG-HXj" kind="push" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -139,6 +141,80 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYL-dD-06O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3549" y="-221"/>
+        </scene>
+        <!--Lobby Presentation Detail Controller - Presentation Detail-->
+        <scene sceneID="Fri-dJ-JfY">
+            <objects>
+                <tableViewController id="jnE-kG-HXj" customClass="ILobbyPresentationDetailController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="HmC-Hm-dt3">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationDetailActiveTrackCell" id="c2a-TE-sXK" customClass="ILobbyPresentationDetailActiveTrackCell">
+                                <rect key="frame" x="0.0" y="86" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c2a-TE-sXK" id="B5I-QP-nmM">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Track Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vAQ-Dl-LxE">
+                                            <rect key="frame" x="20" y="11" width="88" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="nameLabel" destination="vAQ-Dl-LxE" id="nqZ-to-nLr"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyPresentationDetailPendingTrackCell">
+                                <rect key="frame" x="0.0" y="130" width="1024" height="68"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DXi-Vu-bon" id="X8H-pH-tqw">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="67"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSC-nP-Zb9">
+                                            <rect key="frame" x="20" y="11" width="88" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="sdl-Hc-OQa">
+                                            <rect key="frame" x="20" y="45" width="951" height="2"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </progressView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="sdl-Hc-OQa" firstAttribute="top" secondItem="jSC-nP-Zb9" secondAttribute="bottom" constant="13" id="18T-0s-fxw"/>
+                                        <constraint firstItem="jSC-nP-Zb9" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="3Jw-OV-fWN"/>
+                                        <constraint firstItem="jSC-nP-Zb9" firstAttribute="top" secondItem="X8H-pH-tqw" secondAttribute="top" constant="11" id="3aY-Sz-pvc"/>
+                                        <constraint firstAttribute="trailing" secondItem="sdl-Hc-OQa" secondAttribute="trailing" constant="20" id="5CC-pO-Ksc"/>
+                                        <constraint firstItem="sdl-Hc-OQa" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="kWe-Ck-pK2"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="nameLabel" destination="jSC-nP-Zb9" id="lej-Lo-d3k"/>
+                                    <outlet property="progressView" destination="sdl-Hc-OQa" id="SQC-3U-RRR"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="jnE-kG-HXj" id="j9N-kp-8AI"/>
+                            <outlet property="delegate" destination="jnE-kG-HXj" id="tXj-d5-pVF"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Presentation Detail" id="TLr-Zp-8O7"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="72D-TD-0pd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4904" y="-221"/>
         </scene>
         <!--Lobby Presentation Groups Table Controller - Presentation Groups-->
         <scene sceneID="0Qw-Lp-c9S">
@@ -310,4 +386,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="Js4-XC-Mie"/>
+    </inferredMetricsTieBreakers>
 </document>

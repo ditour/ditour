@@ -9,6 +9,7 @@
 #import "ILobbyPresentationGroupDetailController.h"
 #import "ILobbyGroupDetailActivePresentationCell.h"
 #import "ILobbyGroupDetailPendingPresentationCell.h"
+#import "ILobbyPresentationDetailController.h"
 
 
 enum : NSInteger {
@@ -22,8 +23,14 @@ static NSString *ACTIVE_PRESENTATION_CELL_ID = @"GroupDetailActivePresentationCe
 static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentationCell";
 
 
+static NSString *SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = @"ShowActivePresentationDetail";
+static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresentationDetail";
+
+
 
 @interface ILobbyPresentationGroupDetailController () <ILobbyDownloadStatusDelegate>
+
+// TODO: add property for configuration
 
 @property (weak, readwrite) IBOutlet UIActivityIndicatorView *downloadIndicator;
 
@@ -115,7 +122,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	if ( !_updateScheduled ) {		// skip if an update has already been scheduled since the display will be refreshed
 		_updateScheduled = YES;		// indicate that an update will be scheduled
 
-		static dispatch_time_t nanoSecondDelay = 1000 * 1000 * 1000 * 0.2;	// refresh the display at most every 0.2 seconds
+		static dispatch_time_t nanoSecondDelay = 1000 * 1000 * 1000 * 0.25;	// refresh the display at most every 0.25 seconds
 		dispatch_time_t runTime = dispatch_time( DISPATCH_TIME_NOW, nanoSecondDelay );
 		dispatch_after( runTime, dispatch_get_main_queue(), ^{
 			_updateScheduled = NO;	// allow another update to be scheduled since we will begin processing the current one
@@ -197,6 +204,32 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 }
 
 
+- (ILobbyStorePresentation *)presentationAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+			return [self activePresentationAtSectionRow:indexPath.row];
+
+		case SECTION_PENDING_PRESENTATIONS_VIEW:
+			return [self pendingPresentationAtSectionRow:indexPath.row];
+
+		default:
+			break;
+	}
+
+	return nil;
+}
+
+
+- (ILobbyStorePresentation *)activePresentationAtSectionRow:(NSInteger)row {
+	return _activePresentations[row];
+}
+
+
+- (ILobbyStorePresentation *)pendingPresentationAtSectionRow:(NSInteger)row {
+	return _pendingPresentations[row];
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView activePresentationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ILobbyGroupDetailActivePresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
@@ -226,15 +259,30 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 }
 
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+	NSString *segueID = [segue identifier];
+
+    if ( [segueID isEqualToString:SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID] ) {
+		NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+		ILobbyStorePresentation *presentation = [self presentationAtIndexPath:indexPath];
+
+		ILobbyPresentationDetailController *presentationController = segue.destinationViewController;
+		presentationController.lobbyModel = self.lobbyModel;
+		presentationController.presentation = presentation;
+
+		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID] ) {
+			ILobbyDownloadContainerStatus *downloadStatus = (ILobbyDownloadContainerStatus *)[self.groupDownloadStatus childStatusForRemoteItem:presentation];
+			presentationController.presentationDownloadStatus = downloadStatus;
+		}
+    }
+    else {
+        NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
+    }
 }
-*/
 
 @end
