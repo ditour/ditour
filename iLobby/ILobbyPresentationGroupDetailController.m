@@ -94,7 +94,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	
 	if ( self.lobbyModel.downloading ) {
 		// TODO: need to display alert view
-		NSLog( @"Attempting to download a group when already downloading. You need to cancel first." );
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't Download" message:@"You attempted to download a group which is already downloading. You need to cancel first." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+		[alert show];
 	}
 	else {
 		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
