@@ -75,6 +75,14 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 }
 
 
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+
+	// allow updates to be scheduled immediately
+	_updateScheduled = NO;
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
