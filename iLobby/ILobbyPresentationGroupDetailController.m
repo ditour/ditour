@@ -36,6 +36,7 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 
 @implementation ILobbyPresentationGroupDetailController {
+	BOOL _hasPendingUpdate;
 	NSArray *_pendingPresentations;
 	NSArray *_activePresentations;
 }
@@ -52,6 +53,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+	_hasPendingUpdate = NO;
 
 	_activePresentations = nil;
 	_pendingPresentations = nil;
@@ -87,6 +90,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 	}
 	else {
 		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
+		[self updateDownloadIndicator];
+		[self.tableView reloadData];
 	}
 }
 
@@ -97,10 +102,17 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 
 - (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
-	dispatch_async( dispatch_get_main_queue(), ^{
-		[self updateDownloadIndicator];
-		[self.tableView reloadData];
-	});
+	if ( !_hasPendingUpdate ) {
+		_hasPendingUpdate = YES;
+
+		static dispatch_time_t delay = 1000 * 1000 * 1000 * 0.2;	// refresh the display every 0.2 seconds
+		dispatch_time_t runTime = dispatch_time( DISPATCH_TIME_NOW, delay );
+		dispatch_after( runTime, dispatch_get_main_queue(), ^{
+			_hasPendingUpdate = NO;
+			[self updateDownloadIndicator];
+			[self.tableView reloadData];
+		});
+	}
 }
 
 

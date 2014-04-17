@@ -38,7 +38,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eO1-5G-eRJ">
-                                    <rect key="frame" x="48" y="7" width="69" height="30"/>
+                                    <rect key="frame" x="20" y="7" width="69" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Download">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -48,7 +48,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q10-zI-GYf">
-                                    <rect key="frame" x="125" y="7" width="48" height="30"/>
+                                    <rect key="frame" x="97" y="7" width="48" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Cancel">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -58,7 +58,7 @@
                                     </connections>
                                 </button>
                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dUb-d8-gdq">
-                                    <rect key="frame" x="20" y="12" width="20" height="20"/>
+                                    <rect key="frame" x="153" y="12" width="20" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
                             </subviews>
@@ -66,10 +66,10 @@
                             <constraints>
                                 <constraint firstItem="eO1-5G-eRJ" firstAttribute="baseline" secondItem="q10-zI-GYf" secondAttribute="baseline" id="AEX-KY-gCN"/>
                                 <constraint firstItem="q10-zI-GYf" firstAttribute="leading" secondItem="eO1-5G-eRJ" secondAttribute="trailing" constant="8" symbolic="YES" id="LNP-bU-Va5"/>
-                                <constraint firstItem="dUb-d8-gdq" firstAttribute="leading" secondItem="ufv-NO-jXp" secondAttribute="leading" constant="20" id="Xg6-Ys-5o3"/>
                                 <constraint firstItem="eO1-5G-eRJ" firstAttribute="centerY" secondItem="dUb-d8-gdq" secondAttribute="centerY" id="Zgz-Ry-Ewz"/>
-                                <constraint firstItem="eO1-5G-eRJ" firstAttribute="leading" secondItem="dUb-d8-gdq" secondAttribute="trailing" constant="8" id="qPd-vB-EZt"/>
+                                <constraint firstItem="dUb-d8-gdq" firstAttribute="leading" secondItem="q10-zI-GYf" secondAttribute="trailing" constant="8" id="w3z-As-Qvp"/>
                                 <constraint firstAttribute="centerY" secondItem="q10-zI-GYf" secondAttribute="centerY" id="yev-ym-2fw"/>
+                                <constraint firstItem="eO1-5G-eRJ" firstAttribute="leading" secondItem="ufv-NO-jXp" secondAttribute="leading" constant="20" id="zJd-0q-9U2"/>
                             </constraints>
                         </view>
                         <prototypes>
