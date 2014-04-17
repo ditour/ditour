@@ -159,14 +159,19 @@
                                     <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Track Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vAQ-Dl-LxE">
-                                            <rect key="frame" x="20" y="11" width="88" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vAQ-Dl-LxE">
+                                            <rect key="frame" x="20" y="11" width="951" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="vAQ-Dl-LxE" firstAttribute="leading" secondItem="B5I-QP-nmM" secondAttribute="leading" constant="20" id="47M-Ao-K5T"/>
+                                        <constraint firstAttribute="centerY" secondItem="vAQ-Dl-LxE" secondAttribute="centerY" id="BYR-Lt-LJM"/>
+                                        <constraint firstAttribute="trailing" secondItem="vAQ-Dl-LxE" secondAttribute="trailing" constant="20" id="ZmX-X0-IoU"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="nameLabel" destination="vAQ-Dl-LxE" id="nqZ-to-nLr"/>
@@ -180,7 +185,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSC-nP-Zb9">
-                                            <rect key="frame" x="20" y="11" width="88" height="21"/>
+                                            <rect key="frame" x="20" y="11" width="951" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -193,9 +198,10 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="sdl-Hc-OQa" firstAttribute="top" secondItem="jSC-nP-Zb9" secondAttribute="bottom" constant="13" id="18T-0s-fxw"/>
-                                        <constraint firstItem="jSC-nP-Zb9" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="3Jw-OV-fWN"/>
                                         <constraint firstItem="jSC-nP-Zb9" firstAttribute="top" secondItem="X8H-pH-tqw" secondAttribute="top" constant="11" id="3aY-Sz-pvc"/>
                                         <constraint firstAttribute="trailing" secondItem="sdl-Hc-OQa" secondAttribute="trailing" constant="20" id="5CC-pO-Ksc"/>
+                                        <constraint firstAttribute="trailing" secondItem="jSC-nP-Zb9" secondAttribute="trailing" constant="20" id="BoT-IL-D3e"/>
+                                        <constraint firstItem="jSC-nP-Zb9" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="haN-BB-rP7"/>
                                         <constraint firstItem="sdl-Hc-OQa" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="kWe-Ck-pK2"/>
                                     </constraints>
                                 </tableViewCellContentView>

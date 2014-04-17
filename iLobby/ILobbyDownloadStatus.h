@@ -47,13 +47,15 @@
 @property BOOL submitted;
 
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus;
-- (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID;
+//- (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID;
 - (ILobbyDownloadStatus *)childStatusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem;
 
 - (void)updateProgress;
 
 // set a common delegate for each child
 - (void)setChildrenDelegate:(id<ILobbyDownloadStatusDelegate>)childrenDelegate;
+
+- (void)printChildInfo;
 
 @end
 

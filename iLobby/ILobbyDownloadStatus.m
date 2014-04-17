@@ -123,6 +123,14 @@
 }
 
 
+- (void)printChildInfo {
+	NSLog( @"Child count: %ld", (long)self.childStatusItems.count );
+	for ( NSString *path in self.childStatusItems.dictionary ) {
+		NSLog( @"Child Path: %@", path );
+	}
+}
+
+
 - (void)setChildrenDelegate:(id<ILobbyDownloadStatusDelegate>)childrenDelegate {
 	[self.childStatusItems.dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
 		ILobbyDownloadStatus *statusItem = (ILobbyDownloadStatus *)object;
@@ -132,30 +140,30 @@
 
 
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus {
-	__block NSManagedObjectID *childID = nil;
+	__block NSString *childPath = nil;
 	ILobbyStoreRemoteItem *childItem = childStatus.remoteItem;
 	[childItem.managedObjectContext performBlockAndWait:^{
-		childID = childItem.objectID;
+		childPath = childItem.path;
 	}];
-	if ( childID != nil ) {
-		self.childStatusItems[childID] = childStatus;
+	if ( childPath != nil ) {
+		self.childStatusItems[childPath] = childStatus;
 		[self updateProgress];
 	}
 }
 
 
-- (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID {
-	return remoteID != nil ? self.childStatusItems[remoteID] : nil;
+- (ILobbyDownloadStatus *)childStatusForRemoteItemPath:(NSString *)path {
+	return path != nil ? self.childStatusItems[path] : nil;
 }
 
 
 - (ILobbyDownloadStatus *)childStatusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem {
-	__block NSManagedObjectID *childID = nil;
+	__block NSString *path = nil;
 	[remoteItem.managedObjectContext performBlockAndWait:^{
-		childID = remoteItem.objectID;
+		path = remoteItem.path;
 	}];
 
-	return [self childStatusForRemoteItemID:childID];
+	return [self childStatusForRemoteItemPath:path];
 }
 
 
