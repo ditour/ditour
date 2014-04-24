@@ -15,4 +15,9 @@
 	return YES;
 }
 
+
+- (NSString *)name {
+	return [self.path lastPathComponent];
+}
+
 @end

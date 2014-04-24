@@ -1,37 +1,30 @@
 //
-//  ILobbyPresentationDetailController.m
+//  ILobbyTrackDetailController.m
 //  iLobby
 //
-//  Created by Pelaia II, Tom on 4/17/14.
+//  Created by Pelaia II, Tom on 4/24/14.
 //  Copyright (c) 2014 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyPresentationDetailController.h"
+#import "ILobbyTrackDetailController.h"
 #import "ILobbyDownloadStatusCell.h"
 #import "ILobbyLabelCell.h"
-#import "ILobbyTrackDetailController.h"
 
 
 
 enum : NSInteger {
-	SECTION_TRACKS_VIEW,
+	// TODO: add section for the config file
+	SECTION_REMOTE_MEDIA,
 	SECTION_COUNT
 };
 
 
-static NSString *SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = @"ShowActiveTrackDetail";
-static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
-
-
-@interface ILobbyPresentationDetailController () <ILobbyDownloadStatusDelegate>
-
-// TODO: add property for configuration
+@interface ILobbyTrackDetailController () <ILobbyDownloadStatusDelegate>
 
 @end
 
 
-
-@implementation ILobbyPresentationDetailController {
+@implementation ILobbyTrackDetailController {
 	BOOL _updateScheduled;		// indicates whether an update has been scheduled
 }
 
@@ -45,9 +38,9 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 }
 
 
-- (void)setPresentationDownloadStatus:(ILobbyDownloadContainerStatus *)presentationDownloadStatus {
-	_presentationDownloadStatus = presentationDownloadStatus;
-	presentationDownloadStatus.delegate = self;
+- (void)setTrackDownloadStatus:(ILobbyDownloadContainerStatus *)trackDownloadStatus {
+	_trackDownloadStatus = trackDownloadStatus;
+	trackDownloadStatus.delegate = self;
 	_updateScheduled = NO;
 }
 
@@ -56,14 +49,14 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
     [super viewDidLoad];
 
 	_updateScheduled = NO;
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
-	self.title = [NSString stringWithFormat:@"Presentation: %@", self.presentation.name];
+	self.title = [NSString stringWithFormat:@"Track: %@", self.track.title];
 }
 
 
@@ -96,7 +89,6 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 	}
 }
 
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -108,21 +100,22 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
 
-	switch ( section ) {
-		case SECTION_TRACKS_VIEW:
-			return self.presentation.tracks.count;
+	switch ( section) {
+		case SECTION_REMOTE_MEDIA:
+			return self.track.remoteMedia.count;
 
 		default:
 			break;
 	}
+
     return 0;
 }
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_TRACKS_VIEW:
-			return [self estimateHeightForTrackAtIndexPath:indexPath];
+		case SECTION_REMOTE_MEDIA:
+			return [self estimateHeightForRemoteMediaAtIndexPath:indexPath];
 
 		default:
 			return [ILobbyLabelCell defaultHeight];
@@ -130,67 +123,66 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 }
 
 
-- (CGFloat)estimateHeightForTrackAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+- (CGFloat)estimateHeightForRemoteMediaAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
 
-	if ( track.isReady ) {
+	if ( media.isReady ) {
 		return [ILobbyLabelCell defaultHeight];
 	}
 	else {
 		return [ILobbyDownloadStatusCell defaultHeight];
 	}
-
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_TRACKS_VIEW:
-			return [self tableView:tableView trackCellForRowAtIndexPath:indexPath];
+		case SECTION_REMOTE_MEDIA:
+			return [self tableView:tableView remoteMediaCellForRowAtIndexPath:indexPath];
 			break;
 
 		default:
 			return nil;
 	}
-
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView trackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+- (UITableViewCell *)tableView:(UITableView *)tableView remoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
 
-	if ( track.isReady ) {
-		return [self tableView:tableView readyTrackCellForRowAtIndexPath:indexPath];
+	if ( media.isReady ) {
+		return [self tableView:tableView readyRemoteMediaCellForRowAtIndexPath:indexPath];
 	}
 	else {
-		return [self tableView:tableView pendingTrackCellForRowAtIndexPath:indexPath];
+		return [self tableView:tableView pendingRemoteMediaCellForRowAtIndexPath:indexPath];
 	}
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView readyTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+- (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
 
-    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
-	cell.title = track.title;
+    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TrackDetailActiveTrackCell" forIndexPath:indexPath];
+	cell.title = media.name;
 
 	return cell;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView pendingTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+- (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
 
-    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
+    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TrackDetailPendingTrackCell" forIndexPath:indexPath];
 
-	ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:track];
+	ILobbyDownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:media];
 	//NSLog( @"Track: %@, Ready: %@, Download status: %@, Pointer: %@, Context: %@", track.title, track.status, downloadStatus, track, track.managedObjectContext );
 
 	cell.downloadStatus = downloadStatus;
-	cell.title = track.title;
+	cell.title = media.name;
 
 	return cell;
 }
+
 
 
 /*
@@ -231,46 +223,15 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 }
 */
 
-
+/*
 #pragma mark - Navigation
 
-
-- (ILobbyStoreTrack *)trackAtIndexPath:(NSIndexPath *)indexPath {
-	switch ( indexPath.section ) {
-		case SECTION_TRACKS_VIEW:
-			return self.presentation.tracks[indexPath.row];
-
-		default:
-			break;
-	}
-
-	return nil;
-}
-
-
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-	NSString *segueID = [segue identifier];
-
-    if ( [segueID isEqualToString:SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_TRACK_DETAIL_ID] ) {
-		NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-		ILobbyStoreTrack *track = [self trackAtIndexPath:indexPath];
-
-		ILobbyTrackDetailController *trackController = segue.destinationViewController;
-		trackController.lobbyModel = self.lobbyModel;
-		trackController.track = track;
-
-		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_TRACK_DETAIL_ID] ) {
-			ILobbyDownloadContainerStatus *downloadStatus = (ILobbyDownloadContainerStatus *)[self.presentationDownloadStatus childStatusForRemoteItem:track];
-			trackController.trackDownloadStatus = downloadStatus;
-		}
-    }
-    else {
-        NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
-    }
 }
-
+*/
 
 @end

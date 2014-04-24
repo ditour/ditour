@@ -16,6 +16,7 @@
 		4C1B0D3F18D0971C001B0B00 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B0D3E18D0971C001B0B00 /* Storyboard.storyboard */; };
 		4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */; };
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
+		4C60121D190978E100BEC685 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */; };
 		4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */; };
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
 		4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */; };
@@ -71,6 +72,8 @@
 		4C1B0D4618D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupsTableController.h; sourceTree = "<group>"; };
 		4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationGroupsTableController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
+		4C60121B190978E100BEC685 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; };
+		4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
 		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
 		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
 		4C690BD818214AB300A823CC /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
@@ -195,6 +198,8 @@
 				4CE0DC5918D8D7AD0092C700 /* ILobbyPresentationGroupDetailController.m */,
 				4CA7DB7A1900491600CB788A /* ILobbyPresentationDetailController.h */,
 				4CA7DB7B1900491600CB788A /* ILobbyPresentationDetailController.m */,
+				4C60121B190978E100BEC685 /* ILobbyTrackDetailController.h */,
+				4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -444,6 +449,7 @@
 				4C01BD521636F88600065A97 /* ILobbyModel.m in Sources */,
 				4CC3919918EDF2B500B9AA4E /* ILobbyDownloadStatus.m in Sources */,
 				4CC09893183D4CBF006755C8 /* ILobbyStoreSlide.m in Sources */,
+				4C60121D190978E100BEC685 /* ILobbyTrackDetailController.m in Sources */,
 				4CE0DC5D18D9E3EE0092C700 /* ILobbyStoreConfiguration.m in Sources */,
 				4CE0DC5318D763B90092C700 /* ILobbyStoreRemoteMedia.m in Sources */,
 				4CA7DB7C1900491600CB788A /* ILobbyPresentationDetailController.m in Sources */,

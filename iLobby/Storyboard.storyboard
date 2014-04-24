@@ -175,6 +175,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="titleLabel" destination="vAQ-Dl-LxE" id="xdI-mt-Wli"/>
+                                    <segue destination="zoZ-Yz-hel" kind="push" identifier="ShowActiveTrackDetail" id="wfz-Ga-EAy"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyDownloadStatusCell">
@@ -208,6 +209,7 @@
                                 <connections>
                                     <outlet property="progressView" destination="sdl-Hc-OQa" id="ar4-fx-dJD"/>
                                     <outlet property="titleLabel" destination="jSC-nP-Zb9" id="oZr-cJ-1ug"/>
+                                    <segue destination="zoZ-Yz-hel" kind="push" identifier="ShowPendingTrackDetail" id="R2E-hK-DuA"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -221,6 +223,86 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="72D-TD-0pd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4904" y="-221"/>
+        </scene>
+        <!--Lobby Track Detail Controller - Track Detail-->
+        <scene sceneID="76x-h2-bf1">
+            <objects>
+                <tableViewController id="zoZ-Yz-hel" customClass="ILobbyTrackDetailController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="eZY-Fn-wm2">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TrackDetailActiveTrackCell" id="Brm-HQ-8we" customClass="ILobbyDownloadStatusCell">
+                                <rect key="frame" x="0.0" y="86" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Brm-HQ-8we" id="4vr-Vb-XiR">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tN3-T1-E5A">
+                                            <rect key="frame" x="20" y="11" width="951" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="tN3-T1-E5A" secondAttribute="trailing" constant="20" id="0sT-WC-wTP"/>
+                                        <constraint firstItem="tN3-T1-E5A" firstAttribute="leading" secondItem="4vr-Vb-XiR" secondAttribute="leading" constant="20" id="PPe-ts-nye"/>
+                                        <constraint firstAttribute="centerY" secondItem="tN3-T1-E5A" secondAttribute="centerY" id="l0P-iS-lh2"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="titleLabel" destination="tN3-T1-E5A" id="xhc-1m-6Kx"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TrackDetailPendingTrackCell" rowHeight="68" id="ZqQ-9G-TPX" customClass="ILobbyDownloadStatusCell">
+                                <rect key="frame" x="0.0" y="130" width="1024" height="68"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZqQ-9G-TPX" id="gn0-zM-OvC">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="67"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeY-Kg-xvq">
+                                            <rect key="frame" x="20" y="11" width="951" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="i9E-S1-M8e">
+                                            <rect key="frame" x="20" y="45" width="951" height="2"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </progressView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="eeY-Kg-xvq" secondAttribute="trailing" constant="20" id="NJn-dE-mW6"/>
+                                        <constraint firstItem="i9E-S1-M8e" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leading" constant="20" id="NjG-CW-QYV"/>
+                                        <constraint firstAttribute="trailing" secondItem="i9E-S1-M8e" secondAttribute="trailing" constant="20" id="YPB-4Q-fuw"/>
+                                        <constraint firstItem="eeY-Kg-xvq" firstAttribute="top" secondItem="gn0-zM-OvC" secondAttribute="top" constant="11" id="Zyt-i3-7DL"/>
+                                        <constraint firstItem="eeY-Kg-xvq" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leading" constant="20" id="iQL-ab-5kV"/>
+                                        <constraint firstItem="i9E-S1-M8e" firstAttribute="top" secondItem="eeY-Kg-xvq" secondAttribute="bottom" constant="13" id="mUw-09-vUA"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="progressView" destination="i9E-S1-M8e" id="Ug7-zo-FOw"/>
+                                    <outlet property="titleLabel" destination="eeY-Kg-xvq" id="ncD-Gn-uAk"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="zoZ-Yz-hel" id="Ye6-sh-gTL"/>
+                            <outlet property="delegate" destination="zoZ-Yz-hel" id="GsL-lm-xyk"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Track Detail" id="pRl-Fg-1iA"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SSm-eu-iDa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6143" y="-221"/>
         </scene>
         <!--Lobby Presentation Groups Table Controller - Presentation Groups-->
         <scene sceneID="0Qw-Lp-c9S">
@@ -393,6 +475,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Js4-XC-Mie"/>
+        <segue reference="E37-Q3-lde"/>
+        <segue reference="R2E-hK-DuA"/>
     </inferredMetricsTieBreakers>
 </document>
