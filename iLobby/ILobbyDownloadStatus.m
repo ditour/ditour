@@ -73,15 +73,25 @@
 
 
 - (void)setProgress:(float)progress {
-	_progress = progress;
+	[self setProgress:progress forcePropagation:NO];
+}
 
-	if ( self.container ) {
-		[self.container updateProgress];
-	}
 
-	id<ILobbyDownloadStatusDelegate> delegate = self.delegate;
-	if ( delegate ) {
-		[delegate downloadStatusChanged:self];
+- (void)setProgress:(float)progress forcePropagation:(BOOL)forcePropagation {
+	float oldProgress = _progress;
+
+	// only need to propagate changes if there is actually a change or forced to do so
+	if ( progress != oldProgress || forcePropagation ) {
+		_progress = progress;
+
+		if ( self.container ) {
+			[self.container updateProgress];
+		}
+
+		id<ILobbyDownloadStatusDelegate> delegate = self.delegate;
+		if ( delegate ) {
+			[delegate downloadStatusChanged:self];
+		}
 	}
 }
 
@@ -102,7 +112,7 @@
 			}
 		}];
 
-		[self setProgress:1.0];
+		[self setProgress:1.0 forcePropagation:YES];
 	}
 }
 
