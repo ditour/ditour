@@ -266,6 +266,7 @@
 		}
 		else {
 			[track markDownloading];
+//			NSLog( @"Download track: %@ with status: %@, pointer: %@", track.title, track.status, track );
 
 			if ( track.configuration ) {
 				[self downloadRemoteFile:track.configuration container:status usingCache:localCacheByURL];

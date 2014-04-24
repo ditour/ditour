@@ -60,6 +60,18 @@
 }
 
 
+- (void)markDownloading {
+	[super markDownloading];
+//	NSLog( @"Mark Downloading for track: %@, status: %@, pointer: %@, context: %@", self.title, self.status, self, self.managedObjectContext );
+}
+
+
+- (void)markReady {
+	[super markReady];
+//	NSLog( @"Mark Ready for track: %@, status: %@, pointer: %@, context: %@", self.title, self.status, self, self.managedObjectContext );
+}
+
+
 @end
 
 
@@ -98,5 +110,6 @@
 - (NSString *)toSpacesFromUnderscores {
 	return [self stringByReplacingOccurrencesOfString:@"_" withString:@" "];
 }
+
 
 @end

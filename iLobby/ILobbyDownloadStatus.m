@@ -106,6 +106,11 @@
 	}
 }
 
+
+- (NSString *)description {
+	return [NSString stringWithFormat:@"progress: %f, complete: %d, location: %@", self.progress, self.completed, self.remoteItem.remoteLocation];
+}
+
 @end
 
 

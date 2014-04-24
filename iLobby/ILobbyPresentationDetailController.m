@@ -22,8 +22,6 @@ enum : NSInteger {
 
 // TODO: add property for configuration
 
-@property (nonatomic, strong) NSArray *tracks;
-
 @end
 
 
@@ -54,8 +52,6 @@ enum : NSInteger {
 
 	_updateScheduled = NO;
 
-	self.tracks = [self.presentation.tracks array];
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -109,7 +105,7 @@ enum : NSInteger {
 
 	switch ( section ) {
 		case SECTION_TRACKS_VIEW:
-			return self.tracks.count;
+			return self.presentation.tracks.count;
 
 		default:
 			break;
@@ -130,7 +126,7 @@ enum : NSInteger {
 
 
 - (CGFloat)estimateHeightForTrackAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.tracks[indexPath.row];
+	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
 	if ( track.isReady ) {
 		return 44;
@@ -156,7 +152,7 @@ enum : NSInteger {
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView trackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.tracks[indexPath.row];
+	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
 	if ( track.isReady ) {
 		return [self tableView:tableView readyTrackCellForRowAtIndexPath:indexPath];
@@ -168,7 +164,7 @@ enum : NSInteger {
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView readyTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.tracks[indexPath.row];
+	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
     ILobbyPresentationDetailActiveTrackCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
 	cell.title = track.title;
@@ -178,12 +174,12 @@ enum : NSInteger {
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.tracks[indexPath.row];
+	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
     ILobbyPresentationDetailPendingTrackCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
 
 	ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:track];
-//	NSLog( @"Download status: %@", downloadStatus );
+	//NSLog( @"Track: %@, Ready: %@, Download status: %@, Pointer: %@, Context: %@", track.title, track.status, downloadStatus, track, track.managedObjectContext );
 	float downloadProgress = downloadStatus != nil ? downloadStatus.progress : 0.0;
 
 	cell.downloadProgress = downloadProgress;
