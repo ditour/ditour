@@ -57,8 +57,6 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	_updateScheduled = NO;
-
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -66,7 +64,7 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	self.title = [NSString stringWithFormat:@"Presentation: %@", self.presentation.name];
-	self.defaultPresentationSwitch.on = self.presentation.isCurrent;
+	[self updateView];
 }
 
 
@@ -102,6 +100,18 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 - (IBAction)changeDefaultPresentation:(id)sender {
 	self.presentation.current = self.defaultPresentationSwitch.on;
+	[self.lobbyModel saveChanges:nil];
+	[self.lobbyModel loadDefaultPresentation];
+}
+
+
+- (void)updateView {
+	_updateScheduled = NO;	// allow another update to be scheduled since we will begin processing the current one
+
+	[self.tableView reloadData];
+
+	self.defaultPresentationSwitch.on = self.presentation.isCurrent;
+	self.defaultPresentationSwitch.enabled = self.presentation.isReady;
 }
 
 

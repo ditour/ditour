@@ -33,6 +33,7 @@
 - (BOOL)play;
 - (void)playTrackAtIndex:(NSUInteger)trackIndex;
 - (void)performShutdown;
+- (BOOL)loadDefaultPresentation;
 
 // document information
 + (NSURL *)documentDirectoryURL;
