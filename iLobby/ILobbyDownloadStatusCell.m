@@ -1,14 +1,14 @@
 //
-//  ILobbyGroupDetailPendingPresentationCell.m
+//  ILobbyDownloadStatusCell.m
 //  iLobby
 //
-//  Created by Pelaia II, Tom on 3/25/14.
+//  Created by Pelaia II, Tom on 4/24/14.
 //  Copyright (c) 2014 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyGroupDetailPendingPresentationCell.h"
+#import "ILobbyDownloadStatusCell.h"
 
-@implementation ILobbyGroupDetailPendingPresentationCell
+@implementation ILobbyDownloadStatusCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -28,6 +28,17 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
+
++ (CGFloat)defaultHeight {
+	return 68;
+}
+
+
+- (void)setDownloadStatus:(ILobbyDownloadStatus *)status {
+	self.progressView.progress = status != nil ? status.progress : 0.0;
 }
 
 @end

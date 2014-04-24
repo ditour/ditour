@@ -7,8 +7,9 @@
 //
 
 #import "ILobbyPresentationDetailController.h"
-#import "ILobbyPresentationDetailActiveTrackCell.h"
-#import "ILobbyPresentationDetailPendingTrackCell.h"
+#import "ILobbyDownloadStatusCell.h"
+#import "ILobbyLabelCell.h"
+
 
 
 enum : NSInteger {
@@ -120,7 +121,7 @@ enum : NSInteger {
 			return [self estimateHeightForTrackAtIndexPath:indexPath];
 
 		default:
-			return 44;
+			return [ILobbyLabelCell defaultHeight];
 	}
 }
 
@@ -129,10 +130,10 @@ enum : NSInteger {
 	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
 	if ( track.isReady ) {
-		return 44;
+		return [ILobbyLabelCell defaultHeight];
 	}
 	else {
-		return 68;
+		return [ILobbyDownloadStatusCell defaultHeight];
 	}
 
 }
@@ -166,7 +167,7 @@ enum : NSInteger {
 - (UITableViewCell *)tableView:(UITableView *)tableView readyTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
-    ILobbyPresentationDetailActiveTrackCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
+    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
 	cell.title = track.title;
 
 	return cell;
@@ -176,13 +177,12 @@ enum : NSInteger {
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
-    ILobbyPresentationDetailPendingTrackCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
+    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
 
 	ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:track];
 	//NSLog( @"Track: %@, Ready: %@, Download status: %@, Pointer: %@, Context: %@", track.title, track.status, downloadStatus, track, track.managedObjectContext );
-	float downloadProgress = downloadStatus != nil ? downloadStatus.progress : 0.0;
 
-	cell.downloadProgress = downloadProgress;
+	cell.downloadStatus = downloadStatus;
 	cell.title = track.title;
 
 	return cell;

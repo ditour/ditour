@@ -7,8 +7,8 @@
 //
 
 #import "ILobbyPresentationGroupDetailController.h"
-#import "ILobbyGroupDetailActivePresentationCell.h"
-#import "ILobbyGroupDetailPendingPresentationCell.h"
+#import "ILobbyDownloadStatusCell.h"
+#import "ILobbyLabelCell.h"
 #import "ILobbyPresentationDetailController.h"
 
 
@@ -154,6 +154,31 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 }
 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_ACTIVE_PRESENTATIONS_VIEW: case SECTION_PENDING_PRESENTATIONS_VIEW:
+			return [self estimateHeightForTrackAtIndexPath:indexPath];
+
+		default:
+			return [ILobbyLabelCell defaultHeight];
+	}
+}
+
+
+- (CGFloat)estimateHeightForTrackAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+			return [ILobbyLabelCell defaultHeight];
+
+		case SECTION_PENDING_PRESENTATIONS_VIEW:
+			return [ILobbyDownloadStatusCell defaultHeight];
+
+		default:
+			return [ILobbyLabelCell defaultHeight];
+	}
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
 
@@ -231,11 +256,11 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView activePresentationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ILobbyGroupDetailActivePresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
+    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
 	ILobbyStorePresentation *presentation = _activePresentations[indexPath.row];
-	cell.nameLabel.text = presentation.name;
+	cell.title = presentation.name;
 //	NSLog( @"Active presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 
     return cell;
@@ -243,15 +268,14 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingPresentationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ILobbyGroupDetailPendingPresentationCell *cell = [tableView dequeueReusableCellWithIdentifier:PENDING_PRESENTATION_CELL_ID forIndexPath:indexPath];
+    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:PENDING_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
 	ILobbyStorePresentation *presentation = _pendingPresentations[indexPath.row];
-	cell.nameLabel.text = presentation.name;
+	cell.title = presentation.name;
 
 	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
-	float downloadProgress = downloadStatus != nil ? downloadStatus.progress : 0.0;
-	cell.progressView.progress = downloadProgress;
+	cell.downloadStatus = downloadStatus;
 
 //	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 

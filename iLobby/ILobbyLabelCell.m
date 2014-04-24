@@ -1,14 +1,14 @@
 //
-//  ILobbyPresentationDetailPendingTrackCell.m
+//  ILobbyLabelCell.m
 //  iLobby
 //
-//  Created by Pelaia II, Tom on 4/17/14.
+//  Created by Pelaia II, Tom on 4/24/14.
 //  Copyright (c) 2014 UT-Battelle ORNL. All rights reserved.
 //
 
-#import "ILobbyPresentationDetailPendingTrackCell.h"
+#import "ILobbyLabelCell.h"
 
-@implementation ILobbyPresentationDetailPendingTrackCell
+@implementation ILobbyLabelCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -16,11 +16,6 @@
         // Initialization code
     }
     return self;
-}
-
-
-- (void)setDownloadProgress:(float)progress {
-	self.progressView.progress = progress;
 }
 
 
@@ -33,6 +28,16 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
++ (CGFloat)defaultHeight {
+	return 44;
+}
+
+
+- (void)setTitle:(NSString *)title {
+	self.titleLabel.text = title;
 }
 
 @end

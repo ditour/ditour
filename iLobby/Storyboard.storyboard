@@ -73,7 +73,7 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="ILobbyGroupDetailActivePresentationCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="ILobbyLabelCell">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="thl-7H-h98" id="z6d-rc-9Ai">
@@ -90,11 +90,11 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="nameLabel" destination="uDc-BQ-P85" id="FSN-gB-MEj"/>
+                                    <outlet property="titleLabel" destination="uDc-BQ-P85" id="E7c-ey-8qP"/>
                                     <segue destination="jnE-kG-HXj" kind="push" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="ILobbyGroupDetailPendingPresentationCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="ILobbyDownloadStatusCell">
                                 <rect key="frame" x="0.0" y="174" width="1024" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cKO-m0-obr" id="LmF-KQ-zzD">
@@ -122,8 +122,8 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="nameLabel" destination="AgP-2y-IrQ" id="ScV-PK-bIj"/>
-                                    <outlet property="progressView" destination="VnP-YA-K09" id="FhS-N3-bcS"/>
+                                    <outlet property="progressView" destination="VnP-YA-K09" id="fYl-OC-2R4"/>
+                                    <outlet property="titleLabel" destination="AgP-2y-IrQ" id="Wyl-rf-3d1"/>
                                     <segue destination="jnE-kG-HXj" kind="push" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
                                 </connections>
                             </tableViewCell>
@@ -152,7 +152,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationDetailActiveTrackCell" id="c2a-TE-sXK" customClass="ILobbyPresentationDetailActiveTrackCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationDetailActiveTrackCell" id="c2a-TE-sXK" customClass="ILobbyDownloadStatusCell">
                                 <rect key="frame" x="0.0" y="86" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c2a-TE-sXK" id="B5I-QP-nmM">
@@ -174,10 +174,10 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="nameLabel" destination="vAQ-Dl-LxE" id="nqZ-to-nLr"/>
+                                    <outlet property="titleLabel" destination="vAQ-Dl-LxE" id="xdI-mt-Wli"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyPresentationDetailPendingTrackCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyDownloadStatusCell">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DXi-Vu-bon" id="X8H-pH-tqw">
@@ -206,8 +206,8 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="nameLabel" destination="jSC-nP-Zb9" id="lej-Lo-d3k"/>
-                                    <outlet property="progressView" destination="sdl-Hc-OQa" id="SQC-3U-RRR"/>
+                                    <outlet property="progressView" destination="sdl-Hc-OQa" id="ar4-fx-dJD"/>
+                                    <outlet property="titleLabel" destination="jSC-nP-Zb9" id="oZr-cJ-1ug"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
