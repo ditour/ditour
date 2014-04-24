@@ -27,6 +27,8 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 // TODO: add property for configuration
 
+@property (nonatomic, weak) IBOutlet UISwitch *defaultPresentationSwitch;
+
 @end
 
 
@@ -64,6 +66,7 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	self.title = [NSString stringWithFormat:@"Presentation: %@", self.presentation.name];
+	self.defaultPresentationSwitch.on = self.presentation.isCurrent;
 }
 
 
@@ -94,6 +97,11 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 			[self.tableView reloadData];
 		});
 	}
+}
+
+
+- (IBAction)changeDefaultPresentation:(id)sender {
+	self.presentation.current = self.defaultPresentationSwitch.on;
 }
 
 

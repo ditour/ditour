@@ -151,9 +151,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="XO1-90-f5d">
+                            <rect key="frame" x="0.0" y="64" width="1024" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BNX-ip-PkP">
+                                    <rect key="frame" x="189" y="6" width="51" height="31"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <connections>
+                                        <action selector="changeDefaultPresentation:" destination="jnE-kG-HXj" eventType="valueChanged" id="G0b-g9-ZxQ"/>
+                                    </connections>
+                                </switch>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Default Presentation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8DY-Fy-vw0">
+                                    <rect key="frame" x="20" y="11" width="161" height="21"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationDetailActiveTrackCell" id="c2a-TE-sXK" customClass="ILobbyDownloadStatusCell">
-                                <rect key="frame" x="0.0" y="86" width="1024" height="44"/>
+                                <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c2a-TE-sXK" id="B5I-QP-nmM">
                                     <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
@@ -179,7 +200,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyDownloadStatusCell">
-                                <rect key="frame" x="0.0" y="130" width="1024" height="68"/>
+                                <rect key="frame" x="0.0" y="174" width="1024" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DXi-Vu-bon" id="X8H-pH-tqw">
                                     <rect key="frame" x="0.0" y="0.0" width="991" height="67"/>
@@ -219,6 +240,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Presentation Detail" id="TLr-Zp-8O7"/>
+                    <connections>
+                        <outlet property="defaultPresentationSwitch" destination="BNX-ip-PkP" id="9qB-dT-5Wd"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="72D-TD-0pd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

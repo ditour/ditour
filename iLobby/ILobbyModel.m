@@ -342,6 +342,8 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 		[self installPresentation];
 		[self loadDefaultPresentation];
 	}
+
+	[self saveChanges:nil];	
 }
 
 
@@ -386,6 +388,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 
 - (BOOL)loadDefaultPresentation {
+	NSLog( @"Load default presentation..." );
 	return [self loadPresentation:self.storeRoot.currentPresentation];
 }
 
