@@ -8,6 +8,7 @@
 
 #import "ILobbyTrack.h"
 #import "ILobbySlide.h"
+#import "ILobbyStoreRemoteMedia.h"
 
 #define DEFAULT_SLIDE_DURATION 5.0f
 
@@ -24,45 +25,41 @@
 
 @implementation ILobbyTrack
 
-- (id)initWithConfiguration:(NSDictionary *)trackConfig relativeTo:(NSString *)rootPath {
-    self = [super init];
-    if (self) {
+
+- (instancetype)initWithTrackStore:(ILobbyStoreTrack *)trackStore {
+	self = [super init];
+
+	if ( self ) {
 		self.currentSlide = nil;
-		
-		NSString *location = trackConfig[@"location"];
-		self.label = trackConfig[@"label"];
 
-		NSString *trackPath = [rootPath stringByAppendingPathComponent:location];
+		self.label = trackStore.title;
 
-		NSString *iconFile = trackConfig[@"icon"];
-		NSString *iconPath = [trackPath stringByAppendingPathComponent:iconFile];
-		self.icon = [UIImage imageWithContentsOfFile:iconPath];
+		// TODO: get the slide duration and transition from the config store
+		self.defaultSlideDuration = DEFAULT_SLIDE_DURATION;
 
-		NSNumber *defaultDuration = trackConfig[@"defaultDuration"];
-		self.defaultSlideDuration = defaultDuration != nil ? [defaultDuration floatValue] : DEFAULT_SLIDE_DURATION;
+//		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:trackConfig[@"defaultTransition"]];
+//		self.defaultTransitionSource = defaultTransitionSource;
 
-		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:trackConfig[@"defaultTransition"]];
-		self.defaultTransitionSource = defaultTransitionSource;
-		
-//		ILobbyDirectory *trackDirectory = [ILobbyDirectory localDirectoryWithPath:trackPath];
-//		NSArray *slidesConfigs = trackConfig[@"slides"];
-//		NSMutableArray *slides = [NSMutableArray new];
-//		for ( id slideConfig in slidesConfigs ) {
-//			NSArray *slideFiles = [ILobbySlide filesFromConfig:slideConfig inDirectory:trackDirectory];
-//			for ( NSString *slideFile in slideFiles ) {
-//				ILobbySlide *slide = [ILobbySlide slideWithFile:[trackPath stringByAppendingPathComponent:slideFile] duration:self.defaultSlideDuration];
-//				if ( slide ) {
-//					slide.transitionSource = defaultTransitionSource;
-//					[slides addObject:slide];
-//				}
-//				else {
-//					NSLog( @"Cannot generate slide for file: %@", slideFile );
-//				}
-//			}
-//		}
-//		self.slides = [NSArray arrayWithArray:slides];
-    }
-    return self;
+		NSMutableArray *slides = [NSMutableArray new];
+		for ( ILobbyStoreRemoteMedia *media in trackStore.remoteMedia ) {
+			// if the filename is Icon.* then it is the icon and all others are slides
+			if ( [[[media.name stringByDeletingPathExtension] lowercaseString] isEqualToString:@"icon"] ) {
+				NSString *iconPath = media.path;
+//				NSLog( @"Assigning icon with path: %@", iconPath );
+				self.icon = [UIImage imageWithContentsOfFile:iconPath];
+			}
+			else {
+				// TODO: add support for a single PDF file mapping to multiple slides
+				NSString *slidePath = media.path;
+				ILobbySlide *slide = [ILobbySlide slideWithFile:slidePath duration:self.defaultSlideDuration];
+				[slides addObject:slide];
+			}
+		}
+
+		self.slides = [slides copy];
+	}
+
+	return self;
 }
 
 

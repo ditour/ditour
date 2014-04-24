@@ -389,7 +389,17 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 - (BOOL)loadDefaultPresentation {
 	NSLog( @"Load default presentation..." );
-	return [self loadPresentation:self.storeRoot.currentPresentation];
+
+	[self stop];
+
+	__block BOOL success = NO;
+	[self.storeRoot.managedObjectContext performBlockAndWait:^{
+		success = [self loadPresentation:self.storeRoot.currentPresentation];
+	}];
+
+	[self play];
+
+	return success;
 }
 
 
@@ -398,9 +408,10 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 		NSMutableArray *tracks = [NSMutableArray new];
 
 		// create a new track from each track store
-//		for ( ILobbyStoreTrack *trackStore in presentationStore.tracks ) {
-//			// TODO: instantiate a new track configured against the store
-//		}
+		for ( ILobbyStoreTrack *trackStore in presentationStore.tracks ) {
+			id track = [[ILobbyTrack alloc] initWithTrackStore:trackStore];
+			[tracks addObject:track];
+		}
 
 		self.tracks = [NSArray arrayWithArray:tracks];
 		self.defaultTrack = tracks.count > 0 ? tracks[0] : nil;

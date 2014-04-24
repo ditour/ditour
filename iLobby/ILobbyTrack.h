@@ -8,8 +8,11 @@
 
 @import Foundation;
 @import UIKit;
+
 #import "ILobbyPresentationDelegate.h"
 #import "ILobbyTransitionSource.h"
+#import "ILobbyStoreTrack.h"
+
 
 @class ILobbyTrack;
 typedef void (^ILobbyTrackCompletionHandler)(ILobbyTrack *);
@@ -23,7 +26,8 @@ typedef void (^ILobbyTrackCompletionHandler)(ILobbyTrack *);
 @property (nonatomic, readonly, strong) NSArray *slides;
 @property (nonatomic, readonly, strong) ILobbyTransitionSource *defaultTransitionSource;
 
-- (id)initWithConfiguration:(NSDictionary *)config relativeTo:(NSString *)rootPath;
+- (instancetype)initWithTrackStore:(ILobbyStoreTrack *)trackStore;
+
 - (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbyTrackCompletionHandler)handler;
 - (void)cancelPresentation;
 
