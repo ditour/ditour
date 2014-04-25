@@ -12,7 +12,8 @@
 enum : short {
 	REMOTE_ITEM_STATUS_PENDING,
 	REMOTE_ITEM_STATUS_DOWNLOADING,
-	REMOTE_ITEM_STATUS_READY
+	REMOTE_ITEM_STATUS_READY,
+	REMOTE_ITEM_STATUS_DISPOSABLE
 };
 
 
@@ -34,9 +35,11 @@ enum : short {
 @property (nonatomic, readonly) BOOL isPending;
 @property (nonatomic, readonly) BOOL isDownloading;
 @property (nonatomic, readonly) BOOL isReady;
+@property (nonatomic, readonly) BOOL isDisposable;
 
 - (void)markPending;
 - (void)markDownloading;
 - (void)markReady;
+- (void)markDisposable;
 
 @end

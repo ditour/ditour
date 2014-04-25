@@ -337,12 +337,6 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	// stop the presentation
 	[self stop];
 
-	// check to see if there are any pending installations to install
-	if ( self.hasPresentationUpdate ) {
-		[self installPresentation];
-		[self loadDefaultPresentation];
-	}
-
 	[self saveChanges:nil];	
 }
 
@@ -366,10 +360,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 			if ( self.playing ) {
 				// check whether a new presentation download is ready and install and load it if so
 				if ( self.hasPresentationUpdate ) {
-					[self stop];
-					[self installPresentation];
-					[self loadDefaultPresentation];
-					[self play];
+					[self reloadPresentation];
 				}
 				else {
 					// play the default track
@@ -381,23 +372,35 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 }
 
 
-- (void)installPresentation {
-	// TODO: implement installation logic
-	self.hasPresentationUpdate = NO;
+- (void)reloadPresentation {
+//	NSLog( @"reloading presentation..." );
+	[self stop];
+	[self loadDefaultPresentation];
+	[self play];
+}
+
+
+- (void)reloadPresentationNextCycle {
+	// if not playing then just reload now otherwise mark for reloading on next cycle
+//	NSLog( @"Will reload presentation next cycle..." );
+	if ( !self.playing ) {
+		[self reloadPresentation];
+	}
+	else {
+		self.hasPresentationUpdate = YES;
+	}
 }
 
 
 - (BOOL)loadDefaultPresentation {
-	NSLog( @"Load default presentation..." );
+//	NSLog( @"Load default presentation..." );
 
-	[self stop];
+	self.hasPresentationUpdate = NO;
 
 	__block BOOL success = NO;
-	[self.storeRoot.managedObjectContext performBlockAndWait:^{
+	[self.mainStoreRoot.managedObjectContext performBlockAndWait:^{
 		success = [self loadPresentation:self.storeRoot.currentPresentation];
 	}];
-
-	[self play];
 
 	return success;
 }
@@ -416,10 +419,32 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 		self.tracks = [NSArray arrayWithArray:tracks];
 		self.defaultTrack = tracks.count > 0 ? tracks[0] : nil;
 
+		// remove any disposable presentations such as the one (if any) marked current at the time it was replaced
+		[self cleanupDisposablePresentations];
+
 		return YES;
 	}
 	else {
 		return NO;
+	}
+}
+
+
+// remove any presentations marked as disposable
+- (void)cleanupDisposablePresentations {
+//	NSLog( @"cleaning up disposable presentations..." );
+	NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStorePresentation entityName]];
+	fetch.predicate = [NSPredicate predicateWithFormat:@"status = %d", REMOTE_ITEM_STATUS_DISPOSABLE];
+	NSArray *presentations = [self.mainManagedObjectContext executeFetchRequest:fetch error:nil];
+
+	if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
+		for ( ILobbyStorePresentation *presentation in presentations ) {
+			if ( presentation.isDisposable ) {
+				[presentation.managedObjectContext deleteObject:presentation];
+			}
+		}
+
+		[self saveChanges:nil];
 	}
 }
 

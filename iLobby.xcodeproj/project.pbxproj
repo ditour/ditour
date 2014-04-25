@@ -73,6 +73,7 @@
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4C60121B190978E100BEC685 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; };
 		4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
+		4C60121E190AA39900BEC685 /* iLobby 0.9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 0.9.xcdatamodel"; sourceTree = "<group>"; };
 		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
 		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
 		4C690BD818214AB300A823CC /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
@@ -601,9 +602,10 @@
 		4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				4C60121E190AA39900BEC685 /* iLobby 0.9.xcdatamodel */,
 				4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */,
 			);
-			currentVersion = 4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */;
+			currentVersion = 4C60121E190AA39900BEC685 /* iLobby 0.9.xcdatamodel */;
 			path = iLobby.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

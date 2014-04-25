@@ -37,6 +37,11 @@
 }
 
 
+- (BOOL)isDisposable {
+	return self.status.shortValue == REMOTE_ITEM_STATUS_DISPOSABLE;
+}
+
+
 - (void)markPending {
 	self.status = @( REMOTE_ITEM_STATUS_PENDING );
 }
@@ -49,6 +54,11 @@
 
 - (void)markReady {
 	self.status = @( REMOTE_ITEM_STATUS_READY );
+}
+
+
+- (void)markDisposable {
+	self.status = @( REMOTE_ITEM_STATUS_DISPOSABLE );
 }
 
 

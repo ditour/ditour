@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Configuration" representedClassName="ILobbyStoreConfiguration" parentEntity="RemoteFile" syncable="YES">
+        <relationship name="container" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteContainer" inverseName="configuration" inverseEntity="RemoteContainer" syncable="YES"/>
+    </entity>
+    <entity name="Presentation" representedClassName="ILobbyStorePresentation" parentEntity="RemoteContainer" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="presentations" inverseEntity="PresentationGroup" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="revision" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="revision" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="parent" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="rootForCurrent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="currentPresentation" inverseEntity="Root" syncable="YES"/>
+        <relationship name="tracks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Track" inverseName="presentation" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="PresentationGroup" representedClassName="ILobbyStorePresentationGroup" parentEntity="RemoteContainer" syncable="YES">
+        <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Presentation" inverseName="group" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="root" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="groups" inverseEntity="Root" syncable="YES"/>
+        <fetchedProperty name="activePresentations" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 2)"/>
+        </fetchedProperty>
+        <fetchedProperty name="pendingPresentations" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Presentation" predicateString="($FETCH_SOURCE = group) AND (status = 0 OR status = 1)"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="RemoteContainer" representedClassName="ILobbyStoreRemoteContainer" isAbstract="YES" parentEntity="RemoteItem" syncable="YES">
+        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="container" inverseEntity="Configuration" syncable="YES"/>
+    </entity>
+    <entity name="RemoteFile" representedClassName="ILobbyStoreRemoteFile" isAbstract="YES" parentEntity="RemoteItem" syncable="YES"/>
+    <entity name="RemoteItem" representedClassName="ILobbyStoreRemoteItem" isAbstract="YES" syncable="YES">
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remoteInfo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remoteLocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="RemoteMedia" representedClassName="ILobbyStoreRemoteMedia" parentEntity="RemoteFile" syncable="YES">
+        <relationship name="slides" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Slide" inverseName="remoteMedia" inverseEntity="Slide" syncable="YES"/>
+        <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="remoteMedia" inverseEntity="Track" syncable="YES"/>
+    </entity>
+    <entity name="Root" representedClassName="ILobbyStoreRoot" syncable="YES">
+        <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Presentation" inverseName="rootForCurrent" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="PresentationGroup" inverseName="root" inverseEntity="PresentationGroup" syncable="YES"/>
+    </entity>
+    <entity name="Slide" representedClassName="ILobbyStoreSlide" syncable="YES">
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="remoteMedia" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteMedia" inverseName="slides" inverseEntity="RemoteMedia" syncable="YES"/>
+    </entity>
+    <entity name="Track" representedClassName="ILobbyStoreTrack" parentEntity="RemoteContainer" syncable="YES">
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="presentation" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="tracks" inverseEntity="Presentation" syncable="YES"/>
+        <relationship name="remoteMedia" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="RemoteMedia" inverseName="track" inverseEntity="RemoteMedia" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Configuration" positionX="27" positionY="72" width="128" height="58"/>
+        <element name="Presentation" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="116"/>
+        <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="58"/>
+        <element name="RemoteFile" positionX="27" positionY="81" width="128" height="45"/>
+        <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="73"/>
+        <element name="Root" positionX="0" positionY="0" width="128" height="73"/>
+        <element name="Slide" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Track" positionX="0" positionY="0" width="128" height="88"/>
+    </elements>
+</model>

@@ -57,6 +57,7 @@
 @property (getter = isCurrent) BOOL current;
 
 + (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group from:(ILobbyRemoteDirectory *)remoteDirectory;
++ (NSString *)entityName;
 
 // is the current presentation on display
 - (BOOL)isCurrent;

@@ -11,6 +11,9 @@
 #import "ILobbyStoreRoot.h"
 
 
+static NSString *ENTITY_NAME = @"Presentation";
+
+
 @implementation ILobbyStorePresentation
 
 // attributes
@@ -28,7 +31,7 @@
 
 + (instancetype)newPresentationInGroup:(ILobbyStorePresentationGroup *)group from:(ILobbyRemoteDirectory *)remoteDirectory {
 
-    ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:@"Presentation" inManagedObjectContext:group.managedObjectContext];
+    ILobbyStorePresentation *presentation = [NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:group.managedObjectContext];
 
 	presentation.status = @( REMOTE_ITEM_STATUS_PENDING );
 	presentation.timestamp = [NSDate date];
@@ -57,6 +60,11 @@
 }
 
 
++ (NSString *)entityName {
+	return ENTITY_NAME;
+}
+
+
 - (void)markReady {
 	[super markReady];
 
@@ -75,7 +83,13 @@
 
 		self.parent = nil;
 
-		[parentPresentation.managedObjectContext deleteObject:parentPresentation];
+		// mark the presentation as disposable so it can be cleaned up later if necessary (e.g. if it is current we can't delete until the new presentation is loaded for playback)
+		[parentPresentation markDisposable];
+
+		// don't delete the resources of any currently playing presentation; we can clean them up later
+		if ( !current ) {
+			[parentPresentation.managedObjectContext deleteObject:parentPresentation];
+		}
 	}
 }
 

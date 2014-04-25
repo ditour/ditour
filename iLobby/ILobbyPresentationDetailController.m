@@ -101,7 +101,7 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 - (IBAction)changeDefaultPresentation:(id)sender {
 	self.presentation.current = self.defaultPresentationSwitch.on;
 	[self.lobbyModel saveChanges:nil];
-	[self.lobbyModel loadDefaultPresentation];
+	[self.lobbyModel reloadPresentation];
 }
 
 

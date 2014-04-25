@@ -8,6 +8,7 @@
 
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
+#import "ILobbyModel.h"
 
 
 @interface ILobbyDownloadSession () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
@@ -92,6 +93,7 @@
 //		NSLog( @"Download session is complete and will be cancelled..." );
 		[self cancel];
 		[self publishChanges];
+		[self.lobbyModel reloadPresentationNextCycle];
 	}
 }
 
@@ -166,8 +168,12 @@
 		// any active presentation which does not have a revision should be removed except for the currently playing one if any
 		for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
 			if ( presentation.revision == nil ) {
-				[group removePresentationsObject:presentation];
-				[group.managedObjectContext deleteObject:presentation];
+				[presentation markDisposable];
+
+				if ( !presentation.isCurrent ) {
+					[group removePresentationsObject:presentation];
+					[group.managedObjectContext deleteObject:presentation];
+				}
 			}
 		}
 
@@ -297,6 +303,7 @@
 //						NSLog( @"Simply copying file from local cache for: %@", remoteFile.path );
 						NSFileManager *fileManager = [NSFileManager defaultManager];
 						NSError *error = nil;
+						// create a hard link from the original path to the new path so we save space
 						BOOL success = [fileManager linkItemAtPath:cachedFile.path toPath:remoteFile.path error:&error];
 						if ( success ) {
 							[remoteFile markReady];
