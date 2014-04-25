@@ -43,7 +43,6 @@
 		4CC09896183D4CC0006755C8 /* ILobbyStoreRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09895183D4CC0006755C8 /* ILobbyStoreRoot.m */; };
 		4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */; };
 		4CC0989F183D4CC0006755C8 /* ILobbyStoreTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */; };
-		4CC3919618EC687100B9AA4E /* ILobbyDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3919518EC687100B9AA4E /* ILobbyDownloadManager.m */; };
 		4CC3919918EDF2B500B9AA4E /* ILobbyDownloadStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */; };
 		4CC3919C18EDF72C00B9AA4E /* ILobbyDownloadSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC3919B18EDF72C00B9AA4E /* ILobbyDownloadSession.m */; };
 		4CC391A418EF05F300B9AA4E /* ILobbyConcurrentDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC391A318EF05F300B9AA4E /* ILobbyConcurrentDictionary.m */; };
@@ -126,8 +125,6 @@
 		4CC09898183D4CC0006755C8 /* ILobbyStorePresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyStorePresentation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CC0989D183D4CC0006755C8 /* ILobbyStoreTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreTrack.h; sourceTree = "<group>"; };
 		4CC0989E183D4CC0006755C8 /* ILobbyStoreTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreTrack.m; sourceTree = "<group>"; };
-		4CC3919418EC687100B9AA4E /* ILobbyDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadManager.h; sourceTree = "<group>"; };
-		4CC3919518EC687100B9AA4E /* ILobbyDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadManager.m; sourceTree = "<group>"; };
 		4CC3919718EDF2B500B9AA4E /* ILobbyDownloadStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadStatus.h; sourceTree = "<group>"; };
 		4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadStatus.m; sourceTree = "<group>"; };
 		4CC3919A18EDF72C00B9AA4E /* ILobbyDownloadSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadSession.h; sourceTree = "<group>"; };
@@ -176,8 +173,6 @@
 				4C690BE21821559F00A823CC /* tidy */,
 				4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */,
 				4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */,
-				4CC3919418EC687100B9AA4E /* ILobbyDownloadManager.h */,
-				4CC3919518EC687100B9AA4E /* ILobbyDownloadManager.m */,
 				4CC3919718EDF2B500B9AA4E /* ILobbyDownloadStatus.h */,
 				4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */,
 				4CC3919A18EDF72C00B9AA4E /* ILobbyDownloadSession.h */,
@@ -432,7 +427,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CC3919618EC687100B9AA4E /* ILobbyDownloadManager.m in Sources */,
 				4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */,
 				4C9248C618E45A1900A6CBDA /* ILobbyStoreRemoteFile.m in Sources */,
 				4C937D851631AAE200F251FF /* main.m in Sources */,
