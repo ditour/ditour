@@ -302,22 +302,28 @@
 					if ( remoteInfo != nil && [remoteInfo isEqualToString:cacheInfo] ) {
 //						NSLog( @"Simply copying file from local cache for: %@", remoteFile.path );
 						NSFileManager *fileManager = [NSFileManager defaultManager];
-						NSError *error = nil;
-						// create a hard link from the original path to the new path so we save space
-						BOOL success = [fileManager linkItemAtPath:cachedFile.path toPath:remoteFile.path error:&error];
-						if ( success ) {
-							[remoteFile markReady];
-							status.completed = YES;
-							status.progress = 1.0;
-							[self updateStatus];
-							return;
-						}
-						else {
-							NSLog( @"Error creating hard link to remote file: %@ from existing file at: %@", remoteFile.path, cachedFile.path );
+
+						if ( [fileManager fileExistsAtPath:cachedFile.path] ) {
+							NSError *error = nil;
+							// create a hard link from the original path to the new path so we save space
+							BOOL success = [fileManager linkItemAtPath:cachedFile.path toPath:remoteFile.path error:&error];
+							if ( success ) {
+								[remoteFile markReady];
+								status.completed = YES;
+								status.progress = 1.0;
+								[self updateStatus];
+								return;
+							}
+							else {
+								NSLog( @"Error creating hard link to remote file: %@ from existing file at: %@", remoteFile.path, cachedFile.path );
+							}
+
 						}
 					}
 				}
 			}
+
+			// anything that fails in using the cache file will fall through to here which forces a fresh fetch to the server
 
 			//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
 			NSURL *downloadURL = remoteFile.remoteURL;
