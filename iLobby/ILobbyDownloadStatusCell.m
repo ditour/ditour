@@ -8,7 +8,22 @@
 
 #import "ILobbyDownloadStatusCell.h"
 
+
+static NSNumberFormatter *PROGRESS_FORMAT = nil;
+
+
 @implementation ILobbyDownloadStatusCell
+
+
++ (void)initialize {
+	if ( self == [ILobbyDownloadStatusCell class] ) {
+		PROGRESS_FORMAT = [NSNumberFormatter new];
+		PROGRESS_FORMAT.numberStyle = NSNumberFormatterPercentStyle;
+		PROGRESS_FORMAT.minimumFractionDigits = 2;
+		PROGRESS_FORMAT.maximumFractionDigits = 2;
+	}
+}
+
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -38,7 +53,10 @@
 
 
 - (void)setDownloadStatus:(ILobbyDownloadStatus *)status {
-	self.progressView.progress = status != nil ? status.progress : 0.0;
+	float progress = status != nil ? status.progress : 0.0;
+
+	self.progressView.progress = progress;
+	self.progressLabel.text = [PROGRESS_FORMAT stringFromNumber:@(progress)];
 }
 
 @end

@@ -109,19 +109,29 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="VnP-YA-K09">
-                                            <rect key="frame" x="20" y="49" width="951" height="2"/>
+                                            <rect key="frame" x="98" y="49" width="873" height="2"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </progressView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100.00%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aTC-jr-BLn">
+                                            <rect key="frame" x="20" y="39" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="VnP-YA-K09" firstAttribute="leading" secondItem="LmF-KQ-zzD" secondAttribute="leading" constant="20" id="4dO-jR-qgz"/>
+                                        <constraint firstItem="VnP-YA-K09" firstAttribute="leading" secondItem="aTC-jr-BLn" secondAttribute="trailing" constant="8" symbolic="YES" id="16K-kx-fnA"/>
+                                        <constraint firstItem="AgP-2y-IrQ" firstAttribute="leading" secondItem="aTC-jr-BLn" secondAttribute="leading" id="5If-oh-7B9"/>
+                                        <constraint firstItem="aTC-jr-BLn" firstAttribute="top" secondItem="AgP-2y-IrQ" secondAttribute="bottom" constant="7" id="5MM-nT-AxH"/>
                                         <constraint firstItem="AgP-2y-IrQ" firstAttribute="top" secondItem="LmF-KQ-zzD" secondAttribute="top" constant="11" id="SdS-2h-mij"/>
-                                        <constraint firstItem="AgP-2y-IrQ" firstAttribute="leading" secondItem="VnP-YA-K09" secondAttribute="leading" id="Z4E-Bi-CVJ"/>
                                         <constraint firstItem="VnP-YA-K09" firstAttribute="top" secondItem="AgP-2y-IrQ" secondAttribute="bottom" constant="17" id="jki-72-RsB"/>
+                                        <constraint firstItem="AgP-2y-IrQ" firstAttribute="leading" secondItem="LmF-KQ-zzD" secondAttribute="leading" constant="20" symbolic="YES" id="qAo-0Y-JAk"/>
                                         <constraint firstAttribute="trailing" secondItem="VnP-YA-K09" secondAttribute="trailing" constant="20" id="sPe-bF-CIq"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="progressLabel" destination="aTC-jr-BLn" id="wze-hL-11D"/>
                                     <outlet property="progressView" destination="VnP-YA-K09" id="fYl-OC-2R4"/>
                                     <outlet property="titleLabel" destination="AgP-2y-IrQ" id="Wyl-rf-3d1"/>
                                     <segue destination="jnE-kG-HXj" kind="push" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
@@ -214,20 +224,30 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="sdl-Hc-OQa">
-                                            <rect key="frame" x="20" y="45" width="951" height="2"/>
+                                            <rect key="frame" x="98" y="45" width="873" height="2"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </progressView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100.00%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cKc-72-pxo">
+                                            <rect key="frame" x="20" y="35" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="sdl-Hc-OQa" firstAttribute="top" secondItem="jSC-nP-Zb9" secondAttribute="bottom" constant="13" id="18T-0s-fxw"/>
                                         <constraint firstItem="jSC-nP-Zb9" firstAttribute="top" secondItem="X8H-pH-tqw" secondAttribute="top" constant="11" id="3aY-Sz-pvc"/>
                                         <constraint firstAttribute="trailing" secondItem="sdl-Hc-OQa" secondAttribute="trailing" constant="20" id="5CC-pO-Ksc"/>
                                         <constraint firstAttribute="trailing" secondItem="jSC-nP-Zb9" secondAttribute="trailing" constant="20" id="BoT-IL-D3e"/>
+                                        <constraint firstItem="sdl-Hc-OQa" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="98" id="bHe-NL-SkV"/>
                                         <constraint firstItem="jSC-nP-Zb9" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="haN-BB-rP7"/>
-                                        <constraint firstItem="sdl-Hc-OQa" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="kWe-Ck-pK2"/>
+                                        <constraint firstItem="cKc-72-pxo" firstAttribute="top" secondItem="jSC-nP-Zb9" secondAttribute="bottom" constant="3" id="mZF-RI-Kgx"/>
+                                        <constraint firstItem="sdl-Hc-OQa" firstAttribute="leading" secondItem="cKc-72-pxo" secondAttribute="trailing" constant="8" symbolic="YES" id="ofA-Kd-l2y"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="progressLabel" destination="cKc-72-pxo" id="Ma6-CI-HAn"/>
                                     <outlet property="progressView" destination="sdl-Hc-OQa" id="ar4-fx-dJD"/>
                                     <outlet property="titleLabel" destination="jSC-nP-Zb9" id="oZr-cJ-1ug"/>
                                     <segue destination="zoZ-Yz-hel" kind="push" identifier="ShowPendingTrackDetail" id="R2E-hK-DuA"/>
@@ -298,13 +318,22 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="i9E-S1-M8e">
-                                            <rect key="frame" x="20" y="45" width="951" height="2"/>
+                                            <rect key="frame" x="105" y="45" width="866" height="2"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="866" id="nfd-uv-dvo"/>
+                                            </constraints>
                                         </progressView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="100.00%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38K-ki-SJm">
+                                            <rect key="frame" x="20" y="35" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="eeY-Kg-xvq" secondAttribute="trailing" constant="20" id="NJn-dE-mW6"/>
-                                        <constraint firstItem="i9E-S1-M8e" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leading" constant="20" id="NjG-CW-QYV"/>
                                         <constraint firstAttribute="trailing" secondItem="i9E-S1-M8e" secondAttribute="trailing" constant="20" id="YPB-4Q-fuw"/>
                                         <constraint firstItem="eeY-Kg-xvq" firstAttribute="top" secondItem="gn0-zM-OvC" secondAttribute="top" constant="11" id="Zyt-i3-7DL"/>
                                         <constraint firstItem="eeY-Kg-xvq" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leading" constant="20" id="iQL-ab-5kV"/>
@@ -312,6 +341,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="progressLabel" destination="38K-ki-SJm" id="Cb1-jz-Cf7"/>
                                     <outlet property="progressView" destination="i9E-S1-M8e" id="Ug7-zo-FOw"/>
                                     <outlet property="titleLabel" destination="eeY-Kg-xvq" id="ncD-Gn-uAk"/>
                                 </connections>

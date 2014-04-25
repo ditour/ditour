@@ -15,6 +15,7 @@
 @interface ILobbyDownloadStatusCell : ILobbyLabelCell
 
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+@property (nonatomic, weak) IBOutlet UILabel *progressLabel;
 
 - (void)setDownloadStatus:(ILobbyDownloadStatus *)status;
 
