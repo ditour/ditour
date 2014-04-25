@@ -137,4 +137,26 @@ static NSString *ENTITY_NAME = @"Presentation";
 	return [dictionary copy];
 }
 
+
+- (NSDictionary *)effectiveConfiguration {
+	if ( _effectiveConfiguration == nil ) {
+		NSMutableDictionary *effectiveConfig = [NSMutableDictionary new];
+
+		NSDictionary *groupConfig = self.group.effectiveConfiguration;
+		if ( groupConfig != nil ) {
+			[effectiveConfig addEntriesFromDictionary:groupConfig];
+		}
+
+		NSDictionary *presentationConfig = [self parseConfiguration];
+		if ( presentationConfig != nil ) {
+			[effectiveConfig addEntriesFromDictionary:presentationConfig];
+		}
+
+		_effectiveConfiguration = [effectiveConfig copy];
+	}
+
+	return [_effectiveConfiguration copy];
+}
+
+
 @end

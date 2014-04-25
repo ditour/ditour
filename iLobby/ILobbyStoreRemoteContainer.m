@@ -9,6 +9,7 @@
 #import "ILobbyStoreRemoteContainer.h"
 
 @implementation ILobbyStoreRemoteContainer
+
 @dynamic configuration;
 
 
@@ -24,5 +25,34 @@
 //	}
 }
 
+
+- (NSDictionary *)effectiveConfiguration {
+	if ( _effectiveConfiguration == nil ) {
+		_effectiveConfiguration = [self parseConfiguration];
+	}
+
+	return [_effectiveConfiguration copy];
+}
+
+
+- (NSDictionary *)parseConfiguration {
+//	NSLog( @"Parsing configuration with path: %@", self.configuration.path );
+	if ( self.configuration != nil && self.configuration.path != nil ) {
+		NSData *jsonData = [NSData dataWithContentsOfFile:self.configuration.path];
+		if ( jsonData == nil )  return nil;
+		NSError *error = nil;
+		NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+		if ( error ) {
+			NSLog( @"Error parsing json: %@", error );
+		}
+//		else {
+//			NSLog( @"Parsed config: %@", json );
+//		}
+		return [json copy];
+	}
+	else {
+		return @{};
+	}
+}
 
 @end

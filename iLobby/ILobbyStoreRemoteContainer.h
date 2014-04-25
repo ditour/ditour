@@ -10,7 +10,9 @@
 #import "ILobbyStoreConfiguration.h"
 
 
-@interface ILobbyStoreRemoteContainer : ILobbyStoreRemoteItem
+@interface ILobbyStoreRemoteContainer : ILobbyStoreRemoteItem {
+	NSDictionary *_effectiveConfiguration;
+}
 
 @property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
 @end
@@ -19,6 +21,9 @@
 
 // custom additions
 @interface ILobbyStoreRemoteContainer ()
+
+@property (nonatomic, readonly) NSDictionary *effectiveConfiguration;
+- (NSDictionary *)parseConfiguration;
 
 - (void)processRemoteFile:(ILobbyRemoteFile *)remoteFile;
 

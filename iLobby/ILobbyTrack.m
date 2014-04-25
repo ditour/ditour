@@ -40,6 +40,9 @@
 //		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:trackConfig[@"defaultTransition"]];
 //		self.defaultTransitionSource = defaultTransitionSource;
 
+		NSDictionary *config = trackStore.effectiveConfiguration;
+		NSLog( @"Config for %@: %@", self.label, config );
+
 		NSMutableArray *slides = [NSMutableArray new];
 		for ( ILobbyStoreRemoteMedia *media in trackStore.remoteMedia ) {
 			// if the filename is Icon.* then it is the icon and all others are slides

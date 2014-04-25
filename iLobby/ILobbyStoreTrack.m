@@ -72,6 +72,26 @@
 }
 
 
+- (NSDictionary *)effectiveConfiguration {
+	if ( _effectiveConfiguration == nil ) {
+		NSMutableDictionary *effectiveConfig = [NSMutableDictionary new];
+
+		NSDictionary *presentationConfig = self.presentation.effectiveConfiguration;
+		if ( presentationConfig != nil ) {
+			[effectiveConfig addEntriesFromDictionary:presentationConfig];
+		}
+
+		NSDictionary *trackConfig = [self parseConfiguration];
+		if ( trackConfig != nil ) {
+			[effectiveConfig addEntriesFromDictionary:trackConfig];
+		}
+
+		_effectiveConfiguration = [effectiveConfig copy];
+	}
+
+	return [_effectiveConfiguration copy];
+}
+
 @end
 
 
