@@ -434,14 +434,13 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 - (void)cleanupDisposablePresentations {
 //	NSLog( @"cleaning up disposable presentations..." );
 	NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStorePresentation entityName]];
-	fetch.predicate = [NSPredicate predicateWithFormat:@"status = %d", REMOTE_ITEM_STATUS_DISPOSABLE];
+	// fetch presentations explicitly marked disposable or that have no group assignment
+	fetch.predicate = [NSPredicate predicateWithFormat:@"(status = %d) || (group = nil)", REMOTE_ITEM_STATUS_DISPOSABLE];
 	NSArray *presentations = [self.mainManagedObjectContext executeFetchRequest:fetch error:nil];
 
 	if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
 		for ( ILobbyStorePresentation *presentation in presentations ) {
-			if ( presentation.isDisposable ) {
-				[presentation.managedObjectContext deleteObject:presentation];
-			}
+			[presentation.managedObjectContext deleteObject:presentation];
 		}
 
 		[self saveChanges:nil];
