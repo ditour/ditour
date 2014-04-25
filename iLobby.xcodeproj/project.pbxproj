@@ -17,6 +17,7 @@
 		4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */; };
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
 		4C60121D190978E100BEC685 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */; };
+		4C601220190ADAEB00BEC685 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */; };
 		4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */; };
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
 		4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */; };
@@ -74,6 +75,7 @@
 		4C60121B190978E100BEC685 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; };
 		4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
 		4C60121E190AA39900BEC685 /* iLobby 0.9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 0.9.xcdatamodel"; sourceTree = "<group>"; };
+		4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultSlideIcon.png; sourceTree = "<group>"; };
 		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
 		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
 		4C690BD818214AB300A823CC /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
@@ -281,6 +283,7 @@
 		4C937D7F1631AAE200F251FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */,
 				4C42A5E2165A96F100B64970 /* README.rtf */,
 				4C937D801631AAE200F251FF /* iLobby-Info.plist */,
 				4C937D811631AAE200F251FF /* InfoPlist.strings */,
@@ -416,6 +419,7 @@
 			files = (
 				4C937D831631AAE200F251FF /* InfoPlist.strings in Resources */,
 				4C82BEC217D7899200740BD1 /* Images.xcassets in Resources */,
+				4C601220190ADAEB00BEC685 /* DefaultSlideIcon.png in Resources */,
 				4C42A5E3165A96F100B64970 /* README.rtf in Resources */,
 				4C1B0D3F18D0971C001B0B00 /* Storyboard.storyboard in Resources */,
 			);

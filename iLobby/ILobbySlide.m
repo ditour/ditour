@@ -55,6 +55,9 @@
 }
 
 
+- (UIImage *)icon {
+	return nil;
+}
 
 
 + (BOOL)matchesExtension:(NSString *)extension {
@@ -107,6 +110,11 @@ static NSArray *IMAGE_EXTENSIONS;
 	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
 		handler( self );
 	});
+}
+
+
+- (UIImage *)icon {
+	return [UIImage imageWithContentsOfFile:self.mediaFile];
 }
 
 @end

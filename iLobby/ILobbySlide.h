@@ -26,4 +26,7 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 - (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
 - (void)cancelPresentation;
 
+// provide an icon representation if possible or nil if not
+- (UIImage *)icon;
+
 @end

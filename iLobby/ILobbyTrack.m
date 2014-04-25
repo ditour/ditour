@@ -56,6 +56,23 @@
 			}
 		}
 
+		// if there was no explicit icon file provided then use first image if any
+		if ( self.icon == nil ) {
+			for ( ILobbySlide *slide in slides ) {
+				UIImage *icon = slide.icon;
+				if ( icon != nil ) {
+					self.icon = icon;
+					break;
+				}
+			}
+		}
+
+
+		// if there is still no icon provide a default one from this application's main bundle
+		if ( self.icon == nil ) {
+			self.icon = [UIImage imageNamed:@"DefaultSlideIcon"];
+		}
+
 		self.slides = [slides copy];
 	}
 
