@@ -79,7 +79,7 @@
 @implementation NSString (ILobbyTrackTransforms)
 
 - (NSString *)toTrackTitle {
-	return [[[self stripLeadingDigitsAndUnderscore] toSpacesFromUnderscores] capitalizedString];
+	return [[self stripLeadingDigitsAndUnderscore] toSpacesFromUnderscores];
 }
 
 
