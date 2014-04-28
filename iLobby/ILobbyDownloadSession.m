@@ -142,74 +142,85 @@
 
 		ILobbyRemoteDirectory *groupRemoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:group.remoteURL error:&error];
 
-		// process any files (e.g. config files)
-		for ( ILobbyRemoteFile *remoteFile in groupRemoteDirectory.files ) {
-			[group processRemoteFile:remoteFile];
-		}
-
-		// store the active presentations by name so they can be used as parents if necessary
-		NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
-		for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
-//			NSLog( @"Active presentation at: %@", presentation.path );
-			activePresentationsByName[presentation.name] = presentation;
-		}
-
-		// fetch presentations
-		for ( ILobbyRemoteDirectory *remotePresentationDirectory in groupRemoteDirectory.subdirectories ) {
-			ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:group from:remotePresentationDirectory];
-
-			// if an active presentation has the same name then assign it as a parent
-			ILobbyStorePresentation *presentationParent = activePresentationsByName[presentation.name];
-			if ( presentationParent != nil ) {
-				presentation.parent = presentationParent;
+		if ( groupRemoteDirectory != nil && error == nil ) {
+			// process any files (e.g. config files)
+			for ( ILobbyRemoteFile *remoteFile in groupRemoteDirectory.files ) {
+				[group processRemoteFile:remoteFile];
 			}
-		}
 
-		// any active presentation which does not have a revision should be removed except for the currently playing one if any
-		for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
-			if ( presentation.revision == nil ) {
-				[presentation markDisposable];
+			// store the active presentations by name so they can be used as parents if necessary
+			NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
+			for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+				//			NSLog( @"Active presentation at: %@", presentation.path );
+				activePresentationsByName[presentation.name] = presentation;
+			}
 
-				if ( !presentation.isCurrent ) {
-					[group removePresentationsObject:presentation];
-					[group.managedObjectContext deleteObject:presentation];
+			// fetch presentations
+			for ( ILobbyRemoteDirectory *remotePresentationDirectory in groupRemoteDirectory.subdirectories ) {
+				ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:group from:remotePresentationDirectory];
+
+				// if an active presentation has the same name then assign it as a parent
+				ILobbyStorePresentation *presentationParent = activePresentationsByName[presentation.name];
+				if ( presentationParent != nil ) {
+					presentation.parent = presentationParent;
 				}
 			}
-		}
 
-		[self persistentSaveContext:group.managedObjectContext error:&error];
+			// any active presentation which does not have a revision should be removed except for the currently playing one if any
+			for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+				if ( presentation.revision == nil ) {
+					[presentation markDisposable];
 
-
-		// updates fetched properties
-		[group.managedObjectContext refreshObject:group mergeChanges:YES];
-
-		// ----------- now begin downloading the files
-
-		// if the group has a configuration then determine whether the configuration file can be copied from the initial one
-		if ( group.configuration != nil ) {
-			// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
-			NSFileManager *fileManager = [NSFileManager defaultManager];
-			if ( initialConfigRemoteInfo != nil && [initialConfigRemoteInfo isEqualToString:group.configuration.remoteInfo] && [initialConfigPath isEqualToString:group.configuration.path] && [fileManager fileExistsAtPath:initialConfigPath] ) {
-				[group.configuration markReady];
-			}
-			else {
-				if ( initialConfigPath != nil ) {
-					[self removeFileAt:initialConfigPath];
+					if ( !presentation.isCurrent ) {
+						[group removePresentationsObject:presentation];
+						[group.managedObjectContext deleteObject:presentation];
+					}
 				}
-				[self downloadRemoteFile:group.configuration container:status usingCache:nil];
 			}
-		}
-		else if ( initialConfig != nil ) {
-			[self removeFileAt:initialConfigPath];
-		}
 
-		// download the presentations
-		for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
-			[self downloadPresentation:pendingPresentation container:status];
-		}
+			[self persistentSaveContext:group.managedObjectContext error:&error];
 
-		status.submitted = YES;
-		[self updateStatus];
+
+			// updates fetched properties
+			[group.managedObjectContext refreshObject:group mergeChanges:YES];
+
+			// ----------- now begin downloading the files
+
+			// if the group has a configuration then determine whether the configuration file can be copied from the initial one
+			if ( group.configuration != nil ) {
+				// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
+				NSFileManager *fileManager = [NSFileManager defaultManager];
+				if ( initialConfigRemoteInfo != nil && [initialConfigRemoteInfo isEqualToString:group.configuration.remoteInfo] && [initialConfigPath isEqualToString:group.configuration.path] && [fileManager fileExistsAtPath:initialConfigPath] ) {
+					[group.configuration markReady];
+				}
+				else {
+					if ( initialConfigPath != nil ) {
+						[self removeFileAt:initialConfigPath];
+					}
+					[self downloadRemoteFile:group.configuration container:status usingCache:nil];
+				}
+			}
+			else if ( initialConfig != nil ) {
+				[self removeFileAt:initialConfigPath];
+			}
+
+			// download the presentations
+			for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
+				[self downloadPresentation:pendingPresentation container:status];
+			}
+			
+			status.submitted = YES;
+			[self updateStatus];
+		}
+		else {
+			if ( error != nil ) {
+				NSLog( @"Error downloading group: %@", error );
+				status.error = error;
+			}
+
+			[group markPending];
+			[self cancel];
+		}
 	}];
 
 	return status;
