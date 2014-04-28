@@ -53,10 +53,14 @@ enum : NSInteger {
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Now Playing" style:UIBarButtonItemStyleDone target:self action:@selector(popToPlaying)];
 
 	self.title = [NSString stringWithFormat:@"Track: %@", self.track.title];
+}
+
+
+- (void)popToPlaying {
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 

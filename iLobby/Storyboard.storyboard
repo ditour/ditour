@@ -451,7 +451,7 @@
             </objects>
             <point key="canvasLocation" x="2227" y="-221"/>
         </scene>
-        <!--Lobby View Controller - Presentations-->
+        <!--Lobby View Controller - Playing-->
         <scene sceneID="g29-gM-USr">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="dmv-Dt-LNm" customClass="ILobbyViewController" sceneMemberID="viewController">
@@ -509,7 +509,7 @@
                             <outlet property="delegate" destination="dmv-Dt-LNm" id="rm8-Hf-OE9"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Presentations" id="ATr-XS-G5I">
+                    <navigationItem key="navigationItem" title="Playing" id="ATr-XS-G5I">
                         <barButtonItem key="rightBarButtonItem" systemItem="organize" id="g5F-aO-8JZ">
                             <connections>
                                 <segue destination="J4K-xb-7m0" kind="push" identifier="MainToGroups" id="1hV-E4-sjv"/>

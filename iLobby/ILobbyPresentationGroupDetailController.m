@@ -70,8 +70,7 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
     // self.clearsSelectionOnViewWillAppear = NO;
 	self.title = [NSString stringWithFormat:@"Group: %@", self.group.shortName];
 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Now Playing" style:UIBarButtonItemStyleDone target:self action:@selector(popToPlaying)];
 
 	self.groupDownloadStatus = [self.lobbyModel downloadStatusForGroup:self.group];
 	if ( self.groupDownloadStatus != nil ) {
@@ -79,6 +78,11 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 	}
 
 	[self updateDownloadIndicator];
+}
+
+
+- (void)popToPlaying {
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 
