@@ -11,11 +11,13 @@
 #import "ILobbyStoreRemoteMedia.h"
 
 #define DEFAULT_SLIDE_DURATION 5.0f
+#define DEFAULT_SINGLE_IMAGE_SLIDE_DURATION 600.0f
 
 
 @interface ILobbyTrack ()
 @property (nonatomic, readwrite, strong) UIImage *icon;
 @property (nonatomic, readwrite, copy) NSString *label;
+@property (nonatomic, readwrite, assign) float extraTrackDuration;
 @property (nonatomic, readwrite, assign) float defaultSlideDuration;
 @property (nonatomic, readwrite, strong) NSArray *slides;
 @property (nonatomic, readwrite, strong) ILobbySlide *currentSlide;
@@ -34,14 +36,15 @@
 
 		self.label = trackStore.title;
 
-		// TODO: get the slide duration and transition from the config store
-		self.defaultSlideDuration = DEFAULT_SLIDE_DURATION;
-
-//		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:trackConfig[@"defaultTransition"]];
-//		self.defaultTransitionSource = defaultTransitionSource;
-
 		NSDictionary *config = trackStore.effectiveConfiguration;
-		NSLog( @"Config for %@: %@", self.label, config );
+//		NSLog( @"Config for %@: %@", self.label, config );
+
+		NSNumber *slideDurationNum = config[@"slideDuration"];
+		float defaultSlideDuration = slideDurationNum != nil ? slideDurationNum.floatValue : DEFAULT_SLIDE_DURATION;
+		self.defaultSlideDuration = defaultSlideDuration;
+
+		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:config[@"slideTransition"]];
+		self.defaultTransitionSource = defaultTransitionSource;
 
 		NSMutableArray *slides = [NSMutableArray new];
 		for ( ILobbyStoreRemoteMedia *media in trackStore.remoteMedia ) {
@@ -54,7 +57,10 @@
 			else {
 				// TODO: add support for a single PDF file mapping to multiple slides
 				NSString *slidePath = media.path;
-				ILobbySlide *slide = [ILobbySlide slideWithFile:slidePath duration:self.defaultSlideDuration];
+				ILobbySlide *slide = [ILobbySlide slideWithFile:slidePath duration:defaultSlideDuration];
+				if ( defaultTransitionSource != nil ) {
+					slide.transitionSource = defaultTransitionSource;
+				}
 				[slides addObject:slide];
 			}
 		}
@@ -76,10 +82,37 @@
 			self.icon = [UIImage imageNamed:@"DefaultSlideIcon"];
 		}
 
+
+		// if there is only one slide and it is an image slide then the slide duration may be extended if the config file specifies it
+		if ( slides.count == 1 ) {
+			ILobbySlide *slide = slides[0];
+			if ( slide.isImageSlide ) {
+				NSNumber *singleImageSlideTrackDurationNum = config[@"singleImageSlideTrackDuration"];
+				if ( singleImageSlideTrackDurationNum != nil ) {
+					float trackDuration = [singleImageSlideTrackDurationNum floatValue];
+					[self setSingleImageSlideDuration:trackDuration];
+				}
+				else {
+					float trackDuration = DEFAULT_SINGLE_IMAGE_SLIDE_DURATION;
+					[self setSingleImageSlideDuration:trackDuration];
+				}
+			}
+		}
+		else {
+			self.extraTrackDuration = 0.0;
+		}
+
 		self.slides = [slides copy];
 	}
 
 	return self;
+}
+
+
+// if the track duration is greater than the slide duration we must allow for the extra time otherwise no extra time is needed
+- (void)setSingleImageSlideDuration:(float)trackDuration {
+	float slideDuration = self.defaultSlideDuration;
+	self.extraTrackDuration = ( trackDuration > slideDuration ) ? trackDuration - slideDuration : 0.0;;
 }
 
 
@@ -109,7 +142,19 @@
 				[self presentSlideAt:nextSlideIndex to:presenter forRun:runID completionHandler:trackCompletionHandler];
 			}
 			else {
-				trackCompletionHandler( self );
+				float trackDelay = self.extraTrackDuration;
+
+				// if there is an extra track delay then we will delay calling the completion handler
+				if ( trackDelay > 0.0 ) {
+					int64_t delayInSeconds = trackDelay;
+					dispatch_time_t popTime = dispatch_time( DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC );
+					dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
+						trackCompletionHandler( self );
+					});
+				}
+				else {
+					trackCompletionHandler( self );
+				}
 			}
 		}
 	}];

@@ -60,6 +60,11 @@
 }
 
 
+- (BOOL)isImageSlide {
+	return NO;
+}
+
+
 + (BOOL)matchesExtension:(NSString *)extension {
 	return NO;
 }
@@ -115,6 +120,11 @@ static NSArray *IMAGE_EXTENSIONS;
 
 - (UIImage *)icon {
 	return [UIImage imageWithContentsOfFile:self.mediaFile];
+}
+
+
+- (BOOL)isImageSlide {
+	return YES;
 }
 
 @end
