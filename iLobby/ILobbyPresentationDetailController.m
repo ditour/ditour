@@ -14,6 +14,7 @@
 
 
 enum : NSInteger {
+	SECTION_CONFIG,
 	SECTION_TRACKS,
 	SECTION_COUNT
 };
@@ -132,6 +133,8 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
     // Return the number of rows in the section.
 
 	switch ( section ) {
+		case SECTION_CONFIG:
+			return self.presentation.configuration != nil ? 1 : 0;
 		case SECTION_TRACKS:
 			return self.presentation.tracks.count;
 
@@ -142,13 +145,41 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 }
 
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	switch ( section ) {
+		case SECTION_CONFIG:
+			return @"Configuration";
+			
+		case SECTION_TRACKS:
+			return @"Tracks";
+
+		default:
+			break;
+	}
+
+	return nil;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_TRACKS:
+		case SECTION_CONFIG: case SECTION_TRACKS:
 			return [self heightForRemoteItemAtIndexPath:indexPath];
 
 		default:
 			return [ILobbyLabelCell defaultHeight];
+	}
+}
+
+
+- (CGFloat)heightForRemoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteItem *remoteItem = [self remoteItemAtIndexPath:indexPath];
+
+	if ( [self isRemoteItemDownloading:remoteItem] ) {
+		return [ILobbyDownloadStatusCell defaultHeight];
+	}
+	else {
+		return [ILobbyLabelCell defaultHeight];
 	}
 }
 
@@ -166,6 +197,9 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 - (ILobbyStoreRemoteItem *)remoteItemAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
+		case SECTION_CONFIG:
+			return self.presentation.configuration;
+			
 		case SECTION_TRACKS:
 			return self.presentation.tracks[indexPath.row];
 
@@ -175,23 +209,13 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 }
 
 
-- (CGFloat)heightForRemoteItemAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteItem *remoteItem = [self remoteItemAtIndexPath:indexPath];
-
-	if ( [self isRemoteItemDownloading:remoteItem] ) {
-		return [ILobbyDownloadStatusCell defaultHeight];
-	}
-	else {
-		return [ILobbyLabelCell defaultHeight];
-	}
-}
-
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
+		case SECTION_CONFIG:
+			return [self tableView:tableView configurationCellForRowAtIndexPath:indexPath];
+			
 		case SECTION_TRACKS:
 			return [self tableView:tableView trackCellForRowAtIndexPath:indexPath];
-			break;
 
 		default:
 			return nil;
@@ -235,6 +259,44 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 	return cell;
 }
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView configurationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreConfiguration *configuration = self.presentation.configuration;
+
+	if ( [self isRemoteItemDownloading:configuration] ) {
+		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self tableView:tableView readyRemoteFileCellForRowAtIndexPath:indexPath];
+	}
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+
+    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
+	cell.title = remoteFile.name;
+
+	return cell;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+
+    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
+
+	ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];
+
+	cell.downloadStatus = downloadStatus;
+	cell.title = remoteFile.name;
+
+	return cell;
+}
+
 
 
 /*

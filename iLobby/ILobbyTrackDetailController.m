@@ -13,7 +13,7 @@
 
 
 enum : NSInteger {
-	// TODO: add section for the config file
+	SECTION_CONFIG,
 	SECTION_REMOTE_MEDIA,
 	SECTION_COUNT
 };
@@ -101,10 +101,29 @@ enum : NSInteger {
 }
 
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	switch ( section ) {
+		case SECTION_CONFIG:
+			return @"Configuration";
+			
+		case SECTION_REMOTE_MEDIA:
+			return @"Media";
+
+		default:
+			break;
+	}
+
+	return nil;
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
 
 	switch ( section) {
+		case SECTION_CONFIG:
+			return self.track.configuration != nil ? 1 : 0;
+			
 		case SECTION_REMOTE_MEDIA:
 			return self.track.remoteMedia.count;
 
@@ -118,8 +137,8 @@ enum : NSInteger {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_REMOTE_MEDIA:
-			return [self estimateHeightForRemoteMediaAtIndexPath:indexPath];
+		case SECTION_CONFIG: case SECTION_REMOTE_MEDIA:
+			return [self heightForRemoteItemAtIndexPath:indexPath];
 
 		default:
 			return [ILobbyLabelCell defaultHeight];
@@ -127,23 +146,50 @@ enum : NSInteger {
 }
 
 
-- (CGFloat)estimateHeightForRemoteMediaAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
+- (CGFloat)heightForRemoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteItem *remoteItem = [self remoteItemAtIndexPath:indexPath];
 
-	if ( media.isReady ) {
-		return [ILobbyLabelCell defaultHeight];
+	if ( [self isRemoteItemDownloading:remoteItem] ) {
+		return [ILobbyDownloadStatusCell defaultHeight];
 	}
 	else {
-		return [ILobbyDownloadStatusCell defaultHeight];
+		return [ILobbyLabelCell defaultHeight];
+	}
+}
+
+
+- (BOOL)isRemoteItemDownloading:(ILobbyStoreRemoteItem *)remoteItem {
+	if ( remoteItem.isReady ) {
+		return NO;
+	}
+	else {
+		ILobbyDownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteItem];
+		return downloadStatus != nil && !downloadStatus.completed ? YES : NO;
+	}
+}
+
+
+- (ILobbyStoreRemoteItem *)remoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_CONFIG:
+			return self.track.configuration;
+
+		case SECTION_REMOTE_MEDIA:
+			return self.track.remoteMedia[indexPath.row];
+
+		default:
+			return nil;
 	}
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
+		case SECTION_CONFIG:
+			return [self tableView:tableView configurationCellForRowAtIndexPath:indexPath];
+
 		case SECTION_REMOTE_MEDIA:
 			return [self tableView:tableView remoteMediaCellForRowAtIndexPath:indexPath];
-			break;
 
 		default:
 			return nil;
@@ -154,35 +200,49 @@ enum : NSInteger {
 - (UITableViewCell *)tableView:(UITableView *)tableView remoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
 
-	if ( media.isReady ) {
-		return [self tableView:tableView readyRemoteMediaCellForRowAtIndexPath:indexPath];
+	if ( [self isRemoteItemDownloading:media] ) {
+		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];
 	}
 	else {
-		return [self tableView:tableView pendingRemoteMediaCellForRowAtIndexPath:indexPath];
+		return [self tableView:tableView readyRemoteFileCellForRowAtIndexPath:indexPath];
 	}
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
 
-    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TrackDetailActiveTrackCell" forIndexPath:indexPath];
-	cell.title = media.name;
+
+- (UITableViewCell *)tableView:(UITableView *)tableView configurationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreConfiguration *configuration = self.track.configuration;
+
+	if ( [self isRemoteItemDownloading:configuration] ) {
+		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self tableView:tableView readyRemoteFileCellForRowAtIndexPath:indexPath];
+	}
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+
+    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
+	cell.title = remoteFile.name;
 
 	return cell;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
+- (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
 
-    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TrackDetailPendingTrackCell" forIndexPath:indexPath];
+    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
-	ILobbyDownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:media];
-	//NSLog( @"Track: %@, Ready: %@, Download status: %@, Pointer: %@, Context: %@", track.title, track.status, downloadStatus, track, track.managedObjectContext );
+	ILobbyDownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteFile];
 
 	cell.downloadStatus = downloadStatus;
-	cell.title = media.name;
+	cell.title = remoteFile.name;
 
 	return cell;
 }
