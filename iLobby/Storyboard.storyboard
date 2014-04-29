@@ -137,6 +137,74 @@
                                     <segue destination="jnE-kG-HXj" kind="push" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="pzb-Cl-t0f" customClass="ILobbyDownloadStatusCell">
+                                <rect key="frame" x="0.0" y="240" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pzb-Cl-t0f" id="Xcp-AU-C0V">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYz-hp-E0U">
+                                            <rect key="frame" x="20" y="11" width="951" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="yYz-hp-E0U" secondAttribute="centerY" id="GMd-kS-8ig"/>
+                                        <constraint firstAttribute="trailing" secondItem="yYz-hp-E0U" secondAttribute="trailing" constant="20" id="oVz-aa-esV"/>
+                                        <constraint firstItem="yYz-hp-E0U" firstAttribute="leading" secondItem="Xcp-AU-C0V" secondAttribute="leading" constant="20" id="ulO-CF-w9C"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="titleLabel" destination="yYz-hp-E0U" id="vCS-c6-sCV"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="qBL-d6-z9F" customClass="ILobbyDownloadStatusCell">
+                                <rect key="frame" x="0.0" y="284" width="1024" height="68"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qBL-d6-z9F" id="atE-26-AK9">
+                                    <rect key="frame" x="0.0" y="0.0" width="991" height="67"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2g-Im-0jX">
+                                            <rect key="frame" x="20" y="11" width="951" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Zpk-cU-jcN">
+                                            <rect key="frame" x="105" y="45" width="866" height="2"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="866" id="OtV-dy-tYu"/>
+                                            </constraints>
+                                        </progressView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="100.00%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bly-sR-87g">
+                                            <rect key="frame" x="20" y="35" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="L2g-Im-0jX" firstAttribute="top" secondItem="atE-26-AK9" secondAttribute="top" constant="11" id="0ch-QI-Hqe"/>
+                                        <constraint firstAttribute="trailing" secondItem="Zpk-cU-jcN" secondAttribute="trailing" constant="20" id="8PY-rr-imt"/>
+                                        <constraint firstItem="Zpk-cU-jcN" firstAttribute="top" secondItem="L2g-Im-0jX" secondAttribute="bottom" constant="13" id="KTw-NN-B86"/>
+                                        <constraint firstItem="L2g-Im-0jX" firstAttribute="leading" secondItem="atE-26-AK9" secondAttribute="leading" constant="20" id="ZKx-oH-ACf"/>
+                                        <constraint firstAttribute="trailing" secondItem="L2g-Im-0jX" secondAttribute="trailing" constant="20" id="cYV-R8-bb7"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="progressLabel" destination="Bly-sR-87g" id="lpl-q3-yue"/>
+                                    <outlet property="progressView" destination="Zpk-cU-jcN" id="Eqh-JF-cpI"/>
+                                    <outlet property="titleLabel" destination="L2g-Im-0jX" id="SDb-0W-IZM"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="0xE-St-MOE" id="amu-sN-lV3"/>

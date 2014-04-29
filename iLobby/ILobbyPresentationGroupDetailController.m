@@ -13,8 +13,9 @@
 
 
 enum : NSInteger {
-	SECTION_ACTIVE_PRESENTATIONS_VIEW,
-	SECTION_PENDING_PRESENTATIONS_VIEW,
+	SECTION_CONFIG,
+	SECTION_ACTIVE_PRESENTATIONS,
+	SECTION_PENDING_PRESENTATIONS,
 	SECTION_COUNT
 };
 
@@ -160,8 +161,11 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_ACTIVE_PRESENTATIONS_VIEW: case SECTION_PENDING_PRESENTATIONS_VIEW:
-			return [self estimateHeightForTrackAtIndexPath:indexPath];
+		case SECTION_CONFIG:
+			return [self heightForRemoteItemAtIndexPath:indexPath];
+
+		case SECTION_ACTIVE_PRESENTATIONS: case SECTION_PENDING_PRESENTATIONS:
+			return [self heightForPresentationAtIndexPath:indexPath];
 
 		default:
 			return [ILobbyLabelCell defaultHeight];
@@ -169,16 +173,53 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 }
 
 
-- (CGFloat)estimateHeightForTrackAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForPresentationAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+		case SECTION_ACTIVE_PRESENTATIONS:
 			return [ILobbyLabelCell defaultHeight];
 
-		case SECTION_PENDING_PRESENTATIONS_VIEW:
+		case SECTION_PENDING_PRESENTATIONS:
 			return [ILobbyDownloadStatusCell defaultHeight];
 
 		default:
-			return [ILobbyLabelCell defaultHeight];
+			return [self heightForRemoteItemAtIndexPath:indexPath];
+	}
+}
+
+
+- (CGFloat)heightForRemoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteItem *remoteItem = [self remoteItemAtIndexPath:indexPath];
+
+	if ( [self isRemoteItemDownloading:remoteItem] ) {
+		return [ILobbyDownloadStatusCell defaultHeight];
+	}
+	else {
+		return [ILobbyLabelCell defaultHeight];
+	}
+}
+
+
+- (BOOL)isRemoteItemDownloading:(ILobbyStoreRemoteItem *)remoteItem {
+	if ( remoteItem.isReady ) {
+		return NO;
+	}
+	else {
+		ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteItem];
+		return downloadStatus != nil && !downloadStatus.completed ? YES : NO;
+	}
+}
+
+
+- (ILobbyStoreRemoteItem *)remoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_CONFIG:
+			return self.group.configuration;
+
+		case SECTION_ACTIVE_PRESENTATIONS: SECTION_PENDING_PRESENTATIONS:
+			return [self presentationAtIndexPath:indexPath];
+
+		default:
+			return nil;
 	}
 }
 
@@ -187,10 +228,13 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
     // Return the number of rows in the section.
 
 	switch ( section ) {
-		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+		case SECTION_CONFIG:
+			return self.group.configuration != nil ? 1 : 0;
+
+		case SECTION_ACTIVE_PRESENTATIONS:
 			return _activePresentations.count;
 
-		case SECTION_PENDING_PRESENTATIONS_VIEW:
+		case SECTION_PENDING_PRESENTATIONS:
 			return _pendingPresentations.count;
 
 		default:
@@ -203,10 +247,13 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch ( section ) {
-		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+		case SECTION_CONFIG:
+			return @"Configuration";
+
+		case SECTION_ACTIVE_PRESENTATIONS:
 			return @"Active Presentations";
 
-		case SECTION_PENDING_PRESENTATIONS_VIEW:
+		case SECTION_PENDING_PRESENTATIONS:
 			return @"Pending Presentations";
 
 		default:
@@ -219,10 +266,13 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+		case SECTION_CONFIG:
+			return [self tableView:tableView configurationCellForRowAtIndexPath:indexPath];
+
+		case SECTION_ACTIVE_PRESENTATIONS:
 			return [self tableView:tableView activePresentationCellForRowAtIndexPath:indexPath];
 
-		case SECTION_PENDING_PRESENTATIONS_VIEW:
+		case SECTION_PENDING_PRESENTATIONS:
 			return [self tableView:tableView pendingPresentationCellForRowAtIndexPath:indexPath];
 
 		default:
@@ -235,10 +285,10 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 - (ILobbyStorePresentation *)presentationAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_ACTIVE_PRESENTATIONS_VIEW:
+		case SECTION_ACTIVE_PRESENTATIONS:
 			return [self activePresentationAtSectionRow:indexPath.row];
 
-		case SECTION_PENDING_PRESENTATIONS_VIEW:
+		case SECTION_PENDING_PRESENTATIONS:
 			return [self pendingPresentationAtSectionRow:indexPath.row];
 
 		default:
@@ -284,6 +334,43 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 //	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 
     return cell;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView configurationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreConfiguration *configuration = self.group.configuration;
+
+	if ( [self isRemoteItemDownloading:configuration] ) {
+		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];
+	}
+	else {
+		return [self tableView:tableView readyRemoteFileCellForRowAtIndexPath:indexPath];
+	}
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+
+    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
+	cell.title = remoteFile.name;
+
+	return cell;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+
+    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
+
+	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteFile];
+
+	cell.downloadStatus = downloadStatus;
+	cell.title = remoteFile.name;
+
+	return cell;
 }
 
 
