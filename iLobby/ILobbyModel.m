@@ -336,6 +336,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 - (void)performShutdown {
 	// stop the presentation
 	[self stop];
+	[self cleanup];
 
 	[self saveChanges:nil];	
 }
@@ -427,6 +428,11 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	else {
 		return NO;
 	}
+}
+
+
+- (void)cleanup {
+	[self cleanupDisposablePresentations];
 }
 
 
