@@ -10,6 +10,7 @@
 #import "ILobbyDownloadStatusCell.h"
 #import "ILobbyLabelCell.h"
 #import "ILobbyPresentationDetailController.h"
+#import "ILobbyFileInfoController.h"
 
 
 enum : NSInteger {
@@ -26,7 +27,8 @@ static NSString *PENDING_PRESENTATION_CELL_ID = @"GroupDetailPendingPresentation
 
 static NSString *SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = @"ShowActivePresentationDetail";
 static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresentationDetail";
-
+static NSString *SEGUE_SHOW_FILE_INFO_ID = @"GroupDetailShowFileInfo";
+static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileInfo";
 
 
 @interface ILobbyPresentationGroupDetailController () <ILobbyDownloadStatusDelegate>
@@ -398,6 +400,13 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 			presentationController.presentationDownloadStatus = downloadStatus;
 		}
     }
+	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
+		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
+		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
+		fileInfoController.lobbyModel = self.lobbyModel;
+		fileInfoController.remoteFile = remoteFile;
+		fileInfoController.downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteFile];
+	}
     else {
         NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
     }

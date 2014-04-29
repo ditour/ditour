@@ -10,6 +10,7 @@
 #import "ILobbyDownloadStatusCell.h"
 #import "ILobbyLabelCell.h"
 #import "ILobbyTrackDetailController.h"
+#import "ILobbyFileInfoController.h"
 
 
 
@@ -22,6 +23,8 @@ enum : NSInteger {
 
 static NSString *SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = @"ShowActiveTrackDetail";
 static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
+static NSString *SEGUE_SHOW_FILE_INFO_ID = @"PresentationDetailShowFileInfo";
+static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendingFileInfo";
 
 
 @interface ILobbyPresentationDetailController () <ILobbyDownloadStatusDelegate>
@@ -376,6 +379,13 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 			trackController.trackDownloadStatus = downloadStatus;
 		}
     }
+	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
+		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
+		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
+		fileInfoController.lobbyModel = self.lobbyModel;
+		fileInfoController.remoteFile = remoteFile;
+		fileInfoController.downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];
+	}
     else {
         NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
     }

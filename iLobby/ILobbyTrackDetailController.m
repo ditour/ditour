@@ -9,6 +9,7 @@
 #import "ILobbyTrackDetailController.h"
 #import "ILobbyDownloadStatusCell.h"
 #import "ILobbyLabelCell.h"
+#import "ILobbyFileInfoController.h"
 
 
 
@@ -17,6 +18,10 @@ enum : NSInteger {
 	SECTION_REMOTE_MEDIA,
 	SECTION_COUNT
 };
+
+
+static NSString *SEGUE_SHOW_FILE_INFO_ID = @"TrackDetailShowFileInfo";
+static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileInfo";
 
 
 @interface ILobbyTrackDetailController () <ILobbyDownloadStatusDelegate>
@@ -290,15 +295,25 @@ enum : NSInteger {
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+	NSString *segueID = [segue identifier];
+
+	if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
+		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
+		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
+		fileInfoController.lobbyModel = self.lobbyModel;
+		fileInfoController.remoteFile = remoteFile;
+		fileInfoController.downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteFile];
+	}
+    else {
+        NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );
+    }
 }
-*/
 
 @end
