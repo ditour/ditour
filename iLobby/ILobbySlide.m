@@ -132,7 +132,7 @@ static NSSet *IMAGE_EXTENSIONS;
 
 @implementation ILobbyImageSlide
 
-+ (void)initialize {
++ (void)load {
 	if ( self == [ILobbyImageSlide class] ) {
 		IMAGE_EXTENSIONS = [NSSet setWithArray:@[ @"png", @"jpg", @"jpeg", @"gif" ]];
 		[self registerSupportedExtensions];
@@ -178,7 +178,7 @@ static NSSet *VIDEO_EXTENSIONS;
 
 @implementation ILobbyVideoSlide
 
-+ (void)initialize {
++ (void)load {
 	if ( self == [ILobbyVideoSlide class] ) {
 		VIDEO_EXTENSIONS = [NSSet setWithArray:@[ @"m4v", @"mp4", @"mov" ]];
 		[self registerSupportedExtensions];
