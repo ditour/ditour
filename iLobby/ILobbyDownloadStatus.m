@@ -102,7 +102,8 @@
 	if ( completed ) {
 		// important for the following code to block since marking ready must complete before setting the progress which in turn propagates progress state
 		[self.remoteItem.managedObjectContext performBlockAndWait:^{
-			[self.remoteItem markReady];
+			if ( self.error == nil )  [self.remoteItem markReady];
+
 			if ( self.container ) {
 				ILobbyStoreRemoteItem *remoteContainer = self.container.remoteItem;
 				if ( remoteContainer ) {
@@ -191,6 +192,8 @@
 
 	// WARNING: child items may be added after this is called since they get dispatched for download immediately after being added (verify using self.submitted boolean)
 	if ( childCount > 0 ) {
+		__block NSError *childError = nil;
+
 		[self.childStatusItems.dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
 			ILobbyDownloadStatus *statusItem = (ILobbyDownloadStatus *)object;
 			progressSum += statusItem.progress;
@@ -199,9 +202,18 @@
 			if ( statusItem.completed ) {
 				++completionCount;
 			}
+
+			if ( statusItem.error != nil ) {
+				childError = statusItem.error;
+			}
 		}];
 
 		self.progress = progressSum / childCount;
+
+		// bubble error up
+		if ( childError != nil ) {
+			self.error = childError;
+		}
 
 		if ( _submitted && completionCount == childCount ) {
 //			NSLog( @"%@ is complete", self.remoteItem.remoteLocation );
