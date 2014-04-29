@@ -249,6 +249,7 @@
 		[[NSFileManager defaultManager] createDirectoryAtPath:presentation.path withIntermediateDirectories:YES attributes:nil error:&error];
 
 		if ( error ) {
+			status.error = error;
 			NSLog( @"Error creating presentation directory: %@", [error localizedDescription] );
 		}
 		else {
@@ -279,6 +280,7 @@
 		[[NSFileManager defaultManager] createDirectoryAtPath:track.path withIntermediateDirectories:YES attributes:nil error:&error];
 
 		if ( error ) {
+			status.error = error;
 			NSLog( @"Error creating track directory: %@", [error localizedDescription] );
 		}
 		else {
@@ -326,6 +328,7 @@
 								return;
 							}
 							else {
+								status.error = error;
 								NSLog( @"Error creating hard link to remote file: %@ from existing file at: %@", remoteFile.path, cachedFile.path );
 							}
 
@@ -387,6 +390,7 @@
 		}
 
 		if ( error ) {
+			downloadStatus.error = error;
 			NSLog( @"Error copying file from %@ to %@, %@", remoteURL, destination, [error localizedDescription] );
 		}
 	}
@@ -412,6 +416,8 @@
 		}
     }
     else {
+		downloadStatus.error = error;
+
         NSLog(@"Task: %@ completed with error: %@", task, [error localizedDescription]);
 
 		if ( remoteFile ) {
