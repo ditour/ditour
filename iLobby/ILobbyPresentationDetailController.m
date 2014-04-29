@@ -14,7 +14,7 @@
 
 
 enum : NSInteger {
-	SECTION_TRACKS_VIEW,
+	SECTION_TRACKS,
 	SECTION_COUNT
 };
 
@@ -63,6 +63,7 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Now Playing" style:UIBarButtonItemStyleDone target:self action:@selector(popToPlaying)];
 
 	self.title = [NSString stringWithFormat:@"Presentation: %@", self.presentation.name];
+
 	[self updateView];
 }
 
@@ -131,7 +132,7 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
     // Return the number of rows in the section.
 
 	switch ( section ) {
-		case SECTION_TRACKS_VIEW:
+		case SECTION_TRACKS:
 			return self.presentation.tracks.count;
 
 		default:
@@ -143,8 +144,8 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_TRACKS_VIEW:
-			return [self estimateHeightForTrackAtIndexPath:indexPath];
+		case SECTION_TRACKS:
+			return [self heightForRemoteItemAtIndexPath:indexPath];
 
 		default:
 			return [ILobbyLabelCell defaultHeight];
@@ -152,22 +153,43 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 }
 
 
-- (CGFloat)estimateHeightForTrackAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
-
-	if ( track.isReady ) {
-		return [ILobbyLabelCell defaultHeight];
+- (BOOL)isRemoteItemDownloading:(ILobbyStoreRemoteItem *)remoteItem {
+	if ( remoteItem.isReady ) {
+		return NO;
 	}
 	else {
+		ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteItem];
+		return downloadStatus != nil && !downloadStatus.completed ? YES : NO;
+	}
+}
+
+
+- (ILobbyStoreRemoteItem *)remoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	switch ( indexPath.section ) {
+		case SECTION_TRACKS:
+			return self.presentation.tracks[indexPath.row];
+
+		default:
+			return nil;
+	}
+}
+
+
+- (CGFloat)heightForRemoteItemAtIndexPath:(NSIndexPath *)indexPath {
+	ILobbyStoreRemoteItem *remoteItem = [self remoteItemAtIndexPath:indexPath];
+
+	if ( [self isRemoteItemDownloading:remoteItem] ) {
 		return [ILobbyDownloadStatusCell defaultHeight];
 	}
-
+	else {
+		return [ILobbyLabelCell defaultHeight];
+	}
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_TRACKS_VIEW:
+		case SECTION_TRACKS:
 			return [self tableView:tableView trackCellForRowAtIndexPath:indexPath];
 			break;
 
@@ -181,11 +203,11 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 - (UITableViewCell *)tableView:(UITableView *)tableView trackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
 
-	if ( track.isReady ) {
-		return [self tableView:tableView readyTrackCellForRowAtIndexPath:indexPath];
+	if ( [self isRemoteItemDownloading:track] ) {
+		return [self tableView:tableView pendingTrackCellForRowAtIndexPath:indexPath];
 	}
 	else {
-		return [self tableView:tableView pendingTrackCellForRowAtIndexPath:indexPath];
+		return [self tableView:tableView readyTrackCellForRowAtIndexPath:indexPath];
 	}
 }
 
@@ -259,7 +281,7 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 - (ILobbyStoreTrack *)trackAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
-		case SECTION_TRACKS_VIEW:
+		case SECTION_TRACKS:
 			return self.presentation.tracks[indexPath.row];
 
 		default:
