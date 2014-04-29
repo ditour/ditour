@@ -146,18 +146,21 @@ static NSString *SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = @"ShowPendingTrackDetail";
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	switch ( section ) {
-		case SECTION_CONFIG:
-			return @"Configuration";
-			
-		case SECTION_TRACKS:
-			return @"Tracks";
+	if ( [self tableView:tableView numberOfRowsInSection:section] > 0 ) {	// only display a section title if there are any rows to display
+		switch ( section ) {
+			case SECTION_CONFIG:
+				return @"Configuration";
 
-		default:
-			break;
+			case SECTION_TRACKS:
+				return @"Tracks";
+
+			default:
+				return nil;
+		}
 	}
-
-	return nil;
+	else {
+		return nil;
+	}
 }
 
 

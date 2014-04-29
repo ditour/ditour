@@ -102,18 +102,21 @@ enum : NSInteger {
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	switch ( section ) {
-		case SECTION_CONFIG:
-			return @"Configuration";
-			
-		case SECTION_REMOTE_MEDIA:
-			return @"Media";
+	if ( [self tableView:tableView numberOfRowsInSection:section] > 0 ) {	// only display a section title if there are any rows to display
+		switch ( section ) {
+			case SECTION_CONFIG:
+				return @"Configuration";
 
-		default:
-			break;
+			case SECTION_REMOTE_MEDIA:
+				return @"Media";
+
+			default:
+				return nil;
+		}
 	}
-
-	return nil;
+	else {
+		return nil;
+	}
 }
 
 

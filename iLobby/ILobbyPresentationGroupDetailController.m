@@ -246,21 +246,24 @@ static NSString *SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = @"ShowPendingPresen
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	switch ( section ) {
-		case SECTION_CONFIG:
-			return @"Configuration";
+	if ( [self tableView:tableView numberOfRowsInSection:section] > 0 ) {	// only display a section title if there are any rows to display
+		switch ( section ) {
+			case SECTION_CONFIG:
+				return @"Configuration";
 
-		case SECTION_ACTIVE_PRESENTATIONS:
-			return @"Active Presentations";
+			case SECTION_ACTIVE_PRESENTATIONS:
+				return @"Active Presentations";
 
-		case SECTION_PENDING_PRESENTATIONS:
-			return @"Pending Presentations";
+			case SECTION_PENDING_PRESENTATIONS:
+				return @"Pending Presentations";
 
-		default:
-			break;
+			default:
+				return nil;
+		}
 	}
-
-	return nil;
+	else {
+		return nil;
+	}
 }
 
 
