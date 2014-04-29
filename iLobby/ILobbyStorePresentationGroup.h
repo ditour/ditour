@@ -33,12 +33,9 @@
 @interface ILobbyStorePresentationGroup ()
 
 @property (nonatomic, readonly) NSString *shortName;
-@property (nonatomic) NSArray *activePresentations;
-@property (nonatomic) NSArray *pendingPresentations;
+@property (nonatomic, readonly) NSArray *activePresentations;
+@property (nonatomic, readonly) NSArray *pendingPresentations;
 
 + (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext;
-
-// fetch the presentations but don't download them
-- (void)fetchPresentationsWithCompletion:(void (^)(ILobbyStorePresentationGroup *group, NSError *error))completionBlock;
 
 @end

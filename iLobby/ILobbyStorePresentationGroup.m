@@ -9,14 +9,12 @@
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyRemoteDirectory.h"
 #import "ILobbyModel.h"
+#import "ILobbyStorePresentation.h"
 
 @implementation ILobbyStorePresentationGroup
 
 @dynamic presentations;
 @dynamic root;
-
-@dynamic activePresentations;
-@dynamic pendingPresentations;
 
 
 + (instancetype)insertNewPresentationGroupInContext:(NSManagedObjectContext *)managedObjectContext {
@@ -38,43 +36,21 @@
 }
 
 
-- (void)fetchPresentationsWithCompletion:(void (^)(ILobbyStorePresentationGroup *group, NSError *error))completionBlock {
+- (NSArray *)pendingPresentations {
+	return [self fetchPresentationsWithFormat:@"(group = %@) AND status = 0 OR status = 1"];
+}
 
-	dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^{
-		NSError *error = nil;
-		ILobbyRemoteDirectory *remoteGroup = [ILobbyRemoteDirectory parseDirectoryAtURL:self.remoteURL error:&error];
 
-		if ( !error ) {
-			[self.managedObjectContext performBlockAndWait:^{
-				// process any files (e.g. config files)
-				for ( ILobbyRemoteFile *remoteFile in remoteGroup.files ) {
-					[self processRemoteFile:remoteFile];
-				}
+- (NSArray *)activePresentations {
+	return [self fetchPresentationsWithFormat:@"(group = %@) AND status = 2"];
+}
 
-				// store the active presentations by name so they can be used as parents if necessary
-				NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
-				for ( ILobbyStorePresentation *presentation in self.activePresentations ) {
-					activePresentationsByName[presentation.name] = presentation;
-				}
 
-				// fetch presentations
-				for ( ILobbyRemoteDirectory *remotePresentationDirectory in remoteGroup.subdirectories ) {
-					ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:self from:remotePresentationDirectory];
-
-					// if an active presentation has the same name then assign it as a parent
-					ILobbyStorePresentation *presentationParent = activePresentationsByName[presentation.name];
-					if ( presentationParent != nil ) {
-						presentation.parent = presentationParent;
-					}
-				}
-
-				// updates fetched properties
-				[self.managedObjectContext refreshObject:self mergeChanges:YES];
-			}];
-		}
-
-		completionBlock( self, error );
-	});
+- (NSArray *)fetchPresentationsWithFormat:(NSString *)format {
+	NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStorePresentation entityName]];
+	fetch.predicate = [NSPredicate predicateWithFormat:format argumentArray:@[self]];
+	fetch.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES] ];
+	return [self.managedObjectContext executeFetchRequest:fetch error:nil];
 }
 
 @end
