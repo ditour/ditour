@@ -266,9 +266,9 @@
 		4C937D7E1631AAE200F251FF /* iLobby */ = {
 			isa = PBXGroup;
 			children = (
-				4CC391A118EF05E500B9AA4E /* Utils */,
 				4C937D871631AAE200F251FF /* ILobbyAppDelegate.h */,
 				4C937D881631AAE200F251FF /* ILobbyAppDelegate.m */,
+				4CC391A118EF05E500B9AA4E /* Utils */,
 				4C690BD3181EED5D00A823CC /* View Controllers */,
 				4CA2E44618D0DA31004C0489 /* Cells */,
 				4C690BD2181EED4D00A823CC /* Download */,
