@@ -13,4 +13,6 @@
 
 @property (nonatomic, strong) ILobbyModel *lobbyModel;
 
+- (IBAction)reloadPresentation:(id)sender;
+
 @end

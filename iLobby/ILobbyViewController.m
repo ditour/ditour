@@ -53,6 +53,11 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 }
 
 
+- (IBAction)reloadPresentation:(id)sender {
+	[self.lobbyModel reloadPresentation];
+}
+
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if ( [object isKindOfClass:[ILobbyModel class]] ) {
 		if ( [keyPath isEqualToString:@"tracks"] ) {
