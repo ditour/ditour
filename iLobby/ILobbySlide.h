@@ -32,4 +32,7 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 // indicates that the slide shows an image rather than a movie
 - (BOOL)isImageSlide;
 
+// get all extensions which are supported by the family of slide classes
++ (NSSet *)allSupportedExtensions;
+
 @end

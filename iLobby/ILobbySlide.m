@@ -10,11 +10,19 @@
 @import AVFoundation;
 @import QuartzCore;
 
+
+
 @interface ILobbySlide ()
+
++ (NSSet *)supportedExtensions;
+
 @property (nonatomic, readwrite) float duration;
 @property (nonatomic, readwrite, copy) NSString *mediaFile;
+
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
+
 @end
+
 
 
 @interface ILobbyImageSlide : ILobbySlide
@@ -26,6 +34,8 @@
 @property (nonatomic, readwrite, strong) ILobbySlideCompletionHandler completionHandler;
 @end
 
+
+static NSSet *ALL_SUPPORTED_EXTENSIONS = nil;
 
 
 @implementation ILobbySlide
@@ -51,6 +61,33 @@
 	}
 	else {
 		return nil;
+	}
+}
+
+
++ (NSSet *)supportedExtensions {
+	return nil;
+}
+
+
++ (NSSet *)allSupportedExtensions {
+	return [ALL_SUPPORTED_EXTENSIONS copy];
+}
+
+
+// called by subclasses to register their supported extensions by appending them to ALL_SUPPORTED_EXTENSIONS
++ (void)registerSupportedExtensions {
+	NSSet *extensions = [self supportedExtensions];
+
+	if ( extensions != nil ) {
+		if ( ALL_SUPPORTED_EXTENSIONS != nil ) {
+			NSMutableSet *allExtensions = [ALL_SUPPORTED_EXTENSIONS mutableCopy];
+			[allExtensions unionSet:extensions];
+			ALL_SUPPORTED_EXTENSIONS = [allExtensions copy];
+		}
+		else {
+			ALL_SUPPORTED_EXTENSIONS = [extensions copy];
+		}
 	}
 }
 
@@ -91,14 +128,20 @@
 
 
 
-static NSArray *IMAGE_EXTENSIONS;
+static NSSet *IMAGE_EXTENSIONS;
 
 @implementation ILobbyImageSlide
 
 + (void)initialize {
 	if ( self == [ILobbyImageSlide class] ) {
-		IMAGE_EXTENSIONS = @[ @"png", @"jpg", @"jpeg", @"gif" ];
+		IMAGE_EXTENSIONS = [NSSet setWithArray:@[ @"png", @"jpg", @"jpeg", @"gif" ]];
+		[self registerSupportedExtensions];
 	}
+}
+
+
++ (NSSet *)supportedExtensions {
+	return IMAGE_EXTENSIONS;
 }
 
 
@@ -131,14 +174,20 @@ static NSArray *IMAGE_EXTENSIONS;
 
 
 
-static NSArray *VIDEO_EXTENSIONS;
+static NSSet *VIDEO_EXTENSIONS;
 
 @implementation ILobbyVideoSlide
 
 + (void)initialize {
 	if ( self == [ILobbyVideoSlide class] ) {
-		VIDEO_EXTENSIONS = @[ @"m4v", @"mp4", @"mov" ];
+		VIDEO_EXTENSIONS = [NSSet setWithArray:@[ @"m4v", @"mp4", @"mov" ]];
+		[self registerSupportedExtensions];
 	}
+}
+
+
++ (NSSet *)supportedExtensions {
+	return VIDEO_EXTENSIONS;
 }
 
 
