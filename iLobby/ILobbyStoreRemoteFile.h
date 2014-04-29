@@ -23,3 +23,13 @@
 - (NSString *)name;
 
 @end
+
+
+
+// custom additions
+@interface ILobbyStoreRemoteFile ()
+
+- (NSString *)summary;
+- (NSString *)localDataSummary;
+
+@end

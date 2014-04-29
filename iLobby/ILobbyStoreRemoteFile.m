@@ -20,4 +20,44 @@
 	return [self.path lastPathComponent];
 }
 
+
+- (NSString *)summary {
+	return [NSString stringWithFormat:@"%@\n\n\n%@", self.remoteSummary, self.localSummary];
+}
+
+
+- (NSString *)localSummary {
+	NSString *localSummary = @"No Local Info...";
+
+	static NSDateFormatter *dateFormatter;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		dateFormatter = [NSDateFormatter new];
+		dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+		dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+	});
+
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if ( [fileManager fileExistsAtPath:self.path] ) {
+		NSError *error = nil;
+		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:self.path error:&error];
+		if ( !error ) {
+			NSDate *modDate = fileAttributes[NSFileModificationDate];
+			localSummary = [NSString stringWithFormat:@"Local ModificationDate:\n\t%@\n\nLocal File Size:\n\t%@\n\n%@", [dateFormatter stringFromDate:modDate], fileAttributes[NSFileSize], self.localDataSummary];
+		}
+	}
+
+	return localSummary;
+}
+
+
+- (NSString *)localDataSummary {
+	return @"";
+}
+
+
+- (NSString *)remoteSummary {
+	return [NSString stringWithFormat:@"Remote Location:\n\t%@\n\nRemote Info:\n\t%@", self.remoteLocation, self.remoteInfo];
+}
+
 @end

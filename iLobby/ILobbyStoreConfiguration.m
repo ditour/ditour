@@ -35,4 +35,11 @@
 	return [[candidateURL.lastPathComponent lowercaseString] isEqualToString:@"config.json"];
 }
 
+
+- (NSString *)localDataSummary {
+	NSStringEncoding encoding = NSUTF8StringEncoding;
+	NSString *contents = [NSString stringWithContentsOfFile:self.path usedEncoding:&encoding error:nil];
+	return [NSString stringWithFormat:@"Local Contents:\n%@", contents];
+}
+
 @end

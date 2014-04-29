@@ -102,6 +102,8 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 			self.progressView.hidden = YES;
 		}
 	}
+
+	self.infoView.text = self.remoteFile.summary;
 }
 
 
