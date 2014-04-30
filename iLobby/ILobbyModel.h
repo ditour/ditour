@@ -18,7 +18,6 @@
 
 @interface ILobbyModel : NSObject
 
-@property (strong, nonatomic) ILobbyStoreRoot *storeRoot;			// user config for persistent store context
 @property (nonatomic, readonly) ILobbyStoreRoot *mainStoreRoot;		// user config for main queue context
 
 @property (strong, nonatomic, readonly) NSString *presentationGroupsRoot;	// root location of presentations on the local file system
@@ -43,10 +42,10 @@
 
 // managed object support
 - (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr;
+- (BOOL)saveChangesToStoreForContext:(NSManagedObjectContext *)editContext error:(NSError * __autoreleasing *)errorPtr;
+- (NSManagedObjectContext *)createEditContextOnMain;
 
-@property (readonly) NSManagedObjectContext *managedObjectContext;		// context for persistent store context
 @property (readonly) NSManagedObjectContext *mainManagedObjectContext;	// context for the main queue
-
 @property (readonly) NSManagedObjectModel *managedObjectModel;
 @property (readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 

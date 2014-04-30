@@ -14,6 +14,7 @@
 #import "ILobbyDownloadStatus.h"
 
 
+
 @interface ILobbyModel ()
 
 @property (readwrite) BOOL hasPresentationUpdate;
@@ -24,13 +25,13 @@
 
 // managed object support
 @property (nonatomic, readwrite) ILobbyStoreRoot *mainStoreRoot;
-@property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readwrite) NSManagedObjectContext *mainManagedObjectContext;
 
 // background URL download session
 @property (nonatomic) ILobbyDownloadSession *downloadSession;
 
 @end
+
 
 
 static NSString *PRESENTATION_GROUP_ROOT = nil;
@@ -133,7 +134,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 		[self setupDataModel];
 
-		self.storeRoot = [self fetchRootStore];
+		self.mainStoreRoot = [self fetchRootStore];
 
 		[self loadDefaultPresentation];
     }
@@ -156,21 +157,22 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 }
 
 
-// set the user config for the managed object context on the persistent store
-- (void)setStoreRoot:(ILobbyStoreRoot *)rootStore {
-	_storeRoot = rootStore;
+- (BOOL)saveChangesToStoreForContext:(NSManagedObjectContext *)editContext error:(NSError *__autoreleasing *)errorPtr {
+	__block BOOL success;
+	__block NSManagedObjectContext *parentContext;
 
-	// get the corresponding user config on the main managed object context
-	__block NSManagedObjectID *rootStoreID = nil;
-	void (^transferCall)() = ^{
-		rootStoreID = self.storeRoot.objectID;
-	};
-	[self.managedObjectContext performBlockAndWait:transferCall];
+	// first save to the edit context
+	[editContext performBlockAndWait:^{
+		success = [editContext save:errorPtr];
+		parentContext = editContext.parentContext;
+	}];
 
-	NSError * __autoreleasing error = nil;
-	self.mainStoreRoot = (ILobbyStoreRoot *)[self.mainManagedObjectContext existingObjectWithID:rootStoreID error:&error];
-	if ( error ) {
-		NSLog( @"Error getting user config in edit context: %@", error );
+	// keep saving until we get to the persistent store
+	if ( success && parentContext != nil ) {
+		return [self saveChangesToStoreForContext:parentContext error:errorPtr];
+	}
+	else {
+		return success;
 	}
 }
 
@@ -185,17 +187,9 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	}];
 
 	if ( !success ) {
-		NSLog( @"Failed to save group edit to edit context: %@", *errorPtr );
+		NSLog( @"Failed to save group edit to the main edit context: %@", *errorPtr );
 		return NO;
 	}
-
-	// saves the changes to the persistent store which backs the main object context
-	[self.managedObjectContext performBlockAndWait:^{
-		success = [self.managedObjectContext save:errorPtr];
-		if ( !success ) {
-			NSLog( @"Failed to save main context after group edit: %@", *errorPtr );
-		}
-	}];
 
 	return success;
 }
@@ -227,15 +221,19 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
         abort();
     }
 
-	// setup the managed object context
+	// setup the managed object context on the main queue
     if ( persistentStoreCoordinator != nil ) {
-        self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-		self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
+		self.mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+		self.mainManagedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator;
     }
+}
 
-	// create an edit context using the main queue and backed by the model context
-	self.mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-	self.mainManagedObjectContext.parentContext = self.managedObjectContext;
+
+- (NSManagedObjectContext *)createEditContextOnMain {
+	NSManagedObjectContext *editContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+	editContext.parentContext = self.mainManagedObjectContext;
+
+	return editContext;
 }
 
 
@@ -244,11 +242,11 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 	ILobbyStoreRoot *rootStore = nil;
 	NSError * __autoreleasing error = nil;
-	NSArray *rootStores = [self.managedObjectContext executeFetchRequest:mainFetchRequest error:&error];
+	NSArray *rootStores = [self.mainManagedObjectContext executeFetchRequest:mainFetchRequest error:&error];
 	switch ( rootStores.count ) {
 		case 0:
-			rootStore = [ILobbyStoreRoot insertNewRootStoreInContext:self.managedObjectContext];
-			[self.managedObjectContext save:&error];
+			rootStore = [ILobbyStoreRoot insertNewRootStoreInContext:self.mainManagedObjectContext];
+			[self.mainManagedObjectContext save:&error];
 			break;
 		case 1:
 			rootStore = rootStores[0];
@@ -267,7 +265,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-	return self.managedObjectContext.persistentStoreCoordinator;
+	return self.mainManagedObjectContext.persistentStoreCoordinator;
 }
 
 
@@ -400,7 +398,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 	__block BOOL success = NO;
 	[self.mainStoreRoot.managedObjectContext performBlockAndWait:^{
-		success = [self loadPresentation:self.storeRoot.currentPresentation];
+		success = [self loadPresentation:self.mainStoreRoot.currentPresentation];
 	}];
 
 	return success;

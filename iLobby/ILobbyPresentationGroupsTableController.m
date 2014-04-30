@@ -60,7 +60,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	self.editingCell = nil;
 
 	// setup the local edit context and its managed objects
-	self.editContext = self.lobbyModel.mainManagedObjectContext;
+	self.editContext = [self.lobbyModel createEditContextOnMain];
 	self.rootStore = self.lobbyModel.mainStoreRoot;
 
     // Uncomment the following line to preserve selection between presentations.
@@ -124,7 +124,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr {
-	return [self.lobbyModel saveChanges:errorPtr];
+	return [self.lobbyModel saveChangesToStoreForContext:self.editContext error:errorPtr];
 }
 
 
