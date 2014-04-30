@@ -187,7 +187,10 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 	}];
 
 	if ( !success ) {
-		NSLog( @"Failed to save group edit to the main edit context: %@", *errorPtr );
+		if ( errorPtr != nil ) {
+			NSLog( @"Failed to save group edit to the main edit context: %@", *errorPtr );
+		}
+		
 		return NO;
 	}
 

@@ -466,7 +466,7 @@
 // save the specified context all the way to the root persistent store
 - (BOOL)persistentSaveContext:(NSManagedObjectContext *)context error:(NSError * __autoreleasing *)errorPtr {
 	// saves the changes to the parent context
-	__block BOOL success;
+	__block BOOL success = YES;
 
 	// first save to the managed object context on Main
 	[context performBlockAndWait:^{
@@ -474,7 +474,10 @@
 	}];
 
 	if ( !success ) {
-		NSLog( @"Failed to save to edit context: %@", *errorPtr );
+		if ( errorPtr != nil ) {
+			NSLog( @"Failed to save to edit context: %@", *errorPtr );
+		}
+		
 		return NO;
 	}
 
