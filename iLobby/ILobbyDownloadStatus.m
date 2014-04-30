@@ -107,7 +107,7 @@
 	if ( completed ) {
 		// important for the following code to block since marking ready must complete before setting the progress which in turn propagates progress state
 		[self.remoteItem.managedObjectContext performBlockAndWait:^{
-			if ( self.error == nil )  [self.remoteItem markReady];
+			if ( self.error == nil && !self.canceled )  [self.remoteItem markReady];
 
 			if ( self.container ) {
 				ILobbyStoreRemoteItem *remoteContainer = self.container.remoteItem;
