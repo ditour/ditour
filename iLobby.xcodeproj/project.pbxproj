@@ -75,7 +75,7 @@
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4C60121B190978E100BEC685 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; };
 		4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
-		4C60121E190AA39900BEC685 /* iLobby 0.9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 0.9.xcdatamodel"; sourceTree = "<group>"; };
+		4C60121E190AA39900BEC685 /* iLobby 2.0b.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0b.xcdatamodel"; sourceTree = "<group>"; };
 		4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultSlideIcon.png; sourceTree = "<group>"; };
 		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
 		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
@@ -135,8 +135,8 @@
 		4CC3919B18EDF72C00B9AA4E /* ILobbyDownloadSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadSession.m; sourceTree = "<group>"; };
 		4CC391A218EF05F300B9AA4E /* ILobbyConcurrentDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyConcurrentDictionary.h; sourceTree = "<group>"; };
 		4CC391A318EF05F300B9AA4E /* ILobbyConcurrentDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyConcurrentDictionary.m; sourceTree = "<group>"; };
-		4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iLobby.xcdatamodel; sourceTree = "<group>"; };
-		4CD40CF0190FDBE10000B740 /* iLobby 2.0a.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0a.xcdatamodel"; sourceTree = "<group>"; };
+		4CD0ED7B182978380090EFE5 /* iLobby 2.0a.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0a.xcdatamodel"; sourceTree = "<group>"; };
+		4CD40CF0190FDBE10000B740 /* iLobby 2.0c.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0c.xcdatamodel"; sourceTree = "<group>"; };
 		4CD40CF119100E770000B740 /* ILobbyFileInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyFileInfoController.h; sourceTree = "<group>"; };
 		4CD40CF219100E770000B740 /* ILobbyFileInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyFileInfoController.m; sourceTree = "<group>"; };
 		4CDF9AE218CE5467001E26B0 /* ILobbyStorePresentationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentationGroup.h; sourceTree = "<group>"; };
@@ -613,11 +613,11 @@
 		4CD0ED7A182978380090EFE5 /* iLobby.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				4C60121E190AA39900BEC685 /* iLobby 0.9.xcdatamodel */,
-				4CD40CF0190FDBE10000B740 /* iLobby 2.0a.xcdatamodel */,
-				4CD0ED7B182978380090EFE5 /* iLobby.xcdatamodel */,
+				4C60121E190AA39900BEC685 /* iLobby 2.0b.xcdatamodel */,
+				4CD40CF0190FDBE10000B740 /* iLobby 2.0c.xcdatamodel */,
+				4CD0ED7B182978380090EFE5 /* iLobby 2.0a.xcdatamodel */,
 			);
-			currentVersion = 4CD40CF0190FDBE10000B740 /* iLobby 2.0a.xcdatamodel */;
+			currentVersion = 4CD40CF0190FDBE10000B740 /* iLobby 2.0c.xcdatamodel */;
 			path = iLobby.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
