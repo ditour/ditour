@@ -42,12 +42,15 @@
 
 // managed object support
 - (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr;
-- (BOOL)saveChangesToStoreForContext:(NSManagedObjectContext *)editContext error:(NSError * __autoreleasing *)errorPtr;
+
+// save the specified context all the way to the persistent store
+- (BOOL)persistentSaveContext:(NSManagedObjectContext *)editContext error:(NSError * __autoreleasing *)errorPtr;
 - (NSManagedObjectContext *)createEditContextOnMain;
 
 @property (readonly) NSManagedObjectContext *mainManagedObjectContext;	// context for the main queue
 @property (readonly) NSManagedObjectModel *managedObjectModel;
 @property (readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 
 // download session management
 - (void)handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler;

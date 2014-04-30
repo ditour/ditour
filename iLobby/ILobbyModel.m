@@ -157,7 +157,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 }
 
 
-- (BOOL)saveChangesToStoreForContext:(NSManagedObjectContext *)editContext error:(NSError *__autoreleasing *)errorPtr {
+- (BOOL)persistentSaveContext:(NSManagedObjectContext *)editContext error:(NSError *__autoreleasing *)errorPtr {
 	__block BOOL success;
 	__block NSManagedObjectContext *parentContext;
 
@@ -169,7 +169,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 
 	// keep saving until we get to the persistent store
 	if ( success && parentContext != nil ) {
-		return [self saveChangesToStoreForContext:parentContext error:errorPtr];
+		return [self persistentSaveContext:parentContext error:errorPtr];
 	}
 	else {
 		return success;

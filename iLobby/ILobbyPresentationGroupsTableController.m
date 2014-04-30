@@ -124,7 +124,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr {
-	return [self.lobbyModel saveChangesToStoreForContext:self.editContext error:errorPtr];
+	return [self.lobbyModel persistentSaveContext:self.editContext error:errorPtr];
 }
 
 
