@@ -15,6 +15,8 @@
 
 @property (readwrite, nonatomic, copy) NSString *backgroundIdentifier;
 
+@property (readwrite, nonatomic) BOOL canceled;
+
 @property (copy) void (^backgroundSessionCompletionHandler)();
 @property NSURLSession *downloadSession;
 @property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;		// file download status keyed by task
@@ -36,6 +38,7 @@
 		self.backgroundIdentifier = [self createBackgroundIdenfier];
 
 		_active = YES;
+		_canceled = NO;
 		[self createBackgroundSession];
     }
     return self;
@@ -74,10 +77,25 @@
 }
 
 
+// cancel the session due to an explicit request or error
 - (void)cancel {
 	if ( _active ) {
 //		NSLog( @"Canceling the download session..." );
 		_active = NO;
+		_canceled = YES;
+
+		self.groupStatus.canceled = YES;
+		[self.downloadSession invalidateAndCancel];
+		[self publishChanges];
+	}
+}
+
+
+// stop the session due to normal termination
+- (void)stop {
+	if ( _active ) {
+		_active = NO;
+
 		[self.downloadSession invalidateAndCancel];
 		[self publishChanges];
 	}
@@ -91,7 +109,7 @@
 //	NSLog( @"Updating status: %d, download task count: %ld", self.groupStatus.completed, (long)self.downloadTaskRemoteItems.count );
 	if ( self.groupStatus.completed && self.downloadTaskRemoteItems.count == 0 ) {
 //		NSLog( @"Download session is complete and will be cancelled..." );
-		[self cancel];
+		[self stop];
 		[self publishChanges];
 		[self.lobbyModel reloadPresentationNextCycle];
 	}
@@ -216,10 +234,13 @@
 			if ( error != nil ) {
 				NSLog( @"Error downloading group: %@", error );
 				status.error = error;
+				[self cancel];
+			}
+			else {
+				[self stop];
 			}
 
 			[group markPending];
-			[self cancel];
 		}
 	}];
 
@@ -237,6 +258,7 @@
 
 	if ( error ) {
 		NSLog( @"Error deleting existing file at destination %@, %@", path, [error localizedDescription] );
+		[self cancel];
 	}
 }
 
@@ -390,8 +412,17 @@
 		}
 
 		if ( error ) {
+			// cached the current cancel state since we will be canceling
+			BOOL alreadyCanceled = self.canceled;
+
+			[self cancel];
 			downloadStatus.error = error;
-			NSLog( @"Error copying file from %@ to %@, %@", remoteURL, destination, [error localizedDescription] );
+
+			// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
+			if ( !alreadyCanceled ) {
+				self.groupStatus.error = error;
+				NSLog( @"Error copying file from %@ to %@, %@", remoteURL, destination, [error localizedDescription] );
+			}
 		}
 	}
 
@@ -416,9 +447,17 @@
 		}
     }
     else {
+		// cached the current cancel state since we will be canceling
+		BOOL alreadyCanceled = self.canceled;
+
+		[self cancel];
 		downloadStatus.error = error;
 
-        NSLog(@"Task: %@ completed with error: %@", task, [error localizedDescription]);
+		// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
+		if ( !alreadyCanceled ) {
+			self.groupStatus.error = error;
+			NSLog(@"Task: %@ completed with error: %@", task, [error localizedDescription]);
+		}
 
 		if ( remoteFile ) {
 			[remoteFile.managedObjectContext performBlock:^{
@@ -437,7 +476,7 @@
 	// if all tasks have been submitted and no tasks remain then we can cancel the session
 	if ( self.groupStatus.completed && self.downloadTaskRemoteItems.count == 0 ) {
 //		NSLog( @"Download session is complete and will be cancelled..." );
-		[self cancel];
+		[self stop];
 	}
 	
 	[self persistentSaveContext:remoteFile.managedObjectContext error:nil];
@@ -448,8 +487,9 @@
  If an application has received an -application:handleEventsForBackgroundURLSession:completionHandler: message, the session delegate will receive this message to indicate that all messages previously enqueued for this session have been delivered. At this time it is safe to invoke the previously stored completion handler, or to begin any internal updates that will result in invoking the completion handler.
  */
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    if ( self.backgroundSessionCompletionHandler ) {
-        void (^completionHandler)() = self.backgroundSessionCompletionHandler;
+	void (^completionHandler)() = self.backgroundSessionCompletionHandler;
+
+    if ( completionHandler ) {
         self.backgroundSessionCompletionHandler = nil;
         completionHandler();
     }
@@ -465,36 +505,7 @@
 
 // save the specified context all the way to the root persistent store
 - (BOOL)persistentSaveContext:(NSManagedObjectContext *)context error:(NSError * __autoreleasing *)errorPtr {
-	// saves the changes to the parent context
-	__block BOOL success = YES;
-
-	// first save to the managed object context on Main
-	[context performBlockAndWait:^{
-		success = [context save:errorPtr];
-	}];
-
-	if ( !success ) {
-		if ( errorPtr != nil ) {
-			NSLog( @"Failed to save to edit context: %@", *errorPtr );
-		}
-		
-		return NO;
-	}
-
-	// saves the changes to the persistent store which backs the main object context
-	__block NSManagedObjectContext *parentContext = nil;
-	[context performBlockAndWait:^{
-		 parentContext = context.parentContext;
-	}];
-
-	// perform a deep save as necessary
-	if ( parentContext != nil ) {
-		return [self persistentSaveContext:parentContext error:errorPtr];
-	}
-	else {
-//		NSLog( @"Saved to persistent store..." );
-		return success;
-	}
+	return [self.lobbyModel persistentSaveContext:context error:errorPtr];
 }
 
 

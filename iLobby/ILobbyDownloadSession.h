@@ -18,6 +18,7 @@
 @property (readonly, nonatomic, copy) NSString *backgroundIdentifier;
 @property (nonatomic, readonly) ILobbyDownloadContainerStatus *groupStatus;
 @property (nonatomic, readonly) BOOL active;
+@property (nonatomic, readonly) BOOL canceled;
 
 - (instancetype)initWithModel:(ILobbyModel *)lobbyModel;
 

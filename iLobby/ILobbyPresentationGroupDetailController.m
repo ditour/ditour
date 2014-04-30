@@ -386,7 +386,16 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 	cell.downloadStatus = downloadStatus;
 	cell.title = remoteFile.name;
-	cell.subtitle = nil;
+
+	if ( downloadStatus.error != nil ) {
+		cell.subtitle = @"Failed";
+	}
+	else if ( downloadStatus.canceled ) {
+		cell.subtitle = @"Canceled";
+	}
+	else {
+		cell.subtitle = nil;
+	}
 
 	return cell;
 }

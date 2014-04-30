@@ -31,13 +31,18 @@
 
 
 
-@implementation ILobbyDownloadStatus
+@implementation ILobbyDownloadStatus {
+@protected
+	BOOL _canceled;
+}
+
 
 - (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
     self = [super init];
     if (self) {
-		self.progress = 0.0;
-		self.completed = NO;
+		_progress = 0.0;
+		_completed = NO;
+		_canceled = NO;
         self.remoteItem = remoteItem;
 		self.container = container;
 		[container addChildStatus:self];
@@ -114,6 +119,16 @@
 		}];
 
 		[self setProgress:1.0 forcePropagation:YES];
+	}
+}
+
+
+- (void)setCanceled:(BOOL)canceled {
+	_canceled = canceled;
+
+	if ( canceled ) {
+		// we're done and post event
+		self.completed = YES;
 	}
 }
 
@@ -210,8 +225,8 @@
 
 		self.progress = progressSum / childCount;
 
-		// bubble error up
-		if ( childError != nil ) {
+		// bubble error up if this is the causal error
+		if ( self.error == nil && childError != nil ) {
 			self.error = childError;
 		}
 
@@ -233,6 +248,22 @@
 
 - (void)setCompleted:(BOOL)completed {
 	super.completed = completed;
+}
+
+
+- (void)setCanceled:(BOOL)canceled {
+	_canceled = canceled;
+
+	if ( canceled ) {
+		// push events down
+		[self.childStatusItems.dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+			ILobbyDownloadStatus *statusItem = (ILobbyDownloadStatus *)object;
+			statusItem.canceled = canceled;
+		}];
+
+		// we're done and post event
+		self.completed = YES;
+	}
 }
 
 @end

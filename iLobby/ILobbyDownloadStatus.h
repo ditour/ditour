@@ -30,6 +30,7 @@
 @property (strong, readonly) ILobbyStoreRemoteItem *remoteItem;
 @property (nonatomic, readonly) float progress;
 @property (nonatomic, readonly) BOOL completed;
+@property (nonatomic, readwrite) BOOL canceled;
 @property (nonatomic, strong) NSError *error;
 @property (weak) id<ILobbyDownloadStatusDelegate> delegate;
 
