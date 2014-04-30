@@ -347,7 +347,17 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
 	cell.downloadStatus = downloadStatus;
 
-//	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
+	if ( downloadStatus.error != nil ) {
+		cell.subtitle = @"Failed";
+	}
+	else if ( downloadStatus.canceled ) {
+		cell.subtitle = @"Canceled";
+	}
+	else {
+		cell.subtitle = nil;
+	}
+
+	//	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 
     return cell;
 }
