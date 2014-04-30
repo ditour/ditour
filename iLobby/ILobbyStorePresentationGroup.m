@@ -37,12 +37,14 @@
 
 
 - (NSArray *)pendingPresentations {
-	return [self fetchPresentationsWithFormat:@"(group = %@) AND status = 0 OR status = 1"];
+	NSString *query = [NSString stringWithFormat:@"(group = %%@) AND status = %hd OR status = %hd", REMOTE_ITEM_STATUS_PENDING, REMOTE_ITEM_STATUS_DOWNLOADING];
+	return [self fetchPresentationsWithFormat:query];
 }
 
 
 - (NSArray *)activePresentations {
-	return [self fetchPresentationsWithFormat:@"(group = %@) AND status = 2"];
+	NSString *query = [NSString stringWithFormat:@"(group = %%@) AND status = %hd", REMOTE_ITEM_STATUS_READY];
+	return [self fetchPresentationsWithFormat:query];
 }
 
 
