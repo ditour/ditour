@@ -255,21 +255,30 @@
 	if ( returnCode >= 0 )
 		returnCode = tidySaveBuffer( tdoc, &output );          // Pretty Print
 
+	short success = ok == 1 && returnCode >= 0;
+
 	unsigned outputSize;
 	char *outbuffer = nil;
-	if ( returnCode >= 0 ) {
+	if ( success ) {
 		outputSize = 0;
 		returnCode = tidySaveString( tdoc, nil, &outputSize );			// need this to get the output size
-		outbuffer = (char *)malloc( outputSize + 1 );
-		outbuffer[outputSize] = '\0';			// terminate the string with a null character
-		returnCode = tidySaveString( tdoc, outbuffer, &outputSize );
+
+		if ( returnCode == -ENOMEM ) {
+			outbuffer = (char *)malloc( outputSize + 1 );
+			outbuffer[outputSize] = '\0';			// terminate the string with a null character
+			returnCode = tidySaveString( tdoc, outbuffer, &outputSize );
+		}
+		else {
+			NSLog( @"Tidy error with return code: %d", returnCode );
+			success = 0;
+		}
 	}
 	else {
-		NSLog( @"Error with return code: %d", returnCode );
+		NSLog( @"Tidy error with return code: %d", returnCode );
 	}
 
 	NSString *outputXHTML = nil;
-	if ( returnCode >= 0 ) {
+	if ( success ) {
 //		NSLog( @"Output size: %u, output length: %lu", outputSize, (unsigned long)strlen(outbuffer) );
 		// need to be careful as the outbuffer is not null terminated and so we must make sure to only copy the characters specified by the output size
 		outputXHTML = [[NSString alloc] initWithBytes:outbuffer length:outputSize encoding:NSUTF8StringEncoding];
