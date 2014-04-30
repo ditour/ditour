@@ -11,9 +11,11 @@
 @interface ILobbyLabelCell : UITableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 
 + (CGFloat)defaultHeight;
 
 - (void)setTitle:(NSString *)title;
+- (void)setSubtitle:(NSString *)subtitle;
 
 @end

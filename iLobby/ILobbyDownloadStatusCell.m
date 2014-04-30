@@ -36,6 +36,7 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 
 - (void)awakeFromNib {
     // Initialization code
+	[super awakeFromNib];
 }
 
 

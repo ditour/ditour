@@ -317,9 +317,19 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 - (UITableViewCell *)tableView:(UITableView *)tableView activePresentationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:ACTIVE_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
+	static NSDateFormatter *timestampFormatter;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		timestampFormatter = [NSDateFormatter new];
+		timestampFormatter.dateStyle = NSDateFormatterMediumStyle;
+		timestampFormatter.timeStyle = NSDateFormatterMediumStyle;
+	});
+
     // Configure the cell...
 	ILobbyStorePresentation *presentation = _activePresentations[indexPath.row];
 	cell.title = presentation.name;
+	cell.subtitle = [timestampFormatter stringFromDate:presentation.timestamp];
+
 //	NSLog( @"Active presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
 
     return cell;
@@ -332,6 +342,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
     // Configure the cell...
 	ILobbyStorePresentation *presentation = _pendingPresentations[indexPath.row];
 	cell.title = presentation.name;
+	cell.subtitle = nil;
 
 	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
 	cell.downloadStatus = downloadStatus;
@@ -360,6 +371,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
     ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
 	cell.title = remoteFile.name;
+	cell.subtitle = nil;
 
 	return cell;
 }
@@ -374,6 +386,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 	cell.downloadStatus = downloadStatus;
 	cell.title = remoteFile.name;
+	cell.subtitle = nil;
 
 	return cell;
 }

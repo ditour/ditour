@@ -20,7 +20,9 @@
 
 
 - (void)awakeFromNib {
+	[super awakeFromNib];
     // Initialization code
+	self.subtitle = nil;
 }
 
 
@@ -38,6 +40,11 @@
 
 - (void)setTitle:(NSString *)title {
 	self.titleLabel.text = title;
+}
+
+
+- (void)setSubtitle:(NSString *)subtitle {
+	self.subtitleLabel.text = subtitle;
 }
 
 @end
