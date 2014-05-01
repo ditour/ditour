@@ -43,7 +43,9 @@
 		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:self.path error:&error];
 		if ( !error ) {
 			NSDate *modDate = fileAttributes[NSFileModificationDate];
-			localSummary = [NSString stringWithFormat:@"Local ModificationDate:\n\t%@\n\nLocal File Size:\n\t%@\n\n%@", [dateFormatter stringFromDate:modDate], fileAttributes[NSFileSize], self.localDataSummary];
+			NSNumber *fileSize = fileAttributes[NSFileSize];
+			NSString *fileSizeString = [NSByteCountFormatter stringFromByteCount:fileSize.longValue countStyle:NSByteCountFormatterCountStyleFile];
+			localSummary = [NSString stringWithFormat:@"Local ModificationDate:\n\t%@\n\nLocal File Size:\n\t%@\n\n%@", [dateFormatter stringFromDate:modDate], fileSizeString, self.localDataSummary];
 		}
 	}
 
