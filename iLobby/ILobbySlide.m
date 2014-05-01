@@ -248,15 +248,16 @@ static NSSet *PDF_EXTENSIONS;
 
 	CGPDFPageRef pageRef = CGPDFDocumentGetPage( documentRef, pageNumber );
 	UIImage *image = [self imageFromPageRef:pageRef];
+	CGPDFDocumentRelease( documentRef );
+
 	[presenter displayImage:image];
 
-	CGPDFDocumentRelease( documentRef );
 	size_t nextPageNumber = pageNumber + 1;
-
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
-		if ( currentRunID == _currentRunID ) {
+		if ( currentRunID == _currentRunID ) {		// make sure the user hasn't switched to another track
+			// if the page number is valid display the image for the page otherwise we are done
 			if ( nextPageNumber <= pageCount ) {
 				[self displayPage:nextPageNumber toPresenter:presenter completionHandler:completionHandler runID:currentRunID];
 			}
