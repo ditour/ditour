@@ -55,7 +55,6 @@
 				self.icon = [UIImage imageWithContentsOfFile:iconPath];
 			}
 			else {
-				// TODO: add support for a single PDF file mapping to multiple slides
 				NSString *slidePath = media.path;
 				ILobbySlide *slide = [ILobbySlide slideWithFile:slidePath duration:defaultSlideDuration];
 				if ( defaultTransitionSource != nil ) {
@@ -86,7 +85,7 @@
 		// if there is only one slide and it is an image slide then the slide duration may be extended if the config file specifies it
 		if ( slides.count == 1 ) {
 			ILobbySlide *slide = slides[0];
-			if ( slide.isImageSlide ) {
+			if ( slide.isSingleFrame ) {
 				NSNumber *singleImageSlideTrackDurationNum = config[@"singleImageSlideTrackDuration"];
 				if ( singleImageSlideTrackDurationNum != nil ) {
 					float trackDuration = [singleImageSlideTrackDurationNum floatValue];

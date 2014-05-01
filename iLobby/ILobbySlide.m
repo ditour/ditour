@@ -30,12 +30,19 @@
 
 
 
+@interface ILobbyPDFSlide : ILobbySlide
+@end
+
+
+
 @interface ILobbyVideoSlide : ILobbySlide
 @property (nonatomic, readwrite, strong) ILobbySlideCompletionHandler completionHandler;
 @end
 
 
+
 static NSSet *ALL_SUPPORTED_EXTENSIONS = nil;
+static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 
 
 @implementation ILobbySlide
@@ -51,13 +58,17 @@ static NSSet *ALL_SUPPORTED_EXTENSIONS = nil;
 
 
 + (id)slideWithFile:(NSString *)file duration:(float)duration {
-	NSString *extension = [file pathExtension];
+	NSString *extension = [file pathExtension].lowercaseString;
 
-	if ( [ILobbyImageSlide matchesExtension:extension] ) {
-		return [[ILobbyImageSlide alloc] initWithFile:file duration:duration];
-	}
-	else if ( [ILobbyVideoSlide matchesExtension:extension] ) {
-		return [[ILobbyVideoSlide alloc] initWithFile:file duration:duration];
+	NSString *slideClassName = SLIDE_CLASS_NAMES_BY_EXTENSION[extension];
+	if ( slideClassName != nil ) {
+		Class slideClass = NSClassFromString( slideClassName );
+		if ( slideClass != nil ) {
+			return [[slideClass alloc] initWithFile:file duration:duration];
+		}
+		else {
+			return nil;
+		}
 	}
 	else {
 		return nil;
@@ -75,10 +86,24 @@ static NSSet *ALL_SUPPORTED_EXTENSIONS = nil;
 }
 
 
-// called by subclasses to register their supported extensions by appending them to ALL_SUPPORTED_EXTENSIONS
-+ (void)registerSupportedExtensions {
-	NSSet *extensions = [self supportedExtensions];
+// called by subclasses to register themselves
++ (void)registerSlideClass:(Class)slideClass {
+	// store the class names keyed by lower case extension for later use when instantiating slides
+	NSString *className = NSStringFromClass( slideClass );
+	NSMutableDictionary *slideClassNamesByExtension = SLIDE_CLASS_NAMES_BY_EXTENSION != nil ? [SLIDE_CLASS_NAMES_BY_EXTENSION mutableCopy] : [NSMutableDictionary new];
+	NSSet *extensions = [slideClass supportedExtensions];
+	for ( NSString *extension in extensions ) {
+		NSString *extensionKey = extension.lowercaseString;
+		slideClassNamesByExtension[extensionKey] = className;
+	}
+	SLIDE_CLASS_NAMES_BY_EXTENSION = [slideClassNamesByExtension copy];
 
+	[self appendSupportedExtensions:extensions];
+}
+
+
+// append the supported extensions to ALL_SUPPORTED_EXTENSIONS
++ (void)appendSupportedExtensions:(NSSet *)extensions {
 	if ( extensions != nil ) {
 		if ( ALL_SUPPORTED_EXTENSIONS != nil ) {
 			NSMutableSet *allExtensions = [ALL_SUPPORTED_EXTENSIONS mutableCopy];
@@ -97,13 +122,13 @@ static NSSet *ALL_SUPPORTED_EXTENSIONS = nil;
 }
 
 
-- (BOOL)isImageSlide {
+- (BOOL)isSingleFrame {
 	return NO;
 }
 
 
 + (BOOL)matchesExtension:(NSString *)extension {
-	return NO;
+	return [[self supportedExtensions] containsObject:extension];
 }
 
 
@@ -135,18 +160,13 @@ static NSSet *IMAGE_EXTENSIONS;
 + (void)load {
 	if ( self == [ILobbyImageSlide class] ) {
 		IMAGE_EXTENSIONS = [NSSet setWithArray:@[ @"png", @"jpg", @"jpeg", @"gif" ]];
-		[self registerSupportedExtensions];
+		[self registerSlideClass:self];
 	}
 }
 
 
 + (NSSet *)supportedExtensions {
 	return IMAGE_EXTENSIONS;
-}
-
-
-+ (BOOL)matchesExtension:(NSString *)extension {
-	return [IMAGE_EXTENSIONS containsObject:extension];
 }
 
 
@@ -166,8 +186,128 @@ static NSSet *IMAGE_EXTENSIONS;
 }
 
 
-- (BOOL)isImageSlide {
+- (BOOL)isSingleFrame {
 	return YES;
+}
+
+@end
+
+
+
+static NSSet *PDF_EXTENSIONS;
+
+@implementation ILobbyPDFSlide {
+	id _currentRunID;
+}
+
++ (void)load {
+	if ( self == [ILobbyPDFSlide class] ) {
+		PDF_EXTENSIONS = [NSSet setWithObject:@"pdf"];
+		[self registerSlideClass:self];
+	}
+}
+
+
++ (NSSet *)supportedExtensions {
+	return PDF_EXTENSIONS;
+}
+
+
+- (void)cancelPresentation {
+	_currentRunID = nil;
+}
+
+
+- (CGPDFDocumentRef)createDocument {
+	NSURL *mediaURL = [NSURL fileURLWithPath:self.mediaFile];
+	return CGPDFDocumentCreateWithURL( (__bridge CFURLRef)mediaURL );
+}
+
+
+- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler {
+	_currentRunID = [NSDate date];
+	id currentRunID = _currentRunID;
+
+	CGPDFDocumentRef documentRef = [self createDocument];
+	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
+	CGPDFDocumentRelease( documentRef );
+
+	if ( pageCount > 0 ) {
+		// pages begin with 1
+		[self displayPage:1 toPresenter:presenter completionHandler:completionHandler runID:currentRunID];
+	}
+	else {
+		completionHandler( self );	// nothing to do so we're done
+	}
+}
+
+
+- (void)displayPage:(size_t)pageNumber toPresenter:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler runID:(id)currentRunID {
+	CGPDFDocumentRef documentRef = [self createDocument];
+	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
+
+	CGPDFPageRef pageRef = CGPDFDocumentGetPage( documentRef, pageNumber );
+	UIImage *image = [self imageFromPageRef:pageRef];
+	[presenter displayImage:image];
+
+	CGPDFDocumentRelease( documentRef );
+	size_t nextPageNumber = pageNumber + 1;
+
+	int64_t delayInSeconds = self.duration;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
+		if ( currentRunID == _currentRunID ) {
+			if ( nextPageNumber <= pageCount ) {
+				[self displayPage:nextPageNumber toPresenter:presenter completionHandler:completionHandler runID:currentRunID];
+			}
+			else {
+				completionHandler( self );
+			}
+		}
+	});
+}
+
+
+- (UIImage *)icon {
+	CGPDFDocumentRef documentRef = [self createDocument];
+	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
+
+	UIImage *image = nil;
+	if ( pageCount > 0 ) {
+		CGPDFPageRef pageRef = CGPDFDocumentGetPage( documentRef, 1 );
+		image = [self imageFromPageRef:pageRef];
+	}
+
+	CGPDFDocumentRelease( documentRef );
+
+	return image;
+}
+
+
+- (BOOL)isSingleFrame {
+	CGPDFDocumentRef document = [self createDocument];
+	size_t pageCount = CGPDFDocumentGetNumberOfPages( document );
+	CGPDFDocumentRelease( document );
+	return pageCount == 1;
+}
+
+
+- (UIImage *)imageFromPageRef:(CGPDFPageRef)pageRef {
+	CGRect bounds = CGPDFPageGetBoxRect( pageRef, kCGPDFCropBox );
+	size_t width = CGRectGetWidth( bounds );
+	size_t height = CGRectGetHeight( bounds );
+	CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+	CGContextRef context = CGBitmapContextCreate( NULL, width, height, 8, 0, colorSpaceRef, kCGImageAlphaPremultipliedLast );
+	CGContextDrawPDFPage( context, pageRef );
+
+	CGImageRef imageRef = CGBitmapContextCreateImage( context );
+	UIImage *image = [UIImage imageWithCGImage:imageRef];
+
+	CGImageRelease( imageRef );
+	CGColorSpaceRelease( colorSpaceRef );
+	CGContextRelease( context );
+
+	return image;
 }
 
 @end
@@ -181,18 +321,13 @@ static NSSet *VIDEO_EXTENSIONS;
 + (void)load {
 	if ( self == [ILobbyVideoSlide class] ) {
 		VIDEO_EXTENSIONS = [NSSet setWithArray:@[ @"m4v", @"mp4", @"mov" ]];
-		[self registerSupportedExtensions];
+		[self registerSlideClass:self];
 	}
 }
 
 
 + (NSSet *)supportedExtensions {
 	return VIDEO_EXTENSIONS;
-}
-
-
-+ (BOOL)matchesExtension:(NSString *)extension {
-	return [VIDEO_EXTENSIONS containsObject:extension];
 }
 
 

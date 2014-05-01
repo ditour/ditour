@@ -29,8 +29,8 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 // provide an icon representation if possible or nil if not
 - (UIImage *)icon;
 
-// indicates that the slide shows an image rather than a movie
-- (BOOL)isImageSlide;
+// indicates that the slide represents just a single frame (e.g. image slide vs. movie)
+- (BOOL)isSingleFrame;
 
 // get all extensions which are supported by the family of slide classes
 + (NSSet *)allSupportedExtensions;
