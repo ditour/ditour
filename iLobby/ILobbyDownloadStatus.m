@@ -78,7 +78,7 @@
 
 
 - (void)setProgress:(float)progress {
-	[self setProgress:progress forcePropagation:NO];
+	[self setProgress:progress forcePropagation:YES];
 }
 
 
