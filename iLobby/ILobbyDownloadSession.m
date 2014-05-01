@@ -108,7 +108,7 @@
 
 //	NSLog( @"Updating status: %d, download task count: %ld", self.groupStatus.completed, (long)self.downloadTaskRemoteItems.count );
 	if ( self.groupStatus.completed && self.downloadTaskRemoteItems.count == 0 ) {
-//		NSLog( @"Download session is complete and will be cancelled..." );
+//		NSLog( @"Download session is complete and will be stopped..." );
 		[self stop];
 		[self publishChanges];
 		[self.lobbyModel reloadPresentationNextCycle];
@@ -430,6 +430,7 @@
 	downloadStatus.progress = 1.0;
 
 	[self persistentSaveContext:remoteFile.managedObjectContext error:nil];
+	[self updateStatus];
 }
 
 
@@ -480,6 +481,7 @@
 	}
 	
 	[self persistentSaveContext:remoteFile.managedObjectContext error:nil];
+	[self updateStatus];
 }
 
 

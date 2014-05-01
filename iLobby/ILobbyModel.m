@@ -389,6 +389,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 		[self reloadPresentation];
 	}
 	else {
+//		NSLog( @"Marked the presentation for reload..." );
 		self.hasPresentationUpdate = YES;
 	}
 }
