@@ -133,6 +133,12 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 
 
 - (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+	[self performTransition:presenter];
+	[self displayTo:presenter completionHandler:handler];
+}
+
+
+- (void)performTransition:(id<ILobbyPresentationDelegate>)presenter {
 	ILobbyTransitionSource *transitionSource = self.transitionSource;
 	if ( transitionSource ) {
 		CATransition *transition = [transitionSource generate];
@@ -140,8 +146,6 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 			[presenter beginTransition:transition];
 		}
 	}
-
-	[self displayTo:presenter completionHandler:handler];
 }
 
 
@@ -259,6 +263,7 @@ static NSSet *PDF_EXTENSIONS;
 		if ( currentRunID == _currentRunID ) {		// make sure the user hasn't switched to another track
 			// if the page number is valid display the image for the page otherwise we are done
 			if ( nextPageNumber <= pageCount ) {
+				[self performTransition:presenter];
 				[self displayPage:nextPageNumber toPresenter:presenter completionHandler:completionHandler runID:currentRunID];
 			}
 			else {
