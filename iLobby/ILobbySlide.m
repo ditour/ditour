@@ -218,7 +218,7 @@ static NSSet *PDF_EXTENSIONS;
 }
 
 
-- (CGPDFDocumentRef)createDocument {
+- (CGPDFDocumentRef)newDocument {
 	NSURL *mediaURL = [NSURL fileURLWithPath:self.mediaFile];
 	return CGPDFDocumentCreateWithURL( (__bridge CFURLRef)mediaURL );
 }
@@ -228,7 +228,7 @@ static NSSet *PDF_EXTENSIONS;
 	_currentRunID = [NSDate date];
 	id currentRunID = _currentRunID;
 
-	CGPDFDocumentRef documentRef = [self createDocument];
+	CGPDFDocumentRef documentRef = [self newDocument];
 	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
 	CGPDFDocumentRelease( documentRef );
 
@@ -243,7 +243,7 @@ static NSSet *PDF_EXTENSIONS;
 
 
 - (void)displayPage:(size_t)pageNumber toPresenter:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler runID:(id)currentRunID {
-	CGPDFDocumentRef documentRef = [self createDocument];
+	CGPDFDocumentRef documentRef = [self newDocument];
 	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
 
 	CGPDFPageRef pageRef = CGPDFDocumentGetPage( documentRef, pageNumber );
@@ -269,7 +269,7 @@ static NSSet *PDF_EXTENSIONS;
 
 
 - (UIImage *)icon {
-	CGPDFDocumentRef documentRef = [self createDocument];
+	CGPDFDocumentRef documentRef = [self newDocument];
 	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
 
 	UIImage *image = nil;
@@ -285,7 +285,7 @@ static NSSet *PDF_EXTENSIONS;
 
 
 - (BOOL)isSingleFrame {
-	CGPDFDocumentRef document = [self createDocument];
+	CGPDFDocumentRef document = [self newDocument];
 	size_t pageCount = CGPDFDocumentGetNumberOfPages( document );
 	CGPDFDocumentRelease( document );
 	return pageCount == 1;
