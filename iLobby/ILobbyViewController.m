@@ -126,9 +126,12 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
 	// Do any additional setup after loading the view.
 	self.collectionView.allowsSelection = YES;
 	self.collectionView.allowsMultipleSelection = NO;
+
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
 }
 
 
