@@ -17,23 +17,6 @@
 @interface ILobbyStoreRemoteMedia : ILobbyStoreRemoteFile
 
 @property (nonatomic, retain) ILobbyStoreTrack *track;
-@property (nonatomic, retain) NSOrderedSet *slides;
-@end
-
-
-
-@interface ILobbyStoreRemoteMedia (CoreDataGeneratedAccessors)
-
-- (void)insertObject:(ILobbyStoreSlide *)value inSlidesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromSlidesAtIndex:(NSUInteger)idx;
-- (void)insertSlides:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeSlidesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInSlidesAtIndex:(NSUInteger)idx withObject:(ILobbyStoreSlide *)value;
-- (void)replaceSlidesAtIndexes:(NSIndexSet *)indexes withSlides:(NSArray *)values;
-- (void)addSlidesObject:(ILobbyStoreSlide *)value;
-- (void)removeSlidesObject:(ILobbyStoreSlide *)value;
-- (void)addSlides:(NSOrderedSet *)values;
-- (void)removeSlides:(NSOrderedSet *)values;
 @end
 
 

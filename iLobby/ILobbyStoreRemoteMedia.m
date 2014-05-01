@@ -13,7 +13,6 @@
 
 @implementation ILobbyStoreRemoteMedia
 @dynamic track;
-@dynamic slides;
 
 
 + (instancetype)newRemoteMediaInTrack:(ILobbyStoreTrack *)track at:(ILobbyRemoteFile *)remoteFile {
