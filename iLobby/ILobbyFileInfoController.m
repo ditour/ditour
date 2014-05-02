@@ -6,12 +6,15 @@
 //  Copyright (c) 2014 UT-Battelle ORNL. All rights reserved.
 //
 
+@import QuickLook;
+
 #import "ILobbyFileInfoController.h"
 
 
-@interface ILobbyFileInfoController () <ILobbyDownloadStatusDelegate>
+@interface ILobbyFileInfoController () <ILobbyDownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource>
 
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;
+@property (nonatomic, weak) IBOutlet UIButton *previewButton;
 
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *progressLabel;
@@ -71,6 +74,8 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 		self.progressView.hidden = YES;
 	}
 
+	self.previewButton.hidden = ![self canPreview];
+
 	[self updateView];
 }
 
@@ -101,6 +106,8 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 		if ( progress == 1.0 ) {
 			self.progressView.hidden = YES;
 		}
+
+		self.previewButton.hidden = ![self canPreview];
 	}
 
 	self.infoView.text = self.remoteFile.summary;
@@ -115,6 +122,50 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Preview
+
+- (BOOL)canPreview {
+	if ( self.remoteFile.path != nil ) {
+		if ( [[NSFileManager defaultManager] fileExistsAtPath:self.remoteFile.path] ) {
+			return [QLPreviewController canPreviewItem:self];
+		}
+		else {
+			return NO;
+		}
+	}
+	else {
+		return NO;
+	}
+}
+
+
+- (NSString *)previewItemTitle {
+	return self.remoteFile.name;
+}
+
+
+- (NSURL *)previewItemURL {
+	return [NSURL fileURLWithPath:self.remoteFile.path];
+}
+
+
+- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
+	return 1;
+}
+
+
+- (id<QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index {
+	return self;
+}
+
+
+- (IBAction)displayPreview:(id)sender {
+	QLPreviewController *previewController = [QLPreviewController new];
+	previewController.dataSource = self;
+	[self presentViewController:previewController animated:YES completion:nil];
 }
 
 

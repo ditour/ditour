@@ -55,17 +55,29 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KZ5-XT-ruM">
-                                <rect key="frame" x="20" y="80" width="984" height="21"/>
+                                <rect key="frame" x="20" y="80" width="77" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JoP-RC-OcW">
+                                <rect key="frame" x="950" y="76" width="54" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Preview">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="displayPreview:" destination="Pd3-Nz-BAB" eventType="touchUpInside" id="ALy-O8-KDG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="KZ5-XT-ruM" secondAttribute="trailing" constant="20" id="4Wl-9i-Im4"/>
-                            <constraint firstItem="KZ5-XT-ruM" firstAttribute="top" secondItem="XZN-Vb-i3q" secondAttribute="bottom" constant="16" id="DVu-rU-uwK"/>
-                            <constraint firstItem="KZ5-XT-ruM" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leading" constant="20" id="qQS-Pi-drJ"/>
+                            <constraint firstAttribute="trailing" secondItem="JoP-RC-OcW" secondAttribute="trailing" constant="20" id="J6n-J9-kv6"/>
+                            <constraint firstItem="KZ5-XT-ruM" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leading" constant="20" id="K4m-Km-mRw"/>
+                            <constraint firstItem="JoP-RC-OcW" firstAttribute="centerY" secondItem="KZ5-XT-ruM" secondAttribute="centerY" id="deX-58-Fue"/>
+                            <constraint firstItem="JoP-RC-OcW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KZ5-XT-ruM" secondAttribute="trailing" constant="8" symbolic="YES" id="mVT-0f-3mv"/>
+                            <constraint firstItem="KZ5-XT-ruM" firstAttribute="top" secondItem="XZN-Vb-i3q" secondAttribute="bottom" constant="16" id="pfT-Re-vev"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
@@ -73,6 +85,7 @@
                     <connections>
                         <outlet property="infoView" destination="os8-xt-d02" id="Ox9-01-vFn"/>
                         <outlet property="nameLabel" destination="KZ5-XT-ruM" id="jBo-xk-6yq"/>
+                        <outlet property="previewButton" destination="JoP-RC-OcW" id="xZN-IY-Qeb"/>
                         <outlet property="progressLabel" destination="moX-ML-Uxr" id="sEf-Xa-MJA"/>
                         <outlet property="progressView" destination="dlp-rE-8r6" id="BtN-pb-zyQ"/>
                     </connections>
