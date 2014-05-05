@@ -398,20 +398,6 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 }
 
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	if ( self.editMode == EDIT_MODE_NONE ) {
-		switch ( indexPath.section ) {
-			case GROUP_VIEW_SECTION:
-				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.mainRootStore.groups[indexPath.row]];
-				break;
-
-			default:
-				break;
-		}
-	}
-}
-
-
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
