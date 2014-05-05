@@ -217,6 +217,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (void)dismissEditing {
+	[self saveChanges:nil];
 	[self closeEditingMode];
 }
 
@@ -236,13 +237,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	if ( groupsToDeleteIndexes.count > 0 ) {
 		[self.currentStoreRoot removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
-		if ( [self saveChanges:nil] ) {
-			[self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
-		}
-		else {
-			NSLog( @"Error deleting selected rows..." );
-			[self.editContext rollback];
-		}
+		[self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
 	}
 }
 
@@ -250,7 +245,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 - (BOOL)deleteGroupAtIndex:(NSInteger)index {
 	if ( index >= 0 ) {
 		[self.currentStoreRoot removeObjectFromGroupsAtIndex:index];
-		return [self saveChanges:nil];
+		return YES;
 	}
 	else {
 		return NO;
@@ -260,7 +255,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 - (BOOL)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
 	[self.currentStoreRoot moveGroupAtIndex:fromIndex toIndex:toIndex];
-	return [self saveChanges:nil];
+	return YES;
 }
 
 
