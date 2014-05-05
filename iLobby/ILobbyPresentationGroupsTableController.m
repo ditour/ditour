@@ -22,6 +22,15 @@ enum :NSInteger {
 };
 
 
+// enum of editing states
+typedef enum :short {
+	EDIT_MODE_NONE,			// no editing
+	EDIT_MODE_BATCH_EDIT,	// deleting multiple groups
+	EDIT_MODE_GROUP_EDIT,	// edit the name of one group
+	EDIT_MODE_COUNT
+} EditMode;
+
+
 static NSString * const GROUP_VIEW_CELL_ID = @"PresentationGroupCell";
 static NSString * const GROUP_EDIT_CELL_ID = @"PresentationGroupEditCell";
 static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
@@ -29,12 +38,16 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMasters";
 
 @interface ILobbyPresentationGroupsTableController ()
-@property (nonatomic, readwrite, strong) ILobbyStoreRoot *rootStore;
+@property (nonatomic, readwrite, strong) ILobbyStoreRoot *mainRootStore;
+@property (nonatomic, readwrite, strong) ILobbyStoreRoot *editingRootStore;
+@property (nonatomic, readwrite, strong) ILobbyStoreRoot *currentStoreRoot;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *editContext;
 
 // indicates which group is being edited
 @property (nonatomic, readwrite, strong) ILobbyStorePresentationGroup *editingGroup;
 @property (nonatomic, readwrite, strong) ILobbyPresentationGroupEditCell *editingCell;
+
+@property (nonatomic, assign) EditMode editMode;
 
 @end
 
@@ -56,12 +69,13 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	self.tableView.allowsMultipleSelectionDuringEditing = YES;
 
 	// initialize instance variables
+	self.editMode = EDIT_MODE_NONE;
 	self.editingGroup = nil;
 	self.editingCell = nil;
 
 	// setup the local edit context and its managed objects
-	self.editContext = [self.lobbyModel createEditContextOnMain];
-	self.rootStore = self.lobbyModel.mainStoreRoot;
+	self.mainRootStore = self.lobbyModel.mainStoreRoot;
+	self.currentStoreRoot = self.mainRootStore;
 
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -95,10 +109,61 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 }
 
 
-- (void)cancelGroupEditing {
-	[self.editContext rollback];
+- (void)setupForEditing {
+	// create a new edit context
+	self.editContext = [self.lobbyModel createEditContextOnMain];
 
+	// get the current root ID
+	__block NSManagedObjectID *storeRootID = nil;
+	[self.mainRootStore.managedObjectContext performBlockAndWait:^{
+		storeRootID = self.mainRootStore.objectID;
+	}];
+
+	// create a new root store corresponding to the same current root
+	[self.editContext performBlockAndWait:^{
+		self.editingRootStore = (ILobbyStoreRoot *)[self.editContext objectWithID:storeRootID];
+	}];
+
+	self.currentStoreRoot = self.editingRootStore;
+}
+
+
+- (void)closeEditingMode {
+	self.editMode = EDIT_MODE_NONE;
+
+	self.editContext = nil;
+
+	self.currentStoreRoot = self.mainRootStore;
+	self.editingRootStore = nil;
+
+	self.editing = NO;
+	self.editingGroup = nil;
+	self.editingCell = nil;
+}
+
+
+// get a group on the edit context corresponding to the specified group
+- (ILobbyStorePresentationGroup *)editingGroupForGroup:(ILobbyStorePresentationGroup *)group {
+	// get the current root ID
+	__block NSManagedObjectID *groupID = nil;
+	[self.mainRootStore.managedObjectContext performBlockAndWait:^{
+		groupID = group.objectID;
+	}];
+
+	// create a new root store corresponding to the same current root
+	__block ILobbyStorePresentationGroup *editingGroup = nil;
+	[self.editContext performBlockAndWait:^{
+		editingGroup = (ILobbyStorePresentationGroup *)[self.editContext objectWithID:groupID];
+	}];
+
+	return editingGroup;
+}
+
+
+- (void)cancelGroupEditing {
 	[self.editingCell.locationField resignFirstResponder];
+
+	[self closeEditingMode];
 
 	self.editing = NO;
 	self.editingGroup = nil;
@@ -115,21 +180,32 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	[self.editingCell.locationField resignFirstResponder];
 
-	self.editing = NO;
-	self.editingGroup = nil;
-	self.editingCell = nil;
+	[self closeEditingMode];
+
 	[self updateControls];
 	[self.tableView reloadData];
 }
 
 
 - (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr {
-	return [self.lobbyModel persistentSaveContext:self.editContext error:errorPtr];
+	switch ( self.editMode ) {
+		case EDIT_MODE_NONE:
+			return [self.lobbyModel saveChanges:errorPtr];
+
+		default:
+			return [self.lobbyModel persistentSaveContext:self.editContext error:errorPtr];
+	}
 }
 
 
 - (void)setEditing:(BOOL)editing {
 	[super setEditing:editing];
+
+	self.editMode = editing ? EDIT_MODE_BATCH_EDIT : EDIT_MODE_NONE;
+	if ( editing ) {
+		[self setupForEditing];
+	}
+
 	[self updateControls];
 	[self.tableView reloadData];
 }
@@ -141,7 +217,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (void)dismissEditing {
-	self.editing = NO;
+	[self closeEditingMode];
 }
 
 
@@ -159,7 +235,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	}
 
 	if ( groupsToDeleteIndexes.count > 0 ) {
-		[self.rootStore removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
+		[self.currentStoreRoot removeGroupsAtIndexes:[groupsToDeleteIndexes copy]];
 		if ( [self saveChanges:nil] ) {
 			[self.tableView deleteRowsAtIndexPaths:self.tableView.indexPathsForSelectedRows withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
@@ -173,7 +249,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 - (BOOL)deleteGroupAtIndex:(NSInteger)index {
 	if ( index >= 0 ) {
-		[self.rootStore removeObjectFromGroupsAtIndex:index];
+		[self.currentStoreRoot removeObjectFromGroupsAtIndex:index];
 		return [self saveChanges:nil];
 	}
 	else {
@@ -183,7 +259,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (BOOL)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex {
-	[self.rootStore moveGroupAtIndex:fromIndex toIndex:toIndex];
+	[self.currentStoreRoot moveGroupAtIndex:fromIndex toIndex:toIndex];
 	return [self saveChanges:nil];
 }
 
@@ -201,11 +277,11 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	switch ( section ) {
 		case GROUP_VIEW_SECTION:
-			return self.rootStore.groups.count;
+			return self.currentStoreRoot.groups.count;
 
 		case GROUP_ADD_SECTION:
 			// if we are editing the table or a cell, hide the "add" cell
-			return self.editing || self.editingGroup != nil ? 0 : 1;
+			return self.editMode == EDIT_MODE_NONE ? 1 : 0;
 
 		default:
 			break;
@@ -233,7 +309,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (UITableViewCell *)groupViewCellAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStorePresentationGroup *group = self.rootStore.groups[indexPath.row];
+	ILobbyStorePresentationGroup *group = self.currentStoreRoot.groups[indexPath.row];
 	if ( group == self.editingGroup ) {
 		if ( !self.editingCell ) {
 			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
@@ -278,12 +354,16 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		switch ( indexPath.section ) {
 			case GROUP_ADD_SECTION:
 				// create a new group and enable editing
-				self.editingGroup = [self.rootStore addNewPresentationGroup];
+				self.editMode = EDIT_MODE_GROUP_EDIT;
+				[self setupForEditing];
+				self.editingGroup = [self.editingRootStore addNewPresentationGroup];
 				break;
 
 			case GROUP_VIEW_SECTION:
 				// enable editing for the corresponding group
-				self.editingGroup = self.rootStore.groups[indexPath.row];
+				self.editMode = EDIT_MODE_GROUP_EDIT;
+				[self setupForEditing];
+				self.editingGroup = [self editingGroupForGroup:self.mainRootStore.groups[indexPath.row]];
 				break;
 
 			default:
@@ -298,10 +378,10 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	if ( !self.editing ) {
+	if ( self.editMode == EDIT_MODE_NONE ) {
 		switch ( indexPath.section ) {
 			case GROUP_VIEW_SECTION:
-				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.rootStore.groups[indexPath.row]];
+				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.mainRootStore.groups[indexPath.row]];
 				break;
 
 			default:
