@@ -356,6 +356,8 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	else {
 		ILobbyPresentationGroupCell *viewCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_VIEW_CELL_ID forIndexPath:indexPath];
 		viewCell.locationLabel.text = group.remoteLocation;
+		viewCell.editButton.hidden = self.editing;	// hide the edit button when editing
+
 		return viewCell;
 	}
 

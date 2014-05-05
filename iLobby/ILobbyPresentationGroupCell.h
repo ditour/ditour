@@ -13,5 +13,6 @@
 @interface ILobbyPresentationGroupCell : UITableViewCell
 
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UIButton *editButton;
 
 @end

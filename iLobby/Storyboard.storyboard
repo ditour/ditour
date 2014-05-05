@@ -716,6 +716,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="editButton" destination="mtW-96-yQC" id="dSE-4u-XiT"/>
                                     <outlet property="locationLabel" destination="fZA-2T-bgu" id="nMD-B1-Oqu"/>
                                 </connections>
                             </tableViewCell>
