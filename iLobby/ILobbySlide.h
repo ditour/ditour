@@ -10,10 +10,12 @@
 #import "ILobbyModel.h"
 #import "ILobbyTransitionSource.h"
 
+
 @class ILobbySlide;
 typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 
 
+// ILobbySlide is the public abstract superclass for all media slides which form a family
 @interface ILobbySlide : NSObject
 
 @property (nonatomic, readonly) float duration;

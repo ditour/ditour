@@ -15,6 +15,9 @@
 		4C188A1A1909500500B3EBF1 /* ILobbyDownloadStatusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C188A191909500500B3EBF1 /* ILobbyDownloadStatusCell.m */; };
 		4C1B0D3F18D0971C001B0B00 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B0D3E18D0971C001B0B00 /* Storyboard.storyboard */; };
 		4C1B0D4818D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */; };
+		4C204E811917BC0F002B75D3 /* ILobbyImageSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C204E801917BC0F002B75D3 /* ILobbyImageSlide.m */; };
+		4C204E841917BC2C002B75D3 /* ILobbyPDFSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C204E831917BC2C002B75D3 /* ILobbyPDFSlide.m */; };
+		4C204E871917BC49002B75D3 /* ILobbyMovieSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C204E861917BC49002B75D3 /* ILobbyMovieSlide.m */; };
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
 		4C60121D190978E100BEC685 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */; };
 		4C601220190ADAEB00BEC685 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */; };
@@ -71,6 +74,13 @@
 		4C1B0D3E18D0971C001B0B00 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		4C1B0D4618D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupsTableController.h; sourceTree = "<group>"; };
 		4C1B0D4718D0AD30001B0B00 /* ILobbyPresentationGroupsTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationGroupsTableController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		4C204E7F1917BC0F002B75D3 /* ILobbyImageSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyImageSlide.h; sourceTree = "<group>"; };
+		4C204E801917BC0F002B75D3 /* ILobbyImageSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyImageSlide.m; sourceTree = "<group>"; };
+		4C204E821917BC2C002B75D3 /* ILobbyPDFSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPDFSlide.h; sourceTree = "<group>"; };
+		4C204E831917BC2C002B75D3 /* ILobbyPDFSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPDFSlide.m; sourceTree = "<group>"; };
+		4C204E851917BC49002B75D3 /* ILobbyMovieSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyMovieSlide.h; sourceTree = "<group>"; };
+		4C204E861917BC49002B75D3 /* ILobbyMovieSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyMovieSlide.m; sourceTree = "<group>"; };
+		4C204E881917BCEB002B75D3 /* ILobbySlideFamily.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbySlideFamily.h; sourceTree = "<group>"; };
 		4C42A5E2165A96F100B64970 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4C60121B190978E100BEC685 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; };
 		4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
@@ -167,6 +177,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C204E7E1917BBCA002B75D3 /* Slides */ = {
+			isa = PBXGroup;
+			children = (
+				4CE1D6C61638219C00026847 /* ILobbySlide.h */,
+				4CE1D6C71638219C00026847 /* ILobbySlide.m */,
+				4C204E881917BCEB002B75D3 /* ILobbySlideFamily.h */,
+				4C204E7F1917BC0F002B75D3 /* ILobbyImageSlide.h */,
+				4C204E801917BC0F002B75D3 /* ILobbyImageSlide.m */,
+				4C204E821917BC2C002B75D3 /* ILobbyPDFSlide.h */,
+				4C204E831917BC2C002B75D3 /* ILobbyPDFSlide.m */,
+				4C204E851917BC49002B75D3 /* ILobbyMovieSlide.h */,
+				4C204E861917BC49002B75D3 /* ILobbyMovieSlide.m */,
+			);
+			name = Slides;
+			sourceTree = "<group>";
+		};
 		4C690BD2181EED4D00A823CC /* Download */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,8 +238,7 @@
 				4CA582E116397A0C009ACF37 /* ILobbyPresentationDelegate.h */,
 				4C937DA61631BA8F00F251FF /* ILobbyPresenter.h */,
 				4C937DA71631BA8F00F251FF /* ILobbyPresenter.m */,
-				4CE1D6C61638219C00026847 /* ILobbySlide.h */,
-				4CE1D6C71638219C00026847 /* ILobbySlide.m */,
+				4C204E7E1917BBCA002B75D3 /* Slides */,
 				4C01BD561637150700065A97 /* ILobbyTrack.h */,
 				4C01BD571637150700065A97 /* ILobbyTrack.m */,
 				4C01BD5C16371E1A00065A97 /* ILobbyTrackViewCell.h */,
@@ -434,12 +459,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C204E811917BC0F002B75D3 /* ILobbyImageSlide.m in Sources */,
 				4CC09899183D4CC0006755C8 /* ILobbyStorePresentation.m in Sources */,
 				4C9248C618E45A1900A6CBDA /* ILobbyStoreRemoteFile.m in Sources */,
 				4C937D851631AAE200F251FF /* main.m in Sources */,
 				4C937D891631AAE200F251FF /* ILobbyAppDelegate.m in Sources */,
 				4CC391A418EF05F300B9AA4E /* ILobbyConcurrentDictionary.m in Sources */,
 				4CDF9AE418CE5467001E26B0 /* ILobbyStorePresentationGroup.m in Sources */,
+				4C204E871917BC49002B75D3 /* ILobbyMovieSlide.m in Sources */,
 				4CD40CF319100E770000B740 /* ILobbyFileInfoController.m in Sources */,
 				4C937DA81631BA8F00F251FF /* ILobbyPresenter.m in Sources */,
 				4CD0ED7C182978380090EFE5 /* iLobby.xcdatamodeld in Sources */,
@@ -460,6 +487,7 @@
 				4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */,
 				4C188A1719094FEF00B3EBF1 /* ILobbyLabelCell.m in Sources */,
 				4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */,
+				4C204E841917BC2C002B75D3 /* ILobbyPDFSlide.m in Sources */,
 				4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */,
 				4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */,
 				4C9248C918E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m in Sources */,
