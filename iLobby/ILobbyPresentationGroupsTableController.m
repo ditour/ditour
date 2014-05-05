@@ -38,6 +38,7 @@ static NSString * const GROUP_ADD_CELL_ID = @"PresentationGroupAddCell";
 static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMasters";
 
 @interface ILobbyPresentationGroupsTableController ()
+
 @property (nonatomic, readwrite, strong) ILobbyStoreRoot *mainRootStore;
 @property (nonatomic, readwrite, strong) ILobbyStoreRoot *editingRootStore;
 @property (nonatomic, readwrite, strong) ILobbyStoreRoot *currentStoreRoot;
@@ -139,6 +140,23 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	self.editing = NO;
 	self.editingGroup = nil;
 	self.editingCell = nil;
+}
+
+
+- (IBAction)editGroup:(id)sender {
+	CGPoint senderPoint = [sender bounds].origin;		// point in the button's own coordinates
+	CGPoint pointInTable = [sender convertPoint:senderPoint toView:self.tableView];		// point in the table view
+	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:pointInTable];
+
+	if ( indexPath != nil ) {
+		// enable editing for the corresponding group
+		self.editMode = EDIT_MODE_GROUP_EDIT;
+		[self setupForEditing];
+		self.editingGroup = [self editingGroupForGroup:self.mainRootStore.groups[indexPath.row]];
+
+		[self updateControls];
+		[self.tableView reloadData];
+	}
 }
 
 
@@ -355,10 +373,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 				break;
 
 			case GROUP_VIEW_SECTION:
-				// enable editing for the corresponding group
-				self.editMode = EDIT_MODE_GROUP_EDIT;
-				[self setupForEditing];
-				self.editingGroup = [self editingGroupForGroup:self.mainRootStore.groups[indexPath.row]];
+				[self performSegueWithIdentifier:SEGUE_SHOW_PRESENTAION_MASTERS_ID sender:self.mainRootStore.groups[indexPath.row]];
 				break;
 
 			default:

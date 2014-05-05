@@ -13,4 +13,6 @@
 
 @property (nonatomic, readwrite, strong) ILobbyModel *lobbyModel;
 
+- (IBAction)editGroup:(id)sender;
+
 @end
