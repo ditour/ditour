@@ -23,7 +23,7 @@
 	[super awakeFromNib];
     // Initialization code
 	self.subtitle = nil;
-	self.titleLabel.highlightedTextColor = [UIColor blueColor];
+	self.titleLabel.highlightedTextColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
 }
 
 
