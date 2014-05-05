@@ -183,25 +183,36 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	[self closeEditingMode];
 
-	self.editing = NO;
-	self.editingGroup = nil;
-	self.editingCell = nil;
 	[self updateControls];
 	[self.tableView reloadData];
 }
 
 
 - (void)confirmGroupEditing {
-	self.editingGroup.remoteLocation = self.editingCell.locationField.text;
+	// strip white space
+	NSString *groupUrlSpec = [self.editingCell.locationField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-	[self saveChanges:nil];
+	// validate whether the URL is well formed
+	if ( groupUrlSpec == nil || groupUrlSpec.length == 0 ) {
+		// empty URL so just throw it away
+		[self cancelGroupEditing];
+	}
+	else {
+		NSURL *groupURL = [NSURL URLWithString:groupUrlSpec];
 
-	[self.editingCell.locationField resignFirstResponder];
-
-	[self closeEditingMode];
-
-	[self updateControls];
-	[self.tableView reloadData];
+		// since the URL is not empty verify that it is well formed
+		if ( groupURL != nil && groupURL.scheme != nil && groupURL.host != nil && groupURL.path != nil ) {	// well formed
+			// save changes and dismiss editing
+			self.editingGroup.remoteLocation = groupUrlSpec;
+			[self saveChanges:nil];
+			[self cancelGroupEditing];
+		}
+		else if ( groupUrlSpec != nil ) {	// malformed but not nil
+			// alert the user that the URL is malformed and allow them to continue editing
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Malformed URL" message:@"The URL specified is malformed." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+			[alertView show];
+		}
+	}
 }
 
 
