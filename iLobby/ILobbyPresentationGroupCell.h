@@ -14,5 +14,6 @@
 
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet UIButton *editButton;
+@property (nonatomic, weak) IBOutlet UIButton *openURLButton;
 
 @end

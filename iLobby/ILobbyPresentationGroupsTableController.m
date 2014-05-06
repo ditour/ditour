@@ -143,6 +143,19 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 }
 
 
+- (IBAction)openGroupURL:(id)sender {
+	CGPoint senderPoint = [sender bounds].origin;		// point in the button's own coordinates
+	CGPoint pointInTable = [sender convertPoint:senderPoint toView:self.tableView];		// point in the table view
+	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:pointInTable];
+
+	if ( indexPath != nil ) {
+		ILobbyStorePresentationGroup *group = self.currentStoreRoot.groups[indexPath.row];
+		NSURL *url = group.remoteURL;
+		[[UIApplication sharedApplication] openURL:url];
+	}
+}
+
+
 - (IBAction)editGroup:(id)sender {
 	CGPoint senderPoint = [sender bounds].origin;		// point in the button's own coordinates
 	CGPoint pointInTable = [sender convertPoint:senderPoint toView:self.tableView];		// point in the table view
@@ -356,7 +369,8 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	else {
 		ILobbyPresentationGroupCell *viewCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_VIEW_CELL_ID forIndexPath:indexPath];
 		viewCell.locationLabel.text = group.remoteLocation;
-		viewCell.editButton.hidden = self.editing;	// hide the edit button when editing
+		viewCell.editButton.hidden = self.editing;		// hide the edit button when editing
+		viewCell.openURLButton.hidden = self.editing;	// hide the open URL button when editing
 
 		return viewCell;
 	}

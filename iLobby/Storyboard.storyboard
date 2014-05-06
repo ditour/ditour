@@ -700,13 +700,23 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mtW-96-yQC">
-                                            <rect key="frame" x="925" y="7" width="30" height="30"/>
+                                            <rect key="frame" x="868" y="7" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Edit">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
                                                 <action selector="editGroup:" destination="J4K-xb-7m0" eventType="touchUpInside" id="72V-aB-Lm2"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grY-J8-Yep">
+                                            <rect key="frame" x="906" y="7" width="65" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Webpage">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="openGroupURL:" destination="J4K-xb-7m0" eventType="touchUpInside" id="mXt-3M-poA"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -718,6 +728,7 @@
                                 <connections>
                                     <outlet property="editButton" destination="mtW-96-yQC" id="dSE-4u-XiT"/>
                                     <outlet property="locationLabel" destination="fZA-2T-bgu" id="nMD-B1-Oqu"/>
+                                    <outlet property="openURLButton" destination="grY-J8-Yep" id="MKy-rX-cIc"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PresentationGroupEditCell" id="hSR-8T-xft" customClass="ILobbyPresentationGroupEditCell">

@@ -13,6 +13,7 @@
 
 @property (nonatomic, readwrite, strong) ILobbyModel *lobbyModel;
 
+- (IBAction)openGroupURL:(id)sender;
 - (IBAction)editGroup:(id)sender;
 
 @end
