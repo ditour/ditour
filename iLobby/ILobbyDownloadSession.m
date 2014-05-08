@@ -131,7 +131,7 @@
 	status.delegate = delegate;
 	self.groupStatus = status;
 
-	[group.managedObjectContext performBlock:^{
+	[group.managedObjectContext performBlockAndWait:^{
 		NSError *error = nil;
 
 		[group markDownloading];

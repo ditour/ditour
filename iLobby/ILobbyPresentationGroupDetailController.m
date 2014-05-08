@@ -115,6 +115,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	}
 	else {
 		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
+
+		if ( self.groupDownloadStatus.error != nil ) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download Error" message:self.groupDownloadStatus.error.localizedDescription delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+			[alert show];
+		}
+
 		[self updateDownloadIndicator];
 		[self.tableView reloadData];
 	}
