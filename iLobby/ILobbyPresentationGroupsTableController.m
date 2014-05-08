@@ -216,9 +216,17 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		// since the URL is not empty verify that it is well formed
 		if ( groupURL != nil && groupURL.scheme != nil && groupURL.host != nil && groupURL.path != nil ) {	// well formed
 			// save changes and dismiss editing
-			self.editingGroup.remoteLocation = groupUrlSpec;
-			[self saveChanges:nil];
-			[self cancelGroupEditing];
+			if ( [groupURL.scheme isEqualToString:@"http"] || [groupURL.scheme isEqualToString:@"https"] ) {
+				self.editingGroup.remoteLocation = groupUrlSpec;
+				[self saveChanges:nil];
+				[self cancelGroupEditing];
+			}
+			else {
+				// alert the user that the URL is malformed and allow them to continue editing
+				NSString *message = [NSString stringWithFormat:@"The URL scheme must be either \"http\" or \"https\", but you have specified one with scheme: \"%@\"", groupURL.scheme];
+				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid URL Scheme" message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+				[alertView show];
+			}
 		}
 		else if ( groupUrlSpec != nil ) {	// malformed but not nil
 			// alert the user that the URL is malformed and allow them to continue editing
