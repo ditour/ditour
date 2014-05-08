@@ -385,9 +385,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4C937D731631AAE200F251FF /* iLobby */ = {
+		4C937D731631AAE200F251FF /* DiTour */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4C937D981631AAE200F251FF /* Build configuration list for PBXNativeTarget "iLobby" */;
+			buildConfigurationList = 4C937D981631AAE200F251FF /* Build configuration list for PBXNativeTarget "DiTour" */;
 			buildPhases = (
 				4C937D701631AAE200F251FF /* Sources */,
 				4C937D711631AAE200F251FF /* Frameworks */,
@@ -397,7 +397,7 @@
 			);
 			dependencies = (
 			);
-			name = iLobby;
+			name = DiTour;
 			productName = iLobby;
 			productReference = 4C937D741631AAE200F251FF /* iLobby.app */;
 			productType = "com.apple.product-type.application";
@@ -434,7 +434,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4C937D731631AAE200F251FF /* iLobby */,
+				4C937D731631AAE200F251FF /* DiTour */,
 			);
 		};
 /* End PBXProject section */
@@ -621,7 +621,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C937D981631AAE200F251FF /* Build configuration list for PBXNativeTarget "iLobby" */ = {
+		4C937D981631AAE200F251FF /* Build configuration list for PBXNativeTarget "DiTour" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4C937D991631AAE200F251FF /* Debug */,
