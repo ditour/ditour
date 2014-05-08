@@ -8,6 +8,7 @@
 
 #import "ILobbyLabelCell.h"
 
+
 @implementation ILobbyLabelCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -23,7 +24,6 @@
 	[super awakeFromNib];
     // Initialization code
 	self.subtitle = nil;
-	self.titleLabel.highlightedTextColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
 }
 
 
@@ -36,6 +36,18 @@
 
 + (CGFloat)defaultHeight {
 	return 44;
+}
+
+
+- (void)setMarked:(BOOL)marked {
+	static UIColor *markedColor = nil;
+
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		markedColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
+	});
+
+	self.titleLabel.textColor = marked ? markedColor : [UIColor blackColor];
 }
 
 

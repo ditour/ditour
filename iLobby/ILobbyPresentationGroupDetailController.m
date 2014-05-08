@@ -330,7 +330,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
     // Configure the cell...
 	ILobbyStorePresentation *presentation = _activePresentations[indexPath.row];
-	cell.titleLabel.highlighted = presentation.isCurrent;
+	cell.marked = presentation.isCurrent;
 	cell.title = presentation.name;
 	cell.subtitle = [timestampFormatter stringFromDate:presentation.timestamp];
 

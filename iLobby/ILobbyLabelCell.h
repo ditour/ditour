@@ -15,6 +15,8 @@
 
 + (CGFloat)defaultHeight;
 
+- (void)setMarked:(BOOL)marked;
+
 - (void)setTitle:(NSString *)title;
 - (void)setSubtitle:(NSString *)subtitle;
 
