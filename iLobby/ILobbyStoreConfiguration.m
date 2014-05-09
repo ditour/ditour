@@ -24,7 +24,7 @@
 	configuration.path = [container.path stringByAppendingPathComponent:remoteFile.location.lastPathComponent];
 	
 //	NSLog( @"Fetching Configuration: %@", configuration.remoteURL.lastPathComponent );
-//	NSLog( @"Config File: %@", configuration.path );
+//	NSLog( @"Config File: %@", configuration.absolutePath );
 
 	return configuration;
 }

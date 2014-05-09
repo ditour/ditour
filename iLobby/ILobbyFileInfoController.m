@@ -128,8 +128,8 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 #pragma mark - Preview
 
 - (BOOL)canPreview {
-	if ( self.remoteFile.path != nil ) {
-		if ( [[NSFileManager defaultManager] fileExistsAtPath:self.remoteFile.path] ) {
+	if ( self.remoteFile.absolutePath != nil ) {
+		if ( [[NSFileManager defaultManager] fileExistsAtPath:self.remoteFile.absolutePath] ) {
 			return [QLPreviewController canPreviewItem:self];
 		}
 		else {
@@ -148,7 +148,7 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 
 
 - (NSURL *)previewItemURL {
-	return [NSURL fileURLWithPath:self.remoteFile.path];
+	return [NSURL fileURLWithPath:self.remoteFile.absolutePath];
 }
 
 

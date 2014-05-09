@@ -50,12 +50,12 @@
 		for ( ILobbyStoreRemoteMedia *media in trackStore.remoteMedia ) {
 			// if the filename is Icon.* then it is the icon and all others are slides
 			if ( [[[media.name stringByDeletingPathExtension] lowercaseString] isEqualToString:@"icon"] ) {
-				NSString *iconPath = media.path;
+				NSString *iconPath = media.absolutePath;
 //				NSLog( @"Assigning icon with path: %@", iconPath );
 				self.icon = [UIImage imageWithContentsOfFile:iconPath];
 			}
 			else {
-				NSString *slidePath = media.path;
+				NSString *slidePath = media.absolutePath;
 				ILobbySlide *slide = [ILobbySlide slideWithFile:slidePath duration:defaultSlideDuration];
 				if ( defaultTransitionSource != nil ) {
 					slide.transitionSource = defaultTransitionSource;

@@ -25,7 +25,7 @@
 	remoteMedia.path = [track.path stringByAppendingPathComponent:remoteFile.location.lastPathComponent];
 
 //	NSLog( @"Fetching Media: %@", remoteMedia.remoteURL.lastPathComponent );
-//	NSLog( @"Media Path: %@", remoteMedia.path );
+//	NSLog( @"Media Path: %@", remoteMedia.absolutePath );
 
 	return remoteMedia;
 }

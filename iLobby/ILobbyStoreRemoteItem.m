@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyStoreRemoteItem.h"
+#import "ILobbyModel.h"
 
 @implementation ILobbyStoreRemoteItem
 
@@ -65,21 +66,26 @@
 - (void)prepareForDeletion {
 	// delete the associated directory if any
 	if ( self.path ) {
-	//	NSLog( @"Deleting store item at path: %@", self.path );
+	//	NSLog( @"Deleting store item at path: %@", self.absolutePath );
 
 		NSError *error = nil;
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 
-		if ( [fileManager fileExistsAtPath:self.path] ) {
-			BOOL success = [fileManager removeItemAtPath:self.path error:&error];
+		if ( [fileManager fileExistsAtPath:self.absolutePath] ) {
+			BOOL success = [fileManager removeItemAtPath:self.absolutePath error:&error];
 			if ( !success ) {
-				NSLog( @"Error deleting store remote item at path: %@ due to error: %@", self.path, error );
+				NSLog( @"Error deleting store remote item at path: %@ due to error: %@", self.absolutePath, error );
 			}
 		}
 	}
 
 	// call the default implementation
 	[super prepareForDeletion];
+}
+
+
+- (NSString *)absolutePath {
+	return [[ILobbyModel presentationGroupsRoot] stringByAppendingPathComponent:self.path];
 }
 
 

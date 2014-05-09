@@ -39,7 +39,7 @@
 	track.title = [rawName toTrackTitle];
 
 //	NSLog( @"Fetching Track: %@", track.title );
-//	NSLog( @"Track Path: %@", track.path );
+//	NSLog( @"Track Path: %@", track.absolutePath );
 
 	for ( ILobbyRemoteFile *remoteFile in remoteDirectory.files ) {
 		[track processRemoteFile:remoteFile];

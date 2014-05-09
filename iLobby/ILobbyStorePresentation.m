@@ -79,7 +79,7 @@ static NSString *ENTITY_NAME = @"Presentation";
 			self.current = current;
 		}
 
-//		NSLog( @"Replacing parent at: %@ with this presentation at: %@", parentPresentation.path, self.path );
+//		NSLog( @"Replacing parent at: %@ with this presentation at: %@", parentPresentation.absolutePath, self.absolutePath );
 
 		self.parent = nil;
 
@@ -117,18 +117,18 @@ static NSString *ENTITY_NAME = @"Presentation";
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableDictionary *dictionary = [NSMutableDictionary new];
 
-	if ( self.configuration != nil && self.configuration.isReady && [fileManager fileExistsAtPath:self.configuration.path] ) {
+	if ( self.configuration != nil && self.configuration.isReady && [fileManager fileExistsAtPath:self.configuration.absolutePath] ) {
 		dictionary[self.configuration.remoteLocation] = self.configuration;
 	}
 
 	for ( ILobbyStoreTrack *track in self.tracks ) {
 		ILobbyStoreRemoteFile *trackConfig = track.configuration;
-		if ( trackConfig != nil && trackConfig.isReady && [fileManager fileExistsAtPath:trackConfig.path] ) {
+		if ( trackConfig != nil && trackConfig.isReady && [fileManager fileExistsAtPath:trackConfig.absolutePath] ) {
 			dictionary[trackConfig.remoteLocation] = trackConfig;
 		}
 
 		for ( ILobbyStoreRemoteMedia *media in track.remoteMedia ) {
-			if ( media.isReady && [fileManager fileExistsAtPath:media.path] ) {
+			if ( media.isReady && [fileManager fileExistsAtPath:media.absolutePath] ) {
 				dictionary[media.remoteLocation] = media;
 			}
 		}

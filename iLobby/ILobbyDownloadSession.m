@@ -142,7 +142,7 @@
 		NSString *initialConfigPath = nil;
 		if ( initialConfig != nil ) {
 			initialConfigRemoteInfo = initialConfig.remoteInfo;
-			initialConfigPath = initialConfig.path;
+			initialConfigPath = initialConfig.absolutePath;
 		}
 		initialConfig = nil;
 
@@ -169,7 +169,7 @@
 			// store the active presentations by name so they can be used as parents if necessary
 			NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
 			for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
-				//			NSLog( @"Active presentation at: %@", presentation.path );
+				//			NSLog( @"Active presentation at: %@", presentation.absolutePath );
 				activePresentationsByName[presentation.name] = presentation;
 			}
 
@@ -208,11 +208,11 @@
 			if ( group.configuration != nil ) {
 				// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
 				NSFileManager *fileManager = [NSFileManager defaultManager];
-				if ( initialConfigRemoteInfo != nil && [initialConfigRemoteInfo isEqualToString:group.configuration.remoteInfo] && [initialConfigPath isEqualToString:group.configuration.path] && [fileManager fileExistsAtPath:initialConfigPath] ) {
+				if ( initialConfigRemoteInfo != nil && [initialConfigRemoteInfo isEqualToString:group.configuration.remoteInfo] && [initialConfigPath isEqualToString:group.configuration.absolutePath] && [fileManager fileExistsAtPath:initialConfigPath] ) {
 					[group.configuration markReady];
 				}
 				else {
-					if ( initialConfigPath != nil ) {
+					if ( initialConfigPath != nil && [fileManager fileExistsAtPath:initialConfigPath] ) {
 						[self removeFileAt:initialConfigPath];
 					}
 					[self downloadRemoteFile:group.configuration container:status usingCache:nil];
@@ -268,7 +268,7 @@
 
 	[presentation.managedObjectContext performBlock:^{
 		NSError * __autoreleasing error = nil;
-		[[NSFileManager defaultManager] createDirectoryAtPath:presentation.path withIntermediateDirectories:YES attributes:nil error:&error];
+		[[NSFileManager defaultManager] createDirectoryAtPath:presentation.absolutePath withIntermediateDirectories:YES attributes:nil error:&error];
 
 		if ( error ) {
 			status.error = error;
@@ -299,7 +299,7 @@
 
 	[track.managedObjectContext performBlock:^{
 		NSError * __autoreleasing error = nil;
-		[[NSFileManager defaultManager] createDirectoryAtPath:track.path withIntermediateDirectories:YES attributes:nil error:&error];
+		[[NSFileManager defaultManager] createDirectoryAtPath:track.absolutePath withIntermediateDirectories:YES attributes:nil error:&error];
 
 		if ( error ) {
 			status.error = error;
@@ -335,13 +335,13 @@
 					NSString *cacheInfo = cachedFile.remoteInfo;
 					NSString *remoteInfo = remoteFile.remoteInfo;
 					if ( remoteInfo != nil && [remoteInfo isEqualToString:cacheInfo] ) {
-//						NSLog( @"Simply copying file from local cache for: %@", remoteFile.path );
+//						NSLog( @"Simply copying file from local cache for: %@", remoteFile.absolutePath );
 						NSFileManager *fileManager = [NSFileManager defaultManager];
 
-						if ( [fileManager fileExistsAtPath:cachedFile.path] ) {
+						if ( [fileManager fileExistsAtPath:cachedFile.absolutePath] ) {
 							NSError *error = nil;
 							// create a hard link from the original path to the new path so we save space
-							BOOL success = [fileManager linkItemAtPath:cachedFile.path toPath:remoteFile.path error:&error];
+							BOOL success = [fileManager linkItemAtPath:cachedFile.absolutePath toPath:remoteFile.absolutePath error:&error];
 							if ( success ) {
 								[remoteFile markReady];
 								status.completed = YES;
@@ -351,7 +351,7 @@
 							}
 							else {
 								status.error = error;
-								NSLog( @"Error creating hard link to remote file: %@ from existing file at: %@", remoteFile.path, cachedFile.path );
+								NSLog( @"Error creating hard link to remote file: %@ from existing file at: %@", remoteFile.absolutePath, cachedFile.absolutePath );
 							}
 
 						}
@@ -397,7 +397,7 @@
 		__block NSString *destination = nil;
 		__block NSURL *remoteURL = nil;
 		[remoteFile.managedObjectContext performBlockAndWait:^{
-			destination = remoteFile.path;
+			destination = remoteFile.absolutePath;
 			remoteURL = remoteFile.remoteURL;
 		}];
 

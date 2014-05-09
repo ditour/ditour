@@ -36,9 +36,9 @@
 
 
 - (NSDictionary *)parseConfiguration {
-//	NSLog( @"Parsing configuration with path: %@", self.configuration.path );
-	if ( self.configuration != nil && self.configuration.path != nil ) {
-		NSData *jsonData = [NSData dataWithContentsOfFile:self.configuration.path];
+//	NSLog( @"Parsing configuration with path: %@", self.configuration.absolutePath );
+	if ( self.configuration != nil && self.configuration.absolutePath != nil ) {
+		NSData *jsonData = [NSData dataWithContentsOfFile:self.configuration.absolutePath];
 		if ( jsonData == nil )  return nil;
 		NSError *error = nil;
 		NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];

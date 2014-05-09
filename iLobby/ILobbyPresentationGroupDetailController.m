@@ -340,7 +340,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	cell.title = presentation.name;
 	cell.subtitle = [timestampFormatter stringFromDate:presentation.timestamp];
 
-//	NSLog( @"Active presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
+//	NSLog( @"Active presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.absolutePath );
 
     return cell;
 }
@@ -367,7 +367,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 		cell.subtitle = nil;
 	}
 
-	//	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.path );
+	//	NSLog( @"Pending presentation %@, status: %@, path: %@", presentation.name, presentation.status, presentation.absolutePath );
 
     return cell;
 }

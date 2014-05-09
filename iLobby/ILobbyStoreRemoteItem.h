@@ -42,4 +42,7 @@ enum : short {
 - (void)markReady;
 - (void)markDisposable;
 
+// get the full path (path is relative to the Presentation Groups Root directory whose absolute path can move when the app is updated since the document directory moves)
+- (NSString *)absolutePath;
+
 @end

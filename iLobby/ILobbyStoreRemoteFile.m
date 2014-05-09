@@ -38,9 +38,9 @@
 	});
 
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if ( [fileManager fileExistsAtPath:self.path] ) {
+	if ( [fileManager fileExistsAtPath:self.absolutePath] ) {
 		NSError *error = nil;
-		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:self.path error:&error];
+		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:self.absolutePath error:&error];
 		if ( !error ) {
 			NSDate *modDate = fileAttributes[NSFileModificationDate];
 			NSNumber *fileSize = fileAttributes[NSFileSize];

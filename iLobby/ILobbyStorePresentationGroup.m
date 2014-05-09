@@ -23,9 +23,8 @@
 	// generate a unique path for the group based on the timestamp when the group was created
 	NSDateFormatter *formatter = [NSDateFormatter new];
 	formatter.dateFormat = @"yyyyMMdd'-'HHmmss";
-	NSString *basePath = [NSString stringWithFormat:@"Group-%@", [formatter stringFromDate:[NSDate date]]];
-	group.path = [[ILobbyModel presentationGroupsRoot] stringByAppendingPathComponent:basePath];
-//	NSLog( @"group path: %@", group.path );
+	group.path = [NSString stringWithFormat:@"Group-%@", [formatter stringFromDate:[NSDate date]]];
+//	NSLog( @"group path: %@", group.absolutePath );
 
 	return group;
 }
