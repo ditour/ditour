@@ -31,6 +31,16 @@ static NSSet *PDF_EXTENSIONS;
 }
 
 
+- (id)initWithFile:(NSString *)file duration:(float)duration {
+    self = [super initWithFile:file duration:duration];
+
+    if (self) {
+		// custom PDF Slide initialization
+    }
+    return self;
+}
+
+
 - (void)cancelPresentation {
 	_currentRunID = nil;
 }
@@ -117,7 +127,7 @@ static NSSet *PDF_EXTENSIONS;
 	size_t width = CGRectGetWidth( bounds );
 	size_t height = CGRectGetHeight( bounds );
 	CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-	CGContextRef context = CGBitmapContextCreate( NULL, width, height, 8, 0, colorSpaceRef, kCGImageAlphaPremultipliedLast );
+	CGContextRef context = CGBitmapContextCreate( NULL, width, height, 8, 0, colorSpaceRef, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrderDefault );
 	CGContextDrawPDFPage( context, pageRef );
 
 	CGImageRef imageRef = CGBitmapContextCreateImage( context );
