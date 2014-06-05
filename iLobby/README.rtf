@@ -1,74 +1,52 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red196\green26\blue22;}
-{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid2\'02\'01.;}{\levelnumbers\'01;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid3\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid1}}
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{square\}}{\leveltext\leveltemplateid1\'01\uc0\u9642 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
 \margl1440\margr1440\vieww9000\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\pard\tqr\tx363\tx363\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
-\f0\fs24 \cf0 iLobby is a universal iOS app for displaying interactive slideshows. While it will run on any modern iOS device, an iPad provides the best user experience for driving presentations. An external monitor is required for displaying the presentations.\
+\f0\fs24 \cf0 DiTour is a universal iOS app for displaying interactive slideshows. It runs on any modern iPad. An external monitor is required for displaying the presentations.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+
+\b Presentations Groups
+\b0 :\
+One or more presentation may be collected into a group. Each group is identified by a URL which specifies the location of the group which is the root directory of all presentations for that group. One or more group may be specified.\
 \
 
 \b Presentations
 \b0 :\
-One or more tracks may be loaded onto the device. The first track is the default track. When the user selects a track, that slides in that track are presented until the specified duration expires or the user selects another track. When the duration expires, the presentation returns to the default track. The default track plays all its slides in order and repeats indefinitely. A slide may either by an image or a movie. An image is displayed for the track's default duration before switching to the next slide. A movie slide is presented until the movie plays to completion and then switches to the next slide.\
+Within each directory pointed to by the group, is a list of directories (one for each presentation). Under each presentation directory, are directories corresponding to each track. Tracks will be loaded alphanumerically as they appear on the indexed webpage. You can force order by prefixing track names with any sequence of digits followed by an underscore. This prefix will be stripped when forming the track name to display. The first track is the default track. When the user selects a track, that slides in that track are presented until the specified duration expires or the user selects another track. When the duration expires, the presentation returns to the default track. The default track plays all its slides in order and repeats indefinitely. A slide may either by an image or a movie. An image is displayed for the track's default duration before switching to the next slide. A movie slide is presented until the movie plays to completion and then switches to the next slide. A PDF slid will present each of its pages as if they were individual image slides.\
 \
 
 \b Configuration
 \b0 :\
-An index.json file provides the specification of all media files. The user specifies the URL to the index.json file and the app downloads the index file and all referenced media files. Once the index is validated and all media downloaded, the new presentation is either installed immediately or delayed until the next cycle for the default slideshow depending on the option selected.\
-\
+In each directory, a config.json file may be specified. The configuration is valid at the level of the directory and is inherited by all sub directories. Properties specified in a configuration file override inherited. The configuration file format is JSON format which may contain any of the following information:\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	
+\f1 \uc0\u9642 
+\f0 	}slideDuration  - floating point value indicating the time in seconds to display a slide\
+{\listtext	
+\f1 \uc0\u9642 
+\f0 	}singelImageSlideTrackDuration - floating point value indicating the time in seconds for displaying a track with a single slide before transitioning to the next track\
+{\listtext	
+\f1 \uc0\u9642 
+\f0 	}slideTransition - JSON dictionary of with the following key/value pairs:\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}"type" - string value for the transition type (one of:  "fade", "push", "reveal" or "moveIn")\
+{\listtext	\uc0\u8259 	}"subtype" - string value for the transition subtype (one of: "fromTop", "fromLeft", "fromRight" or "fromBottom")\
+{\listtext	\uc0\u8259 	}"duration" - floating point value in seconds for the transition time\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
 
 \b Media Directory Layout and Index Format
 \b0 :\
-Media should be placed on a web server that is accessible to the device. The URL should point to the index.json file (defines the root directory) which specifies the location of media files and presentation settings. A directory named "tracks" should be placed in root directory, and a subfolder for each track should be placed in that directory. The track's images, icons and movies should be placed in the track's directory.\
+Media should be placed on a web server that is accessible to the device. The URL should point to the presentation group's directory and has the following structure:\
 \
-The index.json file in the root directory should be prepared in JSON format. At the top level is a single item which is a dictionary whose key is "tracks" and whose value is an array of track configurations (one configuration for each track). Tracks are displayed in the app in the order they appear in this array, and the first track configuration represents the default track.\
+Presentation Group Directory\
+- > Presentation directories plus optional config.json\
+	- > Track directories plus optional config.json\
+		- > media files, icon file plus optional config.json\
 \
-The track configuration is a dictionary with the following keys: 
-\i location
-\i0 , 
-\i label
-\i0 , 
-\i icon
-\i0 , 
-\i defaultDuration
-\i0 , 
-\i defaultTransition
-\i0  and 
-\i slides
-\i0 .\
-\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
-\ls1\ilvl0\cf0 {\listtext	\'95	}location: string specifying the subdirectory within tracks that corresponds to the track\
-{\listtext	\'95	}label: string to display for the track button\
-{\listtext	\'95	}icon: image to display for the track button\
-{\listtext	\'95	}defaultDuration: time in seconds for which each image slide should be displayed before moving to the next one or falling back to the default track after the last\
-{\listtext	\'95	}defaultTransition: (optional) dictionary specifying the transition to apply to slides including the 
-\i type
-\i0 , 
-\i subtype
-\i0  and 
-\i duration\
-\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
-\ls1\ilvl1
-\i0 \cf0 {\listtext	\uc0\u8259 	}type: string which is one of "fade", "push", "reveal" or "moveIn"\
-{\listtext	\uc0\u8259 	}subtype: string which is one of "fromTop", "fromLeft", "fromRight" or "fromBottom"\
-{\listtext	\uc0\u8259 	}duration: time in seconds for which to apply the transition when changing slides\
-\pard\tx220\tx720\tx1120\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
-\ls1\ilvl0\cf0 {\listtext	\'95	}slides: an array of either slide file names or slide configurations. A slide configuration allows multiple files to be specified with a single pattern rather than one at a time. A slide configuration may take one of two forms:\
-\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
-\ls1\ilvl1\cf0 {\listtext	1.	}Directory source which reads files from the web server's directory index of the track and applies a regular expression to match using the following configuration dictionary:\
-\pard\tx1660\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li2160\fi-2160\pardirnatural
-\ls1\ilvl2\cf0 {\listtext	\uc0\u8259 	}source: this values should always be "directory"\
-{\listtext	\uc0\u8259 	}pattern: regular expression to apply to the file (e.g. 
-\f1\fs22 \cf2 \CocoaLigature0 "[0-9]+\\\\.(png|jpg|jpeg|gif)"
-\f0\fs24 \cf0 \CocoaLigature1  will match files begging with a number and having an extension of png, jpg, jpeg or gif.\
-\pard\tx940\tx1440\tx1680\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
-\ls1\ilvl1\cf0 {\listtext	2.	}Iterator pattern which specifies how to iterate over a pattern using index substitution.\
-\pard\tx1660\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li2160\fi-2160\pardirnatural
-\ls1\ilvl2\cf0 {\listtext	\uc0\u8259 	}source: this value should always be "iterator"\
-{\listtext	\uc0\u8259 	}start: integer specifying the starting index (defaults to 1)\
-{\listtext	\uc0\u8259 	}end: integer specifying the ending index\
-{\listtext	\uc0\u8259 	}zeropadding: (optional) index specifying the number of zeros to pad the index. For example, a padding of 3 and an index of 5 would yield "005" and a padding of 3 and an index of 12 would yield "012" and a padding of 3 and an index of 1234 would yield "1234" for the substituted index.\
-{\listtext	\uc0\u8259 	}pattern: string specifying the file name pattern and containing the substring, "$\{index\}" for which the iterator substitutes the index. For example, if the pattern is "cars$\{index\}.png" and the iterator iterates from 5 to 10 with zeropadding of 3 the following slide image files will be downloaded in order: cars005.png, cars006.png, cars007.png, cars008.png, cars009.png and cars010.png.\
-}
+The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v and pdf. Any file named "Icon" with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.}
