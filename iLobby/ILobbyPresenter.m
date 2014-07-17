@@ -16,6 +16,7 @@
 @property (strong, nonatomic) CALayer *mediaLayer;
 @property (strong, nonatomic) CALayer *imageLayer;
 @property (strong, nonatomic) UIImage *currentImage;
+
 @end
 
 
@@ -33,6 +34,11 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScreensChange:) name:UIScreenDidDisconnectNotification object:nil];
     }
     return self;
+}
+
+
+- (CGRect)externalBounds {
+	return self.externalWindow.bounds;
 }
 
 
@@ -79,6 +85,16 @@
 		self.mediaLayer = videoLayer;
 
 		[player play];
+	}
+}
+
+
+- (void)displayMediaLayer:(CALayer *)mediaLayer {
+	if ( self.externalWindow ) {
+		self.currentImage = nil;
+
+		[self.contentView.layer replaceSublayer:self.mediaLayer with:mediaLayer];
+		self.mediaLayer = mediaLayer;
 	}
 }
 

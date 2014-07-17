@@ -12,10 +12,12 @@
 @protocol ILobbyPresentationDelegate <NSObject>
 
 @property( strong, readwrite ) id currentRunID;
+@property( readonly ) CGRect externalBounds;
 
 - (void)beginTransition:(CATransition *)transition;
 
 - (void)displayImage:(UIImage *)image;
 - (void)displayVideo:(AVPlayer *)player;
+- (void)displayMediaLayer:(CALayer *)mediaLayer;
 
 @end

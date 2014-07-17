@@ -25,6 +25,7 @@
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
 		4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */; };
 		4C690BEC18229DEE00A823CC /* ILobbyRemoteFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BEB18229DEE00A823CC /* ILobbyRemoteFile.m */; };
+		4C73623F1977055E00BD128F /* ILobbyWebSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C73623E1977055E00BD128F /* ILobbyWebSlide.m */; };
 		4C75A81D1652EB7F00375EFF /* ILobbyTransitionSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */; };
 		4C82BEC217D7899200740BD1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C82BEC117D7899200740BD1 /* Images.xcassets */; };
 		4C865F8118CE0F7F00F66913 /* ILobbyStoreRemoteItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C865F8018CE0F7F00F66913 /* ILobbyStoreRemoteItem.m */; };
@@ -97,6 +98,8 @@
 		4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteDirectory.m; sourceTree = "<group>"; };
 		4C690BEA18229DEE00A823CC /* ILobbyRemoteFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteFile.h; sourceTree = "<group>"; };
 		4C690BEB18229DEE00A823CC /* ILobbyRemoteFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteFile.m; sourceTree = "<group>"; };
+		4C73623D1977055E00BD128F /* ILobbyWebSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyWebSlide.h; sourceTree = "<group>"; };
+		4C73623E1977055E00BD128F /* ILobbyWebSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyWebSlide.m; sourceTree = "<group>"; };
 		4C75A81B1652EB7F00375EFF /* ILobbyTransitionSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTransitionSource.h; sourceTree = "<group>"; };
 		4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTransitionSource.m; sourceTree = "<group>"; };
 		4C82BEC117D7899200740BD1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -186,6 +189,8 @@
 				4C204E831917BC2C002B75D3 /* ILobbyPDFSlide.m */,
 				4C204E851917BC49002B75D3 /* ILobbyMovieSlide.h */,
 				4C204E861917BC49002B75D3 /* ILobbyMovieSlide.m */,
+				4C73623D1977055E00BD128F /* ILobbyWebSlide.h */,
+				4C73623E1977055E00BD128F /* ILobbyWebSlide.m */,
 			);
 			name = Slides;
 			sourceTree = "<group>";
@@ -485,6 +490,7 @@
 				4C188A1719094FEF00B3EBF1 /* ILobbyLabelCell.m in Sources */,
 				4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */,
 				4C204E841917BC2C002B75D3 /* ILobbyPDFSlide.m in Sources */,
+				4C73623F1977055E00BD128F /* ILobbyWebSlide.m in Sources */,
 				4C01BD5E16371E1B00065A97 /* ILobbyTrackViewCell.m in Sources */,
 				4CE1D6C81638219C00026847 /* ILobbySlide.m in Sources */,
 				4C9248C918E45A3400A6CBDA /* ILobbyStoreRemoteContainer.m in Sources */,
