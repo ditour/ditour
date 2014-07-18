@@ -12,13 +12,9 @@
 
 static NSSet *WEB_EXTENSIONS;
 
-
-@interface ILobbyWebSlide ()
-
-@property (strong, nonatomic) UIWebView *webView;
-@property (strong, nonatomic) UIWindow *webWindow;
-
-@end
+static UIWebView *WEB_VIEW = nil;
+static UIWindow *WEB_WINDOW = nil;
+static CALayer *WEB_LAYER = nil;
 
 
 @implementation ILobbyWebSlide
@@ -41,15 +37,23 @@ static NSSet *WEB_EXTENSIONS;
 	NSURL *slideURL = [NSURL URLWithString:slideWebSpec];
 
 	CGRect viewSize = presenter.externalBounds;
-	self.webWindow = [[UIWindow alloc] initWithFrame:viewSize];
-	self.webView = [[UIWebView alloc] initWithFrame:viewSize];
-	[self.webWindow addSubview:self.webView];
-	self.webView.scalesPageToFit = YES;
+
+	if ( WEB_VIEW == nil ) {
+		WEB_WINDOW = [[UIWindow alloc] initWithFrame:viewSize];
+		WEB_VIEW = [[UIWebView alloc] initWithFrame:viewSize];
+		[WEB_WINDOW addSubview:WEB_VIEW];
+		WEB_VIEW.scalesPageToFit = YES;
+		WEB_LAYER = WEB_VIEW.layer;
+	}
+	else {
+		WEB_WINDOW.frame = viewSize;
+		WEB_VIEW.frame = viewSize;
+	}
 
 	//NSLog( @"Loading slide for URL: %@", slideURL );
-	[self.webView loadRequest:[NSURLRequest requestWithURL:slideURL]];
+	[WEB_VIEW loadRequest:[NSURLRequest requestWithURL:slideURL]];
 
-	[presenter displayMediaLayer:self.webView.layer];
+	[presenter displayMediaLayer:WEB_LAYER];
 
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -61,8 +65,7 @@ static NSSet *WEB_EXTENSIONS;
 
 
 - (void)cleanup {
-	self.webWindow = nil;
-	self.webView = nil;
+	//[WEB_VIEW stopLoading];
 }
 
 
