@@ -17,6 +17,11 @@ static UIWindow *WEB_WINDOW = nil;
 static CALayer *WEB_LAYER = nil;
 
 
+@interface ILobbyWebSlide () <UIWebViewDelegate>
+
+@end
+
+
 @implementation ILobbyWebSlide
 
 + (void)load {
@@ -41,6 +46,7 @@ static CALayer *WEB_LAYER = nil;
 	if ( WEB_VIEW == nil ) {
 		WEB_WINDOW = [[UIWindow alloc] initWithFrame:viewSize];
 		WEB_VIEW = [[UIWebView alloc] initWithFrame:viewSize];
+		WEB_VIEW.delegate = self;
 		[WEB_WINDOW addSubview:WEB_VIEW];
 		WEB_VIEW.scalesPageToFit = YES;
 		WEB_LAYER = WEB_VIEW.layer;
@@ -61,6 +67,18 @@ static CALayer *WEB_LAYER = nil;
 		handler( self );
 		[self cleanup];
 	});
+}
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+	// scale the web view's scroll zoom to match the content view so we can see the whole image
+
+	CGSize contentSize = webView.scrollView.contentSize;
+
+	if ( contentSize.width > 0 ) {
+		CGSize viewSize = webView.bounds.size;
+		webView.scrollView.zoomScale = viewSize.width / contentSize.width;
+	}
 }
 
 
