@@ -64,8 +64,8 @@ static CALayer *WEB_LAYER = nil;
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
-		handler( self );
 		[self cleanup];
+		handler( self );
 	});
 }
 
@@ -86,7 +86,8 @@ static CALayer *WEB_LAYER = nil;
 
 
 - (void)cleanup {
-	//[WEB_VIEW stopLoading];
+	// clear the web slide to stop loading content and prevent artifacts during the track loop
+	[WEB_VIEW loadHTMLString:@"<html><body></body></html>" baseURL:[NSURL URLWithString:@"http://localhost"]];
 
 	WEB_VIEW.scrollView.minimumZoomScale = 1.0;
 	WEB_VIEW.scrollView.maximumZoomScale = 1.0;
