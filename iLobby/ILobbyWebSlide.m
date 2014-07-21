@@ -38,7 +38,7 @@ static CALayer *WEB_LAYER = nil;
 
 
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
-	NSString *slideWebSpec = [NSString stringWithContentsOfFile:self.mediaFile encoding:NSUTF8StringEncoding error:nil];
+	NSString *slideWebSpec = [[NSString stringWithContentsOfFile:self.mediaFile encoding:NSUTF8StringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	NSURL *slideURL = [NSURL URLWithString:slideWebSpec];
 
 	CGRect viewSize = presenter.externalBounds;
