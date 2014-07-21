@@ -22,6 +22,7 @@
 @property (nonatomic, readwrite, strong) NSArray *slides;
 @property (nonatomic, readwrite, strong) ILobbySlide *currentSlide;
 @property (nonatomic, readwrite, strong) ILobbyTransitionSource *defaultTransitionSource;
+@property (nonatomic, readwrite, assign) BOOL playing;
 @end
 
 
@@ -32,6 +33,7 @@
 	self = [super init];
 
 	if ( self ) {
+		self.playing = NO;
 		self.currentSlide = nil;
 
 		self.label = trackStore.title;
@@ -117,6 +119,8 @@
 
 - (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbyTrackCompletionHandler)handler {
 //	NSLog( @"Presenting track: %@", self.label );
+	self.playing = YES;
+
 	NSArray *slides = self.slides;
 	id runID = [NSDate new];
 	if ( slides != nil && slides.count > 0 ) {
@@ -135,24 +139,26 @@
 	ILobbySlide *slide = (ILobbySlide *)slides[slideIndex];
 	self.currentSlide = slide;
 	[slide presentTo:presenter completionHandler:^(ILobbySlide *theSlide) {
-		NSUInteger nextSlideIndex = slideIndex + 1;
-		if ( runID == presenter.currentRunID ) {
-			if ( nextSlideIndex < slides.count ) {
-				[self presentSlideAt:nextSlideIndex to:presenter forRun:runID completionHandler:trackCompletionHandler];
-			}
-			else {
-				float trackDelay = self.extraTrackDuration;
-
-				// if there is an extra track delay then we will delay calling the completion handler
-				if ( trackDelay > 0.0 ) {
-					int64_t delayInSeconds = trackDelay;
-					dispatch_time_t popTime = dispatch_time( DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC );
-					dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
-						trackCompletionHandler( self );
-					});
+		if ( self.playing ) {
+			NSUInteger nextSlideIndex = slideIndex + 1;
+			if ( runID == presenter.currentRunID ) {
+				if ( nextSlideIndex < slides.count ) {
+					[self presentSlideAt:nextSlideIndex to:presenter forRun:runID completionHandler:trackCompletionHandler];
 				}
 				else {
-					trackCompletionHandler( self );
+					float trackDelay = self.extraTrackDuration;
+
+					// if there is an extra track delay then we will delay calling the completion handler
+					if ( trackDelay > 0.0 ) {
+						int64_t delayInSeconds = trackDelay;
+						dispatch_time_t popTime = dispatch_time( DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC );
+						dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
+							trackCompletionHandler( self );
+						});
+					}
+					else {
+						trackCompletionHandler( self );
+					}
 				}
 			}
 		}
@@ -161,6 +167,7 @@
 
 
 - (void)cancelPresentation {
+	self.playing = NO;
 	ILobbySlide *currentSlide = self.currentSlide;
 	if ( currentSlide )  [currentSlide cancelPresentation];
 }
