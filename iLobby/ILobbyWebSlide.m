@@ -86,12 +86,12 @@ static CALayer *WEB_LAYER = nil;
 
 
 - (void)cleanup {
-	// clear the web slide to stop loading content and prevent artifacts during the track loop
-	[WEB_VIEW loadHTMLString:@"<html><body></body></html>" baseURL:[NSURL URLWithString:@"http://localhost"]];
-
 	WEB_VIEW.scrollView.minimumZoomScale = 1.0;
 	WEB_VIEW.scrollView.maximumZoomScale = 1.0;
 	WEB_VIEW.scrollView.zoomScale = 1.0;
+
+	// clear the web slide to stop loading content and prevent artifacts during the track loop
+	[WEB_VIEW loadHTMLString:@"<html><body></body></html>" baseURL:[NSURL URLWithString:@"http://localhost"]];
 }
 
 
