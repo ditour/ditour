@@ -77,13 +77,20 @@ static CALayer *WEB_LAYER = nil;
 
 	if ( contentSize.width > 0 ) {
 		CGSize viewSize = webView.bounds.size;
-		webView.scrollView.zoomScale = viewSize.width / contentSize.width;
+		double zoomScale = viewSize.width / contentSize.width;
+		webView.scrollView.minimumZoomScale = zoomScale;
+		webView.scrollView.maximumZoomScale = zoomScale;
+		webView.scrollView.zoomScale = zoomScale;
 	}
 }
 
 
 - (void)cleanup {
 	//[WEB_VIEW stopLoading];
+
+	WEB_VIEW.scrollView.minimumZoomScale = 1.0;
+	WEB_VIEW.scrollView.maximumZoomScale = 1.0;
+	WEB_VIEW.scrollView.zoomScale = 1.0;
 }
 
 
