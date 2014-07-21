@@ -18,7 +18,7 @@ static CALayer *WEB_LAYER = nil;
 
 
 @interface ILobbyWebSlide () <UIWebViewDelegate>
-
+@property (assign) BOOL canceled;
 @end
 
 
@@ -38,6 +38,8 @@ static CALayer *WEB_LAYER = nil;
 
 
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+	self.canceled = NO;
+
 	NSString *slideWebSpec = [[NSString stringWithContentsOfFile:self.mediaFile encoding:NSUTF8StringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	NSURL *slideURL = [NSURL URLWithString:slideWebSpec];
 
@@ -64,8 +66,10 @@ static CALayer *WEB_LAYER = nil;
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
-		[self cleanup];
-		handler( self );
+		if ( !self.canceled ) {
+			[self cleanup];
+			handler( self );
+		}
 	});
 }
 
@@ -96,6 +100,7 @@ static CALayer *WEB_LAYER = nil;
 
 
 - (void)cancelPresentation {
+	self.canceled = YES;
 	[self cleanup];
 }
 
