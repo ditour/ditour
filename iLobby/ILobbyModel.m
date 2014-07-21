@@ -377,7 +377,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 - (void)reloadPresentation {
 //	NSLog( @"reloading presentation..." );
 	[self stop];
-//	[self loadDefaultPresentation];
+	[self loadDefaultPresentation];
 	[self play];
 }
 
