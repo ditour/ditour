@@ -66,6 +66,7 @@ static CALayer *WEB_LAYER = nil;
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
+		// since the web slides share a common web view we should not perform and cleanup upon cancelation as this may interrupt another web slide
 		if ( !self.canceled ) {
 			[self cleanup];
 			handler( self );
