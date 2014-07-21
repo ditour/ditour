@@ -40,6 +40,9 @@ static CALayer *WEB_LAYER = nil;
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.canceled = NO;
 
+	// store a local copy to compare during post processing
+	id currentRunID = presenter.currentRunID;
+
 	NSString *slideWebSpec = [[NSString stringWithContentsOfFile:self.mediaFile encoding:NSUTF8StringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	NSURL *slideURL = [NSURL URLWithString:slideWebSpec];
 
@@ -67,7 +70,7 @@ static CALayer *WEB_LAYER = nil;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
 	dispatch_after( popTime, dispatch_get_main_queue(), ^(void){
 		// since the web slides share a common web view we should not perform and cleanup upon cancelation as this may interrupt another web slide
-		if ( !self.canceled ) {
+		if ( !self.canceled && currentRunID == presenter.currentRunID ) {
 			[self cleanup];
 			handler( self );
 		}
@@ -101,8 +104,10 @@ static CALayer *WEB_LAYER = nil;
 
 
 - (void)cancelPresentation {
-	self.canceled = YES;
-	[self cleanup];
+	if ( !self.canceled ) {		// prevent unnecessary cleanup
+		self.canceled = YES;
+		[self cleanup];
+	}
 }
 
 

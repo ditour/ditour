@@ -170,6 +170,9 @@
 	self.playing = NO;
 	ILobbySlide *currentSlide = self.currentSlide;
 	if ( currentSlide )  [currentSlide cancelPresentation];
+
+	// clear the current slide to avoid unnecessary slide cancelation
+	self.currentSlide = nil;
 }
 
 @end
