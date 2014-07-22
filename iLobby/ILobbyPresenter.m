@@ -15,8 +15,6 @@
 @property (strong, nonatomic) UIView *contentView;
 @property (weak, nonatomic) CALayer *mediaLayer;
 @property (weak, nonatomic) UIView *mediaView;
-@property (strong, nonatomic) CALayer *imageLayer;
-@property (strong, nonatomic) UIImage *currentImage;
 
 @end
 
@@ -50,38 +48,8 @@
 }
 
 
-- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)graphicsContext {
-	if ( self.currentImage ) {
-		UIGraphicsPushContext( graphicsContext );
-		[self.currentImage drawInRect:self.imageLayer.bounds];
-		UIGraphicsPopContext();
-	}
-}
-
-
-- (void)displayImage:(UIImage *)image {
-	if ( self.externalWindow ) {
-		self.currentImage = image;
-
-		if ( self.mediaView ) {
-			[self.mediaView removeFromSuperview];
-			self.mediaView = nil;
-		}
-
-		if ( self.mediaLayer != self.imageLayer ) {
-			if ( self.mediaLayer )  [self.mediaLayer removeFromSuperlayer];
-			[self.contentView.layer addSublayer:self.imageLayer];
-		}
-
-		[self.imageLayer setNeedsDisplay];
-	}
-}
-
-
 - (void)displayVideo:(AVPlayer *)player {
 	if ( self.externalWindow ) {
-		self.currentImage = nil;
-
 		if ( self.mediaView ) {
 			[self.mediaView removeFromSuperview];
 			self.mediaView = nil;
@@ -133,15 +101,6 @@
 		UIView *contentView = [[UIView alloc] initWithFrame:[externalScreen bounds]];
 		contentView.layer.borderWidth = 0;
 		self.contentView = contentView;
-
-		self.imageLayer = [CALayer new];
-		self.imageLayer.delegate = self;
-		self.imageLayer.contentsGravity = kCAGravityResizeAspect;
-		self.imageLayer.frame = contentView.frame;
-		self.imageLayer.backgroundColor = [[UIColor blackColor] CGColor];
-
-		self.mediaLayer = self.imageLayer;
-		[self.contentView.layer addSublayer:self.mediaLayer];
 
 		UIViewController *contentViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
 		contentViewController.view = contentView;

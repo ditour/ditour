@@ -14,6 +14,9 @@
 
 static NSSet *PDF_EXTENSIONS;
 
+static UIImageView *IMAGE_VIEW = nil;
+
+
 @implementation ILobbyPDFSlide {
 	id _currentRunID;
 }
@@ -78,7 +81,13 @@ static NSSet *PDF_EXTENSIONS;
 	UIImage *image = [self imageFromPageRef:pageRef];
 	CGPDFDocumentRelease( documentRef );
 
-	[presenter displayImage:image];
+	if ( IMAGE_VIEW == nil ) {
+		IMAGE_VIEW = [[UIImageView alloc] initWithFrame:presenter.externalBounds];
+	}
+
+	IMAGE_VIEW.image = image;
+
+	[presenter displayMediaView:IMAGE_VIEW];
 
 	size_t nextPageNumber = pageNumber + 1;
 	int64_t delayInSeconds = self.duration;
