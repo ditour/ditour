@@ -12,11 +12,10 @@
 
 static NSSet *WEB_EXTENSIONS;
 
-static UIWebView *WEB_VIEW = nil;
-
 
 @interface ILobbyWebSlide () <UIWebViewDelegate>
 @property (assign) BOOL canceled;
+@property (strong) UIWebView *webView;
 @end
 
 
@@ -35,6 +34,11 @@ static UIWebView *WEB_VIEW = nil;
 }
 
 
+- (void)dealloc {
+	[self cleanup];
+}
+
+
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.canceled = NO;
 
@@ -46,17 +50,17 @@ static UIWebView *WEB_VIEW = nil;
 
 	CGRect viewSize = presenter.externalBounds;
 
-	if ( WEB_VIEW == nil ) {
-		WEB_VIEW = [[UIWebView alloc] initWithFrame:viewSize];
-		WEB_VIEW.scalesPageToFit = YES;
+	if ( self.webView == nil ) {
+		self.webView = [[UIWebView alloc] initWithFrame:viewSize];
+		self.webView.scalesPageToFit = YES;
 	}
 
-	WEB_VIEW.delegate = self;
+	self.webView.delegate = self;
 
 	//NSLog( @"Loading slide for URL: %@", slideURL );
 
-	[presenter displayMediaView:WEB_VIEW];
-	[WEB_VIEW loadRequest:[NSURLRequest requestWithURL:slideURL]];
+	[presenter displayMediaView:self.webView];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:slideURL]];
 
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -72,7 +76,7 @@ static UIWebView *WEB_VIEW = nil;
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	// scale the web view's scroll zoom to match the content width so we can see the whole width
-	if ( !self.canceled && WEB_VIEW == webView ) {
+	if ( !self.canceled && self.webView == webView ) {
 		CGSize contentSize = webView.scrollView.contentSize;
 
 		if ( contentSize.width > 0 ) {
@@ -87,14 +91,10 @@ static UIWebView *WEB_VIEW = nil;
 
 
 - (void)cleanup {
-	if ( WEB_VIEW ) {
-		// reset the zoom
-		WEB_VIEW.scrollView.minimumZoomScale = 1.0;
-		WEB_VIEW.scrollView.maximumZoomScale = 1.0;
-		WEB_VIEW.scrollView.zoomScale = 1.0;
-
-		[WEB_VIEW loadHTMLString:@"" baseURL:nil];	// stop loading new content
-		WEB_VIEW.delegate = nil;
+	if ( self.webView ) {
+		self.webView.delegate = nil;
+		[self.webView stopLoading];
+		self.webView = nil;
 	}
 }
 
