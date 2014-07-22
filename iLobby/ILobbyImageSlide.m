@@ -12,8 +12,6 @@
 
 static NSSet *IMAGE_EXTENSIONS;
 
-static UIImageView *IMAGE_VIEW = nil;
-
 
 @implementation ILobbyImageSlide
 
@@ -31,15 +29,10 @@ static UIImageView *IMAGE_VIEW = nil;
 
 
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
-	UIImage *image = [UIImage imageWithContentsOfFile:self.mediaFile];
-
-	if ( IMAGE_VIEW == nil ) {
-		IMAGE_VIEW = [[UIImageView alloc] initWithFrame:presenter.externalBounds];
-	}
-
-	IMAGE_VIEW.image = image;
-
-	[presenter displayMediaView:IMAGE_VIEW];
+	UIImageView *imageView = [[UIImageView alloc] initWithFrame:presenter.externalBounds];
+	imageView.image = [UIImage imageWithContentsOfFile:self.mediaFile];
+	
+	[presenter displayMediaView:imageView];
 
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
