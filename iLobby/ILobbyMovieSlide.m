@@ -48,7 +48,17 @@ static NSSet *MOVIE_EXTENSIONS;
     AVPlayer *player = [AVPlayer playerWithPlayerItem:videoItem];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePlayerCompletion:) name:AVPlayerItemDidPlayToEndTimeNotification object:videoItem];
-	[presenter displayVideo:player];
+
+	UIView *videoView = [[UIView alloc] initWithFrame:presenter.externalBounds];
+	CALayer *videoLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+	videoLayer.contentsGravity = kCAGravityResizeAspect;
+	videoLayer.frame = videoView.frame;
+	videoLayer.backgroundColor = [[UIColor blackColor] CGColor];
+	[videoView.layer addSublayer:videoLayer];
+
+	[presenter displayMediaView:videoView];
+
+	[player play];
 }
 
 

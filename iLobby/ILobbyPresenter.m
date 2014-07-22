@@ -12,8 +12,8 @@
 
 
 @interface ILobbyPresenter ()
+
 @property (strong, nonatomic) UIView *contentView;
-@property (weak, nonatomic) CALayer *mediaLayer;
 @property (weak, nonatomic) UIView *mediaView;
 
 @end
@@ -44,27 +44,6 @@
 - (void)beginTransition:(CATransition *)transition {
 	if ( transition != nil && self.externalWindow != nil ) {
 		[self.contentView.layer addAnimation:transition forKey:nil];
-	}
-}
-
-
-- (void)displayVideo:(AVPlayer *)player {
-	if ( self.externalWindow ) {
-		if ( self.mediaView ) {
-			[self.mediaView removeFromSuperview];
-			self.mediaView = nil;
-		}
-
-		CALayer *videoLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-		videoLayer.contentsGravity = kCAGravityResizeAspect;
-		videoLayer.frame = self.contentView.frame;
-		videoLayer.backgroundColor = [[UIColor blackColor] CGColor];
-
-		if ( self.mediaLayer )  [self.mediaLayer removeFromSuperlayer];
-		[self.contentView.layer addSublayer:videoLayer];
-		self.mediaLayer = videoLayer;
-
-		[player play];
 	}
 }
 

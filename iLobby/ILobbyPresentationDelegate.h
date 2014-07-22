@@ -16,8 +16,6 @@
 
 - (void)beginTransition:(CATransition *)transition;
 
-- (void)displayVideo:(AVPlayer *)player;
-
 - (void)displayMediaView:(UIView *)mediaView;
 
 @end
