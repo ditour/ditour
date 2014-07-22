@@ -12,11 +12,11 @@
 
 static NSSet *WEB_EXTENSIONS;
 
+static UIWebView *WEB_VIEW = nil;
+
 
 @interface ILobbyWebSlide () <UIWebViewDelegate>
 @property (assign) BOOL canceled;
-
-@property (strong) UIWebView *webView;
 @end
 
 
@@ -35,11 +35,6 @@ static NSSet *WEB_EXTENSIONS;
 }
 
 
-- (void)dealloc {
-	self.webView = nil;
-}
-
-
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.canceled = NO;
 
@@ -51,14 +46,17 @@ static NSSet *WEB_EXTENSIONS;
 
 	CGRect viewSize = presenter.externalBounds;
 
-	self.webView = [[UIWebView alloc] initWithFrame:viewSize];
-	self.webView.delegate = self;
-	self.webView.scalesPageToFit = YES;
+	if ( WEB_VIEW == nil ) {
+		WEB_VIEW = [[UIWebView alloc] initWithFrame:viewSize];
+		WEB_VIEW.scalesPageToFit = YES;
+	}
+
+	WEB_VIEW.delegate = self;
 
 	//NSLog( @"Loading slide for URL: %@", slideURL );
 
-	[presenter displayMediaView:self.webView];
-	[self.webView loadRequest:[NSURLRequest requestWithURL:slideURL]];
+	[presenter displayMediaView:WEB_VIEW];
+	[WEB_VIEW loadRequest:[NSURLRequest requestWithURL:slideURL]];
 
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -73,9 +71,8 @@ static NSSet *WEB_EXTENSIONS;
 
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-	// scale the web view's scroll zoom to match the content view so we can see the whole image
-
-	if ( !self.canceled && self.webView == webView ) {
+	// scale the web view's scroll zoom to match the content width so we can see the whole width
+	if ( !self.canceled && WEB_VIEW == webView ) {
 		CGSize contentSize = webView.scrollView.contentSize;
 
 		if ( contentSize.width > 0 ) {
@@ -90,10 +87,14 @@ static NSSet *WEB_EXTENSIONS;
 
 
 - (void)cleanup {
-	if ( self.webView ) {
-		[self.webView loadHTMLString:@"" baseURL:nil];
-		[self.webView stopLoading];
-		self.webView.delegate = nil;
+	if ( WEB_VIEW ) {
+		// reset the zoom
+		WEB_VIEW.scrollView.minimumZoomScale = 1.0;
+		WEB_VIEW.scrollView.maximumZoomScale = 1.0;
+		WEB_VIEW.scrollView.zoomScale = 1.0;
+
+		[WEB_VIEW loadHTMLString:@"" baseURL:nil];	// stop loading new content
+		WEB_VIEW.delegate = nil;
 	}
 }
 
