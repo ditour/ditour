@@ -13,7 +13,8 @@
 
 @interface ILobbyPresenter ()
 @property (strong, nonatomic) UIView *contentView;
-@property (strong, nonatomic) CALayer *mediaLayer;
+@property (weak, nonatomic) CALayer *mediaLayer;
+@property (weak, nonatomic) UIView *mediaView;
 @property (strong, nonatomic) CALayer *imageLayer;
 @property (strong, nonatomic) UIImage *currentImage;
 
@@ -62,9 +63,14 @@
 	if ( self.externalWindow ) {
 		self.currentImage = image;
 
+		if ( self.mediaView ) {
+			[self.mediaView removeFromSuperview];
+			self.mediaView = nil;
+		}
+
 		if ( self.mediaLayer != self.imageLayer ) {
-			[self.contentView.layer replaceSublayer:self.mediaLayer with:self.imageLayer];
-			self.mediaLayer = self.imageLayer;
+			if ( self.mediaLayer )  [self.mediaLayer removeFromSuperlayer];
+			[self.contentView.layer addSublayer:self.imageLayer];
 		}
 
 		[self.imageLayer setNeedsDisplay];
@@ -76,12 +82,18 @@
 	if ( self.externalWindow ) {
 		self.currentImage = nil;
 
+		if ( self.mediaView ) {
+			[self.mediaView removeFromSuperview];
+			self.mediaView = nil;
+		}
+
 		CALayer *videoLayer = [AVPlayerLayer playerLayerWithPlayer:player];
 		videoLayer.contentsGravity = kCAGravityResizeAspect;
 		videoLayer.frame = self.contentView.frame;
 		videoLayer.backgroundColor = [[UIColor blackColor] CGColor];
 
-		[self.contentView.layer replaceSublayer:self.mediaLayer with:videoLayer];
+		if ( self.mediaLayer )  [self.mediaLayer removeFromSuperlayer];
+		[self.contentView.layer addSublayer:videoLayer];
 		self.mediaLayer = videoLayer;
 
 		[player play];
@@ -89,13 +101,13 @@
 }
 
 
-- (void)displayMediaLayer:(CALayer *)mediaLayer {
-	if ( self.externalWindow ) {
-		self.currentImage = nil;
-
-		[self.contentView.layer replaceSublayer:self.mediaLayer with:mediaLayer];
-		self.mediaLayer = mediaLayer;
+- (void)displayMediaView:(UIView *)mediaView {
+	if ( self.mediaView ) {
+		[self.mediaView removeFromSuperview];
 	}
+
+	self.mediaView = mediaView;
+	[self.contentView addSubview:mediaView];
 }
 
 

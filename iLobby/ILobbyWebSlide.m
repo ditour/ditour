@@ -12,13 +12,11 @@
 
 static NSSet *WEB_EXTENSIONS;
 
-static UIWebView *WEB_VIEW = nil;
-static UIWindow *WEB_WINDOW = nil;
-static CALayer *WEB_LAYER = nil;
-
 
 @interface ILobbyWebSlide () <UIWebViewDelegate>
 @property (assign) BOOL canceled;
+
+@property (strong) UIWebView *webView;
 @end
 
 
@@ -37,6 +35,11 @@ static CALayer *WEB_LAYER = nil;
 }
 
 
+- (void)dealloc {
+	self.webView = nil;
+}
+
+
 - (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.canceled = NO;
 
@@ -48,23 +51,14 @@ static CALayer *WEB_LAYER = nil;
 
 	CGRect viewSize = presenter.externalBounds;
 
-	if ( WEB_VIEW == nil ) {
-		WEB_WINDOW = [[UIWindow alloc] initWithFrame:viewSize];
-		WEB_VIEW = [[UIWebView alloc] initWithFrame:viewSize];
-		WEB_VIEW.delegate = self;
-		[WEB_WINDOW addSubview:WEB_VIEW];
-		WEB_VIEW.scalesPageToFit = YES;
-		WEB_LAYER = WEB_VIEW.layer;
-	}
-	else {
-		WEB_WINDOW.frame = viewSize;
-		WEB_VIEW.frame = viewSize;
-	}
+	self.webView = [[UIWebView alloc] initWithFrame:viewSize];
+	self.webView.delegate = self;
+	self.webView.scalesPageToFit = YES;
 
 	//NSLog( @"Loading slide for URL: %@", slideURL );
-	[WEB_VIEW loadRequest:[NSURLRequest requestWithURL:slideURL]];
 
-	[presenter displayMediaLayer:WEB_LAYER];
+	[presenter displayMediaView:self.webView];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:slideURL]];
 
 	int64_t delayInSeconds = self.duration;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -81,25 +75,26 @@ static CALayer *WEB_LAYER = nil;
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 	// scale the web view's scroll zoom to match the content view so we can see the whole image
 
-	CGSize contentSize = webView.scrollView.contentSize;
+	if ( !self.canceled && self.webView == webView ) {
+		CGSize contentSize = webView.scrollView.contentSize;
 
-	if ( contentSize.width > 0 ) {
-		CGSize viewSize = webView.bounds.size;
-		double zoomScale = viewSize.width / contentSize.width;
-		webView.scrollView.minimumZoomScale = zoomScale;
-		webView.scrollView.maximumZoomScale = zoomScale;
-		webView.scrollView.zoomScale = zoomScale;
+		if ( contentSize.width > 0 ) {
+			CGSize viewSize = webView.bounds.size;
+			double zoomScale = viewSize.width / contentSize.width;
+			webView.scrollView.minimumZoomScale = zoomScale;
+			webView.scrollView.maximumZoomScale = zoomScale;
+			webView.scrollView.zoomScale = zoomScale;
+		}
 	}
 }
 
 
 - (void)cleanup {
-	WEB_VIEW.scrollView.minimumZoomScale = 1.0;
-	WEB_VIEW.scrollView.maximumZoomScale = 1.0;
-	WEB_VIEW.scrollView.zoomScale = 1.0;
-
-	// clear the web slide to stop loading content and prevent artifacts during the track loop
-	[WEB_VIEW loadHTMLString:@"<html><body></body></html>" baseURL:[NSURL URLWithString:@"http://localhost"]];
+	if ( self.webView ) {
+		[self.webView loadHTMLString:@"" baseURL:nil];
+		[self.webView stopLoading];
+		self.webView.delegate = nil;
+	}
 }
 
 

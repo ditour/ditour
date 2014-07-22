@@ -18,6 +18,7 @@
 
 - (void)displayImage:(UIImage *)image;
 - (void)displayVideo:(AVPlayer *)player;
-- (void)displayMediaLayer:(CALayer *)mediaLayer;
+
+- (void)displayMediaView:(UIView *)mediaView;
 
 @end
