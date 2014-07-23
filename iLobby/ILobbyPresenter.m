@@ -14,7 +14,6 @@
 @interface ILobbyPresenter ()
 
 @property (strong, nonatomic) UIView *contentView;
-@property (weak, nonatomic) UIView *mediaView;
 
 @end
 
@@ -49,11 +48,11 @@
 
 
 - (void)displayMediaView:(UIView *)mediaView {
-	if ( self.mediaView ) {
-		[self.mediaView removeFromSuperview];
+	// remove all subviews from the content view (should just be the last media view but just in case remove all subviews)
+	for ( UIView *subview in self.contentView.subviews ) {
+		[subview removeFromSuperview];
 	}
 
-	self.mediaView = mediaView;
 	[self.contentView addSubview:mediaView];
 }
 
