@@ -50,11 +50,8 @@ static NSSet *WEB_EXTENSIONS;
 
 	CGRect viewSize = presenter.externalBounds;
 
-	if ( self.webView == nil ) {
-		self.webView = [[UIWebView alloc] initWithFrame:viewSize];
-		self.webView.scalesPageToFit = YES;
-	}
-
+	self.webView = [[UIWebView alloc] initWithFrame:viewSize];
+	self.webView.scalesPageToFit = YES;
 	self.webView.delegate = self;
 
 	//NSLog( @"Loading slide for URL: %@", slideURL );
