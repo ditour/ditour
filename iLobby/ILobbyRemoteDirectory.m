@@ -12,8 +12,10 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "tidy.h"
-#include "buffio.h"
+// the project (see the build settings) adds the Mac's /usr/include/tidy to the header search path to pickup
+// these two tidy headers which are included in the iOS Simulator SDK but not the iOS iPhone SDK
+#include <tidy.h>
+#include <buffio.h>
 
 
 @interface ILobbyRemoteDirectory ()
