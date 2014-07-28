@@ -90,10 +90,6 @@
 		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
 		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
 		4C690BD818214AB300A823CC /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
-		4C690BE3182155B000A823CC /* buffio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = buffio.h; sourceTree = "<group>"; };
-		4C690BE4182155B000A823CC /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		4C690BE5182155B000A823CC /* tidy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tidy.h; sourceTree = "<group>"; };
-		4C690BE6182155B000A823CC /* tidyenum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tidyenum.h; sourceTree = "<group>"; };
 		4C690BE718229DD100A823CC /* ILobbyRemoteDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectory.h; sourceTree = "<group>"; };
 		4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteDirectory.m; sourceTree = "<group>"; };
 		4C690BEA18229DEE00A823CC /* ILobbyRemoteFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteFile.h; sourceTree = "<group>"; };
@@ -203,7 +199,6 @@
 				4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */,
 				4C690BEA18229DEE00A823CC /* ILobbyRemoteFile.h */,
 				4C690BEB18229DEE00A823CC /* ILobbyRemoteFile.m */,
-				4C690BE21821559F00A823CC /* tidy */,
 				4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */,
 				4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */,
 				4CC3919718EDF2B500B9AA4E /* ILobbyDownloadStatus.h */,
@@ -249,17 +244,6 @@
 				4C75A81C1652EB7F00375EFF /* ILobbyTransitionSource.m */,
 			);
 			name = Presentation;
-			sourceTree = "<group>";
-		};
-		4C690BE21821559F00A823CC /* tidy */ = {
-			isa = PBXGroup;
-			children = (
-				4C690BE3182155B000A823CC /* buffio.h */,
-				4C690BE4182155B000A823CC /* platform.h */,
-				4C690BE5182155B000A823CC /* tidy.h */,
-				4C690BE6182155B000A823CC /* tidyenum.h */,
-			);
-			path = tidy;
 			sourceTree = "<group>";
 		};
 		4C937D691631AAE200F251FF = {
@@ -584,6 +568,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Applications/Xcode6-Beta4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+				);
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -605,6 +593,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Applications/Xcode6-Beta4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+				);
 				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
