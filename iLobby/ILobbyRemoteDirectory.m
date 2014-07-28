@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "tidy/tidy.h"
-#include "tidy/buffio.h"
+#include "tidy.h"
+#include "buffio.h"
 
 
 @interface ILobbyRemoteDirectory ()
