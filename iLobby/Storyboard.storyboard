@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="cmb-RJ-5st">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="cmb-RJ-5st">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -699,17 +699,7 @@
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mtW-96-yQC">
-                                            <rect key="frame" x="868" y="7" width="30" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Edit">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="editGroup:" destination="J4K-xb-7m0" eventType="touchUpInside" id="72V-aB-Lm2"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grY-J8-Yep">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grY-J8-Yep">
                                             <rect key="frame" x="906" y="7" width="65" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Webpage">
@@ -719,10 +709,25 @@
                                                 <action selector="openGroupURL:" destination="J4K-xb-7m0" eventType="touchUpInside" id="mXt-3M-poA"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mtW-96-yQC">
+                                            <rect key="frame" x="868" y="7" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Edit">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="editGroup:" destination="J4K-xb-7m0" eventType="touchUpInside" id="72V-aB-Lm2"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="grY-J8-Yep" secondAttribute="centerY" id="Fsx-Zi-Kyu"/>
+                                        <constraint firstItem="grY-J8-Yep" firstAttribute="leading" secondItem="mtW-96-yQC" secondAttribute="trailing" constant="8" id="Gc9-qL-tsD"/>
                                         <constraint firstAttribute="centerY" secondItem="fZA-2T-bgu" secondAttribute="centerY" id="NGk-a9-OxF"/>
+                                        <constraint firstAttribute="trailing" secondItem="grY-J8-Yep" secondAttribute="trailing" constant="20" id="UwZ-Vy-9Jh"/>
+                                        <constraint firstItem="mtW-96-yQC" firstAttribute="centerY" secondItem="grY-J8-Yep" secondAttribute="centerY" id="bpD-UI-XnE"/>
                                         <constraint firstItem="fZA-2T-bgu" firstAttribute="leading" secondItem="TRb-70-vNx" secondAttribute="leading" constant="20" id="dCb-Xm-Bu4"/>
+                                        <constraint firstItem="mtW-96-yQC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fZA-2T-bgu" secondAttribute="trailing" constant="8" symbolic="YES" id="dU9-9R-IAy"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
