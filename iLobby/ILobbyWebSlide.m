@@ -92,6 +92,7 @@ static NSSet *WEB_EXTENSIONS;
 	self.webView = [[UIWebView alloc] initWithFrame:viewSize];
 	self.webView.scalesPageToFit = YES;
 	self.webView.delegate = self;
+	self.webView.backgroundColor = UIColor.blackColor;
 
 	//NSLog( @"Loading slide for URL: %@", slideURL );
 
@@ -116,9 +117,8 @@ static NSSet *WEB_EXTENSIONS;
 		CGSize contentSize = webView.scrollView.contentSize;
 
 		if ( contentSize.width > 0 && contentSize.height > 0 ) {
-			CGSize viewSize = webView.bounds.size;
-			double widthZoom = viewSize.width / contentSize.width;
-			double heightZoom = viewSize.height / contentSize.height;
+			double widthZoom = CGRectGetWidth( webView.bounds ) / contentSize.width;
+			double heightZoom = CGRectGetHeight( webView.bounds ) / contentSize.height;
 			double zoomScale = 1.0;
 
 			switch ( self.zoomMode ) {
@@ -140,12 +140,15 @@ static NSSet *WEB_EXTENSIONS;
 			}
 
 			if ( zoomScale != 1.0 ) {
-				[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.body.style.zoom=%f", zoomScale]];
+				webView.scrollView.minimumZoomScale = zoomScale;
+				webView.scrollView.maximumZoomScale = zoomScale;
+				webView.scrollView.zoomScale = zoomScale;
 			}
 
-//			webView.scrollView.minimumZoomScale = zoomScale;
-//			webView.scrollView.maximumZoomScale = zoomScale;
-//			webView.scrollView.zoomScale = zoomScale;
+			// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
+			UIView *contentView = webView.scrollView.subviews[0];
+			CGPoint offset = CGPointMake( 0.5 * CGRectGetWidth( webView.scrollView.bounds ), 0.5 * CGRectGetHeight( webView.scrollView.bounds ) );
+			contentView.center = offset;
 		}
 	}
 }
