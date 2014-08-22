@@ -121,24 +121,36 @@ static NSSet *WEB_EXTENSIONS;
 			double heightZoom = CGRectGetHeight( webView.bounds ) / contentSize.height;
 			double zoomScale = 1.0;
 
+			// initialize the content center variables with the default content view center
+			UIView *contentView = webView.scrollView.subviews[0];
+			double xContentCenter = CGRectGetMidX( contentView.frame );
+			double yContentCenter = CGRectGetMidY( contentView.frame );
+
 			switch ( self.zoomMode ) {
 				case ZOOM_WIDTH:
 					zoomScale = widthZoom;
+					xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds );		// center the content horizontally in the scroll view
 					break;
 
 				case ZOOM_HEIGHT:
 					zoomScale = heightZoom;
+					yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds );	// center the content vertically in the scroll view
 					break;
 
 				case ZOOM_BOTH:
-					// use the minimum zoom to fit both the width and height on the page
+					// use the minimum zoom to fit both the content width and height on the page
 					zoomScale = widthZoom < heightZoom ? widthZoom : heightZoom;
+
+					// center the content both horizontally and vertically in the scroll view
+					xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds );
+					yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds );
 					break;
 
 				default:
 					break;
 			}
 
+			// set the scroll view zoom scale
 			if ( zoomScale != 1.0 ) {
 				webView.scrollView.minimumZoomScale = zoomScale;
 				webView.scrollView.maximumZoomScale = zoomScale;
@@ -146,8 +158,7 @@ static NSSet *WEB_EXTENSIONS;
 			}
 
 			// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
-			UIView *contentView = webView.scrollView.subviews[0];
-			contentView.center = CGPointMake( 0.5 * CGRectGetWidth( webView.scrollView.bounds ), 0.5 * CGRectGetHeight( webView.scrollView.bounds ) );
+			contentView.center = CGPointMake( xContentCenter, yContentCenter );
 		}
 	}
 }
