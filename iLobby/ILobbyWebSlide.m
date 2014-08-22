@@ -147,8 +147,7 @@ static NSSet *WEB_EXTENSIONS;
 
 			// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
 			UIView *contentView = webView.scrollView.subviews[0];
-			CGPoint offset = CGPointMake( 0.5 * CGRectGetWidth( webView.scrollView.bounds ), 0.5 * CGRectGetHeight( webView.scrollView.bounds ) );
-			contentView.center = offset;
+			contentView.center = CGPointMake( 0.5 * CGRectGetWidth( webView.scrollView.bounds ), 0.5 * CGRectGetHeight( webView.scrollView.bounds ) );
 		}
 	}
 }
