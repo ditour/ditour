@@ -1,12 +1,14 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf200
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;}
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;\f2\fnil\fcharset0 Menlo-Regular;
+}
 {\colortbl;\red255\green255\blue255;}
-{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{square\}}{\leveltext\leveltemplateid1\'01\uc0\u9642 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}}
-{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{square\}}{\leveltext\leveltemplateid1\'01\uc0\u9642 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{square\}}{\leveltext\leveltemplateid101\'01\uc0\u9642 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
 \margl1440\margr1440\vieww9000\viewh8400\viewkind0
 \pard\tqr\tx363\tx363\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
-\f0\fs24 \cf0 DiTour is a universal iOS app for displaying interactive slideshows. It runs on any modern iPad. An external monitor is required for displaying the presentations.\
+\f0\fs28 \cf0 DiTour is a universal iOS app for displaying interactive slideshows. It runs on any modern iPad. An external monitor is required for displaying the presentations.\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 \cf0 \
 
@@ -17,7 +19,7 @@ One or more presentation may be collected into a group. Each group is identified
 
 \b Presentations
 \b0 :\
-Within each directory pointed to by the group, is a list of directories (one for each presentation). Under each presentation directory, are directories corresponding to each track. Tracks will be loaded alphanumerically as they appear on the indexed webpage. You can force order by prefixing track names with any sequence of digits followed by an underscore. This prefix will be stripped when forming the track name to display. The first track is the default track. When the user selects a track, that slides in that track are presented until the specified duration expires or the user selects another track. When the duration expires, the presentation returns to the default track. The default track plays all its slides in order and repeats indefinitely. A slide may either by an image or a movie. An image is displayed for the track's default duration before switching to the next slide. A movie slide is presented until the movie plays to completion and then switches to the next slide. A PDF slid will present each of its pages as if they were individual image slides.\
+Within each directory pointed to by the group, is a list of directories (one for each presentation). Under each presentation directory, are directories corresponding to each track. Tracks will be loaded alphanumerically as they appear on the indexed webpage. You can force order by prefixing track names with any sequence of digits followed by an underscore. This prefix will be stripped when forming the track name to display. The first track is the default track. When the user selects a track, that slides in that track are presented until the specified duration expires or the user selects another track. When the duration expires, the presentation returns to the default track. The default track plays all its slides in order and repeats indefinitely. A slide may either by an image or a movie. An image is displayed for the track's default duration before switching to the next slide. A movie slide is presented until the movie plays to completion and then switches to the next slide. A PDF slide will present each of its pages as if they were individual image slides.\
 \
 
 \b Configuration
@@ -49,4 +51,35 @@ Presentation Group Directory\
 	- > Track directories plus optional config.json\
 		- > media files, icon file plus optional config.json\
 \
-The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v and pdf. Any file named "Icon" with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.}
+The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf and urlspec. Any file named "Icon" with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.\
+\
+
+\b Web Page Slides
+\b0 :\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 A slide whose content is given by a web page can be specified using a plain text file with an extension of "urlspec" and whose contents is simply the URL of the page to render. By default, the page will be scaled (preserving aspect ratio) to fit on the external screen. You may optionally append a URL query key/value pair to specify an alternate scaling (all preserve aspect ratio) using one of the following values for the "ditour-zoom" key:\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls2\ilvl0\cf0 {\listtext	
+\f1 \uc0\u9642 
+\f0 	}none		- Don't scale. Will display the page just as Safari would cropped to the screen's view and positioned at the top left corner of the page pinned to the top left corner of the screen.\
+{\listtext	
+\f1 \uc0\u9642 
+\f0 	}width		- Scale the page to fit the width of the page onto the screen, cropping vertically and positioned at the top of the page pinned to the top of the screen.\
+{\listtext	
+\f1 \uc0\u9642 
+\f0 	}height	- Scale the page to fit the height of the page onto the screen, cropping horizontally and positioned at the left of the page pinned to the left of the screen.\
+{\listtext	
+\f1 \uc0\u9642 
+\f0 	}both		- This is the default behavior. It scales the page to fit both horizontally and vertically on the external screen.\
+\pard\tx560\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 For example, to disable any scaling, one can specify the URL as: 
+\f2 \CocoaLigature0 http://web.ornl.gov/~t6p/Main/DiTour.html?ditour-zoom=none\
+\pard\tx560\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0 \cf0 \CocoaLigature1 Be aware that while most websites simply ignore keys they don't define (which is ideal), some websites do not and web pages may fail to load properly when they are given query keys they don't define. If a web page can't handle these query keys, just don't use them and the page will be rendered using the default behavior.\
+\pard\tx560\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+\
+}
