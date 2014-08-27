@@ -21,7 +21,6 @@
 		4C42A5E3165A96F100B64970 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4C42A5E2165A96F100B64970 /* README.rtf */; };
 		4C60121D190978E100BEC685 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */; };
 		4C601220190ADAEB00BEC685 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */; };
-		4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */; };
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
 		4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */; };
 		4C690BEC18229DEE00A823CC /* ILobbyRemoteFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C690BEB18229DEE00A823CC /* ILobbyRemoteFile.m */; };
@@ -87,8 +86,6 @@
 		4C60121C190978E100BEC685 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
 		4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultSlideIcon.png; sourceTree = "<group>"; };
 		4C615BD8191289CC005F91B1 /* iLobby 2.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0.xcdatamodel"; sourceTree = "<group>"; };
-		4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyXMLAttributeParser.h; sourceTree = "<group>"; };
-		4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyXMLAttributeParser.m; sourceTree = "<group>"; };
 		4C690BD818214AB300A823CC /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
 		4C690BE718229DD100A823CC /* ILobbyRemoteDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectory.h; sourceTree = "<group>"; };
 		4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteDirectory.m; sourceTree = "<group>"; };
@@ -199,8 +196,6 @@
 				4C690BE818229DD100A823CC /* ILobbyRemoteDirectory.m */,
 				4C690BEA18229DEE00A823CC /* ILobbyRemoteFile.h */,
 				4C690BEB18229DEE00A823CC /* ILobbyRemoteFile.m */,
-				4C690BD51820354700A823CC /* ILobbyXMLAttributeParser.h */,
-				4C690BD61820354700A823CC /* ILobbyXMLAttributeParser.m */,
 				4CC3919718EDF2B500B9AA4E /* ILobbyDownloadStatus.h */,
 				4CC3919818EDF2B500B9AA4E /* ILobbyDownloadStatus.m */,
 				4CC3919A18EDF72C00B9AA4E /* ILobbyDownloadSession.h */,
@@ -470,7 +465,6 @@
 				4CC3919C18EDF72C00B9AA4E /* ILobbyDownloadSession.m in Sources */,
 				4C01BD581637150700065A97 /* ILobbyTrack.m in Sources */,
 				4CB41D6518D24D710028F1DF /* ILobbyPresentationGroupEditCell.m in Sources */,
-				4C690BD71820354700A823CC /* ILobbyXMLAttributeParser.m in Sources */,
 				4C188A1719094FEF00B3EBF1 /* ILobbyLabelCell.m in Sources */,
 				4C690BE918229DD100A823CC /* ILobbyRemoteDirectory.m in Sources */,
 				4C204E841917BC2C002B75D3 /* ILobbyPDFSlide.m in Sources */,
