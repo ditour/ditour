@@ -204,35 +204,89 @@
 		4CEFB39419CA1F4B0095DCD2 /* DiTour */ = {
 			isa = PBXGroup;
 			children = (
+				4CEFB41719CA214A0095DCD2 /* Main */,
+				4CEFB41E19CA23120095DCD2 /* Utilities */,
+				4CEFB41919CA21920095DCD2 /* Download */,
+				4CEFB41B19CA21CF0095DCD2 /* Views */,
+				4CEFB41A19CA21B70095DCD2 /* Slides */,
+				4CEFB41D19CA22860095DCD2 /* Presentation */,
+				4CEFB41C19CA22720095DCD2 /* Model */,
+				4CEFB41619CA21370095DCD2 /* Resources */,
+			);
+			path = DiTour;
+			sourceTree = "<group>";
+		};
+		4CEFB41619CA21370095DCD2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */,
 				4CEFB39619CA1F4B0095DCD2 /* DiTour-Info.plist */,
 				4CEFB39719CA1F4B0095DCD2 /* DiTour-Prefix.pch */,
 				4CEFB39819CA1F4B0095DCD2 /* InfoPlist.strings */,
 				4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */,
+				4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */,
+				4CEFB3E819CA1F4B0095DCD2 /* README.rtf */,
+				4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		4CEFB41719CA214A0095DCD2 /* Main */ = {
+			isa = PBXGroup;
+			children = (
 				4CEFB39C19CA1F4B0095DCD2 /* ILobbyAppDelegate.h */,
 				4CEFB39D19CA1F4B0095DCD2 /* ILobbyAppDelegate.m */,
-				4CEFB39E19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.h */,
-				4CEFB39F19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m */,
+				4CEFB3AC19CA1F4B0095DCD2 /* ILobbyModel.h */,
+				4CEFB3AD19CA1F4B0095DCD2 /* ILobbyModel.m */,
+				4CEFB3AE19CA1F4B0095DCD2 /* ILobbyModelContainer.h */,
+				4CEFB3E719CA1F4B0095DCD2 /* main.m */,
+			);
+			name = Main;
+			sourceTree = "<group>";
+		};
+		4CEFB41919CA21920095DCD2 /* Download */ = {
+			isa = PBXGroup;
+			children = (
 				4CEFB3A019CA1F4B0095DCD2 /* ILobbyDownloadSession.h */,
 				4CEFB3A119CA1F4B0095DCD2 /* ILobbyDownloadSession.m */,
 				4CEFB3A219CA1F4B0095DCD2 /* ILobbyDownloadStatus.h */,
 				4CEFB3A319CA1F4B0095DCD2 /* ILobbyDownloadStatus.m */,
 				4CEFB3A419CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.h */,
 				4CEFB3A519CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m */,
-				4CEFB3A619CA1F4B0095DCD2 /* ILobbyFileInfoController.h */,
-				4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */,
+				4CEFB3C019CA1F4B0095DCD2 /* ILobbyRemoteDirectory.h */,
+				4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */,
+				4CEFB3C219CA1F4B0095DCD2 /* ILobbyRemoteDirectoryItem.h */,
+				4CEFB3C319CA1F4B0095DCD2 /* ILobbyRemoteFile.h */,
+				4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */,
+			);
+			name = Download;
+			sourceTree = "<group>";
+		};
+		4CEFB41A19CA21B70095DCD2 /* Slides */ = {
+			isa = PBXGroup;
+			children = (
 				4CEFB3A819CA1F4B0095DCD2 /* ILobbyImageSlide.h */,
 				4CEFB3A919CA1F4B0095DCD2 /* ILobbyImageSlide.m */,
-				4CEFB3AA19CA1F4B0095DCD2 /* ILobbyLabelCell.h */,
-				4CEFB3AB19CA1F4B0095DCD2 /* ILobbyLabelCell.m */,
-				4CEFB3AC19CA1F4B0095DCD2 /* ILobbyModel.h */,
-				4CEFB3AD19CA1F4B0095DCD2 /* ILobbyModel.m */,
-				4CEFB3AE19CA1F4B0095DCD2 /* ILobbyModelContainer.h */,
 				4CEFB3AF19CA1F4B0095DCD2 /* ILobbyMovieSlide.h */,
 				4CEFB3B019CA1F4B0095DCD2 /* ILobbyMovieSlide.m */,
 				4CEFB3B119CA1F4B0095DCD2 /* ILobbyPDFSlide.h */,
 				4CEFB3B219CA1F4B0095DCD2 /* ILobbyPDFSlide.m */,
-				4CEFB3B319CA1F4B0095DCD2 /* ILobbyPresentationDelegate.h */,
+				4CEFB3C519CA1F4B0095DCD2 /* ILobbySlide.h */,
+				4CEFB3C619CA1F4B0095DCD2 /* ILobbySlide.m */,
+				4CEFB3C719CA1F4B0095DCD2 /* ILobbySlideFamily.h */,
+				4CEFB3E419CA1F4B0095DCD2 /* ILobbyWebSlide.h */,
+				4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */,
+			);
+			name = Slides;
+			sourceTree = "<group>";
+		};
+		4CEFB41B19CA21CF0095DCD2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4CEFB3A619CA1F4B0095DCD2 /* ILobbyFileInfoController.h */,
+				4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */,
+				4CEFB3AA19CA1F4B0095DCD2 /* ILobbyLabelCell.h */,
+				4CEFB3AB19CA1F4B0095DCD2 /* ILobbyLabelCell.m */,
 				4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */,
 				4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */,
 				4CEFB3B619CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.h */,
@@ -243,16 +297,19 @@
 				4CEFB3BB19CA1F4B0095DCD2 /* ILobbyPresentationGroupEditCell.m */,
 				4CEFB3BC19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.h */,
 				4CEFB3BD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m */,
-				4CEFB3BE19CA1F4B0095DCD2 /* ILobbyPresenter.h */,
-				4CEFB3BF19CA1F4B0095DCD2 /* ILobbyPresenter.m */,
-				4CEFB3C019CA1F4B0095DCD2 /* ILobbyRemoteDirectory.h */,
-				4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */,
-				4CEFB3C219CA1F4B0095DCD2 /* ILobbyRemoteDirectoryItem.h */,
-				4CEFB3C319CA1F4B0095DCD2 /* ILobbyRemoteFile.h */,
-				4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */,
-				4CEFB3C519CA1F4B0095DCD2 /* ILobbySlide.h */,
-				4CEFB3C619CA1F4B0095DCD2 /* ILobbySlide.m */,
-				4CEFB3C719CA1F4B0095DCD2 /* ILobbySlideFamily.h */,
+				4CEFB3DC19CA1F4B0095DCD2 /* ILobbyTrackDetailController.h */,
+				4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */,
+				4CEFB3DE19CA1F4B0095DCD2 /* ILobbyTrackViewCell.h */,
+				4CEFB3DF19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m */,
+				4CEFB3E219CA1F4B0095DCD2 /* ILobbyViewController.h */,
+				4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		4CEFB41C19CA22720095DCD2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
 				4CEFB3C819CA1F4B0095DCD2 /* ILobbyStoreConfiguration.h */,
 				4CEFB3C919CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m */,
 				4CEFB3CA19CA1F4B0095DCD2 /* ILobbyStorePresentation.h */,
@@ -271,24 +328,31 @@
 				4CEFB3D719CA1F4B0095DCD2 /* ILobbyStoreRoot.m */,
 				4CEFB3D819CA1F4B0095DCD2 /* ILobbyStoreTrack.h */,
 				4CEFB3D919CA1F4B0095DCD2 /* ILobbyStoreTrack.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		4CEFB41D19CA22860095DCD2 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				4CEFB3B319CA1F4B0095DCD2 /* ILobbyPresentationDelegate.h */,
+				4CEFB3BE19CA1F4B0095DCD2 /* ILobbyPresenter.h */,
+				4CEFB3BF19CA1F4B0095DCD2 /* ILobbyPresenter.m */,
 				4CEFB3DA19CA1F4B0095DCD2 /* ILobbyTrack.h */,
 				4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */,
-				4CEFB3DC19CA1F4B0095DCD2 /* ILobbyTrackDetailController.h */,
-				4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */,
-				4CEFB3DE19CA1F4B0095DCD2 /* ILobbyTrackViewCell.h */,
-				4CEFB3DF19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m */,
 				4CEFB3E019CA1F4B0095DCD2 /* ILobbyTransitionSource.h */,
 				4CEFB3E119CA1F4B0095DCD2 /* ILobbyTransitionSource.m */,
-				4CEFB3E219CA1F4B0095DCD2 /* ILobbyViewController.h */,
-				4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */,
-				4CEFB3E419CA1F4B0095DCD2 /* ILobbyWebSlide.h */,
-				4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */,
-				4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */,
-				4CEFB3E719CA1F4B0095DCD2 /* main.m */,
-				4CEFB3E819CA1F4B0095DCD2 /* README.rtf */,
-				4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */,
 			);
-			path = DiTour;
+			name = Presentation;
+			sourceTree = "<group>";
+		};
+		4CEFB41E19CA23120095DCD2 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				4CEFB39E19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.h */,
+				4CEFB39F19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
