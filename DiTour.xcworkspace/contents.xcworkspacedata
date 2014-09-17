@@ -12,6 +12,6 @@
       </FileRef>
    </Group>
    <FileRef
-      location = "group:iLobby.xcodeproj">
+      location = "group:DiTour.xcodeproj">
    </FileRef>
 </Workspace>

@@ -106,10 +106,10 @@
 		4C937D781631AAE200F251FF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C937D7A1631AAE200F251FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C937D7C1631AAE200F251FF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		4C937D801631AAE200F251FF /* iLobby-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iLobby-Info.plist"; sourceTree = "<group>"; };
+		4C937D801631AAE200F251FF /* DiTour-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DiTour-Info.plist"; sourceTree = "<group>"; };
 		4C937D821631AAE200F251FF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C937D841631AAE200F251FF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4C937D861631AAE200F251FF /* iLobby-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iLobby-Prefix.pch"; sourceTree = "<group>"; };
+		4C937D861631AAE200F251FF /* DiTour-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DiTour-Prefix.pch"; sourceTree = "<group>"; };
 		4C937D871631AAE200F251FF /* ILobbyAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILobbyAppDelegate.h; sourceTree = "<group>"; };
 		4C937D881631AAE200F251FF /* ILobbyAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ILobbyAppDelegate.m; sourceTree = "<group>"; };
 		4C937DA31631B80700F251FF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -295,10 +295,10 @@
 			children = (
 				4C60121F190ADAEB00BEC685 /* DefaultSlideIcon.png */,
 				4C42A5E2165A96F100B64970 /* README.rtf */,
-				4C937D801631AAE200F251FF /* iLobby-Info.plist */,
+				4C937D801631AAE200F251FF /* DiTour-Info.plist */,
 				4C937D811631AAE200F251FF /* InfoPlist.strings */,
 				4C937D841631AAE200F251FF /* main.m */,
-				4C937D861631AAE200F251FF /* iLobby-Prefix.pch */,
+				4C937D861631AAE200F251FF /* DiTour-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -403,7 +403,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4C937D6E1631AAE200F251FF /* Build configuration list for PBXProject "iLobby" */;
+			buildConfigurationList = 4C937D6E1631AAE200F251FF /* Build configuration list for PBXProject "DiTour" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -561,13 +561,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
+				GCC_PREFIX_HEADER = "iLobby/DiTour-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode6-Beta4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
 					/usr/include/tidy,
 				);
-				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
+				INFOPLIST_FILE = "iLobby/DiTour-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "68C6125B-D77D-4288-88A6-D1574173D78A";
@@ -587,13 +587,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iLobby/iLobby-Prefix.pch";
+				GCC_PREFIX_HEADER = "iLobby/DiTour-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode6-Beta4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
 					/usr/include/tidy,
 				);
-				INFOPLIST_FILE = "iLobby/iLobby-Info.plist";
+				INFOPLIST_FILE = "iLobby/DiTour-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8CB2130C-27FB-4B6D-BF8E-B1AB07656E4E";
@@ -605,7 +605,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4C937D6E1631AAE200F251FF /* Build configuration list for PBXProject "iLobby" */ = {
+		4C937D6E1631AAE200F251FF /* Build configuration list for PBXProject "DiTour" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4C937D961631AAE200F251FF /* Debug */,
