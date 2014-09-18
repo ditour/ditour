@@ -232,10 +232,10 @@
 		4CEFB41719CA214A0095DCD2 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
 				4CEFB3AC19CA1F4B0095DCD2 /* ILobbyModel.h */,
 				4CEFB3AD19CA1F4B0095DCD2 /* ILobbyModel.m */,
 				4CEFB3AE19CA1F4B0095DCD2 /* ILobbyModelContainer.h */,
-				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
 				4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */,
 			);
 			name = Main;
