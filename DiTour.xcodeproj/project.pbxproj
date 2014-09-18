@@ -16,7 +16,6 @@
 		4CA582DC16386913009ACF37 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA582DB16386913009ACF37 /* CoreMedia.framework */; };
 		4CEFB3EA19CA1F4B0095DCD2 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */; };
 		4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */; };
-		4CEFB3EE19CA1F4B0095DCD2 /* ILobbyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39D19CA1F4B0095DCD2 /* ILobbyAppDelegate.m */; };
 		4CEFB3EF19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39F19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m */; };
 		4CEFB3F019CA1F4B0095DCD2 /* ILobbyDownloadSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A119CA1F4B0095DCD2 /* ILobbyDownloadSession.m */; };
 		4CEFB3F119CA1F4B0095DCD2 /* ILobbyDownloadStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A319CA1F4B0095DCD2 /* ILobbyDownloadStatus.m */; };
@@ -52,10 +51,10 @@
 		4CEFB40F19CA1F4B0095DCD2 /* ILobbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */; };
 		4CEFB41019CA1F4B0095DCD2 /* ILobbyWebSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */; };
 		4CEFB41119CA1F4B0095DCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */; };
-		4CEFB41219CA1F4B0095DCD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E719CA1F4B0095DCD2 /* main.m */; };
 		4CEFB41319CA1F4B0095DCD2 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E819CA1F4B0095DCD2 /* README.rtf */; };
 		4CEFB41419CA1F4B0095DCD2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */; };
 		4CEFB41519CA20180095DCD2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39819CA1F4B0095DCD2 /* InfoPlist.strings */; };
+		4CF0ABA319CB0C1400DEA8D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,8 +71,6 @@
 		4CEFB39719CA1F4B0095DCD2 /* DiTour-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiTour-Prefix.pch"; sourceTree = "<group>"; };
 		4CEFB39919CA1F4B0095DCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CEFB39B19CA1F4B0095DCD2 /* iLobby 2.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0.xcdatamodel"; sourceTree = "<group>"; };
-		4CEFB39C19CA1F4B0095DCD2 /* ILobbyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyAppDelegate.h; sourceTree = "<group>"; };
-		4CEFB39D19CA1F4B0095DCD2 /* ILobbyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyAppDelegate.m; sourceTree = "<group>"; };
 		4CEFB39E19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyConcurrentDictionary.h; sourceTree = "<group>"; };
 		4CEFB39F19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyConcurrentDictionary.m; sourceTree = "<group>"; };
 		4CEFB3A019CA1F4B0095DCD2 /* ILobbyDownloadSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyDownloadSession.h; sourceTree = "<group>"; };
@@ -147,9 +144,10 @@
 		4CEFB3E419CA1F4B0095DCD2 /* ILobbyWebSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyWebSlide.h; sourceTree = "<group>"; };
 		4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyWebSlide.m; sourceTree = "<group>"; };
 		4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		4CEFB3E719CA1F4B0095DCD2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4CEFB3E819CA1F4B0095DCD2 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DiTour-Bridging-Header.h"; sourceTree = "<group>"; };
+		4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,12 +232,11 @@
 		4CEFB41719CA214A0095DCD2 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				4CEFB39C19CA1F4B0095DCD2 /* ILobbyAppDelegate.h */,
-				4CEFB39D19CA1F4B0095DCD2 /* ILobbyAppDelegate.m */,
 				4CEFB3AC19CA1F4B0095DCD2 /* ILobbyModel.h */,
 				4CEFB3AD19CA1F4B0095DCD2 /* ILobbyModel.m */,
 				4CEFB3AE19CA1F4B0095DCD2 /* ILobbyModelContainer.h */,
-				4CEFB3E719CA1F4B0095DCD2 /* main.m */,
+				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
+				4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -434,6 +431,7 @@
 			files = (
 				4CEFB40419CA1F4B0095DCD2 /* ILobbyStorePresentationGroup.m in Sources */,
 				4CEFB40319CA1F4B0095DCD2 /* ILobbyStorePresentation.m in Sources */,
+				4CF0ABA319CB0C1400DEA8D8 /* AppDelegate.swift in Sources */,
 				4CEFB3FF19CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m in Sources */,
 				4CEFB3F119CA1F4B0095DCD2 /* ILobbyDownloadStatus.m in Sources */,
 				4CEFB40019CA1F4B0095DCD2 /* ILobbyRemoteFile.m in Sources */,
@@ -452,9 +450,7 @@
 				4CEFB3F519CA1F4B0095DCD2 /* ILobbyLabelCell.m in Sources */,
 				4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */,
 				4CEFB3F219CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m in Sources */,
-				4CEFB41219CA1F4B0095DCD2 /* main.m in Sources */,
 				4CEFB3EF19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m in Sources */,
-				4CEFB3EE19CA1F4B0095DCD2 /* ILobbyAppDelegate.m in Sources */,
 				4CEFB40D19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m in Sources */,
 				4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */,
 				4CEFB40B19CA1F4B0095DCD2 /* ILobbyTrack.m in Sources */,
@@ -547,6 +543,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -561,8 +558,11 @@
 				);
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "68C6125B-D77D-4288-88A6-D1574173D78A";
+				SWIFT_OBJC_BRIDGING_HEADER = "DiTour/DiTour-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -573,6 +573,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
@@ -587,8 +588,10 @@
 				);
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8CB2130C-27FB-4B6D-BF8E-B1AB07656E4E";
+				SWIFT_OBJC_BRIDGING_HEADER = "DiTour/DiTour-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
