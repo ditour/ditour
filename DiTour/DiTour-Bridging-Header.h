@@ -5,3 +5,7 @@
 #import "ILobbyModel.h"
 #import "ILobbyModelContainer.h"
 #import "ILobbyPresenter.h"
+#import "ILobbyTrack.h"
+#import "ILobbyPresentationDelegate.h"
+#import "ILobbyStoreRoot.h"
+#import "ILobbyDownloadStatus.h"
