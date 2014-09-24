@@ -54,6 +54,8 @@ class MainModel {
 	let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles(nil)
 	let mainManagedObjectContext : NSManagedObjectContext
 
+	let xarr : Array = []
+
 
 	init() {
 		// setup the data model
@@ -84,6 +86,17 @@ class MainModel {
 		let editContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
 		editContext.parentContext = self.mainManagedObjectContext
 		return editContext
+	}
+
+
+	func fetchRootStore() -> ILobbyStoreRoot {
+		let mainFetchRequest = NSFetchRequest(entityName: ILobbyStoreRoot.entityName() )
+
+		var rootStore :ILobbyStoreRoot? = nil
+		var error :NSError? = nil
+		let rootStores = self.mainManagedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )
+
+		return rootStore!
 	}
 
 
