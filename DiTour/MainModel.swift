@@ -54,8 +54,6 @@ class MainModel {
 	let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles(nil)
 	let mainManagedObjectContext : NSManagedObjectContext
 
-	let xarr : Array = []
-
 
 	init() {
 		// setup the data model
