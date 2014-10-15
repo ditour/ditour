@@ -36,19 +36,16 @@ class MainModel {
 //	var mainStoreRoot : ILobbyStoreRoot
 
 	// indicates whether a track is being presented
-	private var _playing = false
-	var playing : Bool { return _playing }
+	private(set) var playing = false
 
 	// all tracks that are available
-	private var _tracks:[ILobbyTrack] = []
-	var tracks:[ILobbyTrack] { return _tracks }
+	private(set) var tracks:[ILobbyTrack] = []
 
 	// track scheduled to play automatically at the end of the current track
-	private var _defaultTrack :ILobbyTrack?
+	private var defaultTrack :ILobbyTrack?
 
 	// track that is currently playing
-	private var _currentTrack :ILobbyTrack?
-	var currentTrack :ILobbyTrack? { return _currentTrack }
+	private(set) var currentTrack :ILobbyTrack?
 
 	// managed object model for the persistent store
 	let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles(nil)
