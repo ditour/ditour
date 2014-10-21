@@ -8,4 +8,5 @@
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"
 #import "ILobbyStoreRoot.h"
+#import "ILobbyStorePresentation.h"
 #import "ILobbyDownloadStatus.h"

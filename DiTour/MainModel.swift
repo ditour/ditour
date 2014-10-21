@@ -47,56 +47,58 @@ class MainModel {
 	// track that is currently playing
 	private(set) var currentTrack :ILobbyTrack?
 
+	// indicates whether there is a presentation update
+	private var hasPresentationUpdate = false
+
 	// managed object model for the persistent store
-	let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles(nil)
+	let managedObjectModel : NSManagedObjectModel
 	let mainManagedObjectContext : NSManagedObjectContext
+
+	let mainStoreRoot : ILobbyStoreRoot
 
 
 	init() {
 		// setup the data model
-		let storeURL = NSURL.fileURLWithPath( MainModel.applicationDocumentsDirectory().stringByAppendingPathComponent("iLobby.db") )
-		let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
+		( self.managedObjectModel, self.mainManagedObjectContext ) = MainModel.setupDataModel()
 
-		if self.managedObjectModel == nil {
-			println( "Error, managed object model is nil..." )
+		self.mainStoreRoot = MainModel.fetchRootStore( self.mainManagedObjectContext )
+
+		//self.loadDefaultPresentation()
+	}
+
+
+	func cleanup() {
+		self.cleanupDisposablePresentations()
+	}
+
+
+	func cleanupDisposablePresentations() {
+		//	NSLog( @"cleaning up disposable presentations..." );
+		let fetch = NSFetchRequest( entityName: ILobbyStorePresentation.entityName() )
+		// fetch presentations explicitly marked disposable or that have no group assignment
+		fetch.predicate = NSPredicate( format: "(status = %d) || (group = nil)", REMOTE_ITEM_STATUS_DISPOSABLE )
+		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as [ILobbyStorePresentation]
+
+		if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
+			for presentation in presentations {
+				presentation.managedObjectContext?.deleteObject(presentation)
+			}
+
+			self.saveChanges(nil)
 		}
+	}
 
-		var error :NSError? = nil
-		let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel!)
-		let persistentStore :NSPersistentStore? = persistentStoreCoordinator.addPersistentStoreWithType(NSBinaryStoreType, configuration: nil, URL: storeURL, options: options, error: &error)
 
-		/* TODO: Replace this implementation with code to handle the error appropriately.
-		Typical reasons for an error here include:
-		* The persistent store is not accessible
-		* The schema for the persistent store is incompatible with current managed object model
-		Check the error message to determine what the actual problem was.
-		*/
-		assert( persistentStore != nil, "Unresolved error: \(error) generating a persistent store: \(error?.userInfo)" )
-		self.mainManagedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-		self.mainManagedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
-
-//		self.mainStoreRoot = self.fetchRootStore()
+//	func loadDefaultPresentation() -> Bool {
+//		self.hasPresentationUpdate = false
 //
-//		self.loadDefaultPresentation()
-	}
-
-
-	func createEditContextOnMain() -> NSManagedObjectContext {
-		let editContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-		editContext.parentContext = self.mainManagedObjectContext
-		return editContext
-	}
-
-
-	func fetchRootStore() -> ILobbyStoreRoot {
-		let mainFetchRequest = NSFetchRequest(entityName: ILobbyStoreRoot.entityName() )
-
-		var rootStore :ILobbyStoreRoot? = nil
-		var error :NSError? = nil
-		let rootStores = self.mainManagedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )
-
-		return rootStore!
-	}
+//		var success = false
+//		self.mainStoreRoot.managedObjectContext?.performBlockAndWait(){ () -> Void in
+//			success = self.loadPresentation( self.mainStoreRoot.currentPresentation )
+//		}
+//
+//		return success
+//	}
 
 
 	class func presentationGroupsRoot() -> String {
@@ -123,6 +125,49 @@ class MainModel {
 	//MARK: -
 	//MARK: Persistent store support
 
+
+	private class func setupDataModel() -> (NSManagedObjectModel, NSManagedObjectContext) {
+		let storeURL = NSURL.fileURLWithPath( MainModel.applicationDocumentsDirectory().stringByAppendingPathComponent("iLobby.db") )
+		let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
+
+		let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles(nil)
+		assert( managedObjectModel != nil, "Error, managed object model is nil..." )
+
+		var error :NSError? = nil
+		let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel!)
+		let persistentStore :NSPersistentStore? = persistentStoreCoordinator.addPersistentStoreWithType(NSBinaryStoreType, configuration: nil, URL: storeURL, options: options, error: &error)
+
+		/* TODO: Replace this implementation with code to handle the error appropriately.
+		Typical reasons for an error here include:
+		* The persistent store is not accessible
+		* The schema for the persistent store is incompatible with current managed object model
+		Check the error message to determine what the actual problem was.
+		*/
+		assert( persistentStore != nil, "Unresolved error: \(error) generating a persistent store: \(error?.userInfo)" )
+		let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+		managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
+
+		return (managedObjectModel!,managedObjectContext)
+	}
+
+
+	func createEditContextOnMain() -> NSManagedObjectContext {
+		let editContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+		editContext.parentContext = self.mainManagedObjectContext
+		return editContext
+	}
+
+
+	class private func fetchRootStore( managedObjectContext : NSManagedObjectContext ) -> ILobbyStoreRoot {
+		let mainFetchRequest = NSFetchRequest(entityName: ILobbyStoreRoot.entityName() )
+
+		var rootStore :ILobbyStoreRoot? = nil
+		var error :NSError? = nil
+		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )
+
+		return rootStore!
+	}
+
 	// save changes down to the persistent store
 	func persistentSaveContext( editContext :NSManagedObjectContext, inout error :NSError? ) -> Bool {
 		var success = false
@@ -145,11 +190,21 @@ class MainModel {
 
 
 	// save changes in the main managed object context on the correct queue and blocking
-	func saveChanges( inout error :NSError? ) -> Bool {
+	func saveChanges( error :NSErrorPointer ) -> Bool {
 		var success = false
 
-		// perform save on the managed object queue
-		// TODO: implement managed object context save
+		// first save to the managed object context on Main
+		self.mainManagedObjectContext.performBlockAndWait { () -> Void in
+			success = self.mainManagedObjectContext.save( error )
+		}
+
+		if !success {
+			if error != nil {
+				println( "Failed to save group edit to the main edit context: \(error)" )
+			}
+
+			return false
+		}
 
 		return success
 	}
