@@ -11,12 +11,13 @@
 #import "ILobbyStoreRemoteFile.h"
 #import "ILobbyModelContainer.h"
 #import "ILobbyDownloadStatus.h"
+#import "DiTour-Swift.h"
 
 
 @interface ILobbyFileInfoController : UIViewController <ILobbyModelContainer>
 
 @property (nonatomic, strong) ILobbyStoreRemoteFile *remoteFile;
 @property (nonatomic, strong) ILobbyDownloadStatus *downloadStatus;
-@property (nonatomic, readwrite, strong) ILobbyModel *lobbyModel;
+@property (nonatomic, readwrite, strong) MainModel *lobbyModel;
 
 @end

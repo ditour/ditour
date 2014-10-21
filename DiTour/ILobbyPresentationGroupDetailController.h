@@ -10,11 +10,12 @@
 
 #import "ILobbyModelContainer.h"
 #import "ILobbyStorePresentationGroup.h"
+#import "DiTour-Swift.h"
 
 
 @interface ILobbyPresentationGroupDetailController : UITableViewController <ILobbyModelContainer>
 
-@property (nonatomic, readwrite) ILobbyModel *lobbyModel;
+@property (nonatomic, readwrite) MainModel *lobbyModel;
 @property (nonatomic, readwrite) ILobbyStorePresentationGroup *group;
 
 @end

@@ -7,8 +7,8 @@
 //
 
 @import Foundation;
-#import "ILobbyModel.h"
 #import "ILobbyTransitionSource.h"
+#import "ILobbyPresentationDelegate.h"
 
 
 @class ILobbySlide;

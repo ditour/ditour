@@ -7,7 +7,9 @@
 //
 
 @import Foundation;
-#import "ILobbyModel.h"
+
+#import "ILobbyPresentationDelegate.h"
+
 
 @interface ILobbyPresenter : NSObject <ILobbyPresentationDelegate>
 

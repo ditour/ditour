@@ -8,7 +8,6 @@
 
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyRemoteDirectory.h"
-#import "ILobbyModel.h"
 #import "ILobbyStorePresentation.h"
 
 @implementation ILobbyStorePresentationGroup

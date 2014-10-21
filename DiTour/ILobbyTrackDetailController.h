@@ -12,10 +12,12 @@
 #import "ILobbyStoreTrack.h"
 #import "ILobbyDownloadStatus.h"
 
+@class MainModel;
+
 
 @interface ILobbyTrackDetailController : UITableViewController <ILobbyModelContainer>
 
-@property (nonatomic, weak) ILobbyModel *lobbyModel;
+@property (nonatomic, weak) MainModel *lobbyModel;
 @property (nonatomic, strong) ILobbyStoreTrack *track;
 @property (nonatomic, strong) ILobbyDownloadContainerStatus *trackDownloadStatus;
 

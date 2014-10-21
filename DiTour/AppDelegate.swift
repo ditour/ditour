@@ -12,7 +12,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
-//	var lobbyModel = ILobbyModel()
 	var lobbyModel = MainModel()
 	var presenter = ILobbyPresenter()
 

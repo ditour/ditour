@@ -395,11 +395,9 @@ private func purgeVersion1Data() {
 
 private func fetchDocumentDirectoryURL() -> NSURL {
 	let fileManager = NSFileManager.defaultManager()
-	var error : NSError?
+	var error : NSErrorPointer = nil
 
-	let documentDirectoryURL = fileManager.URLForDirectory( NSSearchPathDirectory.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true, error: &error )
-
-	assert( error != nil, "Error determining document directory: \(error)" )
+	let documentDirectoryURL = fileManager.URLForDirectory( NSSearchPathDirectory.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true, error: error )
 
 	return documentDirectoryURL!
 }

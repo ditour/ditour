@@ -8,7 +8,6 @@
 
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
-#import "ILobbyModel.h"
 #import "DiTour-Swift.h"
 
 
@@ -30,7 +29,7 @@
 
 @implementation ILobbyDownloadSession
 
-- (instancetype)initWithModel:(id)lobbyModel {
+- (instancetype)initWithModel:(MainModel *)lobbyModel {
     self = [super init];
     if (self) {
 		self.lobbyModel = lobbyModel;

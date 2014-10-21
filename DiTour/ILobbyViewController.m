@@ -10,6 +10,7 @@
 #import "ILobbyTrackViewCell.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationGroupsTableController.h"
+#import "DiTour-Swift.h"
 
 
 static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
@@ -36,8 +37,8 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 }
 
 
-- (void)setLobbyModel:(ILobbyModel *)lobbyModel {
-	ILobbyModel *oldModel = _lobbyModel;
+- (void)setLobbyModel:(MainModel *)lobbyModel {
+	MainModel *oldModel = _lobbyModel;
 	
 	if ( oldModel ) {
 		[oldModel removeObserver:self forKeyPath:@"tracks"];
@@ -59,7 +60,7 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if ( [object isKindOfClass:[ILobbyModel class]] ) {
+	if ( [object isKindOfClass:[MainModel class]] ) {
 		if ( [keyPath isEqualToString:@"tracks"] ) {
 			dispatch_async( dispatch_get_main_queue(), ^{
 				[self.collectionView reloadData];

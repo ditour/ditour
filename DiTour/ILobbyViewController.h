@@ -9,9 +9,12 @@
 @import UIKit;
 #import "ILobbyModelContainer.h"
 
+@class MainModel;
+
+
 @interface ILobbyViewController : UICollectionViewController <ILobbyModelContainer>
 
-@property (nonatomic, strong) ILobbyModel *lobbyModel;
+@property (nonatomic, strong) MainModel *lobbyModel;
 
 - (IBAction)reloadPresentation:(id)sender;
 

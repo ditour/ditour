@@ -9,9 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "ILobbyModel.h"
 
+@class MainModel;
+
+
 @protocol ILobbyModelContainer <NSObject>
 
-- (id)lobbyModel;
-- (void)setLobbyModel:(id)model;
+- (MainModel *)lobbyModel;
+- (void)setLobbyModel:(MainModel *)model;
 
 @end

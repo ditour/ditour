@@ -8,6 +8,7 @@
 
 
 #import "ILobbySlide.h"
+#import "ILobbyPresentationDelegate.h"
 
 
 // ILobbySlide extension for internal use by the family of slides

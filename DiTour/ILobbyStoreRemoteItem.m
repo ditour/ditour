@@ -7,7 +7,7 @@
 //
 
 #import "ILobbyStoreRemoteItem.h"
-#import "ILobbyModel.h"
+#import "DiTour-Swift.h"
 
 @implementation ILobbyStoreRemoteItem
 
@@ -85,7 +85,7 @@
 
 
 - (NSString *)absolutePath {
-	return [[ILobbyModel presentationGroupsRoot] stringByAppendingPathComponent:self.path];
+	return [[MainModel presentationGroupsRoot] stringByAppendingPathComponent:self.path];
 }
 
 

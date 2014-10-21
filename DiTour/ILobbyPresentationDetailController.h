@@ -11,12 +11,12 @@
 #import "ILobbyModelContainer.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyDownloadStatus.h"
-
+#import "DiTour-Swift.h"
 
 
 @interface ILobbyPresentationDetailController : UITableViewController <ILobbyModelContainer>
 
-@property (nonatomic, weak) ILobbyModel *lobbyModel;
+@property (nonatomic, weak) MainModel *lobbyModel;
 @property (nonatomic, strong) ILobbyStorePresentation *presentation;
 @property (nonatomic, strong) ILobbyDownloadContainerStatus *presentationDownloadStatus;
 
