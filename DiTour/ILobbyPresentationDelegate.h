@@ -8,6 +8,7 @@
 
 @import Foundation;
 @import AVFoundation;
+@import UIKit;
 
 @protocol ILobbyPresentationDelegate <NSObject>
 
