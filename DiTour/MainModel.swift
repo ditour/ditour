@@ -24,7 +24,7 @@ private let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringBy
 // MARK: -
 // MARK: Main Model
 // main model for DiTour where the primary state is maintained
-class MainModel {
+public class MainModel : NSObject {
 	// container of static properties
 	private struct StaticProps {
 		// static initialization
@@ -59,9 +59,12 @@ class MainModel {
 
 	var canPlay : Bool { return self.tracks.count > 0 }
 
+	var downloadSession : ILobbyDownloadSession? = nil
+
+	var downloading : Bool { return self.downloadSession?.active ?? false }
 
 
-	init() {
+	override init() {
 		// setup the data model
 		( self.managedObjectModel, self.mainManagedObjectContext ) = MainModel.setupDataModel()
 
@@ -153,6 +156,38 @@ class MainModel {
 		}
 	}
 
+
+	//MARK: -
+	//MARK: Download session support
+
+	func cancelDownload() {
+		self.downloadSession?.cancel()
+		self.downloadSession = nil
+	}
+
+
+	func handleEventsForBackgroundURLSession( identifier : String, completionHandler : ()->Void ) {
+		if let session = self.downloadSession {
+			session.handleEventsForBackgroundURLSession( identifier, completionHandler )
+		}
+	}
+
+
+	func downloadGroup( group: ILobbyStorePresentationGroup, delegate: ILobbyDownloadStatusDelegate ) -> ILobbyDownloadContainerStatus {
+		let downloadSession = ILobbyDownloadSession(model: self)
+		self.downloadSession = downloadSession
+		return downloadSession.downloadGroup( group, withDelegate: delegate )
+	}
+
+
+	func downloadStatusForGroup( group : ILobbyStorePresentationGroup ) -> ILobbyDownloadContainerStatus? {
+		if let status = self.downloadSession?.groupStatus {
+			return status.matchesRemoteItem( group ) ? status : nil
+		}
+		else {
+			return nil
+		}
+	}
 
 
 	//MARK: -
@@ -284,27 +319,33 @@ class MainModel {
 	class private func fetchRootStore( managedObjectContext : NSManagedObjectContext ) -> ILobbyStoreRoot {
 		let mainFetchRequest = NSFetchRequest(entityName: ILobbyStoreRoot.entityName() )
 
-		var rootStore :ILobbyStoreRoot? = nil
-		var error :NSError? = nil
-		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )
+		var error :NSErrorPointer = nil
+		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: error )!
 
-		return rootStore!
+		if rootStores.count > 0 {
+			return (rootStores[0] as ILobbyStoreRoot)
+		}
+		else {
+			let rootStore = ILobbyStoreRoot.insertNewRootStoreInContext( managedObjectContext )
+			managedObjectContext.save( error )
+			return rootStore
+		}
 	}
 
 	// save changes down to the persistent store
-	func persistentSaveContext( editContext :NSManagedObjectContext, inout error :NSError? ) -> Bool {
+	func persistentSaveContext( editContext :NSManagedObjectContext, error :NSErrorPointer ) -> Bool {
 		var success = false
 		var parentContext :NSManagedObjectContext? = nil
 
 		// first save to the edit context
 		editContext.performBlockAndWait {
-			success = editContext.save( &error )
+			success = editContext.save( error )
 			parentContext = editContext.parentContext
 		}
 
 		// propagate the save until we get to the persistent store (i.e. no parent context)
 		if ( success && parentContext != nil ) {
-			return self.persistentSaveContext(parentContext!, error: &error)
+			return self.persistentSaveContext(parentContext!, error: error)
 		}
 		else {
 			return success

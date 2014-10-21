@@ -283,7 +283,7 @@ static NSString *PRESENTATION_GROUP_ROOT = nil;
 }
 
 
-- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate {
+- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group delegate:(id<ILobbyDownloadStatusDelegate>)delegate {
 	self.downloadSession = [[ILobbyDownloadSession alloc] initWithModel:self];
 	return [self.downloadSession downloadGroup:group withDelegate:delegate];
 }

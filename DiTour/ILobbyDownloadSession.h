@@ -20,7 +20,7 @@
 @property (nonatomic, readonly) BOOL active;
 @property (nonatomic, readonly) BOOL canceled;
 
-- (instancetype)initWithModel:(ILobbyModel *)lobbyModel;
+- (instancetype)initWithModel:(id)lobbyModel;
 
 - (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (void)cancel;

@@ -10,3 +10,4 @@
 #import "ILobbyStoreRoot.h"
 #import "ILobbyStorePresentation.h"
 #import "ILobbyDownloadStatus.h"
+#import "ILobbyDownloadSession.h"

@@ -114,7 +114,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 		[alert show];
 	}
 	else {
-		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group withDelegate:self];
+		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group delegate:self];
 
 		if ( self.groupDownloadStatus.error != nil ) {
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download Error" message:self.groupDownloadStatus.error.localizedDescription delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];

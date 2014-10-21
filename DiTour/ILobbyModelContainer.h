@@ -11,7 +11,7 @@
 
 @protocol ILobbyModelContainer <NSObject>
 
-- (ILobbyModel *)lobbyModel;
-- (void)setLobbyModel:(ILobbyModel *)model;
+- (id)lobbyModel;
+- (void)setLobbyModel:(id)model;
 
 @end

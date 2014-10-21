@@ -9,6 +9,7 @@
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
 #import "ILobbyModel.h"
+#import "DiTour-Swift.h"
 
 
 @interface ILobbyDownloadSession () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
@@ -21,7 +22,7 @@
 @property NSURLSession *downloadSession;
 @property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;		// file download status keyed by task
 @property (nonatomic, readwrite) ILobbyDownloadContainerStatus *groupStatus;
-@property (nonatomic, readwrite, weak) ILobbyModel *lobbyModel;
+@property (nonatomic, readwrite, weak) MainModel *lobbyModel;
 
 @end
 
@@ -29,7 +30,7 @@
 
 @implementation ILobbyDownloadSession
 
-- (instancetype)initWithModel:(ILobbyModel *)lobbyModel {
+- (instancetype)initWithModel:(id)lobbyModel {
     self = [super init];
     if (self) {
 		self.lobbyModel = lobbyModel;
