@@ -70,7 +70,9 @@ public class MainModel : NSObject {
 
 		self.mainStoreRoot = MainModel.fetchRootStore( self.mainManagedObjectContext )
 
-		//self.loadDefaultPresentation()
+		super.init()
+
+		self.loadDefaultPresentation()
 	}
 
 
