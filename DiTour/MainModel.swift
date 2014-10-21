@@ -18,22 +18,21 @@ protocol MainModelContainer {
 
 
 
+private let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringByAppendingPathComponent( "PresentationGroups" )
+
+
 // MARK: -
 // MARK: Main Model
 // main model for DiTour where the primary state is maintained
 class MainModel {
 	// container of static properties
 	private struct StaticProps {
-		static let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringByAppendingPathComponent( "PresentationGroups" )
-
 		// static initialization
 		private static let initializer :Void = {
 			performVersionInitialization()
 		}()
 	}
 
-
-//	var mainStoreRoot : ILobbyStoreRoot
 
 	// indicates whether a track is being presented
 	private(set) var playing = false
@@ -55,6 +54,11 @@ class MainModel {
 	let mainManagedObjectContext : NSManagedObjectContext
 
 	let mainStoreRoot : ILobbyStoreRoot
+
+	var presentationDelegate : ILobbyPresentationDelegate? = nil
+
+	var canPlay : Bool { return self.tracks.count > 0 }
+
 
 
 	init() {
@@ -89,20 +93,140 @@ class MainModel {
 	}
 
 
-//	func loadDefaultPresentation() -> Bool {
-//		self.hasPresentationUpdate = false
-//
-//		var success = false
-//		self.mainStoreRoot.managedObjectContext?.performBlockAndWait(){ () -> Void in
-//			success = self.loadPresentation( self.mainStoreRoot.currentPresentation )
-//		}
-//
-//		return success
-//	}
+	// MARK: -
+	// MARK: Loading presentations
 
+
+	func loadDefaultPresentation() -> Bool {
+		self.hasPresentationUpdate = false
+
+		var success = false
+		self.mainStoreRoot.managedObjectContext?.performBlockAndWait(){ () -> Void in
+			success = self.loadPresentation( self.mainStoreRoot.currentPresentation )
+		}
+
+		return success
+	}
+
+
+	func loadPresentation( possiblePresentationStore : ILobbyStorePresentation? ) -> Bool {
+		if let presentationStore = possiblePresentationStore  {
+			if presentationStore.isReady {
+				var tracks = [ILobbyTrack]()
+				for trackStore in presentationStore.tracks.array {
+					let track = ILobbyTrack( trackStore: trackStore as ILobbyStoreTrack )
+					tracks.append( track )
+				}
+
+				self.tracks = tracks
+				self.defaultTrack = tracks.count > 0 ? tracks[0] : nil
+
+				// remove any disposable presentations such as the one (if any) marked current at the time it was replaced
+				self.cleanupDisposablePresentations()
+
+				return true
+			}
+			else {
+				return false
+			}
+		}
+		else {
+			return false
+		}
+	}
+
+
+	func reloadPresentation() {
+		self.stop()
+		self.loadDefaultPresentation()
+		self.play()
+	}
+
+
+	func reloadPresentationNextCycle() {
+		// if not playing then just reload now otherwise mark for reloading on next cycle
+		if !self.playing {
+			self.reloadPresentation()
+		}
+		else {
+			self.hasPresentationUpdate = true
+		}
+	}
+
+
+
+	//MARK: -
+	//MARK: Playback
+
+	func play() -> Bool {
+		if self.canPlay {
+			if let defaultTrack = self.defaultTrack {
+				self.playTrack( defaultTrack, cancelCurrent: true )
+				self.playing = true
+				return true
+			}
+			else {
+				return false
+			}
+		}
+		else {
+			return false
+		}
+	}
+
+
+	func stop() {
+		self.playing = false
+		self.currentTrack?.cancelPresentation()
+	}
+
+
+	func performShutdown() {
+		self.stop()
+		self.cleanup()
+
+		self.saveChanges( nil )
+	}
+
+
+	func playTrackAtIndex( trackIndex : UInt ) {
+		let track = self.tracks[ Int(trackIndex) ]
+		self.playTrack( track, cancelCurrent: true )
+	}
+
+
+	func playTrack( track : ILobbyTrack, cancelCurrent : Bool ) {
+		let oldTrack = self.currentTrack
+		if ( cancelCurrent && oldTrack != nil ) {
+			oldTrack!.cancelPresentation()
+		}
+
+		if let presentationDelegate = self.presentationDelegate {
+			self.currentTrack = track
+			track.presentTo(presentationDelegate, completionHandler: { (theTrack) -> Void in
+				// if playing, present the default track after any track completes on its own (no need to cancel)
+				if self.playing {
+					// check whether a new presentation download is ready and install and load it if so
+					if self.hasPresentationUpdate {
+						self.reloadPresentation()
+					}
+					else {
+						// play the default track
+						if let defaultTrack = self.defaultTrack {
+							self.playTrack( defaultTrack, cancelCurrent: false )
+						}
+					}
+				}
+			})
+		}
+	}
+
+
+	//MARK: -
+	//MARK: Directory paths
 
 	class func presentationGroupsRoot() -> String {
-		return StaticProps.PRESENTATION_GROUP_ROOT
+		return PRESENTATION_GROUP_ROOT
 	}
 
 
@@ -125,8 +249,7 @@ class MainModel {
 	//MARK: -
 	//MARK: Persistent store support
 
-
-	private class func setupDataModel() -> (NSManagedObjectModel, NSManagedObjectContext) {
+	private class func setupDataModel() -> ( model: NSManagedObjectModel, context: NSManagedObjectContext) {
 		let storeURL = NSURL.fileURLWithPath( MainModel.applicationDocumentsDirectory().stringByAppendingPathComponent("iLobby.db") )
 		let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
 
