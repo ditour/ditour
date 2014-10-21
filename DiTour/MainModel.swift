@@ -38,13 +38,29 @@ public class MainModel : NSObject {
 	private(set) var playing = false
 
 	// all tracks that are available
-	private(set) var tracks:[ILobbyTrack] = []
+	private(set) var tracks:[ILobbyTrack] = [] {
+		willSet(newTracks) {
+			self.willChangeValueForKey( "tracks" )
+		}
+
+		didSet {
+			self.didChangeValueForKey( "tracks" )
+		}
+	}
 
 	// track scheduled to play automatically at the end of the current track
 	private var defaultTrack :ILobbyTrack?
 
 	// track that is currently playing
-	private(set) var currentTrack :ILobbyTrack?
+	private(set) var currentTrack :ILobbyTrack? {
+		willSet(newTrack) {
+			self.willChangeValueForKey( "currentTrack" )
+		}
+
+		didSet {
+			self.didChangeValueForKey( "currentTrack" )
+		}
+	}
 
 	// indicates whether there is a presentation update
 	private var hasPresentationUpdate = false
