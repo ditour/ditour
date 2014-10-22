@@ -75,7 +75,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Now Playing" style:UIBarButtonItemStyleDone target:self action:@selector(popToPlaying)];
 
-	self.groupDownloadStatus = [self.lobbyModel downloadStatusForGroup:self.group];
+	self.groupDownloadStatus = [self.ditourModel downloadStatusForGroup:self.group];
 	if ( self.groupDownloadStatus != nil ) {
 		self.groupDownloadStatus.delegate = self;
 	}
@@ -109,12 +109,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 - (IBAction)downloadPresentations:(id)sender {
 	[self.tableView reloadData];
 	
-	if ( self.lobbyModel.downloading ) {
+	if ( self.ditourModel.downloading ) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't Download" message:@"You attempted to download a group which is already downloading. You need to cancel first." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
 		[alert show];
 	}
 	else {
-		self.groupDownloadStatus = [self.lobbyModel downloadGroup:self.group delegate:self];
+		self.groupDownloadStatus = [self.ditourModel downloadGroup:self.group delegate:self];
 
 		if ( self.groupDownloadStatus.error != nil ) {
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download Error" message:self.groupDownloadStatus.error.localizedDescription delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
@@ -128,7 +128,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 
 - (IBAction)cancelGroupDownload:(id)sender {
-	[self.lobbyModel cancelDownload];
+	[self.ditourModel cancelDownload];
 }
 
 
@@ -150,10 +150,10 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 
 - (void)updateDownloadIndicator {
-	if ( self.lobbyModel.downloading && !self.downloadIndicator.isAnimating ) {
+	if ( self.ditourModel.downloading && !self.downloadIndicator.isAnimating ) {
 		[self.downloadIndicator startAnimating];
 	}
-	else if ( !self.lobbyModel.downloading && self.downloadIndicator.isAnimating ) {
+	else if ( !self.ditourModel.downloading && self.downloadIndicator.isAnimating ) {
 		[self.downloadIndicator stopAnimating];
 	}
 }
@@ -434,7 +434,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 		ILobbyStorePresentation *presentation = [self presentationAtIndexPath:indexPath];
 
 		ILobbyPresentationDetailController *presentationController = segue.destinationViewController;
-		presentationController.lobbyModel = self.lobbyModel;
+		presentationController.ditourModel = self.ditourModel;
 		presentationController.presentation = presentation;
 
 		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID] ) {
@@ -445,7 +445,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
 		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
 		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
-		fileInfoController.lobbyModel = self.lobbyModel;
+		fileInfoController.ditourModel = self.ditourModel;
 		fileInfoController.remoteFile = remoteFile;
 		fileInfoController.downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteFile];
 	}

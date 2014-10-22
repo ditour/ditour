@@ -85,7 +85,7 @@
 
 
 - (NSString *)absolutePath {
-	return [[MainModel presentationGroupsRoot] stringByAppendingPathComponent:self.path];
+	return [[DitourModel presentationGroupsRoot] stringByAppendingPathComponent:self.path];
 }
 
 

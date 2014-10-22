@@ -21,7 +21,7 @@
 @property NSURLSession *downloadSession;
 @property (nonatomic) ILobbyConcurrentDictionary *downloadTaskRemoteItems;		// file download status keyed by task
 @property (nonatomic, readwrite) ILobbyDownloadContainerStatus *groupStatus;
-@property (nonatomic, readwrite, weak) MainModel *lobbyModel;
+@property (nonatomic, readwrite, weak) DitourModel *lobbyModel;
 
 @end
 
@@ -29,7 +29,7 @@
 
 @implementation ILobbyDownloadSession
 
-- (instancetype)initWithModel:(MainModel *)lobbyModel {
+- (instancetype)initWithModel:(DitourModel *)lobbyModel {
     self = [super init];
     if (self) {
 		self.lobbyModel = lobbyModel;

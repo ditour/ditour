@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ILobbyModelContainer.h"
 #import "DiTour-Swift.h"
 
-@interface ILobbyPresentationGroupsTableController : UITableViewController <ILobbyModelContainer>
+@interface ILobbyPresentationGroupsTableController : UITableViewController <DitourModelContainer>
 
-@property (nonatomic, readwrite, strong) MainModel *lobbyModel;
+@property (nonatomic, readwrite, strong) DitourModel *ditourModel;
 
 - (IBAction)openGroupURL:(id)sender;
 - (IBAction)editGroup:(id)sender;

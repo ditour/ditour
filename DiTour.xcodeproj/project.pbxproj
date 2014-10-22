@@ -85,7 +85,6 @@
 		4CEFB3A919CA1F4B0095DCD2 /* ILobbyImageSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyImageSlide.m; sourceTree = "<group>"; };
 		4CEFB3AA19CA1F4B0095DCD2 /* ILobbyLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyLabelCell.h; sourceTree = "<group>"; };
 		4CEFB3AB19CA1F4B0095DCD2 /* ILobbyLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyLabelCell.m; sourceTree = "<group>"; };
-		4CEFB3AE19CA1F4B0095DCD2 /* ILobbyModelContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyModelContainer.h; sourceTree = "<group>"; };
 		4CEFB3AF19CA1F4B0095DCD2 /* ILobbyMovieSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyMovieSlide.h; sourceTree = "<group>"; };
 		4CEFB3B019CA1F4B0095DCD2 /* ILobbyMovieSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyMovieSlide.m; sourceTree = "<group>"; };
 		4CEFB3B119CA1F4B0095DCD2 /* ILobbyPDFSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPDFSlide.h; sourceTree = "<group>"; };
@@ -233,7 +232,6 @@
 			children = (
 				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
 				4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */,
-				4CEFB3AE19CA1F4B0095DCD2 /* ILobbyModelContainer.h */,
 				4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */,
 			);
 			name = Main;

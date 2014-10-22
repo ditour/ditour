@@ -7,14 +7,12 @@
 //
 
 @import UIKit;
-#import "ILobbyModelContainer.h"
-
-@class MainModel;
+#import "DiTour-Swift.h"
 
 
-@interface ILobbyViewController : UICollectionViewController <ILobbyModelContainer>
+@interface ILobbyViewController : UICollectionViewController <DitourModelContainer>
 
-@property (nonatomic, strong) MainModel *lobbyModel;
+@property (nonatomic, strong) DitourModel *ditourModel;
 
 - (IBAction)reloadPresentation:(id)sender;
 

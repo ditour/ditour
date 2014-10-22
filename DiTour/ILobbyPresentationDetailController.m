@@ -109,8 +109,8 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 - (IBAction)changeDefaultPresentation:(id)sender {
 	self.presentation.current = self.defaultPresentationSwitch.on;
-	[self.lobbyModel saveChanges:nil];
-	[self.lobbyModel reloadPresentation];
+	[self.ditourModel saveChanges:nil];
+	[self.ditourModel reloadPresentation];
 }
 
 
@@ -391,7 +391,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 		ILobbyStoreTrack *track = [self trackAtIndexPath:indexPath];
 
 		ILobbyTrackDetailController *trackController = segue.destinationViewController;
-		trackController.lobbyModel = self.lobbyModel;
+		trackController.ditourModel = self.ditourModel;
 		trackController.track = track;
 
 		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_TRACK_DETAIL_ID] ) {
@@ -402,7 +402,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
 		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
 		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
-		fileInfoController.lobbyModel = self.lobbyModel;
+		fileInfoController.ditourModel = self.ditourModel;
 		fileInfoController.remoteFile = remoteFile;
 		fileInfoController.downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];
 	}

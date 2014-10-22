@@ -75,7 +75,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	self.editingCell = nil;
 
 	// setup the local edit context and its managed objects
-	self.mainRootStore = self.lobbyModel.mainStoreRoot;
+	self.mainRootStore = self.ditourModel.mainStoreRoot;
 	self.currentStoreRoot = self.mainRootStore;
 
     // Uncomment the following line to preserve selection between presentations.
@@ -112,7 +112,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 - (void)setupForEditing {
 	// create a new edit context
-	self.editContext = [self.lobbyModel createEditContextOnMain];
+	self.editContext = [self.ditourModel createEditContextOnMain];
 
 	// get the current root ID
 	__block NSManagedObjectID *storeRootID = nil;
@@ -240,10 +240,10 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 - (BOOL)saveChanges:(NSError * __autoreleasing *)errorPtr {
 	switch ( self.editMode ) {
 		case EDIT_MODE_NONE:
-			return [self.lobbyModel saveChanges:errorPtr];
+			return [self.ditourModel saveChanges:errorPtr];
 
 		default:
-			return [self.lobbyModel persistentSaveContext:self.editContext error:errorPtr];
+			return [self.ditourModel persistentSaveContext:self.editContext error:errorPtr];
 	}
 }
 
@@ -490,7 +490,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		ILobbyStorePresentationGroup *group = sender;
 
 		ILobbyPresentationGroupDetailController *masterTableController = segue.destinationViewController;
-		masterTableController.lobbyModel = self.lobbyModel;
+		masterTableController.ditourModel = self.ditourModel;
 		masterTableController.group = group;
     }
     else {

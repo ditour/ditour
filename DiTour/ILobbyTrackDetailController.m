@@ -317,7 +317,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 	if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
 		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
 		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
-		fileInfoController.lobbyModel = self.lobbyModel;
+		fileInfoController.ditourModel = self.ditourModel;
 		fileInfoController.remoteFile = remoteFile;
 		fileInfoController.downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteFile];
 	}

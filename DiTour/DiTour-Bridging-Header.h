@@ -2,7 +2,6 @@
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 
-#import "ILobbyModelContainer.h"
 #import "ILobbyPresenter.h"
 #import "ILobbyTrack.h"
 #import "ILobbyPresentationDelegate.h"

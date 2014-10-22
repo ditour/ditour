@@ -10,7 +10,7 @@
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyDownloadStatus.h"
 
-@class MainModel;
+@class DitourModel;
 
 
 @interface ILobbyDownloadSession : NSObject
@@ -20,7 +20,7 @@
 @property (nonatomic, readonly) BOOL active;
 @property (nonatomic, readonly) BOOL canceled;
 
-- (instancetype)initWithModel:(MainModel *)lobbyModel;
+- (instancetype)initWithModel:(DitourModel *)lobbyModel;
 
 - (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (void)cancel;

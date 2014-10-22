@@ -33,41 +33,41 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
 
 - (void)dealloc {
-	self.lobbyModel = nil;
+	self.ditourModel = nil;
 }
 
 
-- (void)setLobbyModel:(MainModel *)lobbyModel {
-	MainModel *oldModel = _lobbyModel;
+- (void)setDitourModel:(DitourModel *)ditourModel {
+	DitourModel *oldModel = _ditourModel;
 	
 	if ( oldModel ) {
 		[oldModel removeObserver:self forKeyPath:@"tracks"];
 		[oldModel removeObserver:self forKeyPath:@"currentTrack"];
 	}
 
-	_lobbyModel = lobbyModel;
+	_ditourModel = ditourModel;
 
-	if ( lobbyModel ) {
-		[lobbyModel addObserver:self forKeyPath:@"tracks" options:NSKeyValueObservingOptionNew context:nil];
-		[lobbyModel addObserver:self forKeyPath:@"currentTrack" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+	if ( ditourModel ) {
+		[ditourModel addObserver:self forKeyPath:@"tracks" options:NSKeyValueObservingOptionNew context:nil];
+		[ditourModel addObserver:self forKeyPath:@"currentTrack" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
 	}
 }
 
 
 - (IBAction)reloadPresentation:(id)sender {
-	[self.lobbyModel reloadPresentation];
+	[self.ditourModel reloadPresentation];
 }
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if ( [object isKindOfClass:[MainModel class]] ) {
+	if ( [object isKindOfClass:[DitourModel class]] ) {
 		if ( [keyPath isEqualToString:@"tracks"] ) {
 			dispatch_async( dispatch_get_main_queue(), ^{
 				[self.collectionView reloadData];
 			});
 		}
 		else if ( [keyPath isEqualToString:@"currentTrack"] ) {
-			NSArray *tracks = self.lobbyModel.tracks;
+			NSArray *tracks = self.ditourModel.tracks;
 			ILobbyTrack *oldTrack = change[ NSKeyValueChangeOldKey ];
 			ILobbyTrack *currentTrack = change[ NSKeyValueChangeNewKey ];
 
@@ -100,18 +100,18 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-	return self.lobbyModel.tracks.count;
+	return self.ditourModel.tracks.count;
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	ILobbyTrackViewCell *cell = (ILobbyTrackViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"TrackCell" forIndexPath:indexPath];
 	NSInteger item = indexPath.item;
-	ILobbyTrack *track = self.lobbyModel.tracks[item];
+	ILobbyTrack *track = self.ditourModel.tracks[item];
 	
 	cell.label.text = track.label;
 	cell.imageView.image = track.icon;
-	cell.outlined = track == self.lobbyModel.currentTrack;
+	cell.outlined = track == self.ditourModel.currentTrack;
 
 	return cell;
 }
@@ -121,7 +121,7 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 	[self.collectionView deselectItemAtIndexPath:indexPath animated:YES];
 	
 	NSInteger item = indexPath.item;
-	[self.lobbyModel playTrackAtIndex:item];
+	[self.ditourModel playTrackAtIndex:item];
 }
 
 
@@ -148,7 +148,7 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 
     if ( [segueID isEqualToString:SEGUE_SHOW_CONFIGURATION_ID] ) {
 		ILobbyPresentationGroupsTableController *configController = segue.destinationViewController;
-		configController.lobbyModel = self.lobbyModel;
+		configController.ditourModel = self.ditourModel;
     }
     else {
         NSLog( @"SegueID: \"%@\" does not match a known ID in prepareForSegue method.", segueID );

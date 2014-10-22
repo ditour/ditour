@@ -1,5 +1,5 @@
 //
-//  MainModel.swift
+//  DitourModel.swift
 //  DiTour
 //
 //  Created by Pelaia II, Tom on 9/18/14.
@@ -9,11 +9,12 @@
 import Foundation
 import CoreData
 
+
 // MARK: -
 // MARK: Main Model Container
 // Objects that contain the main model
-protocol MainModelContainer {
-	var model: MainModel { get set }
+@objc protocol DitourModelContainer {
+	var ditourModel: DitourModel { get set }
 }
 
 
@@ -24,7 +25,7 @@ private let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringBy
 // MARK: -
 // MARK: Main Model
 // main model for DiTour where the primary state is maintained
-public class MainModel : NSObject {
+public class DitourModel : NSObject {
 	// container of static properties
 	private struct StaticProps {
 		// static initialization
@@ -82,9 +83,9 @@ public class MainModel : NSObject {
 
 	override init() {
 		// setup the data model
-		( self.managedObjectModel, self.mainManagedObjectContext ) = MainModel.setupDataModel()
+		( self.managedObjectModel, self.mainManagedObjectContext ) = DitourModel.setupDataModel()
 
-		self.mainStoreRoot = MainModel.fetchRootStore( self.mainManagedObjectContext )
+		self.mainStoreRoot = DitourModel.fetchRootStore( self.mainManagedObjectContext )
 
 		super.init()
 
@@ -284,7 +285,7 @@ public class MainModel : NSObject {
 
 
 	private func presentationGroupsRoot() -> String {
-		return MainModel.presentationGroupsRoot()
+		return DitourModel.presentationGroupsRoot()
 	}
 
 
@@ -303,7 +304,7 @@ public class MainModel : NSObject {
 	//MARK: Persistent store support
 
 	private class func setupDataModel() -> ( model: NSManagedObjectModel, context: NSManagedObjectContext) {
-		let storeURL = NSURL.fileURLWithPath( MainModel.applicationDocumentsDirectory().stringByAppendingPathComponent("iLobby.db") )
+		let storeURL = NSURL.fileURLWithPath( DitourModel.applicationDocumentsDirectory().stringByAppendingPathComponent("iLobby.db") )
 		let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
 
 		let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles(nil)

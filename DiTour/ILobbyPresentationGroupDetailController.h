@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ILobbyModelContainer.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "DiTour-Swift.h"
 
 
-@interface ILobbyPresentationGroupDetailController : UITableViewController <ILobbyModelContainer>
+@interface ILobbyPresentationGroupDetailController : UITableViewController <DitourModelContainer>
 
-@property (nonatomic, readwrite) MainModel *lobbyModel;
+@property (nonatomic, readwrite) DitourModel *ditourModel;
 @property (nonatomic, readwrite) ILobbyStorePresentationGroup *group;
 
 @end
