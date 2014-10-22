@@ -39,6 +39,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 @implementation ILobbyPresentationDetailController {
 	BOOL _updateScheduled;		// indicates whether an update has been scheduled
+	__weak DitourModel *_ditourModel;	// model ivar specified directly to avoid warning against Swift protocol since we want it to be weak here
 }
 
 
@@ -48,6 +49,18 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
         // Custom initialization
     }
     return self;
+}
+
+
+// get the underlying ditour model (needed due to weak Objective-C ivar and Swift protocol)
+- (DitourModel *)ditourModel {
+	return _ditourModel;
+}
+
+
+// set the ditour model (needed due to weak Objective-C ivar and Swift protocol)
+- (void)setDitourModel:(DitourModel *)ditourModel {
+	_ditourModel = ditourModel;
 }
 
 

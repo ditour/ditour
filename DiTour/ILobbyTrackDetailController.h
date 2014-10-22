@@ -15,7 +15,7 @@
 
 @interface ILobbyTrackDetailController : UITableViewController <DitourModelContainer>
 
-@property (nonatomic, weak) DitourModel *ditourModel;
+@property (nonatomic) DitourModel *ditourModel;
 @property (nonatomic, strong) ILobbyStoreTrack *track;
 @property (nonatomic, strong) ILobbyDownloadContainerStatus *trackDownloadStatus;
 

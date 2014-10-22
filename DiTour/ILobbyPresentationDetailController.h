@@ -15,7 +15,7 @@
 
 @interface ILobbyPresentationDetailController : UITableViewController <DitourModelContainer>
 
-@property (nonatomic, weak) DitourModel *ditourModel;
+@property (nonatomic) DitourModel *ditourModel;
 @property (nonatomic, strong) ILobbyStorePresentation *presentation;
 @property (nonatomic, strong) ILobbyDownloadContainerStatus *presentationDownloadStatus;
 
