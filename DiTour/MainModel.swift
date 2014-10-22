@@ -14,7 +14,7 @@ import CoreData
 // MARK: Main Model Container
 // Objects that contain the main model
 @objc protocol DitourModelContainer {
-	var ditourModel: DitourModel { get set }
+	var ditourModel: DitourModel? { get set }
 }
 
 
