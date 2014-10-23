@@ -11,6 +11,11 @@
 @import UIKit;
 
 
+
+@interface ExternalViewController : UIViewController
+@end
+
+
 @interface ILobbyPresenter ()
 
 @property (strong, nonatomic) UIView *contentView;
@@ -80,7 +85,7 @@
 		contentView.layer.borderWidth = 0;
 		self.contentView = contentView;
 
-		UIViewController *contentViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+		UIViewController *contentViewController = [[ExternalViewController alloc] initWithNibName:nil bundle:nil];
 		contentViewController.view = contentView;
 		self.externalWindow.rootViewController = contentViewController;
 
@@ -96,6 +101,21 @@
 // handle the change in screens
 - (void)handleScreensChange:(NSNotification *)notification {
 	[self updateConfiguration];
+}
+
+@end
+
+
+
+@implementation ExternalViewController
+
+- (NSUInteger)supportedInterfaceOrientations {
+	return UIInterfaceOrientationMaskPortrait;
+}
+
+
+- (BOOL)shouldAutorotate {
+	return NO;
 }
 
 @end
