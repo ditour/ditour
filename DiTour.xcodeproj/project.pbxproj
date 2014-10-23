@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */; };
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
 		4C937D7B1631AAE200F251FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7A1631AAE200F251FF /* Foundation.framework */; };
@@ -58,6 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presentation.swift; sourceTree = "<group>"; };
 		4C690BD818214AB300A823CC /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
 		4C937D741631AAE200F251FF /* DiTour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiTour.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C937D781631AAE200F251FF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -335,6 +337,7 @@
 				4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */,
 				4CEFB3E019CA1F4B0095DCD2 /* ILobbyTransitionSource.h */,
 				4CEFB3E119CA1F4B0095DCD2 /* ILobbyTransitionSource.m */,
+				4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */,
 			);
 			name = Presentation;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */,
 				4CEFB40B19CA1F4B0095DCD2 /* ILobbyTrack.m in Sources */,
 				4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */,
+				4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */,
 				4CEFB3F019CA1F4B0095DCD2 /* ILobbyDownloadSession.m in Sources */,
 				4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */,
 				4CEFB41019CA1F4B0095DCD2 /* ILobbyWebSlide.m in Sources */,
