@@ -30,7 +30,7 @@
 	<false/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
-	<key>UIMainStoryboardFile~ipad</key>
+	<key>UIMainStoryboardFile</key>
 	<string>Storyboard</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="cmb-RJ-5st">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cmb-RJ-5st">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
@@ -23,7 +23,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tN5-S7-pqs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-269" y="-221"/>
+            <point key="canvasLocation" x="-210.15625" y="-129.4921875"/>
         </scene>
         <!--File Info-->
         <scene sceneID="yDU-VI-qaI">
@@ -87,7 +87,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Mu-N3-KhJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7440" y="-1303"/>
+            <point key="canvasLocation" x="5812.5" y="-763.4765625"/>
         </scene>
         <!--Group Detail-->
         <scene sceneID="zF6-rG-KUl">
@@ -165,7 +165,7 @@
                                 <connections>
                                     <outlet property="subtitleLabel" destination="nUW-hU-So5" id="3NR-EJ-h0t"/>
                                     <outlet property="titleLabel" destination="uDc-BQ-P85" id="E7c-ey-8qP"/>
-                                    <segue destination="jnE-kG-HXj" kind="push" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
+                                    <segue destination="jnE-kG-HXj" kind="show" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="ILobbyDownloadStatusCell">
@@ -215,7 +215,7 @@
                                     <outlet property="progressView" destination="VnP-YA-K09" id="fYl-OC-2R4"/>
                                     <outlet property="subtitleLabel" destination="DpM-Zb-vOB" id="yFw-Th-qW3"/>
                                     <outlet property="titleLabel" destination="AgP-2y-IrQ" id="Wyl-rf-3d1"/>
-                                    <segue destination="jnE-kG-HXj" kind="push" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
+                                    <segue destination="jnE-kG-HXj" kind="show" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="pzb-Cl-t0f" customClass="ILobbyDownloadStatusCell">
@@ -249,7 +249,7 @@
                                 <connections>
                                     <outlet property="subtitleLabel" destination="c9V-b9-hkc" id="ZRi-eo-dfL"/>
                                     <outlet property="titleLabel" destination="yYz-hp-E0U" id="vCS-c6-sCV"/>
-                                    <segue destination="Pd3-Nz-BAB" kind="push" identifier="GroupDetailShowFileInfo" id="Rq2-ig-DTN"/>
+                                    <segue destination="Pd3-Nz-BAB" kind="show" identifier="GroupDetailShowFileInfo" id="Rq2-ig-DTN"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="qBL-d6-z9F" customClass="ILobbyDownloadStatusCell">
@@ -299,7 +299,7 @@
                                     <outlet property="progressView" destination="Zpk-cU-jcN" id="Eqh-JF-cpI"/>
                                     <outlet property="subtitleLabel" destination="hwA-gX-oha" id="btd-dp-axL"/>
                                     <outlet property="titleLabel" destination="L2g-Im-0jX" id="SDb-0W-IZM"/>
-                                    <segue destination="Pd3-Nz-BAB" kind="push" identifier="GroupDetailShowPendingFileInfo" id="oI4-Xd-Af5"/>
+                                    <segue destination="Pd3-Nz-BAB" kind="show" identifier="GroupDetailShowPendingFileInfo" id="oI4-Xd-Af5"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -315,7 +315,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYL-dD-06O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3549" y="-221"/>
+            <point key="canvasLocation" x="2772.65625" y="-129.4921875"/>
         </scene>
         <!--Presentation Detail-->
         <scene sceneID="Fri-dJ-JfY">
@@ -376,7 +376,7 @@
                                 <connections>
                                     <outlet property="subtitleLabel" destination="Hag-Pc-UJ1" id="puX-IF-hOf"/>
                                     <outlet property="titleLabel" destination="vAQ-Dl-LxE" id="xdI-mt-Wli"/>
-                                    <segue destination="zoZ-Yz-hel" kind="push" identifier="ShowActiveTrackDetail" id="wfz-Ga-EAy"/>
+                                    <segue destination="zoZ-Yz-hel" kind="show" identifier="ShowActiveTrackDetail" id="wfz-Ga-EAy"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyDownloadStatusCell">
@@ -426,7 +426,7 @@
                                     <outlet property="progressView" destination="sdl-Hc-OQa" id="ar4-fx-dJD"/>
                                     <outlet property="subtitleLabel" destination="4uh-hc-BhP" id="p50-ht-J1x"/>
                                     <outlet property="titleLabel" destination="jSC-nP-Zb9" id="oZr-cJ-1ug"/>
-                                    <segue destination="zoZ-Yz-hel" kind="push" identifier="ShowPendingTrackDetail" id="R2E-hK-DuA"/>
+                                    <segue destination="zoZ-Yz-hel" kind="show" identifier="ShowPendingTrackDetail" id="R2E-hK-DuA"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="QIo-Ob-o1D" customClass="ILobbyDownloadStatusCell">
@@ -460,7 +460,7 @@
                                 <connections>
                                     <outlet property="subtitleLabel" destination="zIw-yO-3jA" id="cgj-uh-Ax1"/>
                                     <outlet property="titleLabel" destination="yd2-GK-Rtf" id="hR3-AX-D5Z"/>
-                                    <segue destination="Pd3-Nz-BAB" kind="push" identifier="PresentationDetailShowFileInfo" id="oeD-4I-E0b"/>
+                                    <segue destination="Pd3-Nz-BAB" kind="show" identifier="PresentationDetailShowFileInfo" id="oeD-4I-E0b"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="exz-ec-JYm" customClass="ILobbyDownloadStatusCell">
@@ -510,7 +510,7 @@
                                     <outlet property="progressView" destination="5MX-mE-29Q" id="maC-ER-b9U"/>
                                     <outlet property="subtitleLabel" destination="q4n-7d-jLn" id="a3l-bV-jrh"/>
                                     <outlet property="titleLabel" destination="RTc-pN-Vex" id="eGw-Dy-nhj"/>
-                                    <segue destination="Pd3-Nz-BAB" kind="push" identifier="PresentationDetailShowPendingFileInfo" id="i2j-EO-FCO"/>
+                                    <segue destination="Pd3-Nz-BAB" kind="show" identifier="PresentationDetailShowPendingFileInfo" id="i2j-EO-FCO"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -526,7 +526,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="72D-TD-0pd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4904" y="-221"/>
+            <point key="canvasLocation" x="3831.25" y="-129.4921875"/>
         </scene>
         <!--Track Detail-->
         <scene sceneID="76x-h2-bf1">
@@ -568,7 +568,7 @@
                                 <connections>
                                     <outlet property="subtitleLabel" destination="t4j-OB-9eI" id="qHC-0g-2L9"/>
                                     <outlet property="titleLabel" destination="tN3-T1-E5A" id="xhc-1m-6Kx"/>
-                                    <segue destination="Pd3-Nz-BAB" kind="push" identifier="TrackDetailShowFileInfo" id="mKP-ap-zYB"/>
+                                    <segue destination="Pd3-Nz-BAB" kind="show" identifier="TrackDetailShowFileInfo" id="mKP-ap-zYB"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="ZqQ-9G-TPX" customClass="ILobbyDownloadStatusCell">
@@ -618,7 +618,7 @@
                                     <outlet property="progressView" destination="i9E-S1-M8e" id="Ug7-zo-FOw"/>
                                     <outlet property="subtitleLabel" destination="KYT-Sw-IzA" id="0QK-pv-qtd"/>
                                     <outlet property="titleLabel" destination="eeY-Kg-xvq" id="ncD-Gn-uAk"/>
-                                    <segue destination="Pd3-Nz-BAB" kind="push" identifier="TrackDetailShowPendingFileInfo" id="I5a-Za-ql2"/>
+                                    <segue destination="Pd3-Nz-BAB" kind="show" identifier="TrackDetailShowPendingFileInfo" id="I5a-Za-ql2"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -631,7 +631,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SSm-eu-iDa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6143" y="-221"/>
+            <point key="canvasLocation" x="4799.21875" y="-129.4921875"/>
         </scene>
         <!--Presentation Groups-->
         <scene sceneID="0Qw-Lp-c9S">
@@ -740,12 +740,12 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Presentation Groups" id="7Hu-mk-Xra"/>
                     <connections>
-                        <segue destination="0xE-St-MOE" kind="push" identifier="GroupToPresentationMasters" id="TMY-Cv-PMe"/>
+                        <segue destination="0xE-St-MOE" kind="show" identifier="GroupToPresentationMasters" id="TMY-Cv-PMe"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K6y-cj-s6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2227" y="-221"/>
+            <point key="canvasLocation" x="1739.84375" y="-129.4921875"/>
         </scene>
         <!--Playing-->
         <scene sceneID="g29-gM-USr">
@@ -813,7 +813,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="organize" id="g5F-aO-8JZ">
                             <connections>
-                                <segue destination="J4K-xb-7m0" kind="push" identifier="MainToGroups" id="1hV-E4-sjv"/>
+                                <segue destination="J4K-xb-7m0" kind="show" identifier="MainToGroups" id="1hV-E4-sjv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -823,17 +823,12 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dt6-0H-03u" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1007" y="-221"/>
+            <point key="canvasLocation" x="786.71875" y="-129.4921875"/>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
-    </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="E37-Q3-lde"/>
-        <segue reference="R2E-hK-DuA"/>
-        <segue reference="mKP-ap-zYB"/>
+        <segue reference="Js4-XC-Mie"/>
+        <segue reference="wfz-Ga-EAy"/>
+        <segue reference="oeD-4I-E0b"/>
     </inferredMetricsTieBreakers>
 </document>
