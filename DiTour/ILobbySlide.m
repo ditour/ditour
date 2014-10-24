@@ -8,6 +8,7 @@
 
 #import "ILobbySlide.h"
 #import "ILobbySlideFamily.h"
+#import "DiTour-Swift.h"
 
 
 static NSSet *ALL_SUPPORTED_EXTENSIONS = nil;
@@ -101,13 +102,13 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 }
 
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+- (void)presentTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	[self performTransition:presenter];
 	[self displayTo:presenter completionHandler:handler];
 }
 
 
-- (void)performTransition:(id<ILobbyPresentationDelegate>)presenter {
+- (void)performTransition:(id<PresentationDelegate>)presenter {
 	ILobbyTransitionSource *transitionSource = self.transitionSource;
 	if ( transitionSource ) {
 		CATransition *transition = [transitionSource generate];
@@ -118,7 +119,7 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 }
 
 
-- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {}
+- (void)displayTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {}
 
 - (void)cancelPresentation {}
 

@@ -72,7 +72,7 @@ public class DitourModel : NSObject {
 
 	let mainStoreRoot : ILobbyStoreRoot
 
-	var presentationDelegate : ILobbyPresentationDelegate? = nil
+	var presentationDelegate : PresentationDelegate? = nil
 
 	var canPlay : Bool { return self.tracks.count > 0 }
 

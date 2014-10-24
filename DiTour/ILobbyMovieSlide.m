@@ -8,7 +8,7 @@
 
 #import "ILobbyMovieSlide.h"
 #import "ILobbySlideFamily.h"
-
+#import "DiTour-Swift.h"
 
 @import AVFoundation;
 
@@ -39,7 +39,7 @@ static NSSet *MOVIE_EXTENSIONS;
 }
 
 
-- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+- (void)displayTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.completionHandler = handler;
 
 	NSURL *mediaURL = [NSURL fileURLWithPath:self.mediaFile];

@@ -30,7 +30,28 @@ private class ExternalViewController : UIViewController {
 
 
 
-class Presenter : NSObject, ILobbyPresentationDelegate {
+/* delegate implemented by presenters of media */
+@objc protocol PresentationDelegate {
+	/* unique identifier of the current run */
+	var currentRunID : AnyObject? { get set }
+
+	/* window for displaying content on the external screen */
+	var externalWindow : UIWindow? { get }
+
+	/* bounds of the external window */
+	var externalBounds : CGRect { get }
+
+	/* begin the animated transition to the new content */
+	func beginTransition(transition: CATransition!)
+
+	/* display the specified mediaView in the content view of the external window */
+	func displayMediaView(mediaView: UIView!)
+}
+
+
+
+/* presents the media to an external screen */
+class ExternalPresenter : NSObject, PresentationDelegate {
 	/* unique identifier of the current run */
 	var currentRunID : AnyObject?
 

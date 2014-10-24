@@ -90,7 +90,6 @@
 		4CEFB3B019CA1F4B0095DCD2 /* ILobbyMovieSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyMovieSlide.m; sourceTree = "<group>"; };
 		4CEFB3B119CA1F4B0095DCD2 /* ILobbyPDFSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPDFSlide.h; sourceTree = "<group>"; };
 		4CEFB3B219CA1F4B0095DCD2 /* ILobbyPDFSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPDFSlide.m; sourceTree = "<group>"; };
-		4CEFB3B319CA1F4B0095DCD2 /* ILobbyPresentationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDelegate.h; sourceTree = "<group>"; };
 		4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDetailController.h; sourceTree = "<group>"; };
 		4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationDetailController.m; sourceTree = "<group>"; };
 		4CEFB3B619CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupCell.h; sourceTree = "<group>"; };
@@ -320,7 +319,6 @@
 		4CEFB41D19CA22860095DCD2 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				4CEFB3B319CA1F4B0095DCD2 /* ILobbyPresentationDelegate.h */,
 				4CEFB3DA19CA1F4B0095DCD2 /* ILobbyTrack.h */,
 				4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */,
 				4CEFB3E019CA1F4B0095DCD2 /* ILobbyTransitionSource.h */,

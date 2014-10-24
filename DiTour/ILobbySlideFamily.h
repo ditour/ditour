@@ -8,7 +8,6 @@
 
 
 #import "ILobbySlide.h"
-#import "ILobbyPresentationDelegate.h"
 
 
 // ILobbySlide extension for internal use by the family of slides
@@ -20,7 +19,7 @@
 @property (nonatomic, readwrite) float duration;
 @property (nonatomic, readwrite, copy) NSString *mediaFile;
 
-- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
-- (void)performTransition:(id<ILobbyPresentationDelegate>)presenter;
+- (void)displayTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
+- (void)performTransition:(id<PresentationDelegate>)presenter;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "ILobbyImageSlide.h"
 #import "ILobbySlideFamily.h"
+#import "DiTour-Swift.h"
 
 
 static NSSet *IMAGE_EXTENSIONS;
@@ -28,7 +29,7 @@ static NSSet *IMAGE_EXTENSIONS;
 }
 
 
-- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+- (void)displayTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	UIImageView *imageView = [[UIImageView alloc] initWithFrame:presenter.externalBounds];
 	imageView.image = [UIImage imageWithContentsOfFile:self.mediaFile];
 	

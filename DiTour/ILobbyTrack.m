@@ -9,6 +9,8 @@
 #import "ILobbyTrack.h"
 #import "ILobbySlide.h"
 #import "ILobbyStoreRemoteMedia.h"
+#import "DiTour-Swift.h"
+
 
 #define DEFAULT_SLIDE_DURATION 5.0f
 #define DEFAULT_SINGLE_IMAGE_SLIDE_DURATION 600.0f
@@ -117,7 +119,7 @@
 }
 
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbyTrackCompletionHandler)handler {
+- (void)presentTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbyTrackCompletionHandler)handler {
 //	NSLog( @"Presenting track: %@", self.label );
 	self.playing = YES;
 
@@ -133,7 +135,7 @@
 }
 
 
-- (void)presentSlideAt:(NSUInteger)slideIndex to:(id<ILobbyPresentationDelegate>)presenter forRun:runID completionHandler:(ILobbyTrackCompletionHandler)trackCompletionHandler {
+- (void)presentSlideAt:(NSUInteger)slideIndex to:(id<PresentationDelegate>)presenter forRun:runID completionHandler:(ILobbyTrackCompletionHandler)trackCompletionHandler {
 //	NSLog( @"Presenting slide at index: %d", slideIndex );
 	NSArray *slides = self.slides;
 	ILobbySlide *slide = (ILobbySlide *)slides[slideIndex];

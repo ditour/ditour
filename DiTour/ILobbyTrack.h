@@ -9,10 +9,10 @@
 @import Foundation;
 @import UIKit;
 
-#import "ILobbyPresentationDelegate.h"
 #import "ILobbyTransitionSource.h"
 #import "ILobbyStoreTrack.h"
 
+@protocol PresentationDelegate;
 
 @class ILobbyTrack;
 typedef void (^ILobbyTrackCompletionHandler)(ILobbyTrack *);
@@ -28,7 +28,7 @@ typedef void (^ILobbyTrackCompletionHandler)(ILobbyTrack *);
 
 - (instancetype)initWithTrackStore:(ILobbyStoreTrack *)trackStore;
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbyTrackCompletionHandler)handler;
+- (void)presentTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbyTrackCompletionHandler)handler;
 - (void)cancelPresentation;
 
 @end

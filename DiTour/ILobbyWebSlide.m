@@ -10,6 +10,7 @@
 
 #import "ILobbyWebSlide.h"
 #import "ILobbySlideFamily.h"
+#import "DiTour-Swift.h"
 
 
 typedef enum : NSInteger {
@@ -50,7 +51,7 @@ static NSSet *WEB_EXTENSIONS;
 }
 
 
-- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
+- (void)displayTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler {
 	self.canceled = NO;
 
 	// store a local copy to compare during post processing

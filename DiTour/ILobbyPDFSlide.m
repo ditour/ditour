@@ -8,6 +8,7 @@
 
 #import "ILobbyPDFSlide.h"
 #import "ILobbySlideFamily.h"
+#import "DiTour-Swift.h"
 
 @import QuartzCore;
 
@@ -55,7 +56,7 @@ static UIImageView *IMAGE_VIEW = nil;
 }
 
 
-- (void)displayTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler {
+- (void)displayTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler {
 	_currentRunID = [NSDate date];
 	id currentRunID = _currentRunID;
 
@@ -73,7 +74,7 @@ static UIImageView *IMAGE_VIEW = nil;
 }
 
 
-- (void)displayPage:(size_t)pageNumber toPresenter:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler runID:(id)currentRunID {
+- (void)displayPage:(size_t)pageNumber toPresenter:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)completionHandler runID:(id)currentRunID {
 	CGPDFDocumentRef documentRef = [self newDocument];
 	size_t pageCount = CGPDFDocumentGetNumberOfPages( documentRef );
 

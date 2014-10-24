@@ -8,8 +8,8 @@
 
 @import Foundation;
 #import "ILobbyTransitionSource.h"
-#import "ILobbyPresentationDelegate.h"
 
+@protocol PresentationDelegate;
 
 @class ILobbySlide;
 typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
@@ -25,7 +25,7 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 - (id)initWithFile:(NSString *)file duration:(float)duration;
 + (id)slideWithFile:(NSString *)file duration:(float)duration;
 
-- (void)presentTo:(id<ILobbyPresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
+- (void)presentTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
 - (void)cancelPresentation;
 
 // provide an icon representation if possible or nil if not
