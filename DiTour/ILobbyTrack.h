@@ -9,10 +9,10 @@
 @import Foundation;
 @import UIKit;
 
-#import "ILobbyTransitionSource.h"
 #import "ILobbyStoreTrack.h"
 
 @protocol PresentationDelegate;
+@class TransitionSource;
 
 @class ILobbyTrack;
 typedef void (^ILobbyTrackCompletionHandler)(ILobbyTrack *);
@@ -24,7 +24,7 @@ typedef void (^ILobbyTrackCompletionHandler)(ILobbyTrack *);
 @property (nonatomic, readonly, copy) NSString *label;
 @property (nonatomic, readonly, assign) float defaultSlideDuration;
 @property (nonatomic, readonly, strong) NSArray *slides;
-@property (nonatomic, readonly, strong) ILobbyTransitionSource *defaultTransitionSource;
+@property (nonatomic, readonly, strong) TransitionSource *defaultTransitionSource;
 
 - (instancetype)initWithTrackStore:(ILobbyStoreTrack *)trackStore;
 

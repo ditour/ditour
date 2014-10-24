@@ -23,7 +23,7 @@
 @property (nonatomic, readwrite, assign) float defaultSlideDuration;
 @property (nonatomic, readwrite, strong) NSArray *slides;
 @property (nonatomic, readwrite, strong) ILobbySlide *currentSlide;
-@property (nonatomic, readwrite, strong) ILobbyTransitionSource *defaultTransitionSource;
+@property (nonatomic, readwrite, strong) TransitionSource *defaultTransitionSource;
 @property (nonatomic, readwrite, assign) BOOL playing;
 @end
 
@@ -47,7 +47,7 @@
 		float defaultSlideDuration = slideDurationNum != nil ? slideDurationNum.floatValue : DEFAULT_SLIDE_DURATION;
 		self.defaultSlideDuration = defaultSlideDuration;
 
-		ILobbyTransitionSource *defaultTransitionSource = [ILobbyTransitionSource parseTransitionSource:config[@"slideTransition"]];
+		TransitionSource *defaultTransitionSource = [[TransitionSource alloc] initWithConfig:config[@"slideTransition"]];
 		self.defaultTransitionSource = defaultTransitionSource;
 
 		NSMutableArray *slides = [NSMutableArray new];

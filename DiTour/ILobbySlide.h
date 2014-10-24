@@ -7,9 +7,9 @@
 //
 
 @import Foundation;
-#import "ILobbyTransitionSource.h"
 
 @protocol PresentationDelegate;
+@class TransitionSource;
 
 @class ILobbySlide;
 typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
@@ -20,7 +20,7 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 
 @property (nonatomic, readonly) float duration;
 @property (nonatomic, readonly, copy) NSString *mediaFile;
-@property (readwrite, strong) ILobbyTransitionSource *transitionSource;
+@property (readwrite, strong) TransitionSource *transitionSource;
 
 - (id)initWithFile:(NSString *)file duration:(float)duration;
 + (id)slideWithFile:(NSString *)file duration:(float)duration;

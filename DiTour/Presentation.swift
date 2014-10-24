@@ -143,7 +143,7 @@ class ExternalPresenter : NSObject, PresentationDelegate {
 
 
 /* Generater of a transition */
-struct TransitionSource {
+class TransitionSource : NSObject {
 	var duration : CFTimeInterval = 0.0
 	var type : String?
 	var subType : String?

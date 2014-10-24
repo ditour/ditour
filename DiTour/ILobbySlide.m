@@ -109,7 +109,7 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 
 
 - (void)performTransition:(id<PresentationDelegate>)presenter {
-	ILobbyTransitionSource *transitionSource = self.transitionSource;
+	TransitionSource *transitionSource = self.transitionSource;
 	if ( transitionSource ) {
 		CATransition *transition = [transitionSource generate];
 		if ( transition ) {
