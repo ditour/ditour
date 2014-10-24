@@ -202,7 +202,10 @@
 		4CEFB39419CA1F4B0095DCD2 /* DiTour */ = {
 			isa = PBXGroup;
 			children = (
-				4CEFB41719CA214A0095DCD2 /* Main */,
+				4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */,
+				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
+				4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */,
+				4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */,
 				4CEFB41E19CA23120095DCD2 /* Utilities */,
 				4CEFB41919CA21920095DCD2 /* Download */,
 				4CEFB41B19CA21CF0095DCD2 /* Views */,
@@ -227,16 +230,6 @@
 				4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		4CEFB41719CA214A0095DCD2 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
-				4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */,
-				4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */,
-			);
-			name = Main;
 			sourceTree = "<group>";
 		};
 		4CEFB41919CA21920095DCD2 /* Download */ = {
@@ -337,7 +330,6 @@
 				4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */,
 				4CEFB3E019CA1F4B0095DCD2 /* ILobbyTransitionSource.h */,
 				4CEFB3E119CA1F4B0095DCD2 /* ILobbyTransitionSource.m */,
-				4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */,
 			);
 			name = Presentation;
 			sourceTree = "<group>";
