@@ -338,52 +338,56 @@ public class DitourModel : NSObject {
 	class private func fetchRootStore( managedObjectContext : NSManagedObjectContext ) -> ILobbyStoreRoot {
 		let mainFetchRequest = NSFetchRequest(entityName: ILobbyStoreRoot.entityName() )
 
-		var error :NSErrorPointer = nil
-		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: error )!
+		var error :NSError?
+		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )!
 
 		if rootStores.count > 0 {
 			return (rootStores[0] as ILobbyStoreRoot)
 		}
 		else {
 			let rootStore = ILobbyStoreRoot.insertNewRootStoreInContext( managedObjectContext )
-			managedObjectContext.save( error )
+			managedObjectContext.save( &error )
 			return rootStore
 		}
 	}
 
 	// save changes down to the persistent store
-	func persistentSaveContext( editContext :NSManagedObjectContext, error :NSErrorPointer ) -> Bool {
+	func persistentSaveContext( editContext :NSManagedObjectContext, error errorPtr :NSErrorPointer ) -> Bool {
 		var success = false
 		var parentContext :NSManagedObjectContext? = nil
+		var localError : NSError?
 
 		// first save to the edit context
 		editContext.performBlockAndWait {
-			success = editContext.save( error )
+			success = editContext.save( &localError )
 			parentContext = editContext.parentContext
 		}
 
 		// propagate the save until we get to the persistent store (i.e. no parent context)
 		if ( success && parentContext != nil ) {
-			return self.persistentSaveContext(parentContext!, error: error)
+			return self.persistentSaveContext(parentContext!, error: errorPtr)
 		}
 		else {
+			errorPtr.memory = localError
 			return success
 		}
 	}
 
 
 	// save changes in the main managed object context on the correct queue and blocking
-	func saveChanges( error :NSErrorPointer ) -> Bool {
+	func saveChanges( errorPtr :NSErrorPointer ) -> Bool {
 		var success = false
+		var localError : NSError?
 
 		// first save to the managed object context on Main
 		self.mainManagedObjectContext.performBlockAndWait { () -> Void in
-			success = self.mainManagedObjectContext.save( error )
+			success = self.mainManagedObjectContext.save( &localError )
 		}
 
 		if !success {
-			if error != nil {
-				println( "Failed to save group edit to the main edit context: \(error)" )
+			if localError != nil {
+				println( "Failed to save group edit to the main edit context: \(localError)" )
+				errorPtr.memory = localError
 			}
 
 			return false
@@ -414,9 +418,9 @@ private func purgeVersion1Data() {
 
 private func fetchDocumentDirectoryURL() -> NSURL {
 	let fileManager = NSFileManager.defaultManager()
-	var error : NSErrorPointer = nil
+	var error : NSError?
 
-	let documentDirectoryURL = fileManager.URLForDirectory( NSSearchPathDirectory.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true, error: error )
+	let documentDirectoryURL = fileManager.URLForDirectory( NSSearchPathDirectory.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true, error: &error )
 
 	return documentDirectoryURL!
 }
