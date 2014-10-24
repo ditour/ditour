@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 	var ditourModel = DitourModel()
-	var presenter = ILobbyPresenter()
+	var presenter = Presenter()
 
 
 	override init() {
