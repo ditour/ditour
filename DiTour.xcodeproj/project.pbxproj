@@ -43,7 +43,6 @@
 		4CEFB40819CA1F4B0095DCD2 /* ILobbyStoreRemoteMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3D519CA1F4B0095DCD2 /* ILobbyStoreRemoteMedia.m */; };
 		4CEFB40919CA1F4B0095DCD2 /* ILobbyStoreRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3D719CA1F4B0095DCD2 /* ILobbyStoreRoot.m */; };
 		4CEFB40A19CA1F4B0095DCD2 /* ILobbyStoreTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3D919CA1F4B0095DCD2 /* ILobbyStoreTrack.m */; };
-		4CEFB40B19CA1F4B0095DCD2 /* ILobbyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */; };
 		4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */; };
 		4CEFB40D19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DF19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m */; };
 		4CEFB40F19CA1F4B0095DCD2 /* ILobbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */; };
@@ -125,8 +124,6 @@
 		4CEFB3D719CA1F4B0095DCD2 /* ILobbyStoreRoot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreRoot.m; sourceTree = "<group>"; };
 		4CEFB3D819CA1F4B0095DCD2 /* ILobbyStoreTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreTrack.h; sourceTree = "<group>"; };
 		4CEFB3D919CA1F4B0095DCD2 /* ILobbyStoreTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreTrack.m; sourceTree = "<group>"; };
-		4CEFB3DA19CA1F4B0095DCD2 /* ILobbyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyTrack.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyTrack.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3DC19CA1F4B0095DCD2 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; };
 		4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; };
 		4CEFB3DE19CA1F4B0095DCD2 /* ILobbyTrackViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackViewCell.h; sourceTree = "<group>"; };
@@ -203,7 +200,6 @@
 				4CEFB41919CA21920095DCD2 /* Download */,
 				4CEFB41B19CA21CF0095DCD2 /* Views */,
 				4CEFB41A19CA21B70095DCD2 /* Slides */,
-				4CEFB41D19CA22860095DCD2 /* Presentation */,
 				4CEFB41C19CA22720095DCD2 /* Model */,
 				4CEFB41619CA21370095DCD2 /* Resources */,
 			);
@@ -311,15 +307,6 @@
 				4CEFB3D919CA1F4B0095DCD2 /* ILobbyStoreTrack.m */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		4CEFB41D19CA22860095DCD2 /* Presentation */ = {
-			isa = PBXGroup;
-			children = (
-				4CEFB3DA19CA1F4B0095DCD2 /* ILobbyTrack.h */,
-				4CEFB3DB19CA1F4B0095DCD2 /* ILobbyTrack.m */,
-			);
-			name = Presentation;
 			sourceTree = "<group>";
 		};
 		4CEFB41E19CA23120095DCD2 /* Utilities */ = {
@@ -431,7 +418,6 @@
 				4CEFB3EF19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m in Sources */,
 				4CEFB40D19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m in Sources */,
 				4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */,
-				4CEFB40B19CA1F4B0095DCD2 /* ILobbyTrack.m in Sources */,
 				4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */,
 				4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */,
 				4CEFB3F019CA1F4B0095DCD2 /* ILobbyDownloadSession.m in Sources */,

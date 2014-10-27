@@ -39,7 +39,7 @@ public class DitourModel : NSObject {
 	private(set) var playing = false
 
 	// all tracks that are available
-	private(set) var tracks:[ILobbyTrack] = [] {
+	private(set) var tracks:[Track] = [] {
 		willSet(newTracks) {
 			self.willChangeValueForKey( "tracks" )
 		}
@@ -50,10 +50,10 @@ public class DitourModel : NSObject {
 	}
 
 	// track scheduled to play automatically at the end of the current track
-	private var defaultTrack :ILobbyTrack?
+	private var defaultTrack :Track?
 
 	// track that is currently playing
-	private(set) var currentTrack :ILobbyTrack? {
+	private(set) var currentTrack :Track? {
 		willSet(newTrack) {
 			self.willChangeValueForKey( "currentTrack" )
 		}
@@ -134,9 +134,9 @@ public class DitourModel : NSObject {
 	func loadPresentation( possiblePresentationStore : ILobbyStorePresentation? ) -> Bool {
 		if let presentationStore = possiblePresentationStore  {
 			if presentationStore.isReady {
-				var tracks = [ILobbyTrack]()
+				var tracks = [Track]()
 				for trackStore in presentationStore.tracks.array {
-					let track = ILobbyTrack( trackStore: trackStore as ILobbyStoreTrack )
+					let track = Track( trackStore: trackStore as ILobbyStoreTrack )
 					tracks.append( track )
 				}
 
@@ -249,7 +249,7 @@ public class DitourModel : NSObject {
 	}
 
 
-	func playTrack( track : ILobbyTrack, cancelCurrent : Bool ) {
+	func playTrack( track : Track, cancelCurrent : Bool ) {
 		let oldTrack = self.currentTrack
 		if ( cancelCurrent && oldTrack != nil ) {
 			oldTrack!.cancelPresentation()

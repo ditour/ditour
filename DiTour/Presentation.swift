@@ -142,6 +142,7 @@ class ExternalPresenter : NSObject, PresentationDelegate {
 }
 
 
+
 /* Generater of a transition */
 class TransitionSource : NSObject {
 	var duration : CFTimeInterval = 0.0
@@ -175,7 +176,7 @@ private let DEFAULT_SLIDE_DURATION = Float(5.0)
 private let DEFAULT_SINGLE_IMAGE_SLIDE_DURATION = Float(600.0)
 
 /* Track of sequential slides to present */
-class Track {
+class Track : NSObject {
 	/* this track's icon */
 	let icon : UIImage
 
@@ -223,7 +224,7 @@ class Track {
 			if media.name.stringByDeletingPathExtension.lowercaseString == "icon" {
 				trackIcon = UIImage(contentsOfFile: mediaPath)
 			} else {
-				let slide = ILobbySlide(file: mediaPath, duration: self.defaultSlideDuration)
+				let slide = ILobbySlide.makeSlideWithFile(mediaPath, duration: self.defaultSlideDuration)
 				if let slideTransitionSource = self.defaultTransitionSource {
 					slide.transitionSource = slideTransitionSource
 				}

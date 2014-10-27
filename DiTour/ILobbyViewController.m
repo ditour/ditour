@@ -8,7 +8,6 @@
 
 #import "ILobbyViewController.h"
 #import "ILobbyTrackViewCell.h"
-#import "ILobbyTrack.h"
 #import "ILobbyPresentationGroupsTableController.h"
 #import "DiTour-Swift.h"
 
@@ -68,8 +67,8 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 		}
 		else if ( [keyPath isEqualToString:@"currentTrack"] ) {
 			NSArray *tracks = self.ditourModel.tracks;
-			ILobbyTrack *oldTrack = change[ NSKeyValueChangeOldKey ];
-			ILobbyTrack *currentTrack = change[ NSKeyValueChangeNewKey ];
+			Track *oldTrack = change[ NSKeyValueChangeOldKey ];
+			Track *currentTrack = change[ NSKeyValueChangeNewKey ];
 
 			if ( tracks && oldTrack != currentTrack ) {
 				NSMutableArray *paths = [NSMutableArray new];
@@ -107,7 +106,7 @@ static NSString *SEGUE_SHOW_CONFIGURATION_ID = @"MainToGroups";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	ILobbyTrackViewCell *cell = (ILobbyTrackViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"TrackCell" forIndexPath:indexPath];
 	NSInteger item = indexPath.item;
-	ILobbyTrack *track = self.ditourModel.tracks[item];
+	Track *track = self.ditourModel.tracks[item];
 	
 	cell.label.text = track.label;
 	cell.imageView.image = track.icon;

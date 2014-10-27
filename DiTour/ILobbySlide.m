@@ -27,7 +27,7 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 }
 
 
-+ (instancetype)slideWithFile:(NSString *)file duration:(float)duration {
++ (instancetype)makeSlideWithFile:(NSString *)file duration:(float)duration {
 	NSString *extension = [file pathExtension].lowercaseString;
 
 	NSString *slideClassName = SLIDE_CLASS_NAMES_BY_EXTENSION[extension];

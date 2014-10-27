@@ -7,6 +7,7 @@
 //
 
 @import Foundation;
+@import UIKit;
 
 @protocol PresentationDelegate;
 @class TransitionSource;
@@ -23,7 +24,7 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 @property (readwrite, strong) TransitionSource *transitionSource;
 
 - (instancetype)initWithFile:(NSString *)file duration:(float)duration;
-+ (instancetype)slideWithFile:(NSString *)file duration:(float)duration;
++ (instancetype)makeSlideWithFile:(NSString *)file duration:(float)duration;
 
 - (void)presentTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
 - (void)cancelPresentation;
