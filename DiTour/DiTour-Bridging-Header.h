@@ -7,3 +7,5 @@
 #import "ILobbyStorePresentation.h"
 #import "ILobbyDownloadStatus.h"
 #import "ILobbyDownloadSession.h"
+#import "ILobbySlide.h"
+#import "ILobbyStoreTrack.h"

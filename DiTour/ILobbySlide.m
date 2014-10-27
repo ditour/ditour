@@ -17,7 +17,7 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 
 @implementation ILobbySlide
 
-- (id)initWithFile:(NSString *)file duration:(float)duration {
+- (instancetype)initWithFile:(NSString *)file duration:(float)duration {
     self = [super init];
     if (self) {
 		self.duration = duration;
@@ -27,7 +27,7 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 }
 
 
-+ (id)slideWithFile:(NSString *)file duration:(float)duration {
++ (instancetype)slideWithFile:(NSString *)file duration:(float)duration {
 	NSString *extension = [file pathExtension].lowercaseString;
 
 	NSString *slideClassName = SLIDE_CLASS_NAMES_BY_EXTENSION[extension];

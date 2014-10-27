@@ -22,8 +22,8 @@ typedef void (^ILobbySlideCompletionHandler)(ILobbySlide *);
 @property (nonatomic, readonly, copy) NSString *mediaFile;
 @property (readwrite, strong) TransitionSource *transitionSource;
 
-- (id)initWithFile:(NSString *)file duration:(float)duration;
-+ (id)slideWithFile:(NSString *)file duration:(float)duration;
+- (instancetype)initWithFile:(NSString *)file duration:(float)duration;
++ (instancetype)slideWithFile:(NSString *)file duration:(float)duration;
 
 - (void)presentTo:(id<PresentationDelegate>)presenter completionHandler:(ILobbySlideCompletionHandler)handler;
 - (void)cancelPresentation;

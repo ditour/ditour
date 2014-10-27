@@ -33,7 +33,7 @@ private class ExternalViewController : UIViewController {
 /* delegate implemented by presenters of media */
 @objc protocol PresentationDelegate {
 	/* unique identifier of the current run */
-	var currentRunID : AnyObject? { get set }
+	var currentRunID : NSObject? { get set }
 
 	/* window for displaying content on the external screen */
 	var externalWindow : UIWindow? { get }
@@ -53,7 +53,7 @@ private class ExternalViewController : UIViewController {
 /* presents the media to an external screen */
 class ExternalPresenter : NSObject, PresentationDelegate {
 	/* unique identifier of the current run */
-	var currentRunID : AnyObject?
+	var currentRunID : NSObject?
 
 	/* window for displaying content on the external screen */
 	private(set) var externalWindow : UIWindow?
@@ -167,5 +167,161 @@ class TransitionSource : NSObject {
 		return transition;
 	}
 }
+
+
+
+// private constants for use by Track
+private let DEFAULT_SLIDE_DURATION = Float(5.0)
+private let DEFAULT_SINGLE_IMAGE_SLIDE_DURATION = Float(600.0)
+
+/* Track of sequential slides to present */
+class Track {
+	/* this track's icon */
+	let icon : UIImage
+
+	/* this track's label */
+	let label : String
+
+	/* array of slides to display */
+	let slides : [ILobbySlide]
+
+	/* default duration for a slide */
+	let defaultSlideDuration : Float
+
+	/* default transition source for each slide */
+	let defaultTransitionSource : TransitionSource? = nil
+
+	/* extra delay over and above the slide duration (used when there is just a single image slide) */
+	let extraTrackDuration : Float
+
+	/* indicates whether this track is playing */
+	private var playing : Bool = false
+
+	/* the current slide that is playing (if any) */
+	private var currentSlide : ILobbySlide? = nil
+
+	/* initialize the track from the core data track store */
+	init( trackStore: ILobbyStoreTrack ) {
+		self.label = trackStore.title
+
+		let config = trackStore.effectiveConfiguration as [String: NSObject]
+
+		let defaultSlideDuration = config["slideDuration"] as? Float ?? DEFAULT_SLIDE_DURATION
+		self.defaultSlideDuration = defaultSlideDuration
+
+		if let slideTransitionConfig = config["slideTransition"] as? [String: NSObject] {
+			self.defaultTransitionSource = TransitionSource( config: slideTransitionConfig )
+		}
+
+		// add the track icon and the slides
+		var trackIcon : UIImage?
+		var slides = [ILobbySlide]()
+		for media in trackStore.remoteMedia.array {
+			let mediaPath = media.absolutePath()
+
+			// if the filename is Icon.* then it is the icon and all others are slides
+			if media.name.stringByDeletingPathExtension.lowercaseString == "icon" {
+				trackIcon = UIImage(contentsOfFile: mediaPath)
+			} else {
+				let slide = ILobbySlide(file: mediaPath, duration: self.defaultSlideDuration)
+				if let slideTransitionSource = self.defaultTransitionSource {
+					slide.transitionSource = slideTransitionSource
+				}
+				slides.append(slide)
+			}
+		}
+
+		// if there was no explicit icon file provided then use first image if any
+		if trackIcon == nil {
+			for slide in slides {
+				if let slideIcon = slide.icon() {
+					trackIcon = slideIcon
+					break
+				}
+			}
+		}
+
+		// if there is still no icon provide a default one from this application's main bundle
+		self.icon = trackIcon ?? UIImage(named: "DefaultSlideIcon")!
+
+		// if there is only one slide and it is an image slide then the slide duration may be extended if the config file specifies it
+		var extraTrackDuration = Float(0.0)
+		if slides.count == 1 {
+			let firstSlide = slides[0]
+			if firstSlide.isSingleFrame() {		// it's an image
+				let trackDuration = config["singleImageSlideTrackDuration"] as? Float ?? DEFAULT_SINGLE_IMAGE_SLIDE_DURATION
+				extraTrackDuration = ( trackDuration > defaultSlideDuration ) ? trackDuration - defaultSlideDuration : 0.0
+			}
+		}
+		self.extraTrackDuration = extraTrackDuration
+
+		// copy the slides to the instance variable
+		self.slides = slides
+	}
+
+
+	/* present this track to the presenter and call the completion handler upon completion of this track */
+	func presentTo( presenter: PresentationDelegate, completionHandler: (Track)->Void ) {
+		self.playing = true
+
+		let slides = self.slides
+		let runID = NSDate()
+		if slides.count > 0 {
+			presenter.currentRunID = runID
+			self.presentSlide( atIndex: 0, to: presenter, forRun: runID, completionHandler: completionHandler )
+		} else {
+			completionHandler(self)
+		}
+	}
+
+
+	/* present the slide at the specified index to the presenter and call the completion handler upon completion */
+	private func presentSlide( atIndex slideIndex: UInt, to presenter: PresentationDelegate, forRun runID: NSObject, completionHandler: (Track)->Void ) {
+		let slides = self.slides
+		let slide = slides[Int(slideIndex)]
+		self.currentSlide = slide
+
+		// present the specified slide and upon completion present the next slide if any or complete the track
+		slide.presentTo(presenter){ theSlide -> Void in
+			if self.playing {
+				let nextSlideIndex = slideIndex + 1
+				if let currentRunID = presenter.currentRunID {	// verify the current run is the one we are on
+					if runID == currentRunID {
+						if nextSlideIndex < UInt(slides.count) {
+							self.presentSlide(atIndex: nextSlideIndex, to: presenter, forRun: runID, completionHandler: completionHandler)
+						} else {
+							let trackDelay = self.extraTrackDuration
+
+							// if there is an extra track delay then we will delay calling the completion handler
+							if trackDelay > 0.0 {
+								let delayInSeconds = Int64(trackDelay)
+								let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * Int64(1_000_000_000) )
+								dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+									completionHandler(self)		// call this track's completion handler
+								}
+							} else {
+								completionHandler(self)	// call this track's completion handler
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	/* cancel the presentation of this track */
+	func cancelPresentation() {
+		self.playing = false
+
+		// cancel the current slide (if any) presentation
+		self.currentSlide?.cancelPresentation()
+
+		// clear the current slide to avoid unnecessary slide cancelation
+		self.currentSlide = nil
+	}
+}
+
+
 
 
