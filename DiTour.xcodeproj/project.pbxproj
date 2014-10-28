@@ -44,7 +44,6 @@
 		4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */; };
 		4CEFB40D19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DF19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m */; };
 		4CEFB40F19CA1F4B0095DCD2 /* ILobbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */; };
-		4CEFB41019CA1F4B0095DCD2 /* ILobbyWebSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */; };
 		4CEFB41119CA1F4B0095DCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */; };
 		4CEFB41319CA1F4B0095DCD2 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E819CA1F4B0095DCD2 /* README.rtf */; };
 		4CEFB41419CA1F4B0095DCD2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */; };
@@ -123,8 +122,6 @@
 		4CEFB3DF19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyTrackViewCell.m; sourceTree = "<group>"; };
 		4CEFB3E219CA1F4B0095DCD2 /* ILobbyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyViewController.h; sourceTree = "<group>"; };
 		4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyViewController.m; sourceTree = "<group>"; };
-		4CEFB3E419CA1F4B0095DCD2 /* ILobbyWebSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyWebSlide.h; sourceTree = "<group>"; };
-		4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyWebSlide.m; sourceTree = "<group>"; };
 		4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4CEFB3E819CA1F4B0095DCD2 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
@@ -239,8 +236,6 @@
 				4CEFB3C519CA1F4B0095DCD2 /* ILobbySlide.h */,
 				4CEFB3C619CA1F4B0095DCD2 /* ILobbySlide.m */,
 				4CEFB3C719CA1F4B0095DCD2 /* ILobbySlideFamily.h */,
-				4CEFB3E419CA1F4B0095DCD2 /* ILobbyWebSlide.h */,
-				4CEFB3E519CA1F4B0095DCD2 /* ILobbyWebSlide.m */,
 			);
 			name = Slides;
 			sourceTree = "<group>";
@@ -408,7 +403,6 @@
 				4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */,
 				4CEFB3F019CA1F4B0095DCD2 /* ILobbyDownloadSession.m in Sources */,
 				4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */,
-				4CEFB41019CA1F4B0095DCD2 /* ILobbyWebSlide.m in Sources */,
 				4CEFB40519CA1F4B0095DCD2 /* ILobbyStoreRemoteContainer.m in Sources */,
 				4CEFB40A19CA1F4B0095DCD2 /* ILobbyStoreTrack.m in Sources */,
 				4CEFB3F919CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m in Sources */,

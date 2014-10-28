@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 import QuartzCore
+import JavaScriptCore
 
 
 /* conversion for seconds to nanoseconds */
@@ -49,7 +50,7 @@ private class ImageSlide : ILobbySlide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler handler: ILobbySlideCompletionHandler!) {
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
 		let imageView = UIImageView(frame: presenter.externalBounds)
 		imageView.image = UIImage(contentsOfFile: self.mediaFile)
 
@@ -58,7 +59,7 @@ private class ImageSlide : ILobbySlide {
 		let delayInSeconds = Int64(self.duration)
 		let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
 		dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
-			handler(self)
+			completionHandler(self)
 		}
 	}
 }
@@ -88,8 +89,8 @@ private class MovieSlide : ILobbySlide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler handler: ILobbySlideCompletionHandler!) {
-		self.completionHandler = handler
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
+		self.completionHandler = completionHandler
 
 		let mediaURL = NSURL(fileURLWithPath: self.mediaFile)
 		let asset = AVURLAsset(URL: mediaURL, options: nil)
@@ -252,6 +253,193 @@ private class PDFSlide : ILobbySlide {
 				}
 			}
 		}
+	}
+}
+
+
+
+/* slide for displaying an image */
+private class WebSlide : ILobbySlide, UIWebViewDelegate {
+	/* container of static constants */
+	struct Statics {
+		static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
+	}
+
+
+	/* options for zooming the web view to fit the external display bounds */
+	enum ZoomMode : String {
+		case None = "none"
+		case Width = "width"
+		case Height = "height"
+		case Both = "both"
+	}
+
+
+	/* web view in which to render the page corresponding to a URL */
+	var webView : UIWebView? = nil
+
+	/* indicates whether the run was canceled */
+	var canceled : Bool = false
+
+	/* mode for zooming the web view to fit the external display bounds */
+	var zoomMode : ZoomMode = .Both
+
+
+	/* register this slide class upon loading this class */
+	override class func load() {
+		self.registerSlideClass()
+	}
+
+
+	/* get the supported extensions */
+	override class func supportedExtensions() -> NSSet {
+		return Statics.WEB_EXTENSIONS
+	}
+
+
+	deinit {
+		self.cleanup()
+	}
+
+
+	/* cleanup the resources */
+	func cleanup() {
+		if let webView = self.webView {
+			webView.delegate = nil
+			webView.stopLoading()
+			self.webView = nil
+		}
+	}
+
+
+	/* cancel the current run */
+	private override func cancelPresentation() {
+		if !self.canceled {	// prevent unnecessary cleanup
+			self.canceled = true
+			self.cleanup()
+		}
+	}
+
+
+	/* slide displays just a single frame */
+	override func isSingleFrame() -> Bool {
+		return true
+	}
+
+
+	/* display the image to the presenter */
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
+		self.canceled = false;
+
+		// store a local copy to compare during post processing
+		let currentRunID = presenter.currentRunID;
+
+		if let slideWebSpec = NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding, error: nil) {
+			if let slideURL = NSURL(string: slideWebSpec) {
+				let queryDictionary = WebSlide.dictionaryForQuery(slideURL.query)
+				if let zoomModeID = queryDictionary["ditour-zoom"]?.lowercaseString {
+					self.zoomMode = ZoomMode(rawValue: zoomModeID) ?? .None
+				} else {
+					self.zoomMode = .Both
+				}
+
+				let webView = UIWebView(frame: presenter.externalBounds)
+				webView.scalesPageToFit = true
+				webView.delegate = self
+				webView.backgroundColor = UIColor.blackColor()
+				self.webView = webView
+
+				presenter.displayMediaView(webView)
+				webView.loadRequest(NSURLRequest(URL: slideURL))
+
+				let delayInSeconds = Int64(self.duration)
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+					// since the web slides share a common web view we should not perform and cleanup upon cancelation as this may interrupt another web slide
+					if !self.canceled && currentRunID == presenter.currentRunID {
+						completionHandler(self)
+					}
+				}
+			} else {
+				completionHandler(self)
+			}
+		} else {
+			completionHandler(self)
+		}
+	}
+
+
+	/* handle the web page load completion */
+	func webViewDidFinishLoad(webView: UIWebView) {
+		// scale the web view's scroll zoom to match the content width so we can see the whole width
+		if !self.canceled && self.webView == webView {
+			let contentSize = webView.scrollView.contentSize
+
+			if contentSize.width > 0 && contentSize.height > 0 {
+				let widthZoom = CGRectGetWidth( webView.bounds ) / contentSize.width
+				let heightZoom = CGRectGetHeight( webView.bounds ) / contentSize.height
+				var zoomScale = CGFloat(1.0)
+
+				// initialize the content center variables with the default content view center
+				let contentView = webView.scrollView.subviews[0] as UIView
+				var xContentCenter = CGRectGetMidX( contentView.frame )
+				var yContentCenter = CGRectGetMidY( contentView.frame )
+
+				switch ( self.zoomMode ) {
+				case .Width:
+					zoomScale = widthZoom
+					xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )	// center the content horizontally in the scroll view
+
+				case .Height:
+					zoomScale = heightZoom;
+					yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )	// center the content vertically in the scroll view
+
+				case .Both:
+					// use the minimum zoom to fit both the content width and height on the page
+					zoomScale = widthZoom < heightZoom ? widthZoom : heightZoom
+
+					// center the content both horizontally and vertically in the scroll view
+					xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )
+					yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )
+
+				default:
+					zoomScale = 1.0
+				}
+
+				// set the scroll view zoom scale
+				if ( zoomScale != 1.0 ) {
+					webView.scrollView.minimumZoomScale = zoomScale
+					webView.scrollView.maximumZoomScale = zoomScale
+					webView.scrollView.zoomScale = zoomScale
+				}
+
+				// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
+				contentView.center = CGPointMake( xContentCenter, yContentCenter )
+			}
+		}
+	}
+
+
+	/* extract the key value pairs for the raw URL query and return then in a dictionary */
+	class func dictionaryForQuery(possibleQuery: String?) -> [String:String] {
+		// dictionary of key/value string pairs corresponding to the input query
+		var dictionary = [String:String]()
+
+		if let query = possibleQuery {
+			let scriptContext = JSContext()
+			let records = query.componentsSeparatedByString("&")
+			for record in records {
+				let fields = record.componentsSeparatedByString("=")
+				if fields.count == 2 {
+					let key = fields[0]
+					let scriptCommand = "decodeURIComponent( \"\(fields[1])\" )"
+					let scriptResult = scriptContext.evaluateScript(scriptCommand)
+					dictionary[key] = scriptResult.toString()
+				}
+			}
+		}
+
+		return dictionary
 	}
 }
 
