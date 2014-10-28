@@ -14,7 +14,7 @@
 @interface ILobbySlide ()
 
 + (NSSet *)supportedExtensions;
-+ (void)registerSlideClass:(Class)slideClass;
++ (void)registerSlideClass;
 
 @property (nonatomic, readwrite) float duration;
 @property (nonatomic, readwrite, copy) NSString *mediaFile;

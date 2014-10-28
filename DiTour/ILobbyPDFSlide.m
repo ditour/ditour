@@ -25,7 +25,7 @@ static UIImageView *IMAGE_VIEW = nil;
 + (void)load {
 	if ( self == [ILobbyPDFSlide class] ) {
 		PDF_EXTENSIONS = [NSSet setWithObject:@"pdf"];
-		[self registerSlideClass:self];
+		[self registerSlideClass];
 	}
 }
 

@@ -36,7 +36,7 @@ static NSSet *WEB_EXTENSIONS;
 + (void)load {
 	if ( self == [ILobbyWebSlide class] ) {
 		WEB_EXTENSIONS = [NSSet setWithArray:@[ @"urlspec" ]];
-		[self registerSlideClass:self];
+		[self registerSlideClass];
 	}
 }
 

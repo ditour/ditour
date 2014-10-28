@@ -15,6 +15,7 @@
 		4C937DA41631B80700F251FF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937DA31631B80700F251FF /* QuartzCore.framework */; };
 		4CA2F14416357BB90082ADFF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA2F14316357BB90082ADFF /* AVFoundation.framework */; };
 		4CA582DC16386913009ACF37 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA582DB16386913009ACF37 /* CoreMedia.framework */; };
+		4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDAFDD19FFD0400001069D /* Slides.swift */; };
 		4CEFB3EA19CA1F4B0095DCD2 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */; };
 		4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */; };
 		4CEFB3EF19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39F19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m */; };
@@ -22,9 +23,7 @@
 		4CEFB3F119CA1F4B0095DCD2 /* ILobbyDownloadStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A319CA1F4B0095DCD2 /* ILobbyDownloadStatus.m */; };
 		4CEFB3F219CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A519CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m */; };
 		4CEFB3F319CA1F4B0095DCD2 /* ILobbyFileInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */; };
-		4CEFB3F419CA1F4B0095DCD2 /* ILobbyImageSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A919CA1F4B0095DCD2 /* ILobbyImageSlide.m */; };
 		4CEFB3F519CA1F4B0095DCD2 /* ILobbyLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3AB19CA1F4B0095DCD2 /* ILobbyLabelCell.m */; };
-		4CEFB3F719CA1F4B0095DCD2 /* ILobbyMovieSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B019CA1F4B0095DCD2 /* ILobbyMovieSlide.m */; };
 		4CEFB3F819CA1F4B0095DCD2 /* ILobbyPDFSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B219CA1F4B0095DCD2 /* ILobbyPDFSlide.m */; };
 		4CEFB3F919CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */; };
 		4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B719CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m */; };
@@ -65,6 +64,7 @@
 		4C937DA31631B80700F251FF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CA2F14316357BB90082ADFF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4CA582DB16386913009ACF37 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		4CBDAFDD19FFD0400001069D /* Slides.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Slides.swift; sourceTree = "<group>"; };
 		4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultSlideIcon.png; sourceTree = "<group>"; };
 		4CEFB39619CA1F4B0095DCD2 /* DiTour-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DiTour-Info.plist"; sourceTree = "<group>"; };
 		4CEFB39719CA1F4B0095DCD2 /* DiTour-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiTour-Prefix.pch"; sourceTree = "<group>"; };
@@ -80,12 +80,8 @@
 		4CEFB3A519CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyDownloadStatusCell.m; sourceTree = "<group>"; };
 		4CEFB3A619CA1F4B0095DCD2 /* ILobbyFileInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyFileInfoController.h; sourceTree = "<group>"; };
 		4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyFileInfoController.m; sourceTree = "<group>"; };
-		4CEFB3A819CA1F4B0095DCD2 /* ILobbyImageSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyImageSlide.h; sourceTree = "<group>"; };
-		4CEFB3A919CA1F4B0095DCD2 /* ILobbyImageSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyImageSlide.m; sourceTree = "<group>"; };
 		4CEFB3AA19CA1F4B0095DCD2 /* ILobbyLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyLabelCell.h; sourceTree = "<group>"; };
 		4CEFB3AB19CA1F4B0095DCD2 /* ILobbyLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyLabelCell.m; sourceTree = "<group>"; };
-		4CEFB3AF19CA1F4B0095DCD2 /* ILobbyMovieSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyMovieSlide.h; sourceTree = "<group>"; };
-		4CEFB3B019CA1F4B0095DCD2 /* ILobbyMovieSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyMovieSlide.m; sourceTree = "<group>"; };
 		4CEFB3B119CA1F4B0095DCD2 /* ILobbyPDFSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPDFSlide.h; sourceTree = "<group>"; };
 		4CEFB3B219CA1F4B0095DCD2 /* ILobbyPDFSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPDFSlide.m; sourceTree = "<group>"; };
 		4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationDetailController.h; sourceTree = "<group>"; };
@@ -196,6 +192,7 @@
 				4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */,
 				4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */,
 				4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */,
+				4CBDAFDD19FFD0400001069D /* Slides.swift */,
 				4CEFB41E19CA23120095DCD2 /* Utilities */,
 				4CEFB41919CA21920095DCD2 /* Download */,
 				4CEFB41B19CA21CF0095DCD2 /* Views */,
@@ -242,10 +239,6 @@
 		4CEFB41A19CA21B70095DCD2 /* Slides */ = {
 			isa = PBXGroup;
 			children = (
-				4CEFB3A819CA1F4B0095DCD2 /* ILobbyImageSlide.h */,
-				4CEFB3A919CA1F4B0095DCD2 /* ILobbyImageSlide.m */,
-				4CEFB3AF19CA1F4B0095DCD2 /* ILobbyMovieSlide.h */,
-				4CEFB3B019CA1F4B0095DCD2 /* ILobbyMovieSlide.m */,
 				4CEFB3B119CA1F4B0095DCD2 /* ILobbyPDFSlide.h */,
 				4CEFB3B219CA1F4B0095DCD2 /* ILobbyPDFSlide.m */,
 				4CEFB3C519CA1F4B0095DCD2 /* ILobbySlide.h */,
@@ -399,10 +392,10 @@
 				4CEFB40319CA1F4B0095DCD2 /* ILobbyStorePresentation.m in Sources */,
 				4CF0ABA319CB0C1400DEA8D8 /* AppDelegate.swift in Sources */,
 				4CEFB3FF19CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m in Sources */,
+				4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */,
 				4CEFB3F119CA1F4B0095DCD2 /* ILobbyDownloadStatus.m in Sources */,
 				4CEFB40019CA1F4B0095DCD2 /* ILobbyRemoteFile.m in Sources */,
 				4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */,
-				4CEFB3F719CA1F4B0095DCD2 /* ILobbyMovieSlide.m in Sources */,
 				4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */,
 				4CEFB40119CA1F4B0095DCD2 /* ILobbySlide.m in Sources */,
 				4CEFB3F819CA1F4B0095DCD2 /* ILobbyPDFSlide.m in Sources */,
@@ -411,7 +404,6 @@
 				4CEFB3FC19CA1F4B0095DCD2 /* ILobbyPresentationGroupEditCell.m in Sources */,
 				4CEFB40719CA1F4B0095DCD2 /* ILobbyStoreRemoteItem.m in Sources */,
 				4CEFB40219CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m in Sources */,
-				4CEFB3F419CA1F4B0095DCD2 /* ILobbyImageSlide.m in Sources */,
 				4CEFB3F519CA1F4B0095DCD2 /* ILobbyLabelCell.m in Sources */,
 				4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */,
 				4CEFB3F219CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m in Sources */,

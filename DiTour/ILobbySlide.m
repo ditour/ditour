@@ -57,11 +57,11 @@ static NSDictionary *SLIDE_CLASS_NAMES_BY_EXTENSION = nil;
 
 
 // called by subclasses to register themselves
-+ (void)registerSlideClass:(Class)slideClass {
++ (void)registerSlideClass {
 	// store the class names keyed by lower case extension for later use when instantiating slides
-	NSString *className = NSStringFromClass( slideClass );
+	NSString *className = NSStringFromClass( self );
 	NSMutableDictionary *slideClassNamesByExtension = SLIDE_CLASS_NAMES_BY_EXTENSION != nil ? [SLIDE_CLASS_NAMES_BY_EXTENSION mutableCopy] : [NSMutableDictionary new];
-	NSSet *extensions = [slideClass supportedExtensions];
+	NSSet *extensions = [self supportedExtensions];
 	for ( NSString *extension in extensions ) {
 		NSString *extensionKey = extension.lowercaseString;
 		slideClassNamesByExtension[extensionKey] = className;
