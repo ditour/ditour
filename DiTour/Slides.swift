@@ -10,6 +10,7 @@ import Foundation
 import AVFoundation
 import QuartzCore
 import JavaScriptCore
+import UIKit
 
 
 /* conversion for seconds to nanoseconds */
@@ -17,8 +18,131 @@ private let NANOS_PER_SECOND = Int64(1_000_000_000)
 
 
 
+/* slide base class for displaying content to a presenter */
+class Slide : NSObject {
+	/* container of static constants */
+	struct Statics {
+		static var ALL_SUPPORTED_EXTENSIONS = NSSet()
+		static var SLIDE_CLASS_NAMES_BY_EXTENSION = [String:String]()
+	}
+
+
+	/* duration of the slide's presentation */
+	private(set) var duration : Float
+
+	/* file which contain's this slide's media */
+	private(set) var mediaFile : String
+
+	/* source of transition to this slide */
+	var transitionSource : TransitionSource?
+
+
+	/* required initializer is used to dynamically initialize instances of any subclass */
+	required init(file: String, duration: Float) {
+		self.mediaFile = file
+		self.duration = duration
+	}
+
+
+	/* make a slide instance based on the file's extension */
+	class func makeSlideWithFile(file: String, duration: Float) -> Slide? {
+		let fileExtension = file.pathExtension.lowercaseString
+
+		if let slideClassName = Statics.SLIDE_CLASS_NAMES_BY_EXTENSION[fileExtension] {
+			if let SlideClass: Slide.Type = NSClassFromString( slideClassName ) as? Slide.Type {
+				return SlideClass(file: file, duration: duration)
+			}
+			else {
+				return nil;
+			}
+		}
+		else {
+			return nil;
+		}
+	}
+
+
+	/* register a slide class so we can instantiate it by file extension */
+	private class func registerSlideClass() {
+		// store the class names keyed by lower case extension for later use when instantiating slides
+		let className = NSStringFromClass( self )
+		var slideClassNamesByExtension = Statics.SLIDE_CLASS_NAMES_BY_EXTENSION
+		let fileExtensions = self.supportedExtensions()
+		for fileExtension in fileExtensions {
+			let extensionKey = fileExtension.lowercaseString
+			slideClassNamesByExtension[extensionKey] = className;
+		}
+		Statics.SLIDE_CLASS_NAMES_BY_EXTENSION = slideClassNamesByExtension
+
+		self.appendSupportedExtensions(fileExtensions)
+	}
+
+
+	// append the supported extensions to ALL_SUPPORTED_EXTENSIONS
+	private class func appendSupportedExtensions(fileExtensions: NSSet) {
+		let allExtensions = Statics.ALL_SUPPORTED_EXTENSIONS.mutableCopy() as NSMutableSet
+		allExtensions.unionSet(fileExtensions)
+		Statics.ALL_SUPPORTED_EXTENSIONS = allExtensions.copy()	as NSSet
+	}
+
+
+	/* get the supported extensions */
+	class func supportedExtensions() -> NSSet {
+		return NSSet()
+	}
+
+
+	class func allSupportedExtensions() -> NSSet {
+		return Statics.ALL_SUPPORTED_EXTENSIONS
+	}
+
+
+	/* determine whether this instance's subclass supports the specified extension */
+	func matchesExtension(fileExtension: String) -> Bool {
+		return self.dynamicType.supportedExtensions().containsObject(fileExtension)
+	}
+
+
+	/* icon is the image itself */
+	func icon() -> UIImage? {
+		return nil
+	}
+
+
+	/* indicates whether the slide displays just a single frame */
+	func isSingleFrame() -> Bool {
+		return false
+	}
+
+
+	/* present this slide to the presenter */
+	func presentTo(presenter: PresentationDelegate, completionHandler: (Slide)->Void) {
+		self.performTransition(presenter)
+		self.displayTo(presenter, completionHandler: completionHandler)
+	}
+
+
+	/* perform the transition */
+	func performTransition(presenter: PresentationDelegate) {
+		if let transitionSource = self.transitionSource {
+			let transition = transitionSource.generate()
+			presenter.beginTransition(transition)
+		}
+	}
+
+
+	/* display the image to the presenter */
+	func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {}
+
+
+	/* cancel the presentation of this slide */
+	func cancelPresentation() {}
+}
+
+
+
 /* slide for displaying an image */
-private class ImageSlide : ILobbySlide {
+private class ImageSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let IMAGE_EXTENSIONS = NSSet(array: ["png", "jpg", "jpeg", "gif"])
@@ -50,7 +174,7 @@ private class ImageSlide : ILobbySlide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		let imageView = UIImageView(frame: presenter.externalBounds)
 		imageView.image = UIImage(contentsOfFile: self.mediaFile)
 
@@ -67,13 +191,13 @@ private class ImageSlide : ILobbySlide {
 
 
 /* slide for displaying a movie to the external screen */
-private class MovieSlide : ILobbySlide {
+private class MovieSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let MOVIE_EXTENSIONS = NSSet(array: ["m4v", "mp4", "mov"])
 	}
 
-	var completionHandler : ((ILobbySlide)->Void)? = nil
+	var completionHandler : ((Slide)->Void)? = nil
 
 
 	/* register this slide class upon loading this class */
@@ -89,7 +213,7 @@ private class MovieSlide : ILobbySlide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		self.completionHandler = completionHandler
 
 		let mediaURL = NSURL(fileURLWithPath: self.mediaFile)
@@ -134,7 +258,7 @@ private class MovieSlide : ILobbySlide {
 
 
 /* slide for displaying pages from a PDF document as frames */
-private class PDFSlide : ILobbySlide {
+private class PDFSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let PDF_EXTENSIONS = NSSet(object: "pdf")
@@ -209,7 +333,7 @@ private class PDFSlide : ILobbySlide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		let runID = NSDate()
 		self.currentRunID = runID
 
@@ -225,7 +349,7 @@ private class PDFSlide : ILobbySlide {
 	}
 
 
-	private func displayPage(pageNumber: size_t, to presenter: PresentationDelegate, completionHandler: (ILobbySlide)->Void, runID: NSObject) {
+	private func displayPage(pageNumber: size_t, to presenter: PresentationDelegate, completionHandler: (Slide)->Void, runID: NSObject) {
 		let documentRef = self.newDocument()
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
@@ -258,8 +382,8 @@ private class PDFSlide : ILobbySlide {
 
 
 
-/* slide for displaying an image */
-private class WebSlide : ILobbySlide, UIWebViewDelegate {
+/* slide for displaying a rendering of a web page to the presenter */
+private class WebSlide : Slide, UIWebViewDelegate {
 	/* container of static constants */
 	struct Statics {
 		static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
@@ -328,7 +452,7 @@ private class WebSlide : ILobbySlide, UIWebViewDelegate {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: ILobbySlideCompletionHandler!) {
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		self.canceled = false;
 
 		// store a local copy to compare during post processing

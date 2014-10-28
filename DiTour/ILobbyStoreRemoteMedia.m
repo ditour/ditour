@@ -8,7 +8,7 @@
 
 #import "ILobbyStoreRemoteMedia.h"
 #import "ILobbyStoreTrack.h"
-#import "ILobbySlide.h"
+#import "DiTour-Swift.h"
 
 
 @implementation ILobbyStoreRemoteMedia
@@ -36,7 +36,7 @@
 	static NSSet *supportedExtensions = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		supportedExtensions = [ILobbySlide allSupportedExtensions];
+		supportedExtensions = [Slide allSupportedExtensions];
 	});
 
 	return [supportedExtensions containsObject:[[candidateURL.path pathExtension] lowercaseString]];

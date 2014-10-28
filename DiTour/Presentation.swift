@@ -184,7 +184,7 @@ class Track : NSObject {
 	let label : String
 
 	/* array of slides to display */
-	let slides : [ILobbySlide]
+	let slides : [Slide]
 
 	/* default duration for a slide */
 	let defaultSlideDuration : Float
@@ -199,7 +199,7 @@ class Track : NSObject {
 	private var playing : Bool = false
 
 	/* the current slide that is playing (if any) */
-	private var currentSlide : ILobbySlide? = nil
+	private var currentSlide : Slide? = nil
 
 	/* initialize the track from the core data track store */
 	init( trackStore: ILobbyStoreTrack ) {
@@ -216,7 +216,7 @@ class Track : NSObject {
 
 		// add the track icon and the slides
 		var trackIcon : UIImage?
-		var slides = [ILobbySlide]()
+		var slides = [Slide]()
 		for media in trackStore.remoteMedia.array {
 			let mediaPath = media.absolutePath()
 
@@ -224,11 +224,12 @@ class Track : NSObject {
 			if media.name.stringByDeletingPathExtension.lowercaseString == "icon" {
 				trackIcon = UIImage(contentsOfFile: mediaPath)
 			} else {
-				let slide = ILobbySlide.makeSlideWithFile(mediaPath, duration: self.defaultSlideDuration)
-				if let slideTransitionSource = self.defaultTransitionSource {
-					slide.transitionSource = slideTransitionSource
+				if let slide = Slide.makeSlideWithFile(mediaPath, duration: self.defaultSlideDuration) {
+					if let slideTransitionSource = self.defaultTransitionSource {
+						slide.transitionSource = slideTransitionSource
+					}
+					slides.append(slide)
 				}
-				slides.append(slide)
 			}
 		}
 

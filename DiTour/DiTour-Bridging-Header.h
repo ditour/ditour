@@ -6,6 +6,4 @@
 #import "ILobbyStorePresentation.h"
 #import "ILobbyDownloadStatus.h"
 #import "ILobbyDownloadSession.h"
-#import "ILobbySlide.h"
-#import "ILobbySlideFamily.h"
 #import "ILobbyStoreTrack.h"
