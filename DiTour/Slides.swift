@@ -142,7 +142,7 @@ class Slide : NSObject {
 
 
 /* slide for displaying an image */
-private class ImageSlide : Slide {
+class ImageSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let IMAGE_EXTENSIONS = NSSet(array: ["png", "jpg", "jpeg", "gif"])
@@ -191,7 +191,7 @@ private class ImageSlide : Slide {
 
 
 /* slide for displaying a movie to the external screen */
-private class MovieSlide : Slide {
+class MovieSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let MOVIE_EXTENSIONS = NSSet(array: ["m4v", "mp4", "mov"])
@@ -258,7 +258,7 @@ private class MovieSlide : Slide {
 
 
 /* slide for displaying pages from a PDF document as frames */
-private class PDFSlide : Slide {
+class PDFSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let PDF_EXTENSIONS = NSSet(object: "pdf")
@@ -383,7 +383,7 @@ private class PDFSlide : Slide {
 
 
 /* slide for displaying a rendering of a web page to the presenter */
-private class WebSlide : Slide, UIWebViewDelegate {
+class WebSlide : Slide, UIWebViewDelegate {
 	/* container of static constants */
 	struct Statics {
 		static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
@@ -437,7 +437,7 @@ private class WebSlide : Slide, UIWebViewDelegate {
 
 
 	/* cancel the current run */
-	private override func cancelPresentation() {
+	override func cancelPresentation() {
 		if !self.canceled {	// prevent unnecessary cleanup
 			self.canceled = true
 			self.cleanup()
