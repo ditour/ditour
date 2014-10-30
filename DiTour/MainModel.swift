@@ -38,30 +38,14 @@ public class DitourModel : NSObject {
 	// indicates whether a track is being presented
 	private(set) var playing = false
 
-	// all tracks that are available
-	private(set) var tracks:[Track] = [] {
-		willSet(newTracks) {
-			self.willChangeValueForKey( "tracks" )
-		}
-
-		didSet {
-			self.didChangeValueForKey( "tracks" )
-		}
-	}
+	// all tracks that are available and key-value observable (dynamic)
+	private(set) dynamic var tracks:[Track] = []
 
 	// track scheduled to play automatically at the end of the current track
 	private var defaultTrack :Track?
 
-	// track that is currently playing
-	private(set) var currentTrack :Track? {
-		willSet(newTrack) {
-			self.willChangeValueForKey( "currentTrack" )
-		}
-
-		didSet {
-			self.didChangeValueForKey( "currentTrack" )
-		}
-	}
+	// track that is currently playing and key-value observable (dynamic)
+	private(set) dynamic var currentTrack :Track?
 
 	// indicates whether there is a presentation update
 	private var hasPresentationUpdate = false
