@@ -4,7 +4,6 @@
 
 #import "ILobbyStoreRoot.h"
 #import "ILobbyStorePresentation.h"
-#import "ILobbyStoreRemoteFile.h"
 #import "ILobbyDownloadStatus.h"
 #import "ILobbyDownloadSession.h"
 #import "ILobbyStoreTrack.h"

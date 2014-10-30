@@ -122,12 +122,12 @@ static NSString *ENTITY_NAME = @"Presentation";
 	}
 
 	for ( ILobbyStoreTrack *track in self.tracks ) {
-		ILobbyStoreRemoteFile *trackConfig = track.configuration;
+		RemoteFileStore *trackConfig = track.configuration;
 		if ( trackConfig != nil && trackConfig.isReady && [fileManager fileExistsAtPath:trackConfig.absolutePath] ) {
 			dictionary[trackConfig.remoteLocation] = trackConfig;
 		}
 
-		for ( ILobbyStoreRemoteMedia *media in track.remoteMedia ) {
+		for ( RemoteMediaStore *media in track.remoteMedia ) {
 			if ( media.isReady && [fileManager fileExistsAtPath:media.absolutePath] ) {
 				dictionary[media.remoteLocation] = media;
 			}

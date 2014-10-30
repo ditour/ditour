@@ -8,6 +8,7 @@
 
 #import "ILobbyStoreTrack.h"
 #import "ILobbyStorePresentation.h"
+#import "DiTour-Swift.h"
 
 
 @interface NSString (ILobbyTrackTransforms)
@@ -51,8 +52,8 @@
 
 - (void)processRemoteFile:(ILobbyRemoteFile *)remoteFile {
 	NSURL *location = remoteFile.location;
-	if ( [ILobbyStoreRemoteMedia matches:location] ) {
-		[ILobbyStoreRemoteMedia newRemoteMediaInTrack:self at:remoteFile];
+	if ( [RemoteMediaStore matches:location] ) {
+		[RemoteMediaStore newRemoteMediaInTrack:self at:remoteFile];
 	}
 	else {
 		[super processRemoteFile:remoteFile];

@@ -313,7 +313,7 @@
 				[self downloadRemoteFile:track.configuration container:status usingCache:localCacheByURL];
 			}
 
-			for ( ILobbyStoreRemoteMedia *remoteMedia in track.remoteMedia ) {
+			for ( RemoteMediaStore *remoteMedia in track.remoteMedia ) {
 				[self downloadRemoteFile:remoteMedia container:status usingCache:localCacheByURL];
 			}
 
@@ -323,14 +323,14 @@
 }
 
 
-- (void)downloadRemoteFile:(ILobbyStoreRemoteFile *)remoteFile container:(ILobbyDownloadContainerStatus *)container usingCache:(NSDictionary *)localCacheByURL {
+- (void)downloadRemoteFile:(RemoteFileStore *)remoteFile container:(ILobbyDownloadContainerStatus *)container usingCache:(NSDictionary *)localCacheByURL {
 	ILobbyDownloadFileStatus *status = [ILobbyDownloadFileStatus statusForRemoteItem:remoteFile container:container];
 
 	[remoteFile.managedObjectContext performBlock:^{
 		if ( remoteFile && remoteFile.isPending ) {
 			// first see if the local cache has a current version of the file we want
 			if ( localCacheByURL != nil ) {
-				ILobbyStoreRemoteFile *cachedFile = localCacheByURL[remoteFile.remoteLocation];
+				RemoteFileStore *cachedFile = localCacheByURL[remoteFile.remoteLocation];
 				if ( cachedFile != nil ) {
 					NSString *cacheInfo = cachedFile.remoteInfo;
 					NSString *remoteInfo = remoteFile.remoteInfo;
@@ -391,7 +391,7 @@
 	//NSLog( @"Finished downloading file to %@", downloadURL );
 
 	ILobbyDownloadFileStatus *downloadStatus = self.downloadTaskRemoteItems[downloadTask];
-	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)downloadStatus.remoteItem;
+	RemoteFileStore *remoteFile = (RemoteFileStore *)downloadStatus.remoteItem;
 
 	if ( remoteFile ) {
 		__block NSString *destination = nil;
@@ -436,7 +436,7 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
 	ILobbyDownloadFileStatus *downloadStatus = self.downloadTaskRemoteItems[task];
-	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)downloadStatus.remoteItem;
+	RemoteFileStore *remoteFile = (RemoteFileStore *)downloadStatus.remoteItem;
 
     if (error == nil) {
 //        NSLog(@"Task: %@ completed successfully", task);

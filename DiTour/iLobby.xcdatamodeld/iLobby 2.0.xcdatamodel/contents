@@ -19,14 +19,14 @@
     <entity name="RemoteContainer" representedClassName="ILobbyStoreRemoteContainer" isAbstract="YES" parentEntity="RemoteItem" syncable="YES">
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="container" inverseEntity="Configuration" syncable="YES"/>
     </entity>
-    <entity name="RemoteFile" representedClassName="ILobbyStoreRemoteFile" isAbstract="YES" parentEntity="RemoteItem" syncable="YES"/>
+    <entity name="RemoteFile" representedClassName="DiTour.RemoteFileStore" isAbstract="YES" parentEntity="RemoteItem" syncable="YES"/>
     <entity name="RemoteItem" representedClassName="ILobbyStoreRemoteItem" isAbstract="YES" syncable="YES">
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteLocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
-    <entity name="RemoteMedia" representedClassName="ILobbyStoreRemoteMedia" parentEntity="RemoteFile" syncable="YES">
+    <entity name="RemoteMedia" representedClassName="DiTour.RemoteMediaStore" parentEntity="RemoteFile" syncable="YES">
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="remoteMedia" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="Root" representedClassName="ILobbyStoreRoot" syncable="YES">
@@ -45,7 +45,7 @@
         <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="58"/>
         <element name="RemoteFile" positionX="27" positionY="81" width="128" height="45"/>
         <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
-        <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="58"/>
         <element name="Root" positionX="0" positionY="0" width="128" height="73"/>
         <element name="Track" positionX="0" positionY="0" width="128" height="88"/>
     </elements>

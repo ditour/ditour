@@ -10,11 +10,11 @@
 #import <CoreData/CoreData.h>
 
 #import "ILobbyStoreRemoteContainer.h"
-#import "ILobbyStoreRemoteMedia.h"
 #import "ILobbyRemoteDirectory.h"
 
 
 @class ILobbyStorePresentation;
+@class RemoteMediaStore;
 
 @interface ILobbyStoreTrack : ILobbyStoreRemoteContainer
 
@@ -27,14 +27,14 @@
 
 @interface ILobbyStoreTrack (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(ILobbyStoreRemoteMedia *)value inRemoteMediaAtIndex:(NSUInteger)idx;
+- (void)insertObject:(RemoteMediaStore *)value inRemoteMediaAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromRemoteMediaAtIndex:(NSUInteger)idx;
 - (void)insertRemoteMedia:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeRemoteMediaAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInRemoteMediaAtIndex:(NSUInteger)idx withObject:(ILobbyStoreRemoteMedia *)value;
+- (void)replaceObjectInRemoteMediaAtIndex:(NSUInteger)idx withObject:(RemoteMediaStore *)value;
 - (void)replaceRemoteMediaAtIndexes:(NSIndexSet *)indexes withRemoteMedia:(NSArray *)values;
-- (void)addRemoteMediaObject:(ILobbyStoreRemoteMedia *)value;
-- (void)removeRemoteMediaObject:(ILobbyStoreRemoteMedia *)value;
+- (void)addRemoteMediaObject:(RemoteMediaStore *)value;
+- (void)removeRemoteMediaObject:(RemoteMediaStore *)value;
 - (void)addRemoteMedia:(NSOrderedSet *)values;
 - (void)removeRemoteMedia:(NSOrderedSet *)values;
 @end

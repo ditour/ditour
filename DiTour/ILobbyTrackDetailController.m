@@ -220,7 +220,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView remoteMediaCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteMedia *media = self.track.remoteMedia[indexPath.row];
+	RemoteMediaStore *media = self.track.remoteMedia[indexPath.row];
 
 	if ( [self isRemoteItemDownloading:media] ) {
 		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];
@@ -247,7 +247,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+	RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:indexPath];
 
     ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
 	cell.title = remoteFile.name;
@@ -257,7 +257,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:indexPath];
+	RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:indexPath];
 
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
@@ -329,7 +329,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 	NSString *segueID = [segue identifier];
 
 	if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
-		ILobbyStoreRemoteFile *remoteFile = (ILobbyStoreRemoteFile *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
+		RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
 		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
 		fileInfoController.ditourModel = self.ditourModel;
 		fileInfoController.remoteFile = remoteFile;
