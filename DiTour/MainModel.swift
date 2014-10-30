@@ -351,8 +351,12 @@ public class DitourModel : NSObject {
 		if ( success && parentContext != nil ) {
 			return self.persistentSaveContext(parentContext!, error: errorPtr)
 		}
-		else {
+		else if !success {
+			println("Save error: \(localError?.description)")
 			errorPtr.memory = localError
+			return success
+		}
+		else {
 			return success
 		}
 	}
