@@ -49,8 +49,8 @@ class Slide : NSObject {
 		let fileExtension = file.pathExtension.lowercaseString
 
 		if let slideClassName = Statics.SLIDE_CLASS_NAMES_BY_EXTENSION[fileExtension] {
-			if let SlideClass: Slide.Type = NSClassFromString( slideClassName ) as? Slide.Type {
-				return SlideClass(file: file, duration: duration)
+			if let SlideType = NSClassFromString( slideClassName ) as? Slide.Type {
+				return SlideType(file: file, duration: duration)
 			}
 			else {
 				return nil;
