@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cmb-RJ-5st">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -36,20 +38,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="os8-xt-d02">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
-                            </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="100.00%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="moX-ML-Uxr">
-                                <rect key="frame" x="20" y="109" width="70" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dlp-rE-8r6">
-                                <rect key="frame" x="98" y="119" width="906" height="2"/>
-                            </progressView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KZ5-XT-ruM">
                                 <rect key="frame" x="20" y="80" width="77" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -64,15 +52,55 @@
                                     <action selector="displayPreview:" destination="Pd3-Nz-BAB" eventType="touchUpInside" id="ALy-O8-KDG"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100.00%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="moX-ML-Uxr">
+                                <rect key="frame" x="20" y="109" width="70" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dlp-rE-8r6">
+                                <rect key="frame" x="98" y="119" width="366" height="2"/>
+                            </progressView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="os8-xt-d02">
+                                <rect key="frame" x="20" y="148" width="448" height="120"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="os8-xt-d02" secondAttribute="trailing" id="2xT-yK-gpV"/>
+                            <constraint firstItem="JoP-RC-OcW" firstAttribute="centerY" secondItem="moX-ML-Uxr" secondAttribute="centerY" id="6Zp-8r-gad"/>
+                            <constraint firstItem="os8-xt-d02" firstAttribute="top" secondItem="e5E-gD-bH1" secondAttribute="topMargin" constant="50" id="Ase-LU-FGD"/>
+                            <constraint firstItem="os8-xt-d02" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leadingMargin" id="AyI-1p-xOu"/>
+                            <constraint firstItem="KZ5-XT-ruM" firstAttribute="centerY" secondItem="JoP-RC-OcW" secondAttribute="centerY" id="Egw-I0-QeT"/>
+                            <constraint firstItem="os8-xt-d02" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leadingMargin" constant="4" id="FGd-Zk-g5h"/>
                             <constraint firstAttribute="trailing" secondItem="JoP-RC-OcW" secondAttribute="trailing" constant="20" id="J6n-J9-kv6"/>
                             <constraint firstItem="KZ5-XT-ruM" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leading" constant="20" id="K4m-Km-mRw"/>
+                            <constraint firstItem="4Ln-LM-AX4" firstAttribute="top" secondItem="os8-xt-d02" secondAttribute="bottom" constant="8" id="NVo-8M-orD"/>
+                            <constraint firstItem="moX-ML-Uxr" firstAttribute="centerY" secondItem="dlp-rE-8r6" secondAttribute="centerY" id="Vcb-A0-Yrg"/>
+                            <constraint firstItem="moX-ML-Uxr" firstAttribute="leading" secondItem="KZ5-XT-ruM" secondAttribute="leading" id="YeN-3q-tAW"/>
+                            <constraint firstItem="dlp-rE-8r6" firstAttribute="leading" secondItem="moX-ML-Uxr" secondAttribute="trailing" constant="8" symbolic="YES" id="bLD-o5-0mp"/>
                             <constraint firstItem="JoP-RC-OcW" firstAttribute="centerY" secondItem="KZ5-XT-ruM" secondAttribute="centerY" id="deX-58-Fue"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="os8-xt-d02" secondAttribute="trailing" constant="-4" id="iLR-On-ak9"/>
+                            <constraint firstItem="dlp-rE-8r6" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leadingMargin" constant="82" id="j4e-wd-AKh"/>
                             <constraint firstItem="JoP-RC-OcW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KZ5-XT-ruM" secondAttribute="trailing" constant="8" symbolic="YES" id="mVT-0f-3mv"/>
                             <constraint firstItem="KZ5-XT-ruM" firstAttribute="top" secondItem="XZN-Vb-i3q" secondAttribute="bottom" constant="16" id="pfT-Re-vev"/>
+                            <constraint firstItem="dlp-rE-8r6" firstAttribute="trailing" secondItem="e5E-gD-bH1" secondAttribute="trailingMargin" id="uVP-ee-Miq"/>
+                            <constraint firstItem="os8-xt-d02" firstAttribute="top" secondItem="moX-ML-Uxr" secondAttribute="bottom" constant="18" id="z6A-WC-XiS"/>
+                            <constraint firstItem="moX-ML-Uxr" firstAttribute="top" secondItem="KZ5-XT-ruM" secondAttribute="bottom" constant="8" symbolic="YES" id="zlT-aY-e3U"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2xT-yK-gpV"/>
+                                <exclude reference="Ase-LU-FGD"/>
+                                <exclude reference="AyI-1p-xOu"/>
+                                <exclude reference="bLD-o5-0mp"/>
+                                <exclude reference="6Zp-8r-gad"/>
+                                <exclude reference="deX-58-Fue"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="File Info" id="9Nc-JH-3pj"/>
                     <connections>
@@ -85,7 +113,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Mu-N3-KhJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5812.5" y="-763.4765625"/>
+            <point key="canvasLocation" x="5803" y="-753"/>
         </scene>
         <!--Group Detail-->
         <scene sceneID="zF6-rG-KUl">
@@ -827,6 +855,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="Js4-XC-Mie"/>
         <segue reference="wfz-Ga-EAy"/>
-        <segue reference="oeD-4I-E0b"/>
+        <segue reference="mKP-ap-zYB"/>
     </inferredMetricsTieBreakers>
 </document>
