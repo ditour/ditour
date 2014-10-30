@@ -7,6 +7,8 @@
 //
 
 #import "ILobbyStoreRemoteContainer.h"
+#import "DiTour-Swift.h"
+
 
 @implementation ILobbyStoreRemoteContainer
 
@@ -15,8 +17,8 @@
 
 - (void)processRemoteFile:(ILobbyRemoteFile *)remoteFile {
 	NSURL *location = remoteFile.location;
-	if ( [ILobbyStoreConfiguration matches:location] ) {
-		[ILobbyStoreConfiguration newConfigurationInContainer:self at:remoteFile];
+	if ( [ConfigurationStore matches:location] ) {
+		[ConfigurationStore newConfigurationInContainer:self at:remoteFile];
 	}
 //	else {
 //		NSLog( @"****************************************************************" );

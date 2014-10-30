@@ -15,6 +15,7 @@
 		4C937DA41631B80700F251FF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937DA31631B80700F251FF /* QuartzCore.framework */; };
 		4CA2F14416357BB90082ADFF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA2F14316357BB90082ADFF /* AVFoundation.framework */; };
 		4CA582DC16386913009ACF37 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA582DB16386913009ACF37 /* CoreMedia.framework */; };
+		4CB7E8FF1A02758C005447E8 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7E8FE1A02758C005447E8 /* Persistence.swift */; };
 		4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDAFDD19FFD0400001069D /* Slides.swift */; };
 		4CEFB3EA19CA1F4B0095DCD2 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */; };
 		4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */; };
@@ -31,7 +32,6 @@
 		4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3BD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m */; };
 		4CEFB3FF19CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */; };
 		4CEFB40019CA1F4B0095DCD2 /* ILobbyRemoteFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */; };
-		4CEFB40219CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3C919CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m */; };
 		4CEFB40319CA1F4B0095DCD2 /* ILobbyStorePresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3CB19CA1F4B0095DCD2 /* ILobbyStorePresentation.m */; };
 		4CEFB40419CA1F4B0095DCD2 /* ILobbyStorePresentationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3CD19CA1F4B0095DCD2 /* ILobbyStorePresentationGroup.m */; };
 		4CEFB40519CA1F4B0095DCD2 /* ILobbyStoreRemoteContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3CF19CA1F4B0095DCD2 /* ILobbyStoreRemoteContainer.m */; };
@@ -61,6 +61,7 @@
 		4C937DA31631B80700F251FF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CA2F14316357BB90082ADFF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4CA582DB16386913009ACF37 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		4CB7E8FE1A02758C005447E8 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		4CBDAFDD19FFD0400001069D /* Slides.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Slides.swift; sourceTree = "<group>"; };
 		4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultSlideIcon.png; sourceTree = "<group>"; };
 		4CEFB39619CA1F4B0095DCD2 /* DiTour-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DiTour-Info.plist"; sourceTree = "<group>"; };
@@ -94,8 +95,6 @@
 		4CEFB3C219CA1F4B0095DCD2 /* ILobbyRemoteDirectoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectoryItem.h; sourceTree = "<group>"; };
 		4CEFB3C319CA1F4B0095DCD2 /* ILobbyRemoteFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteFile.h; sourceTree = "<group>"; };
 		4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteFile.m; sourceTree = "<group>"; };
-		4CEFB3C819CA1F4B0095DCD2 /* ILobbyStoreConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStoreConfiguration.h; sourceTree = "<group>"; };
-		4CEFB3C919CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStoreConfiguration.m; sourceTree = "<group>"; };
 		4CEFB3CA19CA1F4B0095DCD2 /* ILobbyStorePresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentation.h; sourceTree = "<group>"; };
 		4CEFB3CB19CA1F4B0095DCD2 /* ILobbyStorePresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyStorePresentation.m; sourceTree = "<group>"; };
 		4CEFB3CC19CA1F4B0095DCD2 /* ILobbyStorePresentationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyStorePresentationGroup.h; sourceTree = "<group>"; };
@@ -183,6 +182,7 @@
 				4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */,
 				4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */,
 				4CBDAFDD19FFD0400001069D /* Slides.swift */,
+				4CB7E8FE1A02758C005447E8 /* Persistence.swift */,
 				4CEFB41E19CA23120095DCD2 /* Utilities */,
 				4CEFB41919CA21920095DCD2 /* Download */,
 				4CEFB41B19CA21CF0095DCD2 /* Views */,
@@ -255,8 +255,6 @@
 		4CEFB41C19CA22720095DCD2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4CEFB3C819CA1F4B0095DCD2 /* ILobbyStoreConfiguration.h */,
-				4CEFB3C919CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m */,
 				4CEFB3CA19CA1F4B0095DCD2 /* ILobbyStorePresentation.h */,
 				4CEFB3CB19CA1F4B0095DCD2 /* ILobbyStorePresentation.m */,
 				4CEFB3CC19CA1F4B0095DCD2 /* ILobbyStorePresentationGroup.h */,
@@ -376,7 +374,6 @@
 				4CEFB40619CA1F4B0095DCD2 /* ILobbyStoreRemoteFile.m in Sources */,
 				4CEFB3FC19CA1F4B0095DCD2 /* ILobbyPresentationGroupEditCell.m in Sources */,
 				4CEFB40719CA1F4B0095DCD2 /* ILobbyStoreRemoteItem.m in Sources */,
-				4CEFB40219CA1F4B0095DCD2 /* ILobbyStoreConfiguration.m in Sources */,
 				4CEFB3F519CA1F4B0095DCD2 /* ILobbyLabelCell.m in Sources */,
 				4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */,
 				4CEFB3F219CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m in Sources */,
@@ -393,6 +390,7 @@
 				4CEFB40919CA1F4B0095DCD2 /* ILobbyStoreRoot.m in Sources */,
 				4CEFB40819CA1F4B0095DCD2 /* ILobbyStoreRemoteMedia.m in Sources */,
 				4CEFB3F319CA1F4B0095DCD2 /* ILobbyFileInfoController.m in Sources */,
+				4CB7E8FF1A02758C005447E8 /* Persistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

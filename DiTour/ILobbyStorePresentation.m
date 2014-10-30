@@ -9,7 +9,7 @@
 #import "ILobbyStorePresentation.h"
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyStoreRoot.h"
-
+#import "DiTour-Swift.h"
 
 static NSString *ENTITY_NAME = @"Presentation";
 

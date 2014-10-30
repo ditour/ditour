@@ -9,17 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-#import "ILobbyStoreConfiguration.h"
-
 
 @class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup, ILobbyStorePresentation;
-
+@class ConfigurationStore;
 
 @interface ILobbyStoreRoot : NSManagedObject
 
 @property (nonatomic, retain) ILobbyStorePresentation *currentPresentation;
 @property (nonatomic, retain) NSOrderedSet *groups;
-@property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
+@property (nonatomic, retain) ConfigurationStore *configuration;
 @end
 
 

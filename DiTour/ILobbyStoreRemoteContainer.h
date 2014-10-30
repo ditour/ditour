@@ -7,14 +7,16 @@
 //
 
 #import "ILobbyStoreRemoteItem.h"
-#import "ILobbyStoreConfiguration.h"
+#import "ILobbyRemoteFile.h"
+
+@class ConfigurationStore;
 
 
 @interface ILobbyStoreRemoteContainer : ILobbyStoreRemoteItem {
 	NSDictionary *_effectiveConfiguration;
 }
 
-@property (nonatomic, retain) ILobbyStoreConfiguration *configuration;
+@property (nonatomic, retain) ConfigurationStore *configuration;
 @end
 
 

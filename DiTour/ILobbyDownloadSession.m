@@ -137,7 +137,7 @@
 		[group markDownloading];
 
 		// cache information about the initial config so we can reuse the file if possible
-		ILobbyStoreConfiguration *initialConfig = group.configuration;
+		ConfigurationStore *initialConfig = group.configuration;
 		NSString *initialConfigRemoteInfo = nil;
 		NSString *initialConfigPath = nil;
 		if ( initialConfig != nil ) {

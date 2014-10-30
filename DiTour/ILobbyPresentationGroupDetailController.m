@@ -374,7 +374,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView configurationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreConfiguration *configuration = self.group.configuration;
+	ConfigurationStore *configuration = self.group.configuration;
 
 	if ( [self isRemoteItemDownloading:configuration] ) {
 		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];

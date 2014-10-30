@@ -10,6 +10,7 @@
 #import "ILobbyDownloadStatusCell.h"
 #import "ILobbyLabelCell.h"
 #import "ILobbyFileInfoController.h"
+#import "DiTour-Swift.h"
 
 
 
@@ -233,7 +234,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView configurationCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreConfiguration *configuration = self.track.configuration;
+	ConfigurationStore *configuration = self.track.configuration;
 
 	if ( [self isRemoteItemDownloading:configuration] ) {
 		return [self tableView:tableView pendingRemoteFileCellForRowAtIndexPath:indexPath];
