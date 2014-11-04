@@ -120,7 +120,7 @@ public class DitourModel : NSObject {
 			if presentationStore.isReady {
 				var tracks = [Track]()
 				for trackStore in presentationStore.tracks.array {
-					let track = Track( trackStore: trackStore as ILobbyStoreTrack )
+					let track = Track( trackStore: trackStore as TrackStore )
 					tracks.append( track )
 				}
 

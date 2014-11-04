@@ -33,7 +33,7 @@
         <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Presentation" inverseName="rootForCurrent" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="PresentationGroup" inverseName="root" inverseEntity="PresentationGroup" syncable="YES"/>
     </entity>
-    <entity name="Track" representedClassName="ILobbyStoreTrack" parentEntity="RemoteContainer" syncable="YES">
+    <entity name="Track" representedClassName="DiTour.TrackStore" parentEntity="RemoteContainer" syncable="YES">
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="presentation" maxCount="1" deletionRule="Nullify" destinationEntity="Presentation" inverseName="tracks" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="remoteMedia" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="RemoteMedia" inverseName="track" inverseEntity="RemoteMedia" syncable="YES"/>

@@ -202,7 +202,7 @@ class Track : NSObject {
 	private var currentSlide : Slide? = nil
 
 	/* initialize the track from the core data track store */
-	init( trackStore: ILobbyStoreTrack ) {
+	init( trackStore: TrackStore ) {
 		self.label = trackStore.title
 
 		let config = trackStore.effectiveConfiguration as [String: NSObject]

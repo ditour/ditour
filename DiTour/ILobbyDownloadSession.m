@@ -284,7 +284,7 @@
 				[self downloadRemoteFile:presentation.configuration container:status usingCache:localCacheByURL];
 			}
 
-			for ( ILobbyStoreTrack *track in presentation.tracks ) {
+			for ( TrackStore *track in presentation.tracks ) {
 				[self downloadTrack:track container:status usingCache:localCacheByURL];
 			}
 
@@ -294,7 +294,7 @@
 }
 
 
-- (void)downloadTrack:(ILobbyStoreTrack	*)track container:(ILobbyDownloadContainerStatus *)presentationStatus usingCache:(NSDictionary *)localCacheByURL {
+- (void)downloadTrack:(TrackStore	*)track container:(ILobbyDownloadContainerStatus *)presentationStatus usingCache:(NSDictionary *)localCacheByURL {
 	ILobbyDownloadContainerStatus *status = [ILobbyDownloadContainerStatus statusForRemoteItem:track container:presentationStatus];
 
 	[track.managedObjectContext performBlock:^{

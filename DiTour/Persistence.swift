@@ -95,10 +95,10 @@ class ConfigurationStore : RemoteFileStore {
 
 /* persistent store for remote media */
 class RemoteMediaStore : RemoteFileStore {
-	@NSManaged var track : ILobbyStoreTrack
+	@NSManaged var track : TrackStore
 
 
-	class func newRemoteMediaInTrack(track: ILobbyStoreTrack, at remoteFile: ILobbyRemoteFile) -> RemoteMediaStore {
+	class func newRemoteMediaInTrack(track: TrackStore, at remoteFile: ILobbyRemoteFile) -> RemoteMediaStore {
 		let mediaStore = NSEntityDescription.insertNewObjectForEntityForName("RemoteMedia", inManagedObjectContext: track.managedObjectContext!) as RemoteMediaStore
 
 		mediaStore.track = track
@@ -122,4 +122,115 @@ class RemoteMediaStore : RemoteFileStore {
 		}
 	}
 }
+
+
+
+/* persistent store for a track */
+class TrackStore : ILobbyStoreRemoteContainer {
+	@NSManaged var title: String
+	@NSManaged var presentation: ILobbyStorePresentation
+	@NSManaged var remoteMedia: NSOrderedSet
+
+	/* Compute and store the effective configuration */
+	// TODO: this property should be renamed and replace effectiveConfiguration()
+	// TODO: the property type should be changed to [String: AnyObject]
+	lazy var effectiveConfigurationProperty : NSDictionary = {
+		var effectiveConfig = NSMutableDictionary()
+
+		// first append the configuration inherited from the enclosing presentation
+		if let persentationConfig = self.presentation.effectiveConfiguration {
+			effectiveConfig.addEntriesFromDictionary(persentationConfig)
+		}
+
+		// now merge in the configuration directly specified for this track
+		if let trackConfig = self.parseConfiguration() {
+			effectiveConfig.addEntriesFromDictionary(trackConfig)
+		}
+
+		return effectiveConfig.copy() as NSDictionary
+	}()
+
+	class func newTrackInPresentation(presentation: ILobbyStorePresentation, from remoteDirectory: ILobbyRemoteDirectory) -> TrackStore {
+		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as TrackStore
+
+		track.presentation = presentation
+		track.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
+		track.remoteLocation = remoteDirectory.location.absoluteString
+
+		let rawName = remoteDirectory.location.lastPathComponent
+		track.path = presentation.path.stringByAppendingPathComponent(rawName)
+
+		// remove leading digits, replace underscores with spaces and trasnform to title case
+		track.title = rawName.toTrackTitle()
+
+		for remoteFile in remoteDirectory.files as [ILobbyRemoteFile] {
+			track.processRemoteFile( remoteFile )
+		}
+
+		return track
+	}
+
+
+	override func processRemoteFile(remoteFile: ILobbyRemoteFile!) {
+		let location = remoteFile.location
+		if RemoteMediaStore.matches(location) {
+			RemoteMediaStore.newRemoteMediaInTrack(self, at: remoteFile)
+		}
+		else {
+			super.processRemoteFile(remoteFile)
+		}
+	}
+
+
+	/* Get the effective configuration at the level of this track inheriting from this track's container */
+	// TODO: this should be reimplemented completely as a lazy property
+	// TODO: when enough relevant classes are ported to Swift the return type should change to [String: AnyObject]
+	func effectiveConfiguration() -> NSDictionary {
+		return self.effectiveConfigurationProperty
+	}
+}
+
+
+
+// regular expression to match a series of consecutive digits followed by a single underscore
+private let REGEX_DIGITS_UNDERSCORE: NSRegularExpression = {
+	return NSRegularExpression(pattern: "\\d+_", options:.CaseInsensitive, error: nil)!
+}()
+
+/* extend String to add convenience methods for Track name processing */
+extension String {
+	/* 
+		Transform a raw track name into a title suitable for display 
+		- Leading digits and underscore are stripped
+		- Remaining underscores are converted to spaces
+	*/
+	func toTrackTitle() -> String {
+		return self.stripLeadingDigitsAndUnderscore().toSpacesFromUnderscores()
+	}
+
+
+	/* strip leading digits and underscore */
+	func stripLeadingDigitsAndUnderscore() -> String {
+		let stringLength = (self as NSString).length
+		if let match = REGEX_DIGITS_UNDERSCORE.firstMatchInString(self, options: NSMatchingOptions(0), range: NSMakeRange(0, stringLength)) {
+			if ( match.range.location == 0 && match.range.length < stringLength ) {
+				return (self as NSString).substringFromIndex(match.range.length)
+			}
+			else {
+				return self
+			}
+		}
+		else {
+			return self
+		}
+	}
+
+
+	/* underscores to spaces */
+	func toSpacesFromUnderscores() -> String {
+		return self.stringByReplacingOccurrencesOfString("_", withString: " ")
+	}
+}
+
+
 

@@ -11,7 +11,7 @@
 #import "ILobbyLabelCell.h"
 #import "ILobbyTrackDetailController.h"
 #import "ILobbyFileInfoController.h"
-
+#import "DiTour-Swift.h"
 
 
 enum : NSInteger {
@@ -244,7 +244,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView trackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+	TrackStore *track = self.presentation.tracks[indexPath.row];
 
 	if ( [self isRemoteItemDownloading:track] ) {
 		return [self tableView:tableView pendingTrackCellForRowAtIndexPath:indexPath];
@@ -256,7 +256,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView readyTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+	TrackStore *track = self.presentation.tracks[indexPath.row];
 
     ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
 	cell.title = track.title;
@@ -266,7 +266,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreTrack *track = self.presentation.tracks[indexPath.row];
+	TrackStore *track = self.presentation.tracks[indexPath.row];
 
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
 
@@ -380,7 +380,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 #pragma mark - Navigation
 
 
-- (ILobbyStoreTrack *)trackAtIndexPath:(NSIndexPath *)indexPath {
+- (TrackStore *)trackAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
 		case SECTION_TRACKS:
 			return self.presentation.tracks[indexPath.row];
@@ -401,7 +401,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
     if ( [segueID isEqualToString:SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_TRACK_DETAIL_ID] ) {
 		NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-		ILobbyStoreTrack *track = [self trackAtIndexPath:indexPath];
+		TrackStore *track = [self trackAtIndexPath:indexPath];
 
 		ILobbyTrackDetailController *trackController = segue.destinationViewController;
 		trackController.ditourModel = self.ditourModel;

@@ -49,7 +49,7 @@ static NSString *ENTITY_NAME = @"Presentation";
 
 	// fetch the tracks
 	for ( ILobbyRemoteDirectory *remoteTrackDirectory in remoteDirectory.subdirectories ) {
-		[ILobbyStoreTrack newTrackInPresentation:presentation from:remoteTrackDirectory];
+		[TrackStore newTrackInPresentation:presentation from:remoteTrackDirectory];
 	}
 
 	for ( ILobbyRemoteFile *remoteFile in remoteDirectory.files ) {
@@ -121,7 +121,7 @@ static NSString *ENTITY_NAME = @"Presentation";
 		dictionary[self.configuration.remoteLocation] = self.configuration;
 	}
 
-	for ( ILobbyStoreTrack *track in self.tracks ) {
+	for ( TrackStore *track in self.tracks ) {
 		RemoteFileStore *trackConfig = track.configuration;
 		if ( trackConfig != nil && trackConfig.isReady && [fileManager fileExistsAtPath:trackConfig.absolutePath] ) {
 			dictionary[trackConfig.remoteLocation] = trackConfig;

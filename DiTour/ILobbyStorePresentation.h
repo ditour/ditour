@@ -10,7 +10,6 @@
 #import <CoreData/CoreData.h>
 
 #import "ILobbyStoreRemoteContainer.h"
-#import "ILobbyStoreTrack.h"
 #import "ILobbyRemoteDirectory.h"
 
 
@@ -36,14 +35,14 @@
 
 @interface ILobbyStorePresentation (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(ILobbyStoreTrack *)value inTracksAtIndex:(NSUInteger)idx;
+- (void)insertObject:(id)value inTracksAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromTracksAtIndex:(NSUInteger)idx;
 - (void)insertTracks:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeTracksAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInTracksAtIndex:(NSUInteger)idx withObject:(ILobbyStoreTrack *)value;
+- (void)replaceObjectInTracksAtIndex:(NSUInteger)idx withObject:(id)value;
 - (void)replaceTracksAtIndexes:(NSIndexSet *)indexes withTracks:(NSArray *)values;
-- (void)addTracksObject:(ILobbyStoreTrack *)value;
-- (void)removeTracksObject:(ILobbyStoreTrack *)value;
+- (void)addTracksObject:(id)value;
+- (void)removeTracksObject:(id)value;
 - (void)addTracks:(NSOrderedSet *)values;
 - (void)removeTracks:(NSOrderedSet *)values;
 

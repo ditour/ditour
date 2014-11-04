@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ILobbyStoreTrack.h"
 #import "ILobbyDownloadStatus.h"
 #import "DiTour-Swift.h"
 
@@ -16,7 +15,7 @@
 @interface ILobbyTrackDetailController : UITableViewController <DitourModelContainer>
 
 @property (nonatomic) DitourModel *ditourModel;
-@property (nonatomic, strong) ILobbyStoreTrack *track;
+@property (nonatomic, strong) TrackStore *track;
 @property (nonatomic, strong) ILobbyDownloadContainerStatus *trackDownloadStatus;
 
 @end
