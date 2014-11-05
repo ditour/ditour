@@ -8,7 +8,8 @@
 
 #import "ILobbyStorePresentationGroup.h"
 #import "ILobbyRemoteDirectory.h"
-#import "ILobbyStorePresentation.h"
+#import "DiTour-Swift.h"
+
 
 @implementation ILobbyStorePresentationGroup
 
@@ -47,7 +48,7 @@
 
 
 - (NSArray *)fetchPresentationsWithFormat:(NSString *)format {
-	NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[ILobbyStorePresentation entityName]];
+	NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:[PresentationStore entityName]];
 	fetch.predicate = [NSPredicate predicateWithFormat:format argumentArray:@[self]];
 	fetch.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES] ];
 	return [self.managedObjectContext executeFetchRequest:fetch error:nil];

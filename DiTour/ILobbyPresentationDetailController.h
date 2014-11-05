@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ILobbyStorePresentation.h"
 #import "ILobbyDownloadStatus.h"
 #import "DiTour-Swift.h"
 
@@ -16,7 +15,7 @@
 @interface ILobbyPresentationDetailController : UITableViewController <DitourModelContainer>
 
 @property (nonatomic) DitourModel *ditourModel;
-@property (nonatomic, strong) ILobbyStorePresentation *presentation;
+@property (nonatomic, strong) PresentationStore *presentation;
 @property (nonatomic, strong) ILobbyDownloadContainerStatus *presentationDownloadStatus;
 
 @end

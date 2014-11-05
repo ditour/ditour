@@ -10,12 +10,13 @@
 #import <CoreData/CoreData.h>
 
 
-@class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup, ILobbyStorePresentation;
+@class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup;
 @class ConfigurationStore;
 
 @interface ILobbyStoreRoot : NSManagedObject
 
-@property (nonatomic, retain) ILobbyStorePresentation *currentPresentation;
+// TODO: really a PresentationStore
+@property (nonatomic, retain) id currentPresentation;
 @property (nonatomic, retain) NSOrderedSet *groups;
 @property (nonatomic, retain) ConfigurationStore *configuration;
 @end

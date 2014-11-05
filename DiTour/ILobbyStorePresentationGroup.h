@@ -7,8 +7,8 @@
 //
 
 #import <CoreData/CoreData.h>
-#import "ILobbyStorePresentation.h"
 #import "ILobbyStoreRemoteContainer.h"
+#import "ILobbyStoreRoot.h"
 
 
 @interface ILobbyStorePresentationGroup : ILobbyStoreRemoteContainer
@@ -21,8 +21,8 @@
 
 @interface ILobbyStorePresentationGroup (CoreDataGeneratedAccessors)
 
-- (void)addPresentationsObject:(ILobbyStorePresentation *)value;
-- (void)removePresentationsObject:(ILobbyStorePresentation *)value;
+- (void)addPresentationsObject:(id)value;
+- (void)removePresentationsObject:(id)value;
 - (void)addPresentations:(NSSet *)values;
 - (void)removePresentations:(NSSet *)values;
 @end

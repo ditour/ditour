@@ -3,7 +3,7 @@
     <entity name="Configuration" representedClassName="DiTour.ConfigurationStore" parentEntity="RemoteFile" syncable="YES">
         <relationship name="container" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RemoteContainer" inverseName="configuration" inverseEntity="RemoteContainer" syncable="YES"/>
     </entity>
-    <entity name="Presentation" representedClassName="ILobbyStorePresentation" parentEntity="RemoteContainer" syncable="YES">
+    <entity name="Presentation" representedClassName="DiTour.PresentationStore" parentEntity="RemoteContainer" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PresentationGroup" inverseName="presentations" inverseEntity="PresentationGroup" syncable="YES"/>
@@ -40,7 +40,7 @@
     </entity>
     <elements>
         <element name="Configuration" positionX="27" positionY="72" width="128" height="60"/>
-        <element name="Presentation" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="Presentation" positionX="0" positionY="0" width="128" height="150"/>
         <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="73"/>
         <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="58"/>
         <element name="RemoteFile" positionX="27" positionY="81" width="128" height="45"/>

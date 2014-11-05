@@ -298,7 +298,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 }
 
 
-- (ILobbyStorePresentation *)presentationAtIndexPath:(NSIndexPath *)indexPath {
+- (PresentationStore *)presentationAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
 		case SECTION_ACTIVE_PRESENTATIONS:
 			return [self activePresentationAtSectionRow:indexPath.row];
@@ -314,12 +314,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 }
 
 
-- (ILobbyStorePresentation *)activePresentationAtSectionRow:(NSInteger)row {
+- (PresentationStore *)activePresentationAtSectionRow:(NSInteger)row {
 	return _activePresentations[row];
 }
 
 
-- (ILobbyStorePresentation *)pendingPresentationAtSectionRow:(NSInteger)row {
+- (PresentationStore *)pendingPresentationAtSectionRow:(NSInteger)row {
 	return _pendingPresentations[row];
 }
 
@@ -336,7 +336,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	});
 
     // Configure the cell...
-	ILobbyStorePresentation *presentation = _activePresentations[indexPath.row];
+	PresentationStore *presentation = _activePresentations[indexPath.row];
 	cell.marked = presentation.isCurrent;
 	cell.title = presentation.name;
 	cell.subtitle = [timestampFormatter stringFromDate:presentation.timestamp];
@@ -351,7 +351,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:PENDING_PRESENTATION_CELL_ID forIndexPath:indexPath];
 
     // Configure the cell...
-	ILobbyStorePresentation *presentation = _pendingPresentations[indexPath.row];
+	PresentationStore *presentation = _pendingPresentations[indexPath.row];
 	cell.title = presentation.name;
 	cell.subtitle = nil;
 
@@ -432,7 +432,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
     if ( [segueID isEqualToString:SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID] ) {
 		NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-		ILobbyStorePresentation *presentation = [self presentationAtIndexPath:indexPath];
+		PresentationStore *presentation = [self presentationAtIndexPath:indexPath];
 
 		ILobbyPresentationDetailController *presentationController = segue.destinationViewController;
 		presentationController.ditourModel = self.ditourModel;

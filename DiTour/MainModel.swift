@@ -84,10 +84,10 @@ public class DitourModel : NSObject {
 
 	func cleanupDisposablePresentations() {
 		//	NSLog( @"cleaning up disposable presentations..." );
-		let fetch = NSFetchRequest( entityName: ILobbyStorePresentation.entityName() )
+		let fetch = NSFetchRequest( entityName: PresentationStore.entityName )
 		// fetch presentations explicitly marked disposable or that have no group assignment
 		fetch.predicate = NSPredicate( format: "(status = %d) || (group = nil)", REMOTE_ITEM_STATUS_DISPOSABLE )
-		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as [ILobbyStorePresentation]
+		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as [PresentationStore]
 
 		if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
 			for presentation in presentations {
@@ -108,14 +108,15 @@ public class DitourModel : NSObject {
 
 		var success = false
 		self.mainStoreRoot.managedObjectContext?.performBlockAndWait(){ () -> Void in
-			success = self.loadPresentation( self.mainStoreRoot.currentPresentation )
+			// TODO: the cast below can be removed once all code is ported to Swift as currentPresentation is a PresentationStore rather than Objective-C id
+			success = self.loadPresentation( self.mainStoreRoot.currentPresentation as? PresentationStore )
 		}
 
 		return success
 	}
 
 
-	func loadPresentation( possiblePresentationStore : ILobbyStorePresentation? ) -> Bool {
+	func loadPresentation( possiblePresentationStore : PresentationStore? ) -> Bool {
 		if let presentationStore = possiblePresentationStore  {
 			if presentationStore.isReady {
 				var tracks = [Track]()

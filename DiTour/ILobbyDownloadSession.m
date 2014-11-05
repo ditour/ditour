@@ -149,7 +149,7 @@
 
 		// remove any existing pending presentations as we will create new ones so stale ones are no longer useful
 		[group.managedObjectContext refreshObject:group mergeChanges:YES];
-		for ( ILobbyStorePresentation *presentation in group.pendingPresentations ) {
+		for ( PresentationStore *presentation in group.pendingPresentations ) {
 			[group removePresentationsObject:presentation];
 			[group.managedObjectContext deleteObject:presentation];
 		}
@@ -168,24 +168,24 @@
 
 			// store the active presentations by name so they can be used as parents if necessary
 			NSMutableDictionary *activePresentationsByName = [NSMutableDictionary new];
-			for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+			for ( PresentationStore *presentation in group.activePresentations ) {
 				//			NSLog( @"Active presentation at: %@", presentation.absolutePath );
 				activePresentationsByName[presentation.name] = presentation;
 			}
 
 			// fetch presentations
 			for ( ILobbyRemoteDirectory *remotePresentationDirectory in groupRemoteDirectory.subdirectories ) {
-				ILobbyStorePresentation *presentation = [ILobbyStorePresentation newPresentationInGroup:group from:remotePresentationDirectory];
+				PresentationStore *presentation = [PresentationStore newPresentationInGroup:group from:remotePresentationDirectory];
 
 				// if an active presentation has the same name then assign it as a parent
-				ILobbyStorePresentation *presentationParent = activePresentationsByName[presentation.name];
+				PresentationStore *presentationParent = activePresentationsByName[presentation.name];
 				if ( presentationParent != nil ) {
 					presentation.parent = presentationParent;
 				}
 			}
 
 			// any active presentation which does not have a revision should be removed except for the currently playing one if any
-			for ( ILobbyStorePresentation *presentation in group.activePresentations ) {
+			for ( PresentationStore *presentation in group.activePresentations ) {
 				if ( presentation.revision == nil ) {
 					[presentation markDisposable];
 
@@ -223,7 +223,7 @@
 			}
 
 			// download the presentations
-			for ( ILobbyStorePresentation *pendingPresentation in group.pendingPresentations ) {
+			for ( PresentationStore *pendingPresentation in group.pendingPresentations ) {
 				[self downloadPresentation:pendingPresentation container:status];
 			}
 			
@@ -263,7 +263,7 @@
 }
 
 
-- (void)downloadPresentation:(ILobbyStorePresentation *)presentation container:(ILobbyDownloadContainerStatus *)groupStatus {
+- (void)downloadPresentation:(PresentationStore *)presentation container:(ILobbyDownloadContainerStatus *)groupStatus {
 	ILobbyDownloadContainerStatus *status = [ILobbyDownloadContainerStatus statusForRemoteItem:presentation container:groupStatus];
 
 	[presentation.managedObjectContext performBlock:^{

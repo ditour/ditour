@@ -128,7 +128,7 @@ class RemoteMediaStore : RemoteFileStore {
 /* persistent store for a track */
 class TrackStore : ILobbyStoreRemoteContainer {
 	@NSManaged var title: String
-	@NSManaged var presentation: ILobbyStorePresentation
+	@NSManaged var presentation: PresentationStore
 	@NSManaged var remoteMedia: NSOrderedSet
 
 	/* Compute and store the effective configuration */
@@ -150,7 +150,9 @@ class TrackStore : ILobbyStoreRemoteContainer {
 		return effectiveConfig.copy() as NSDictionary
 	}()
 
-	class func newTrackInPresentation(presentation: ILobbyStorePresentation, from remoteDirectory: ILobbyRemoteDirectory) -> TrackStore {
+
+	/* construct a new track in the specified presentation from the specified remote directory */
+	class func newTrackInPresentation(presentation: PresentationStore, from remoteDirectory: ILobbyRemoteDirectory) -> TrackStore {
 		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as TrackStore
 
 		track.presentation = presentation
@@ -229,6 +231,173 @@ extension String {
 	/* underscores to spaces */
 	func toSpacesFromUnderscores() -> String {
 		return self.stringByReplacingOccurrencesOfString("_", withString: " ")
+	}
+}
+
+
+
+/* persistent store for a presentation */
+class PresentationStore : ILobbyStoreRemoteContainer {
+	/* class constants */
+	private struct Constants {
+		/* entity name */
+		static let ENTITY_NAME = "Presentation"
+
+
+		/* format for writing base paths */
+		static private let BASE_PATH_DATE_FORMATTER : NSDateFormatter = {
+			let formatter = NSDateFormatter()
+			formatter.dateFormat = "yyyyMMdd'-'HHmmss"
+			return formatter
+		}()
+	}
+
+	@NSManaged var name: String
+	@NSManaged var timestamp: NSDate
+
+	@NSManaged var group: ILobbyStorePresentationGroup
+	@NSManaged var parent: PresentationStore?
+	@NSManaged var revision: PresentationStore?
+	@NSManaged var rootForCurrent: ILobbyStoreRoot?
+	@NSManaged var tracks: NSOrderedSet
+
+	// indicates whether this presenation is the current one being displayed
+	var current: Bool {
+		get {
+			return self.rootForCurrent != nil
+		}
+		set {
+			if newValue {
+				if !self.current {
+					self.group.root.currentPresentation = self
+				}
+			} else {
+				if self.current {
+					self.rootForCurrent = nil
+				}
+			}
+		}
+	}
+
+	// synonymm for current
+	var isCurrent: Bool { return self.current }
+
+	class var entityName: String { return Constants.ENTITY_NAME }
+
+
+	/* Compute and store the effective configuration */
+	// TODO: this property should be renamed and replace effectiveConfiguration()
+	// TODO: the property type should be changed to [String: AnyObject]
+	lazy var effectiveConfigurationProperty : NSDictionary = {
+		var effectiveConfig = NSMutableDictionary()
+
+		// first append the configuration inherited from the enclosing group
+		if let groupConfig = self.group.effectiveConfiguration {
+			effectiveConfig.addEntriesFromDictionary(groupConfig)
+		}
+
+		// now merge in the configuration directly specified for this presentation
+		if let presentationConfig = self.parseConfiguration() {
+			effectiveConfig.addEntriesFromDictionary(presentationConfig)
+		}
+
+		return effectiveConfig.copy() as NSDictionary
+	}()
+
+
+	/* construct a new presentation in the specified group from the specified remote directory */
+	class func newPresentationInGroup(group: ILobbyStorePresentationGroup, from remoteDirectory: ILobbyRemoteDirectory) -> PresentationStore {
+		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as PresentationStore
+
+		presentation.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
+		presentation.timestamp = NSDate()
+		presentation.remoteLocation = remoteDirectory.location.absoluteString
+		presentation.name = remoteDirectory.location.lastPathComponent
+		presentation.group = group
+
+		let dateString = Constants.BASE_PATH_DATE_FORMATTER.stringFromDate( NSDate() )
+		let basePath = "\(presentation.name)-\(dateString)"
+
+		presentation.path = group.path.stringByAppendingPathComponent(basePath)
+
+		// fetch the tracks
+		// TODO: cleanup code once all code is in Swift
+		for remoteTrackDirectory in (remoteDirectory.subdirectories as [ILobbyRemoteDirectory]) {
+			TrackStore.newTrackInPresentation(presentation, from: remoteTrackDirectory)
+		}
+
+		for remoteFile in (remoteDirectory.files as [ILobbyRemoteFile]) {
+			presentation.processRemoteFile(remoteFile)
+		}
+
+		return presentation
+	}
+
+
+	/* Get the effective configuration at the level of this track inheriting from this track's container */
+	// TODO: this should be reimplemented completely as a lazy property
+	// TODO: when enough relevant classes are ported to Swift the return type should change to [String: AnyObject]
+	func effectiveConfiguration() -> NSDictionary {
+		return self.effectiveConfigurationProperty
+	}
+
+
+	/* mark this presentation as ready replacing an older parent presentation if necessary */
+	override func markReady() {
+		super.markReady()
+
+		// if this presentation has a parent then replace the parent with this one since it is ready
+		if let parentPresentation = self.parent {
+			let current = parentPresentation.isCurrent
+			self.group.removePresentationsObject(parentPresentation)
+
+			// if the parent was current this presentation should also be current
+			if ( current ) {
+				self.current = current;
+			}
+
+			self.parent = nil
+
+			// mark the presentation as disposable so it can be cleaned up later if necessary (e.g. if it is current we can't delete until the new presentation is loaded for playback)
+			parentPresentation.markDisposable()
+
+			// don't delete the resources of any currently playing presentation; we can clean them up later
+			if !current {
+				parentPresentation.managedObjectContext?.deleteObject(parentPresentation)
+			}
+		}
+	}
+
+
+	/* generate a dictionary of every model object associated with this presentation keyed by its remote URL */
+	// TODO: NSDictionary is really [String:RemoteFileStore]
+	func generateFileDictionaryKeyedByURL() -> NSDictionary {
+		let fileManager = NSFileManager.defaultManager()
+		var dictionary = NSMutableDictionary()
+
+		// record the presentation configuration if any
+		if ( self.configuration != nil && self.configuration.isReady && fileManager.fileExistsAtPath(self.configuration.absolutePath()) ) {
+			dictionary[self.configuration.remoteLocation] = self.configuration
+		}
+
+		// record files associated with the tracks
+		for track in self.tracks.array as [TrackStore] {
+			// record each track configurations if any
+			if let trackConfig = track.configuration {
+				if trackConfig.isReady && fileManager.fileExistsAtPath(trackConfig.absolutePath()) {
+					dictionary[trackConfig.remoteLocation] = trackConfig
+				}
+			}
+
+			// record the each track's slide media
+			for media in track.remoteMedia.array as [RemoteMediaStore] {
+				if media.isReady && fileManager.fileExistsAtPath(media.absolutePath()) {
+					dictionary[media.remoteLocation] = media
+				}
+			}
+		}
+
+		return dictionary.copy() as NSDictionary
 	}
 }
 
