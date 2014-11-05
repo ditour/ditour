@@ -81,7 +81,7 @@ class RootStore : NSManagedObject {
 
 
 
-/* status of the remote item */
+/* enumeration of possible remote item states */
 enum RemoteItemStatus : Int16 {
 	case Pending = 0
 	case Downloading
