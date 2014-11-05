@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ILobbyStorePresentationGroup.h"
 #import "ILobbyDownloadStatus.h"
 
 @class DitourModel;
@@ -22,7 +21,8 @@
 
 - (instancetype)initWithModel:(DitourModel *)lobbyModel;
 
-- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
+//TODO group is really PresentationGroupStore
+- (ILobbyDownloadContainerStatus *)downloadGroup:(id)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate;
 - (void)cancel;
 
 

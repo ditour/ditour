@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ILobbyStorePresentationGroup.h"
 
 
 @interface ILobbyPresentationGroupCell : UITableViewCell

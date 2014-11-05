@@ -255,7 +255,7 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 	@NSManaged var name: String
 	@NSManaged var timestamp: NSDate
 
-	@NSManaged var group: ILobbyStorePresentationGroup
+	@NSManaged var group: PresentationGroupStore
 	@NSManaged var parent: PresentationStore?
 	@NSManaged var revision: PresentationStore?
 	@NSManaged var rootForCurrent: ILobbyStoreRoot?
@@ -306,7 +306,7 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 
 
 	/* construct a new presentation in the specified group from the specified remote directory */
-	class func newPresentationInGroup(group: ILobbyStorePresentationGroup, from remoteDirectory: ILobbyRemoteDirectory) -> PresentationStore {
+	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: ILobbyRemoteDirectory) -> PresentationStore {
 		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as PresentationStore
 
 		presentation.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
@@ -349,7 +349,7 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 		// if this presentation has a parent then replace the parent with this one since it is ready
 		if let parentPresentation = self.parent {
 			let current = parentPresentation.isCurrent
-			self.group.removePresentationsObject(parentPresentation)
+			self.group.removePresentation(parentPresentation)
 
 			// if the parent was current this presentation should also be current
 			if ( current ) {
@@ -398,6 +398,86 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 		}
 
 		return dictionary.copy() as NSDictionary
+	}
+}
+
+
+
+/* persistent store for a presentation group */
+class PresentationGroupStore : ILobbyStoreRemoteContainer {
+	/* class constants */
+	private struct Constants {
+		/* entity name */
+		static let ENTITY_NAME = "PresentationGroup"
+
+
+		// format for the group based on the timestamp when the group was created
+		static private let BASE_PATH_DATE_FORMATTER : NSDateFormatter = {
+			let formatter = NSDateFormatter()
+			formatter.dateFormat = "yyyyMMdd'-'HHmmss"
+			return formatter
+		}()
+	}
+
+
+	/* entity name */
+	class var entityName: String { return Constants.ENTITY_NAME }
+
+	@NSManaged var presentations: NSSet?
+	@NSManaged var root: ILobbyStoreRoot
+
+
+	/* name of the group based on the final component of the remote location */
+	var shortName: String {
+		return self.remoteLocation.lastPathComponent
+	}
+
+
+	/* get the pending presentations (e.g. still downloading) */
+	var pendingPresentations : [PresentationStore] {
+		let query = "(group = %@) AND status = \(REMOTE_ITEM_STATUS_PENDING) OR status = \(REMOTE_ITEM_STATUS_DOWNLOADING)"
+		return self.fetchPresentationsWithQuery(query)
+	}
+
+
+	/* get the active presentations (i.e. ready for presentation) */
+	var activePresentations : [PresentationStore] {
+		let query = "(group = %@) AND status = \(REMOTE_ITEM_STATUS_READY)"
+		return self.fetchPresentationsWithQuery(query)
+	}
+
+
+	/* construct a new presentation group in the managed context and return it */
+	class func insertNewPresentationGroupInContext(managedObjectContext: NSManagedObjectContext!) -> PresentationGroupStore {
+		let group = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as PresentationGroupStore
+
+		// generate a unique path for the group based on the timestamp when the group was created
+		let timestampString = Constants.BASE_PATH_DATE_FORMATTER.stringFromDate(NSDate())
+		group.path = "Group-\(timestampString)"
+
+		return group
+	}
+
+
+	/* fetch presentations with the specified query */
+	func fetchPresentationsWithQuery( query: String ) -> [PresentationStore] {
+		let fetch = NSFetchRequest(entityName: PresentationStore.entityName)
+		fetch.predicate = NSPredicate(format: query, argumentArray: [self])
+		fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+		var error: NSError?
+		return self.managedObjectContext!.executeFetchRequest(fetch, error: &error) as [PresentationStore]
+	}
+
+
+	/* add a presentation to this group */
+	func addPresentation(presentation: PresentationStore) {
+		self.mutableSetValueForKey("presentations").addObject(presentation)
+	}
+
+
+	/* remove a presentation from this group */
+	func removePresentation(presentation: PresentationStore) {
+		self.mutableSetValueForKey("presentations").removeObject(presentation)
 	}
 }
 

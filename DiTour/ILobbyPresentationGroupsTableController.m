@@ -8,7 +8,6 @@
 
 #import "ILobbyPresentationGroupsTableController.h"
 #import "ILobbyStoreRoot.h"
-#import "ILobbyStorePresentationGroup.h"
 #import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupEditCell.h"
 #import "ILobbyPresentationGroupDetailController.h"
@@ -45,7 +44,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *editContext;
 
 // indicates which group is being edited
-@property (nonatomic, readwrite, strong) ILobbyStorePresentationGroup *editingGroup;
+@property (nonatomic, readwrite, strong) PresentationGroupStore *editingGroup;
 @property (nonatomic, readwrite, strong) ILobbyPresentationGroupEditCell *editingCell;
 
 @property (nonatomic, assign) EditMode editMode;
@@ -149,7 +148,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:pointInTable];
 
 	if ( indexPath != nil ) {
-		ILobbyStorePresentationGroup *group = self.currentStoreRoot.groups[indexPath.row];
+		PresentationGroupStore *group = self.currentStoreRoot.groups[indexPath.row];
 		NSURL *url = group.remoteURL;
 		[[UIApplication sharedApplication] openURL:url];
 	}
@@ -174,7 +173,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 // get a group on the edit context corresponding to the specified group
-- (ILobbyStorePresentationGroup *)editingGroupForGroup:(ILobbyStorePresentationGroup *)group {
+- (PresentationGroupStore *)editingGroupForGroup:(PresentationGroupStore *)group {
 	// get the current root ID
 	__block NSManagedObjectID *groupID = nil;
 	[self.mainRootStore.managedObjectContext performBlockAndWait:^{
@@ -182,9 +181,9 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 	}];
 
 	// create a new root store corresponding to the same current root
-	__block ILobbyStorePresentationGroup *editingGroup = nil;
+	__block PresentationGroupStore *editingGroup = nil;
 	[self.editContext performBlockAndWait:^{
-		editingGroup = (ILobbyStorePresentationGroup *)[self.editContext objectWithID:groupID];
+		editingGroup = (PresentationGroupStore *)[self.editContext objectWithID:groupID];
 	}];
 
 	return editingGroup;
@@ -354,7 +353,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 
 - (UITableViewCell *)groupViewCellAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStorePresentationGroup *group = self.currentStoreRoot.groups[indexPath.row];
+	PresentationGroupStore *group = self.currentStoreRoot.groups[indexPath.row];
 	if ( group == self.editingGroup ) {
 		if ( !self.editingCell ) {
 			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
@@ -487,7 +486,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
     NSString *segueID = [segue identifier];
 
     if ( [segueID isEqualToString:SEGUE_SHOW_PRESENTAION_MASTERS_ID] ) {
-		ILobbyStorePresentationGroup *group = sender;
+		PresentationGroupStore *group = sender;
 
 		ILobbyPresentationGroupDetailController *masterTableController = segue.destinationViewController;
 		masterTableController.ditourModel = self.ditourModel;

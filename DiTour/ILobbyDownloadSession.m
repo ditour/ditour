@@ -118,7 +118,7 @@
 
 - (void)publishChanges {
 //	NSLog( @"publishing changes..." );
-	ILobbyStorePresentationGroup *group = (ILobbyStorePresentationGroup *)self.groupStatus.remoteItem;
+	PresentationGroupStore *group = (PresentationGroupStore *)self.groupStatus.remoteItem;
 	[group.managedObjectContext performBlockAndWait:^{
 		[group.managedObjectContext refreshObject:group mergeChanges:YES];
 	}];
@@ -126,7 +126,7 @@
 }
 
 
-- (ILobbyDownloadContainerStatus *)downloadGroup:(ILobbyStorePresentationGroup *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate {
+- (ILobbyDownloadContainerStatus *)downloadGroup:(PresentationGroupStore *)group withDelegate:(id<ILobbyDownloadStatusDelegate>)delegate {
 	ILobbyDownloadContainerStatus *status = [[ILobbyDownloadContainerStatus alloc] initWithItem:group container:nil];
 	status.delegate = delegate;
 	self.groupStatus = status;
@@ -150,7 +150,7 @@
 		// remove any existing pending presentations as we will create new ones so stale ones are no longer useful
 		[group.managedObjectContext refreshObject:group mergeChanges:YES];
 		for ( PresentationStore *presentation in group.pendingPresentations ) {
-			[group removePresentationsObject:presentation];
+			[group removePresentation:presentation];
 			[group.managedObjectContext deleteObject:presentation];
 		}
 		[self persistentSaveContext:group.managedObjectContext error:&error];
@@ -190,7 +190,7 @@
 					[presentation markDisposable];
 
 					if ( !presentation.isCurrent ) {
-						[group removePresentationsObject:presentation];
+						[group removePresentation:presentation];
 						[group.managedObjectContext deleteObject:presentation];
 					}
 				}

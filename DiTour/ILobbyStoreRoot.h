@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 
 
-@class ILobbyStoreTrackConfiguration, ILobbyStorePresentationGroup;
+@class ILobbyStoreTrackConfiguration, PresentationGroupStore;
 @class ConfigurationStore;
 
 @interface ILobbyStoreRoot : NSManagedObject
@@ -25,14 +25,14 @@
 
 @interface ILobbyStoreRoot (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(ILobbyStorePresentationGroup *)value inGroupsAtIndex:(NSUInteger)idx;
+- (void)insertObject:(PresentationGroupStore *)value inGroupsAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromGroupsAtIndex:(NSUInteger)idx;
 - (void)insertGroups:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeGroupsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInGroupsAtIndex:(NSUInteger)idx withObject:(ILobbyStorePresentationGroup *)value;
+- (void)replaceObjectInGroupsAtIndex:(NSUInteger)idx withObject:(PresentationGroupStore *)value;
 - (void)replaceGroupsAtIndexes:(NSIndexSet *)indexes withGroups:(NSArray *)values;
-- (void)addGroupsObject:(ILobbyStorePresentationGroup *)value;
-- (void)removeGroupsObject:(ILobbyStorePresentationGroup *)value;
+- (void)addGroupsObject:(PresentationGroupStore *)value;
+- (void)removeGroupsObject:(PresentationGroupStore *)value;
 - (void)addGroups:(NSOrderedSet *)values;
 - (void)removeGroups:(NSOrderedSet *)values;
 @end
@@ -47,7 +47,7 @@
 + (instancetype)insertNewRootStoreInContext:(NSManagedObjectContext *)managedObjectContext;
 + (NSString *)entityName;
 
-- (ILobbyStorePresentationGroup *)addNewPresentationGroup;
+- (PresentationGroupStore *)addNewPresentationGroup;
 - (void)moveGroupAtIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 
 @end

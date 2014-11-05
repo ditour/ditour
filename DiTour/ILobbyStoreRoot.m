@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyStoreRoot.h"
-#import "ILobbyStorePresentationGroup.h"
 #import "DiTour-Swift.h"
 
 
@@ -36,8 +35,8 @@ static NSString *GROUPS_KEY = @"Groups";
 
 
 // create a new presentation group and add it to this user configuration
-- (ILobbyStorePresentationGroup *)addNewPresentationGroup {
-	ILobbyStorePresentationGroup *group = [ILobbyStorePresentationGroup insertNewPresentationGroupInContext:self.managedObjectContext];
+- (PresentationGroupStore *)addNewPresentationGroup {
+	PresentationGroupStore *group = [PresentationGroupStore insertNewPresentationGroupInContext:self.managedObjectContext];
 	group.root = self;
 	return group;
 }
@@ -47,7 +46,7 @@ static NSString *GROUPS_KEY = @"Groups";
 - (void)removeObjectFromGroupsAtIndex:(NSUInteger)index {
 	NSMutableOrderedSet *groups = [self mutableOrderedSetValueForKey:GROUPS_KEY];
 
-	ILobbyStorePresentationGroup *group = [groups objectAtIndex:index];
+	PresentationGroupStore *group = [groups objectAtIndex:index];
 
 	// if the group for the current presentation is the group marked for removal then remove set the current master to nil
 	// TODO: cleanup this code as the assignment below is needed since currentPresentation property is Objective-C id
