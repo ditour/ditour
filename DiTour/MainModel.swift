@@ -109,7 +109,7 @@ public class DitourModel : NSObject {
 		var success = false
 		self.mainStoreRoot.managedObjectContext?.performBlockAndWait(){ () -> Void in
 			// TODO: the cast below can be removed once all code is ported to Swift as currentPresentation is a PresentationStore rather than Objective-C id
-			success = self.loadPresentation( self.mainStoreRoot.currentPresentation as? PresentationStore )
+			success = self.loadPresentation( self.mainStoreRoot.currentPresentation )
 		}
 
 		return success

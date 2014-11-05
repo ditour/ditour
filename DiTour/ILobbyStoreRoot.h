@@ -10,13 +10,13 @@
 #import <CoreData/CoreData.h>
 
 
-@class ILobbyStoreTrackConfiguration, PresentationGroupStore;
+@class TrackConfiguration, PresentationGroupStore, PresentationStore;
 @class ConfigurationStore;
 
 @interface ILobbyStoreRoot : NSManagedObject
 
 // TODO: really a PresentationStore
-@property (nonatomic, retain) id currentPresentation;
+@property (nonatomic, retain) PresentationStore *currentPresentation;
 @property (nonatomic, retain) NSOrderedSet *groups;
 @property (nonatomic, retain) ConfigurationStore *configuration;
 @end
@@ -25,16 +25,8 @@
 
 @interface ILobbyStoreRoot (CoreDataGeneratedAccessors)
 
-- (void)insertObject:(PresentationGroupStore *)value inGroupsAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromGroupsAtIndex:(NSUInteger)idx;
-- (void)insertGroups:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeGroupsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInGroupsAtIndex:(NSUInteger)idx withObject:(PresentationGroupStore *)value;
-- (void)replaceGroupsAtIndexes:(NSIndexSet *)indexes withGroups:(NSArray *)values;
-- (void)addGroupsObject:(PresentationGroupStore *)value;
-- (void)removeGroupsObject:(PresentationGroupStore *)value;
-- (void)addGroups:(NSOrderedSet *)values;
-- (void)removeGroups:(NSOrderedSet *)values;
 @end
 
 

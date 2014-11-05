@@ -49,9 +49,7 @@ static NSString *GROUPS_KEY = @"Groups";
 	PresentationGroupStore *group = [groups objectAtIndex:index];
 
 	// if the group for the current presentation is the group marked for removal then remove set the current master to nil
-	// TODO: cleanup this code as the assignment below is needed since currentPresentation property is Objective-C id
-	PresentationStore *currentPresentation = self.currentPresentation;
-	if ( currentPresentation.group == group ) {
+	if ( self.currentPresentation.group == group ) {
 		self.currentPresentation = nil;
 	}
 
