@@ -29,7 +29,7 @@
     <entity name="RemoteMedia" representedClassName="DiTour.RemoteMediaStore" parentEntity="RemoteFile" syncable="YES">
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="remoteMedia" inverseEntity="Track" syncable="YES"/>
     </entity>
-    <entity name="Root" representedClassName="ILobbyStoreRoot" syncable="YES">
+    <entity name="Root" representedClassName="DiTour.RootStore" syncable="YES">
         <relationship name="currentPresentation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Presentation" inverseName="rootForCurrent" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="PresentationGroup" inverseName="root" inverseEntity="PresentationGroup" syncable="YES"/>
     </entity>
@@ -46,7 +46,7 @@
         <element name="RemoteFile" positionX="27" positionY="81" width="128" height="45"/>
         <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
         <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="58"/>
-        <element name="Root" positionX="0" positionY="0" width="128" height="73"/>
+        <element name="Root" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Track" positionX="0" positionY="0" width="128" height="88"/>
     </elements>
 </model>

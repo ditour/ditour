@@ -54,7 +54,7 @@ public class DitourModel : NSObject {
 	let managedObjectModel : NSManagedObjectModel
 	let mainManagedObjectContext : NSManagedObjectContext
 
-	let mainStoreRoot : ILobbyStoreRoot
+	let mainStoreRoot : RootStore
 
 	var presentationDelegate : PresentationDelegate? = nil
 
@@ -320,17 +320,17 @@ public class DitourModel : NSObject {
 	}
 
 
-	class private func fetchRootStore( managedObjectContext : NSManagedObjectContext ) -> ILobbyStoreRoot {
-		let mainFetchRequest = NSFetchRequest(entityName: ILobbyStoreRoot.entityName() )
+	class private func fetchRootStore( managedObjectContext : NSManagedObjectContext ) -> RootStore {
+		let mainFetchRequest = NSFetchRequest(entityName: RootStore.entityName )
 
 		var error :NSError?
 		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )!
 
 		if rootStores.count > 0 {
-			return (rootStores[0] as ILobbyStoreRoot)
+			return (rootStores[0] as RootStore)
 		}
 		else {
-			let rootStore = ILobbyStoreRoot.insertNewRootStoreInContext( managedObjectContext )
+			let rootStore = RootStore.insertNewRootStoreInContext( managedObjectContext )
 			managedObjectContext.save( &error )
 			return rootStore
 		}

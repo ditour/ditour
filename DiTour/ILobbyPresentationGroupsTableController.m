@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyPresentationGroupsTableController.h"
-#import "ILobbyStoreRoot.h"
 #import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupEditCell.h"
 #import "ILobbyPresentationGroupDetailController.h"
@@ -38,9 +37,9 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 @interface ILobbyPresentationGroupsTableController ()
 
-@property (nonatomic, readwrite, strong) ILobbyStoreRoot *mainRootStore;
-@property (nonatomic, readwrite, strong) ILobbyStoreRoot *editingRootStore;
-@property (nonatomic, readwrite, strong) ILobbyStoreRoot *currentStoreRoot;
+@property (nonatomic, readwrite, strong) RootStore *mainRootStore;
+@property (nonatomic, readwrite, strong) RootStore *editingRootStore;
+@property (nonatomic, readwrite, strong) RootStore *currentStoreRoot;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *editContext;
 
 // indicates which group is being edited
@@ -121,7 +120,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 	// create a new root store corresponding to the same current root
 	[self.editContext performBlockAndWait:^{
-		self.editingRootStore = (ILobbyStoreRoot *)[self.editContext objectWithID:storeRootID];
+		self.editingRootStore = (RootStore *)[self.editContext objectWithID:storeRootID];
 	}];
 
 	self.currentStoreRoot = self.editingRootStore;

@@ -11,6 +11,76 @@ import CoreData
 
 
 
+/* root object to in persistent store (e.g. getting defaults) */
+class RootStore : NSManagedObject {
+	/* class constants */
+	private struct Constants {
+		/* entity name */
+		static let ENTITY_NAME = "Root"
+	}
+
+	class var entityName: String { return Constants.ENTITY_NAME }
+
+	/* current presentation */
+	@NSManaged var currentPresentation : PresentationStore?
+
+	/* groups */
+	@NSManaged var groups : NSOrderedSet
+
+	/* root level configuration */
+	@NSManaged var configuration : ConfigurationStore?
+
+
+	/* construct a new root and insert it into the managed object context */
+	class func insertNewRootStoreInContext(managedObjectContext: NSManagedObjectContext!) -> RootStore {
+		return NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as RootStore
+	}
+
+
+	/* create a new presentation group and add it to this user configuration */
+	func addNewPresentationGroup() -> PresentationGroupStore {
+		let group = PresentationGroupStore.insertNewPresentationGroupInContext(self.managedObjectContext!)
+		group.root = self
+		return group
+	}
+
+
+	/* implement group removal and setting the current group to nil if necessary */
+	func removeObjectFromGroupsAtIndex(index: UInt) {
+		let groups = self.mutableOrderedSetValueForKey("Groups")
+
+		let group = groups.objectAtIndex(Int(index)) as PresentationGroupStore
+
+		// if the group for the current presentation is the group marked for removal then set the current master to nil
+		if self.currentPresentation?.group == group {
+			self.currentPresentation = nil
+		}
+
+		groups.removeObjectAtIndex(Int(index))
+
+		// the group is no longer associated with a root, so remove it
+		group.managedObjectContext?.deleteObject(group)
+	}
+
+
+	/* remove the groups corresponding to the specified indexes */
+	func removeGroupsAtIndexes(indexes: NSIndexSet) {
+		// enumerate in reverse order so indexes don't change as we remove groups
+		indexes.enumerateIndexesWithOptions(.Reverse, usingBlock: { (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+			self.removeObjectFromGroupsAtIndex(UInt(index))
+		})
+	}
+
+
+	/* move the group from the fromIndex to the toIndex */
+	func moveGroupAtIndex(fromIndex: NSInteger, toIndex: NSInteger) {
+		let groups = self.mutableOrderedSetValueForKey("Groups")
+		groups.moveObjectsAtIndexes(NSIndexSet(index: fromIndex), toIndex: toIndex)
+	}
+}
+
+
+
 /* status of the remote item */
 enum RemoteItemStatus : Int16 {
 	case Pending = 0
@@ -414,7 +484,7 @@ class PresentationStore : RemoteContainerStore {
 	@NSManaged var group: PresentationGroupStore
 	@NSManaged var parent: PresentationStore?
 	@NSManaged var revision: PresentationStore?
-	@NSManaged var rootForCurrent: ILobbyStoreRoot?
+	@NSManaged var rootForCurrent: RootStore?
 	@NSManaged var tracks: NSOrderedSet
 
 	// indicates whether this presenation is the current one being displayed
@@ -576,7 +646,7 @@ class PresentationGroupStore : RemoteContainerStore {
 	class var entityName: String { return Constants.ENTITY_NAME }
 
 	@NSManaged var presentations: NSSet?
-	@NSManaged var root: ILobbyStoreRoot
+	@NSManaged var root: RootStore
 
 
 	/* name of the group based on the final component of the remote location */
