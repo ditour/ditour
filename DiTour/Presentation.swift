@@ -205,7 +205,7 @@ class Track : NSObject {
 	init( trackStore: TrackStore ) {
 		self.label = trackStore.title
 
-		let possibleConfig = trackStore.effectiveConfiguration()
+		let possibleConfig = trackStore.effectiveConfiguration
 		let defaultSlideDuration = possibleConfig?["slideDuration"] as? Float ?? DEFAULT_SLIDE_DURATION
 		self.defaultSlideDuration = defaultSlideDuration
 

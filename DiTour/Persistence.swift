@@ -138,7 +138,7 @@ class TrackStore : RemoteContainerStore {
 		var effectiveConfig = NSMutableDictionary()
 
 		// first append the configuration inherited from the enclosing presentation
-		if let persentationConfig = self.presentation.effectiveConfiguration() {
+		if let persentationConfig = self.presentation.effectiveConfiguration {
 			effectiveConfig.addEntriesFromDictionary(persentationConfig)
 		}
 
@@ -283,7 +283,7 @@ class PresentationStore : RemoteContainerStore {
 		var effectiveConfig = NSMutableDictionary()
 
 		// first append the configuration inherited from the enclosing group
-		if let groupConfig = self.group.effectiveConfiguration() {
+		if let groupConfig = self.group.effectiveConfiguration {
 			effectiveConfig.addEntriesFromDictionary(groupConfig)
 		}
 
@@ -477,15 +477,9 @@ class RemoteContainerStore : ILobbyStoreRemoteItem {
 	/* Compute and store the effective configuration */
 	// TODO: this property should be renamed and replace effectiveConfiguration()
 	// TODO: the property type should be changed to [String: AnyObject]
-	lazy var effectiveConfigurationProperty : NSDictionary? = {
+	lazy var effectiveConfiguration : NSDictionary? = {
 		return self.loadEffectiveConfiguration()
 	}()
-
-
-	/* get the effective configuration for this container */
-	func effectiveConfiguration() -> NSDictionary? {
-		return self.effectiveConfigurationProperty
-	}
 
 
 	/* load the effective configuration */
