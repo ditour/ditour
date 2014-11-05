@@ -68,11 +68,11 @@ class RemoteFileStore : ILobbyStoreRemoteItem {
 
 /* persistent store for a configuration */
 class ConfigurationStore : RemoteFileStore {
-	@NSManaged var container : ILobbyStoreRemoteContainer?
+	@NSManaged var container : RemoteContainerStore?
 
 
 	/* generate a new instance */
-	class func newConfigurationInContainer(container: ILobbyStoreRemoteContainer, at remoteFile: ILobbyRemoteFile) -> ConfigurationStore {
+	class func newConfigurationInContainer(container: RemoteContainerStore, at remoteFile: ILobbyRemoteFile) -> ConfigurationStore {
 		let configuration = NSEntityDescription.insertNewObjectForEntityForName( "Configuration", inManagedObjectContext: container.managedObjectContext!) as ConfigurationStore
 
 		configuration.container = container
@@ -126,19 +126,19 @@ class RemoteMediaStore : RemoteFileStore {
 
 
 /* persistent store for a track */
-class TrackStore : ILobbyStoreRemoteContainer {
+class TrackStore : RemoteContainerStore {
 	@NSManaged var title: String
 	@NSManaged var presentation: PresentationStore
 	@NSManaged var remoteMedia: NSOrderedSet
 
-	/* Compute and store the effective configuration */
-	// TODO: this property should be renamed and replace effectiveConfiguration()
+
+	/* load the effective configuration */
 	// TODO: the property type should be changed to [String: AnyObject]
-	lazy var effectiveConfigurationProperty : NSDictionary = {
+	private override func loadEffectiveConfiguration() -> NSDictionary {
 		var effectiveConfig = NSMutableDictionary()
 
 		// first append the configuration inherited from the enclosing presentation
-		if let persentationConfig = self.presentation.effectiveConfiguration {
+		if let persentationConfig = self.presentation.effectiveConfiguration() {
 			effectiveConfig.addEntriesFromDictionary(persentationConfig)
 		}
 
@@ -148,7 +148,7 @@ class TrackStore : ILobbyStoreRemoteContainer {
 		}
 
 		return effectiveConfig.copy() as NSDictionary
-	}()
+	}
 
 
 	/* construct a new track in the specified presentation from the specified remote directory */
@@ -173,7 +173,7 @@ class TrackStore : ILobbyStoreRemoteContainer {
 	}
 
 
-	override func processRemoteFile(remoteFile: ILobbyRemoteFile!) {
+	override func processRemoteFile(remoteFile: ILobbyRemoteFile) {
 		let location = remoteFile.location
 		if RemoteMediaStore.matches(location) {
 			RemoteMediaStore.newRemoteMediaInTrack(self, at: remoteFile)
@@ -181,14 +181,6 @@ class TrackStore : ILobbyStoreRemoteContainer {
 		else {
 			super.processRemoteFile(remoteFile)
 		}
-	}
-
-
-	/* Get the effective configuration at the level of this track inheriting from this track's container */
-	// TODO: this should be reimplemented completely as a lazy property
-	// TODO: when enough relevant classes are ported to Swift the return type should change to [String: AnyObject]
-	func effectiveConfiguration() -> NSDictionary {
-		return self.effectiveConfigurationProperty
 	}
 }
 
@@ -237,7 +229,7 @@ extension String {
 
 
 /* persistent store for a presentation */
-class PresentationStore : ILobbyStoreRemoteContainer {
+class PresentationStore : RemoteContainerStore {
 	/* class constants */
 	private struct Constants {
 		/* entity name */
@@ -285,14 +277,13 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 	class var entityName: String { return Constants.ENTITY_NAME }
 
 
-	/* Compute and store the effective configuration */
-	// TODO: this property should be renamed and replace effectiveConfiguration()
+	/* load the effective configuration */
 	// TODO: the property type should be changed to [String: AnyObject]
-	lazy var effectiveConfigurationProperty : NSDictionary = {
+	private override func loadEffectiveConfiguration() -> NSDictionary? {
 		var effectiveConfig = NSMutableDictionary()
 
 		// first append the configuration inherited from the enclosing group
-		if let groupConfig = self.group.effectiveConfiguration {
+		if let groupConfig = self.group.effectiveConfiguration() {
 			effectiveConfig.addEntriesFromDictionary(groupConfig)
 		}
 
@@ -301,8 +292,8 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 			effectiveConfig.addEntriesFromDictionary(presentationConfig)
 		}
 
-		return effectiveConfig.copy() as NSDictionary
-	}()
+		return effectiveConfig.copy() as? NSDictionary
+	}
 
 
 	/* construct a new presentation in the specified group from the specified remote directory */
@@ -331,14 +322,6 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 		}
 
 		return presentation
-	}
-
-
-	/* Get the effective configuration at the level of this track inheriting from this track's container */
-	// TODO: this should be reimplemented completely as a lazy property
-	// TODO: when enough relevant classes are ported to Swift the return type should change to [String: AnyObject]
-	func effectiveConfiguration() -> NSDictionary {
-		return self.effectiveConfigurationProperty
 	}
 
 
@@ -376,8 +359,10 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 		var dictionary = NSMutableDictionary()
 
 		// record the presentation configuration if any
-		if ( self.configuration != nil && self.configuration.isReady && fileManager.fileExistsAtPath(self.configuration.absolutePath()) ) {
-			dictionary[self.configuration.remoteLocation] = self.configuration
+		if let configuration = self.configuration {
+			if ( configuration.isReady && fileManager.fileExistsAtPath(configuration.absolutePath()) ) {
+				dictionary[configuration.remoteLocation] = configuration
+			}
 		}
 
 		// record files associated with the tracks
@@ -404,7 +389,7 @@ class PresentationStore : ILobbyStoreRemoteContainer {
 
 
 /* persistent store for a presentation group */
-class PresentationGroupStore : ILobbyStoreRemoteContainer {
+class PresentationGroupStore : RemoteContainerStore {
 	/* class constants */
 	private struct Constants {
 		/* entity name */
@@ -481,5 +466,70 @@ class PresentationGroupStore : ILobbyStoreRemoteContainer {
 	}
 }
 
+
+
+/* base class for managed objects that act as containers of other remote items */
+class RemoteContainerStore : ILobbyStoreRemoteItem {
+	/* configuration if any immediately within this container */
+	@NSManaged var configuration : ConfigurationStore?
+
+
+	/* Compute and store the effective configuration */
+	// TODO: this property should be renamed and replace effectiveConfiguration()
+	// TODO: the property type should be changed to [String: AnyObject]
+	lazy var effectiveConfigurationProperty : NSDictionary? = {
+		return self.loadEffectiveConfiguration()
+	}()
+
+
+	/* get the effective configuration for this container */
+	func effectiveConfiguration() -> NSDictionary? {
+		return self.effectiveConfigurationProperty
+	}
+
+
+	/* load the effective configuration */
+	// TODO: the property type should be changed to [String: AnyObject]
+	private func loadEffectiveConfiguration() -> NSDictionary? {
+		return self.parseConfiguration()
+	}
+
+
+	/* parse the configuration file at configuration.absolutePath */
+	// TODO: change the return type to [String: AnyObject]
+	func parseConfiguration() -> NSDictionary? {
+		if let path = self.configuration?.absolutePath() {
+			if let jsonData = NSData(contentsOfFile: path) {
+				var error : NSError?
+				// all of our JSON files are formatted as dictionaries keyed by string
+				if let jsonObject = NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(0), error: &error) as? NSDictionary {
+					if error != nil {
+						println( "Error parsing json configuration: \(error) at: \(path)" )
+						return nil
+					} else {
+						return jsonObject
+					}
+				} else {
+					return nil
+				}
+			} else {
+				return nil
+			}
+
+		} else {
+			return nil
+		}
+	}
+
+
+	/* test whether the remote file corresponds to a configuration file and if so instantiate the configuration and assign it to this container */
+	func processRemoteFile(remoteFile: ILobbyRemoteFile) {
+		if let location = remoteFile.location {
+			if ConfigurationStore.matches(location) {
+				ConfigurationStore.newConfigurationInContainer(self, at: remoteFile)
+			}
+		}
+	}
+}
 
 

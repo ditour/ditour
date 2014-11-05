@@ -7,4 +7,3 @@
 #import "ILobbyDownloadSession.h"
 #import "ILobbyRemoteDirectory.h"
 #import "ILobbyRemoteFile.h"
-#import "ILobbyStoreRemoteContainer.h"

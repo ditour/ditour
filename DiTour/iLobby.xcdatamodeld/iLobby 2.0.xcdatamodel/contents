@@ -16,7 +16,7 @@
         <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Presentation" inverseName="group" inverseEntity="Presentation" syncable="YES"/>
         <relationship name="root" maxCount="1" deletionRule="Nullify" destinationEntity="Root" inverseName="groups" inverseEntity="Root" syncable="YES"/>
     </entity>
-    <entity name="RemoteContainer" representedClassName="ILobbyStoreRemoteContainer" isAbstract="YES" parentEntity="RemoteItem" syncable="YES">
+    <entity name="RemoteContainer" representedClassName="DiTour.RemoteContainerStore" isAbstract="YES" parentEntity="RemoteItem" syncable="YES">
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="container" inverseEntity="Configuration" syncable="YES"/>
     </entity>
     <entity name="RemoteFile" representedClassName="DiTour.RemoteFileStore" isAbstract="YES" parentEntity="RemoteItem" syncable="YES"/>
@@ -42,7 +42,7 @@
         <element name="Configuration" positionX="27" positionY="72" width="128" height="60"/>
         <element name="Presentation" positionX="0" positionY="0" width="128" height="150"/>
         <element name="PresentationGroup" positionX="0" positionY="0" width="128" height="73"/>
-        <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="58"/>
+        <element name="RemoteContainer" positionX="18" positionY="72" width="128" height="60"/>
         <element name="RemoteFile" positionX="27" positionY="81" width="128" height="45"/>
         <element name="RemoteItem" positionX="0" positionY="0" width="128" height="103"/>
         <element name="RemoteMedia" positionX="0" positionY="0" width="128" height="58"/>

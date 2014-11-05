@@ -205,12 +205,11 @@ class Track : NSObject {
 	init( trackStore: TrackStore ) {
 		self.label = trackStore.title
 
-		let config = trackStore.effectiveConfiguration as [String: NSObject]
-
-		let defaultSlideDuration = config["slideDuration"] as? Float ?? DEFAULT_SLIDE_DURATION
+		let possibleConfig = trackStore.effectiveConfiguration()
+		let defaultSlideDuration = possibleConfig?["slideDuration"] as? Float ?? DEFAULT_SLIDE_DURATION
 		self.defaultSlideDuration = defaultSlideDuration
 
-		if let slideTransitionConfig = config["slideTransition"] as? [String: NSObject] {
+		if let slideTransitionConfig = possibleConfig?["slideTransition"] as? [String: NSObject] {
 			self.defaultTransitionSource = TransitionSource( config: slideTransitionConfig )
 		}
 
@@ -251,7 +250,7 @@ class Track : NSObject {
 		if slides.count == 1 {
 			let firstSlide = slides[0]
 			if firstSlide.isSingleFrame() {		// it's an image
-				let trackDuration = config["singleImageSlideTrackDuration"] as? Float ?? DEFAULT_SINGLE_IMAGE_SLIDE_DURATION
+				let trackDuration = possibleConfig?["singleImageSlideTrackDuration"] as? Float ?? DEFAULT_SINGLE_IMAGE_SLIDE_DURATION
 				extraTrackDuration = ( trackDuration > defaultSlideDuration ) ? trackDuration - defaultSlideDuration : 0.0
 			}
 		}
