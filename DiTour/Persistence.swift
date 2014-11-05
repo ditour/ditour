@@ -24,7 +24,7 @@ enum RemoteItemStatus : Int16 {
 /* base class for remote items (files and containers) */
 class RemoteItemStore : NSManagedObject {
 	/* status of this item */
-	@NSManaged var status : NSNumber
+	@NSManaged var status : Int16
 
 	/* info for this item from the remote directory for testing freshness */
 	@NSManaged var remoteInfo: String
@@ -50,49 +50,49 @@ class RemoteItemStore : NSManagedObject {
 
 	/* test whether the remote item status is pending */
 	var isPending: Bool {
-		return status.shortValue == RemoteItemStatus.Pending.rawValue
+		return status == RemoteItemStatus.Pending.rawValue
 	}
 
 
 	/* test whether the remote item status is downloading */
 	var isDownloading: Bool {
-		return status.shortValue == RemoteItemStatus.Downloading.rawValue
+		return status == RemoteItemStatus.Downloading.rawValue
 	}
 
 
 	/* test whether the remote item status is ready */
 	var isReady: Bool {
-		return status.shortValue == RemoteItemStatus.Ready.rawValue
+		return status == RemoteItemStatus.Ready.rawValue
 	}
 
 
 	/* test whether the remote item status is disposable */
 	var isDisposable: Bool {
-		return status.shortValue == RemoteItemStatus.Disposable.rawValue
+		return status == RemoteItemStatus.Disposable.rawValue
 	}
 
 
 	/* mark pending */
 	func markPending() {
-		self.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		self.status = RemoteItemStatus.Pending.rawValue
 	}
 
 
 	/* mark pending */
 	func markDownloading() {
-		self.status = NSNumber(short: RemoteItemStatus.Downloading.rawValue)
+		self.status = RemoteItemStatus.Downloading.rawValue
 	}
 
 
 	/* mark pending */
 	func markReady() {
-		self.status = NSNumber(short: RemoteItemStatus.Ready.rawValue)
+		self.status = RemoteItemStatus.Ready.rawValue
 	}
 
 
 	/* mark pending */
 	func markDisposable() {
-		self.status = NSNumber(short: RemoteItemStatus.Disposable.rawValue)
+		self.status = RemoteItemStatus.Disposable.rawValue
 	}
 
 
@@ -180,7 +180,7 @@ class ConfigurationStore : RemoteFileStore {
 		let configuration = NSEntityDescription.insertNewObjectForEntityForName( "Configuration", inManagedObjectContext: container.managedObjectContext!) as ConfigurationStore
 
 		configuration.container = container
-		configuration.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		configuration.status = RemoteItemStatus.Pending.rawValue
 		configuration.remoteLocation = remoteFile.location.absoluteString!
 		configuration.remoteInfo = remoteFile.info
 		configuration.path = container.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent)
@@ -206,7 +206,7 @@ class RemoteMediaStore : RemoteFileStore {
 		let mediaStore = NSEntityDescription.insertNewObjectForEntityForName("RemoteMedia", inManagedObjectContext: track.managedObjectContext!) as RemoteMediaStore
 
 		mediaStore.track = track
-		mediaStore.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		mediaStore.status = RemoteItemStatus.Pending.rawValue
 		mediaStore.remoteLocation = remoteFile.location.absoluteString!
 		mediaStore.remoteInfo = remoteFile.info
 		mediaStore.path = track.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent)
@@ -319,7 +319,7 @@ class TrackStore : RemoteContainerStore {
 		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as TrackStore
 
 		track.presentation = presentation
-		track.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		track.status = RemoteItemStatus.Pending.rawValue
 		track.remoteLocation = remoteDirectory.location.absoluteString!
 
 		let rawName = remoteDirectory.location.lastPathComponent
@@ -467,7 +467,7 @@ class PresentationStore : RemoteContainerStore {
 	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: ILobbyRemoteDirectory) -> PresentationStore {
 		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as PresentationStore
 
-		presentation.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		presentation.status = RemoteItemStatus.Pending.rawValue
 		presentation.timestamp = NSDate()
 		presentation.remoteLocation = remoteDirectory.location.absoluteString!
 		presentation.name = remoteDirectory.location.lastPathComponent
