@@ -176,6 +176,7 @@ class TrackStore : RemoteContainerStore {
 	}
 
 
+	/* process the remote file to get the media for slides in this track */
 	override func processRemoteFile(remoteFile: ILobbyRemoteFile) {
 		let location = remoteFile.location
 		if RemoteMediaStore.matches(location) {
