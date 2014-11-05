@@ -8,6 +8,7 @@
 
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
+#import "ILobbyRemoteDirectory.h"
 #import "DiTour-Swift.h"
 
 

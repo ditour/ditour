@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ILobbyStoreRemoteItem.h"
 
 
 @class ILobbyDownloadStatus;
@@ -22,23 +21,24 @@
 
 
 @class ILobbyDownloadContainerStatus;
+@class RemoteItemStore;
 
 
 @interface ILobbyDownloadStatus : NSObject
 
 @property (weak, readonly) ILobbyDownloadContainerStatus *container;
-@property (strong, readonly) ILobbyStoreRemoteItem *remoteItem;
+@property (strong, readonly) RemoteItemStore *remoteItem;
 @property (nonatomic, readonly) float progress;
 @property (nonatomic, readonly) BOOL completed;
 @property (nonatomic, readwrite) BOOL canceled;
 @property (nonatomic, strong) NSError *error;
 @property (weak) id<ILobbyDownloadStatusDelegate> delegate;
 
-- (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
-+ (instancetype)statusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
+- (instancetype)initWithItem:(RemoteItemStore *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
++ (instancetype)statusForRemoteItem:(RemoteItemStore *)remoteItem container:(ILobbyDownloadContainerStatus *)container;
 
 // determine whether this object's remote item matches (same objectID) the other remote item
-- (BOOL)matchesRemoteItem:(ILobbyStoreRemoteItem *)otherRemoteItem;
+- (BOOL)matchesRemoteItem:(RemoteItemStore *)otherRemoteItem;
 
 @end
 
@@ -50,7 +50,7 @@
 
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus;
 //- (ILobbyDownloadStatus *)childStatusForRemoteItemID:(NSManagedObjectID *)remoteID;
-- (ILobbyDownloadStatus *)childStatusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem;
+- (ILobbyDownloadStatus *)childStatusForRemoteItem:(RemoteItemStore *)remoteItem;
 
 - (void)updateProgress;
 

@@ -8,13 +8,14 @@
 
 #import "ILobbyDownloadStatus.h"
 #import "ILobbyConcurrentDictionary.h"
+#import "DiTour-Swift.h"
 
 
 
 @interface ILobbyDownloadStatus ()
 
 @property (weak, readwrite) ILobbyDownloadContainerStatus *container;
-@property (nonatomic, strong, readwrite) ILobbyStoreRemoteItem *remoteItem;
+@property (nonatomic, strong, readwrite) RemoteItemStore *remoteItem;
 @property (readwrite) float progress;
 @property (readwrite) BOOL completed;
 
@@ -37,7 +38,7 @@
 }
 
 
-- (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
+- (instancetype)initWithItem:(RemoteItemStore *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
     self = [super init];
     if (self) {
 		_progress = 0.0;
@@ -51,13 +52,13 @@
 }
 
 
-+ (instancetype)statusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
++ (instancetype)statusForRemoteItem:(RemoteItemStore *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
 	return [[self alloc] initWithItem:remoteItem container:container];
 }
 
 
 // determine whether this object's remote item matches (same objectID) the other remote item
-- (BOOL)matchesRemoteItem:(ILobbyStoreRemoteItem *)otherRemoteItem {
+- (BOOL)matchesRemoteItem:(RemoteItemStore *)otherRemoteItem {
 	if ( self.remoteItem == otherRemoteItem ) {		// pointer identity is sufficient
 		return YES;
 	}
@@ -110,7 +111,7 @@
 			if ( self.error == nil && !self.canceled )  [self.remoteItem markReady];
 
 			if ( self.container ) {
-				ILobbyStoreRemoteItem *remoteContainer = self.container.remoteItem;
+				RemoteItemStore *remoteContainer = self.container.remoteItem;
 				if ( remoteContainer ) {
 					// force any fetched properties of the containing object to refresh
 					[self.remoteItem.managedObjectContext refreshObject:remoteContainer mergeChanges:YES];
@@ -143,7 +144,7 @@
 
 @implementation ILobbyDownloadContainerStatus
 
-- (instancetype)initWithItem:(ILobbyStoreRemoteItem *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
+- (instancetype)initWithItem:(RemoteItemStore *)remoteItem container:(ILobbyDownloadContainerStatus *)container {
 	self = [super initWithItem:remoteItem container:container];
 	if ( self ) {
 		self.submitted = NO;
@@ -172,7 +173,7 @@
 
 - (void)addChildStatus:(ILobbyDownloadStatus *)childStatus {
 	__block NSString *childPath = nil;
-	ILobbyStoreRemoteItem *childItem = childStatus.remoteItem;
+	RemoteItemStore *childItem = childStatus.remoteItem;
 	[childItem.managedObjectContext performBlockAndWait:^{
 		childPath = childItem.path;
 	}];
@@ -188,7 +189,7 @@
 }
 
 
-- (ILobbyDownloadStatus *)childStatusForRemoteItem:(ILobbyStoreRemoteItem *)remoteItem {
+- (ILobbyDownloadStatus *)childStatusForRemoteItem:(RemoteItemStore *)remoteItem {
 	__block NSString *path = nil;
 	[remoteItem.managedObjectContext performBlockAndWait:^{
 		path = remoteItem.path;

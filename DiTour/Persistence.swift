@@ -11,8 +11,112 @@ import CoreData
 
 
 
+/* status of the remote item */
+enum RemoteItemStatus : Int16 {
+	case Pending = 0
+	case Downloading
+	case Ready
+	case Disposable
+}
+
+
+
+/* base class for remote items (files and containers) */
+class RemoteItemStore : NSManagedObject {
+	/* status of this item */
+	@NSManaged var status : NSNumber
+
+	/* info for this item from the remote directory for testing freshness */
+	@NSManaged var remoteInfo: String
+
+	/* remote location as a URL spec */
+	@NSManaged var remoteLocation: String
+
+	/* local path to the item */
+	@NSManaged var path: String
+
+
+	/* get the remote location as a URL */
+	var remoteURL: NSURL? {
+		return NSURL(string: self.remoteLocation)
+	}
+
+
+	/* get the local absolute path to the item */
+	var absolutePath: String {
+		return DitourModel.presentationGroupsRoot().stringByAppendingPathComponent(self.path)
+	}
+
+
+	/* test whether the remote item status is pending */
+	var isPending: Bool {
+		return status.shortValue == RemoteItemStatus.Pending.rawValue
+	}
+
+
+	/* test whether the remote item status is downloading */
+	var isDownloading: Bool {
+		return status.shortValue == RemoteItemStatus.Downloading.rawValue
+	}
+
+
+	/* test whether the remote item status is ready */
+	var isReady: Bool {
+		return status.shortValue == RemoteItemStatus.Ready.rawValue
+	}
+
+
+	/* test whether the remote item status is disposable */
+	var isDisposable: Bool {
+		return status.shortValue == RemoteItemStatus.Disposable.rawValue
+	}
+
+
+	/* mark pending */
+	func markPending() {
+		self.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+	}
+
+
+	/* mark pending */
+	func markDownloading() {
+		self.status = NSNumber(short: RemoteItemStatus.Downloading.rawValue)
+	}
+
+
+	/* mark pending */
+	func markReady() {
+		self.status = NSNumber(short: RemoteItemStatus.Ready.rawValue)
+	}
+
+
+	/* mark pending */
+	func markDisposable() {
+		self.status = NSNumber(short: RemoteItemStatus.Disposable.rawValue)
+	}
+
+
+	/* perform cleanup prior to deletion from the managed object graph */
+	override func prepareForDeletion() {
+		// delete the associated directory if any
+		var error : NSError?
+		let fileManager = NSFileManager.defaultManager()
+
+		if fileManager.fileExistsAtPath(self.absolutePath) {
+			let success = fileManager.removeItemAtPath(self.absolutePath, error: &error)
+			if !success {
+				println("Error deleting store remote item at path: \(self.absolutePath) due to error: \(error)")
+			}
+		}
+
+		super.prepareForDeletion()
+	}
+}
+
+
+
 /* local persistent store of a reference to a file on a remote server */
-class RemoteFileStore : ILobbyStoreRemoteItem {
+class RemoteFileStore : RemoteItemStore {
 	/* class constants */
 	private struct Constants {
 		/* format for writing timestamps */
@@ -38,9 +142,9 @@ class RemoteFileStore : ILobbyStoreRemoteItem {
 		let defaultLocalSummary = "No Local Info..."
 
 		let fileManager = NSFileManager.defaultManager()
-		if fileManager.fileExistsAtPath(self.absolutePath()) {
+		if fileManager.fileExistsAtPath(self.absolutePath) {
 			var error : NSError? = nil
-			let fileAttributes = fileManager.attributesOfItemAtPath(self.absolutePath(), error: &error) as [String:NSObject]
+			let fileAttributes = fileManager.attributesOfItemAtPath(self.absolutePath, error: &error) as [String:NSObject]
 			if ( error == nil ) {
 				let modDate = fileAttributes[NSFileModificationDate] as NSDate
 				let fileSize = fileAttributes[NSFileSize] as NSNumber
@@ -76,8 +180,8 @@ class ConfigurationStore : RemoteFileStore {
 		let configuration = NSEntityDescription.insertNewObjectForEntityForName( "Configuration", inManagedObjectContext: container.managedObjectContext!) as ConfigurationStore
 
 		configuration.container = container
-		configuration.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
-		configuration.remoteLocation = remoteFile.location.absoluteString
+		configuration.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		configuration.remoteLocation = remoteFile.location.absoluteString!
 		configuration.remoteInfo = remoteFile.info
 		configuration.path = container.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent)
 
@@ -102,8 +206,8 @@ class RemoteMediaStore : RemoteFileStore {
 		let mediaStore = NSEntityDescription.insertNewObjectForEntityForName("RemoteMedia", inManagedObjectContext: track.managedObjectContext!) as RemoteMediaStore
 
 		mediaStore.track = track
-		mediaStore.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
-		mediaStore.remoteLocation = remoteFile.location.absoluteString
+		mediaStore.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		mediaStore.remoteLocation = remoteFile.location.absoluteString!
 		mediaStore.remoteInfo = remoteFile.info
 		mediaStore.path = track.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent)
 
@@ -119,6 +223,62 @@ class RemoteMediaStore : RemoteFileStore {
 		}
 		else {
 			return false
+		}
+	}
+}
+
+
+
+/* base class for managed objects that act as containers of other remote items */
+class RemoteContainerStore : RemoteItemStore {
+	/* configuration if any immediately within this container */
+	@NSManaged var configuration : ConfigurationStore?
+
+
+	/* Compute and store the effective configuration */
+	lazy var effectiveConfiguration : [String: AnyObject]? = {
+		return self.loadEffectiveConfiguration()
+		}()
+
+
+	/* load the effective configuration */
+	private func loadEffectiveConfiguration() -> [String: AnyObject]? {
+		return self.parseConfiguration()
+	}
+
+
+	/* parse the configuration file at configuration.absolutePath */
+	func parseConfiguration() -> [String: AnyObject]? {
+		if let path = self.configuration?.absolutePath {
+			if let jsonData = NSData(contentsOfFile: path) {
+				var error : NSError?
+				// all of our JSON files are formatted as dictionaries keyed by string
+				if let jsonObject = NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(0), error: &error) as? [String: AnyObject] {
+					if error != nil {
+						println( "Error parsing json configuration: \(error) at: \(path)" )
+						return nil
+					} else {
+						return jsonObject
+					}
+				} else {
+					return nil
+				}
+			} else {
+				return nil
+			}
+
+		} else {
+			return nil
+		}
+	}
+
+
+	/* test whether the remote file corresponds to a configuration file and if so instantiate the configuration and assign it to this container */
+	func processRemoteFile(remoteFile: ILobbyRemoteFile) {
+		if let location = remoteFile.location {
+			if ConfigurationStore.matches(location) {
+				ConfigurationStore.newConfigurationInContainer(self, at: remoteFile)
+			}
 		}
 	}
 }
@@ -159,8 +319,8 @@ class TrackStore : RemoteContainerStore {
 		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as TrackStore
 
 		track.presentation = presentation
-		track.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
-		track.remoteLocation = remoteDirectory.location.absoluteString
+		track.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
+		track.remoteLocation = remoteDirectory.location.absoluteString!
 
 		let rawName = remoteDirectory.location.lastPathComponent
 		track.path = presentation.path.stringByAppendingPathComponent(rawName)
@@ -307,9 +467,9 @@ class PresentationStore : RemoteContainerStore {
 	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: ILobbyRemoteDirectory) -> PresentationStore {
 		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as PresentationStore
 
-		presentation.status = NSNumber(short: REMOTE_ITEM_STATUS_PENDING)
+		presentation.status = NSNumber(short: RemoteItemStatus.Pending.rawValue)
 		presentation.timestamp = NSDate()
-		presentation.remoteLocation = remoteDirectory.location.absoluteString
+		presentation.remoteLocation = remoteDirectory.location.absoluteString!
 		presentation.name = remoteDirectory.location.lastPathComponent
 		presentation.group = group
 
@@ -367,7 +527,7 @@ class PresentationStore : RemoteContainerStore {
 
 		// record the presentation configuration if any
 		if let configuration = self.configuration {
-			if ( configuration.isReady && fileManager.fileExistsAtPath(configuration.absolutePath()) ) {
+			if ( configuration.isReady && fileManager.fileExistsAtPath(configuration.absolutePath) ) {
 				dictionary[configuration.remoteLocation] = configuration
 			}
 		}
@@ -376,14 +536,14 @@ class PresentationStore : RemoteContainerStore {
 		for track in self.tracks.array as [TrackStore] {
 			// record each track configurations if any
 			if let trackConfig = track.configuration {
-				if trackConfig.isReady && fileManager.fileExistsAtPath(trackConfig.absolutePath()) {
+				if trackConfig.isReady && fileManager.fileExistsAtPath(trackConfig.absolutePath) {
 					dictionary[trackConfig.remoteLocation] = trackConfig
 				}
 			}
 
 			// record the each track's slide media
 			for media in track.remoteMedia.array as [RemoteMediaStore] {
-				if media.isReady && fileManager.fileExistsAtPath(media.absolutePath()) {
+				if media.isReady && fileManager.fileExistsAtPath(media.absolutePath) {
 					dictionary[media.remoteLocation] = media
 				}
 			}
@@ -427,14 +587,14 @@ class PresentationGroupStore : RemoteContainerStore {
 
 	/* get the pending presentations (e.g. still downloading) */
 	var pendingPresentations : [PresentationStore] {
-		let query = "(group = %@) AND status = \(REMOTE_ITEM_STATUS_PENDING) OR status = \(REMOTE_ITEM_STATUS_DOWNLOADING)"
+		let query = "(group = %@) AND status = \(RemoteItemStatus.Pending.rawValue) OR status = \(RemoteItemStatus.Downloading.rawValue)"
 		return self.fetchPresentationsWithQuery(query)
 	}
 
 
 	/* get the active presentations (i.e. ready for presentation) */
 	var activePresentations : [PresentationStore] {
-		let query = "(group = %@) AND status = \(REMOTE_ITEM_STATUS_READY)"
+		let query = "(group = %@) AND status = \(RemoteItemStatus.Ready.rawValue)"
 		return self.fetchPresentationsWithQuery(query)
 	}
 
@@ -470,62 +630,6 @@ class PresentationGroupStore : RemoteContainerStore {
 	/* remove a presentation from this group */
 	func removePresentation(presentation: PresentationStore) {
 		self.mutableSetValueForKey("presentations").removeObject(presentation)
-	}
-}
-
-
-
-/* base class for managed objects that act as containers of other remote items */
-class RemoteContainerStore : ILobbyStoreRemoteItem {
-	/* configuration if any immediately within this container */
-	@NSManaged var configuration : ConfigurationStore?
-
-
-	/* Compute and store the effective configuration */
-	lazy var effectiveConfiguration : [String: AnyObject]? = {
-		return self.loadEffectiveConfiguration()
-	}()
-
-
-	/* load the effective configuration */
-	private func loadEffectiveConfiguration() -> [String: AnyObject]? {
-		return self.parseConfiguration()
-	}
-
-
-	/* parse the configuration file at configuration.absolutePath */
-	func parseConfiguration() -> [String: AnyObject]? {
-		if let path = self.configuration?.absolutePath() {
-			if let jsonData = NSData(contentsOfFile: path) {
-				var error : NSError?
-				// all of our JSON files are formatted as dictionaries keyed by string
-				if let jsonObject = NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(0), error: &error) as? [String: AnyObject] {
-					if error != nil {
-						println( "Error parsing json configuration: \(error) at: \(path)" )
-						return nil
-					} else {
-						return jsonObject
-					}
-				} else {
-					return nil
-				}
-			} else {
-				return nil
-			}
-
-		} else {
-			return nil
-		}
-	}
-
-
-	/* test whether the remote file corresponds to a configuration file and if so instantiate the configuration and assign it to this container */
-	func processRemoteFile(remoteFile: ILobbyRemoteFile) {
-		if let location = remoteFile.location {
-			if ConfigurationStore.matches(location) {
-				ConfigurationStore.newConfigurationInContainer(self, at: remoteFile)
-			}
-		}
 	}
 }
 

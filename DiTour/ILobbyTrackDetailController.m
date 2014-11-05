@@ -169,7 +169,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
 
 - (CGFloat)heightForRemoteItemAtIndexPath:(NSIndexPath *)indexPath {
-	ILobbyStoreRemoteItem *remoteItem = [self remoteItemAtIndexPath:indexPath];
+	RemoteItemStore *remoteItem = [self remoteItemAtIndexPath:indexPath];
 
 	if ( [self isRemoteItemDownloading:remoteItem] ) {
 		return [ILobbyDownloadStatusCell defaultHeight];
@@ -180,7 +180,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 }
 
 
-- (BOOL)isRemoteItemDownloading:(ILobbyStoreRemoteItem *)remoteItem {
+- (BOOL)isRemoteItemDownloading:(RemoteItemStore *)remoteItem {
 	if ( remoteItem.isReady ) {
 		return NO;
 	}
@@ -191,7 +191,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 }
 
 
-- (ILobbyStoreRemoteItem *)remoteItemAtIndexPath:(NSIndexPath *)indexPath {
+- (RemoteItemStore *)remoteItemAtIndexPath:(NSIndexPath *)indexPath {
 	switch ( indexPath.section ) {
 		case SECTION_CONFIG:
 			return self.track.configuration;

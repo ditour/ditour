@@ -86,7 +86,7 @@ public class DitourModel : NSObject {
 		//	NSLog( @"cleaning up disposable presentations..." );
 		let fetch = NSFetchRequest( entityName: PresentationStore.entityName )
 		// fetch presentations explicitly marked disposable or that have no group assignment
-		fetch.predicate = NSPredicate( format: "(status = %d) || (group = nil)", REMOTE_ITEM_STATUS_DISPOSABLE )
+		fetch.predicate = NSPredicate( format: "(status = %d) || (group = nil)", RemoteItemStatus.Disposable.rawValue )
 		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as [PresentationStore]
 
 		if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop

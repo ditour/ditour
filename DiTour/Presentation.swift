@@ -216,8 +216,8 @@ class Track : NSObject {
 		// add the track icon and the slides
 		var trackIcon : UIImage?
 		var slides = [Slide]()
-		for media in trackStore.remoteMedia.array {
-			let mediaPath = media.absolutePath()
+		for media in trackStore.remoteMedia.array as [RemoteMediaStore] {
+			let mediaPath = media.absolutePath
 
 			// if the filename is Icon.* then it is the icon and all others are slides
 			if media.name.stringByDeletingPathExtension.lowercaseString == "icon" {
