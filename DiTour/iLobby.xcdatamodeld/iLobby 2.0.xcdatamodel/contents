@@ -20,7 +20,7 @@
         <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="container" inverseEntity="Configuration" syncable="YES"/>
     </entity>
     <entity name="RemoteFile" representedClassName="DiTour.RemoteFileStore" isAbstract="YES" parentEntity="RemoteItem" syncable="YES"/>
-    <entity name="RemoteItem" representedClassName="ILobbyStoreRemoteItem" isAbstract="YES" syncable="YES">
+    <entity name="RemoteItem" representedClassName="DiTour.RemoteItemStore" isAbstract="YES" syncable="YES">
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteLocation" optional="YES" attributeType="String" syncable="YES"/>
