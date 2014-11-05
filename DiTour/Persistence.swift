@@ -133,21 +133,24 @@ class TrackStore : RemoteContainerStore {
 
 
 	/* load the effective configuration */
-	// TODO: the property type should be changed to [String: AnyObject]
-	private override func loadEffectiveConfiguration() -> NSDictionary {
-		var effectiveConfig = NSMutableDictionary()
+	private override func loadEffectiveConfiguration() -> [String: AnyObject] {
+		var effectiveConfig = [String: AnyObject]()
 
 		// first append the configuration inherited from the enclosing presentation
 		if let persentationConfig = self.presentation.effectiveConfiguration {
-			effectiveConfig.addEntriesFromDictionary(persentationConfig)
+			for (key, value) in persentationConfig {
+				effectiveConfig[key] = value
+			}
 		}
 
 		// now merge in the configuration directly specified for this track
 		if let trackConfig = self.parseConfiguration() {
-			effectiveConfig.addEntriesFromDictionary(trackConfig)
+			for (key, value) in trackConfig {
+				effectiveConfig[key] = value
+			}
 		}
 
-		return effectiveConfig.copy() as NSDictionary
+		return effectiveConfig
 	}
 
 
@@ -278,21 +281,24 @@ class PresentationStore : RemoteContainerStore {
 
 
 	/* load the effective configuration */
-	// TODO: the property type should be changed to [String: AnyObject]
-	private override func loadEffectiveConfiguration() -> NSDictionary? {
-		var effectiveConfig = NSMutableDictionary()
+	private override func loadEffectiveConfiguration() -> [String: AnyObject]? {
+		var effectiveConfig = [String: AnyObject]()
 
 		// first append the configuration inherited from the enclosing group
 		if let groupConfig = self.group.effectiveConfiguration {
-			effectiveConfig.addEntriesFromDictionary(groupConfig)
+			for (key, value) in groupConfig {
+				effectiveConfig[key] = value
+			}
 		}
 
 		// now merge in the configuration directly specified for this presentation
 		if let presentationConfig = self.parseConfiguration() {
-			effectiveConfig.addEntriesFromDictionary(presentationConfig)
+			for (key, value) in presentationConfig {
+				effectiveConfig[key] = value
+			}
 		}
 
-		return effectiveConfig.copy() as? NSDictionary
+		return effectiveConfig
 	}
 
 
@@ -475,28 +481,24 @@ class RemoteContainerStore : ILobbyStoreRemoteItem {
 
 
 	/* Compute and store the effective configuration */
-	// TODO: this property should be renamed and replace effectiveConfiguration()
-	// TODO: the property type should be changed to [String: AnyObject]
-	lazy var effectiveConfiguration : NSDictionary? = {
+	lazy var effectiveConfiguration : [String: AnyObject]? = {
 		return self.loadEffectiveConfiguration()
 	}()
 
 
 	/* load the effective configuration */
-	// TODO: the property type should be changed to [String: AnyObject]
-	private func loadEffectiveConfiguration() -> NSDictionary? {
+	private func loadEffectiveConfiguration() -> [String: AnyObject]? {
 		return self.parseConfiguration()
 	}
 
 
 	/* parse the configuration file at configuration.absolutePath */
-	// TODO: change the return type to [String: AnyObject]
-	func parseConfiguration() -> NSDictionary? {
+	func parseConfiguration() -> [String: AnyObject]? {
 		if let path = self.configuration?.absolutePath() {
 			if let jsonData = NSData(contentsOfFile: path) {
 				var error : NSError?
 				// all of our JSON files are formatted as dictionaries keyed by string
-				if let jsonObject = NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(0), error: &error) as? NSDictionary {
+				if let jsonObject = NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(0), error: &error) as? [String: AnyObject] {
 					if error != nil {
 						println( "Error parsing json configuration: \(error) at: \(path)" )
 						return nil
