@@ -189,8 +189,6 @@
 				4CEFB3A119CA1F4B0095DCD2 /* ILobbyDownloadSession.m */,
 				4CEFB3A219CA1F4B0095DCD2 /* ILobbyDownloadStatus.h */,
 				4CEFB3A319CA1F4B0095DCD2 /* ILobbyDownloadStatus.m */,
-				4CEFB3A419CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.h */,
-				4CEFB3A519CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m */,
 				4CEFB3C019CA1F4B0095DCD2 /* ILobbyRemoteDirectory.h */,
 				4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */,
 				4CEFB3C219CA1F4B0095DCD2 /* ILobbyRemoteDirectoryItem.h */,
@@ -201,6 +199,8 @@
 		4CEFB41B19CA21CF0095DCD2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4CEFB3A419CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.h */,
+				4CEFB3A519CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m */,
 				4CEFB3A619CA1F4B0095DCD2 /* ILobbyFileInfoController.h */,
 				4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */,
 				4CEFB3AA19CA1F4B0095DCD2 /* ILobbyLabelCell.h */,
