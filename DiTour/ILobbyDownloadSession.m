@@ -163,7 +163,7 @@
 
 		if ( groupRemoteDirectory != nil && error == nil ) {
 			// process any files (e.g. config files)
-			for ( ILobbyRemoteFile *remoteFile in groupRemoteDirectory.files ) {
+			for ( RemoteFile *remoteFile in groupRemoteDirectory.files ) {
 				[group processRemoteFile:remoteFile];
 			}
 

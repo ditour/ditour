@@ -7,7 +7,7 @@
 //
 
 #import "ILobbyRemoteDirectory.h"
-#import "ILobbyRemoteFile.h"
+#import "DiTour-Swift.h"
 
 #include <stdio.h>
 #include <errno.h>
@@ -64,7 +64,7 @@
 @interface ILobbyRemoteDirectoryParser () <NSXMLParserDelegate>
 @property(copy, nonatomic) NSURL *directoryURL;
 
-// an item may either be ILobbyRemoteFile (ordinary file) or NSURL (subdirectory)
+// an item may either be RemoteFile (ordinary file) or NSURL (subdirectory)
 @property(nonatomic) NSMutableArray *items;
 
 @property(copy, nonatomic) NSURL *currentFileLink;
@@ -129,7 +129,7 @@
 
 	// if parsing succeeds construct the remote directory
 	if ( [xmlParser parse] ) {
-		// a remote item may either be a ILobbyRemoteFile (ordinary file) or ILobbyRemoteDirectory (subdirectory)
+		// a remote item may either be a RemoteFile (ordinary file) or ILobbyRemoteDirectory (subdirectory)
 		NSMutableArray *directoryItems = [NSMutableArray new];
 		NSMutableArray *files = [NSMutableArray new];
 		NSMutableArray *subdirectories = [NSMutableArray new];
@@ -213,7 +213,7 @@
 
 - (void)closeFileLinkInfo {
 	if ( self.currentFileLink ) {
-		ILobbyRemoteFile *remoteFile = [[ILobbyRemoteFile alloc] initWithLocation:self.currentFileLink info:self.currentFileLinkText];
+		RemoteFile *remoteFile = [[RemoteFile alloc] initWithLocation:self.currentFileLink info:self.currentFileLinkText];
 		[self.items addObject:remoteFile];
 		self.currentFileLink = nil;
 	}

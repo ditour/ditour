@@ -4,5 +4,6 @@
 
 #import "ILobbyDownloadStatus.h"
 #import "ILobbyDownloadSession.h"
+
+#import "ILobbyRemoteDirectoryItem.h"
 #import "ILobbyRemoteDirectory.h"
-#import "ILobbyRemoteFile.h"

@@ -31,7 +31,6 @@
 		4CEFB3FC19CA1F4B0095DCD2 /* ILobbyPresentationGroupEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3BB19CA1F4B0095DCD2 /* ILobbyPresentationGroupEditCell.m */; };
 		4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3BD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m */; };
 		4CEFB3FF19CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */; };
-		4CEFB40019CA1F4B0095DCD2 /* ILobbyRemoteFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */; };
 		4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */; };
 		4CEFB40D19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DF19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m */; };
 		4CEFB40F19CA1F4B0095DCD2 /* ILobbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E319CA1F4B0095DCD2 /* ILobbyViewController.m */; };
@@ -41,6 +40,7 @@
 		4CEFB41519CA20180095DCD2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39819CA1F4B0095DCD2 /* InfoPlist.strings */; };
 		4CF0ABA319CB0C1400DEA8D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */; };
 		4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */; };
+		4CF72B781A0C0C2200FAF651 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF72B771A0C0C2200FAF651 /* Download.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,10 +83,8 @@
 		4CEFB3BC19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupsTableController.h; sourceTree = "<group>"; };
 		4CEFB3BD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationGroupsTableController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3C019CA1F4B0095DCD2 /* ILobbyRemoteDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectory.h; sourceTree = "<group>"; };
-		4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteDirectory.m; sourceTree = "<group>"; };
+		4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyRemoteDirectory.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3C219CA1F4B0095DCD2 /* ILobbyRemoteDirectoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteDirectoryItem.h; sourceTree = "<group>"; };
-		4CEFB3C319CA1F4B0095DCD2 /* ILobbyRemoteFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyRemoteFile.h; sourceTree = "<group>"; };
-		4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyRemoteFile.m; sourceTree = "<group>"; };
 		4CEFB3DC19CA1F4B0095DCD2 /* ILobbyTrackDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyTrackDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyTrackDetailController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3DE19CA1F4B0095DCD2 /* ILobbyTrackViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyTrackViewCell.h; sourceTree = "<group>"; };
@@ -99,6 +97,7 @@
 		4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "DiTour-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MainModel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		4CF72B771A0C0C2200FAF651 /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +158,7 @@
 				4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */,
 				4CBDAFDD19FFD0400001069D /* Slides.swift */,
 				4CB7E8FE1A02758C005447E8 /* Persistence.swift */,
+				4CF72B771A0C0C2200FAF651 /* Download.swift */,
 				4CEFB41E19CA23120095DCD2 /* Utilities */,
 				4CEFB41919CA21920095DCD2 /* Download */,
 				4CEFB41B19CA21CF0095DCD2 /* Views */,
@@ -194,8 +194,6 @@
 				4CEFB3C019CA1F4B0095DCD2 /* ILobbyRemoteDirectory.h */,
 				4CEFB3C119CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m */,
 				4CEFB3C219CA1F4B0095DCD2 /* ILobbyRemoteDirectoryItem.h */,
-				4CEFB3C319CA1F4B0095DCD2 /* ILobbyRemoteFile.h */,
-				4CEFB3C419CA1F4B0095DCD2 /* ILobbyRemoteFile.m */,
 			);
 			name = Download;
 			sourceTree = "<group>";
@@ -317,7 +315,6 @@
 				4CEFB3FF19CA1F4B0095DCD2 /* ILobbyRemoteDirectory.m in Sources */,
 				4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */,
 				4CEFB3F119CA1F4B0095DCD2 /* ILobbyDownloadStatus.m in Sources */,
-				4CEFB40019CA1F4B0095DCD2 /* ILobbyRemoteFile.m in Sources */,
 				4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */,
 				4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */,
 				4CEFB40F19CA1F4B0095DCD2 /* ILobbyViewController.m in Sources */,
@@ -334,6 +331,7 @@
 				4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */,
 				4CEFB3F919CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m in Sources */,
 				4CEFB3F319CA1F4B0095DCD2 /* ILobbyFileInfoController.m in Sources */,
+				4CF72B781A0C0C2200FAF651 /* Download.swift in Sources */,
 				4CB7E8FF1A02758C005447E8 /* Persistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

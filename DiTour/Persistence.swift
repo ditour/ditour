@@ -246,7 +246,7 @@ class ConfigurationStore : RemoteFileStore {
 
 
 	/* generate a new instance */
-	class func newConfigurationInContainer(container: RemoteContainerStore, at remoteFile: ILobbyRemoteFile) -> ConfigurationStore {
+	class func newConfigurationInContainer(container: RemoteContainerStore, at remoteFile: RemoteFile) -> ConfigurationStore {
 		let configuration = NSEntityDescription.insertNewObjectForEntityForName( "Configuration", inManagedObjectContext: container.managedObjectContext!) as ConfigurationStore
 
 		configuration.container = container
@@ -272,7 +272,7 @@ class RemoteMediaStore : RemoteFileStore {
 	@NSManaged var track : TrackStore
 
 
-	class func newRemoteMediaInTrack(track: TrackStore, at remoteFile: ILobbyRemoteFile) -> RemoteMediaStore {
+	class func newRemoteMediaInTrack(track: TrackStore, at remoteFile: RemoteFile) -> RemoteMediaStore {
 		let mediaStore = NSEntityDescription.insertNewObjectForEntityForName("RemoteMedia", inManagedObjectContext: track.managedObjectContext!) as RemoteMediaStore
 
 		mediaStore.track = track
@@ -344,11 +344,9 @@ class RemoteContainerStore : RemoteItemStore {
 
 
 	/* test whether the remote file corresponds to a configuration file and if so instantiate the configuration and assign it to this container */
-	func processRemoteFile(remoteFile: ILobbyRemoteFile) {
-		if let location = remoteFile.location {
-			if ConfigurationStore.matches(location) {
-				ConfigurationStore.newConfigurationInContainer(self, at: remoteFile)
-			}
+	func processRemoteFile(remoteFile: RemoteFile) {
+		if ConfigurationStore.matches(remoteFile.location) {
+			ConfigurationStore.newConfigurationInContainer(self, at: remoteFile)
 		}
 	}
 }
@@ -398,7 +396,7 @@ class TrackStore : RemoteContainerStore {
 		// remove leading digits, replace underscores with spaces and trasnform to title case
 		track.title = rawName.toTrackTitle()
 
-		for remoteFile in remoteDirectory.files as [ILobbyRemoteFile] {
+		for remoteFile in remoteDirectory.files as [RemoteFile] {
 			track.processRemoteFile( remoteFile )
 		}
 
@@ -407,7 +405,7 @@ class TrackStore : RemoteContainerStore {
 
 
 	/* process the remote file to get the media for slides in this track */
-	override func processRemoteFile(remoteFile: ILobbyRemoteFile) {
+	override func processRemoteFile(remoteFile: RemoteFile) {
 		let location = remoteFile.location
 		if RemoteMediaStore.matches(location) {
 			RemoteMediaStore.newRemoteMediaInTrack(self, at: remoteFile)
@@ -554,7 +552,7 @@ class PresentationStore : RemoteContainerStore {
 			TrackStore.newTrackInPresentation(presentation, from: remoteTrackDirectory)
 		}
 
-		for remoteFile in (remoteDirectory.files as [ILobbyRemoteFile]) {
+		for remoteFile in (remoteDirectory.files as [RemoteFile]) {
 			presentation.processRemoteFile(remoteFile)
 		}
 
