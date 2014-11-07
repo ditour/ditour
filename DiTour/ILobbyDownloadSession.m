@@ -8,7 +8,6 @@
 
 #import "ILobbyDownloadSession.h"
 #import "ILobbyConcurrentDictionary.h"
-#import "ILobbyRemoteDirectory.h"
 #import "DiTour-Swift.h"
 
 
@@ -159,7 +158,7 @@
 
 		// ------------- fetch the directory references from the remote URL
 
-		ILobbyRemoteDirectory *groupRemoteDirectory = [ILobbyRemoteDirectory parseDirectoryAtURL:group.remoteURL error:&error];
+		RemoteDirectory *groupRemoteDirectory = [RemoteDirectory parseDirectoryAtURL:group.remoteURL error:&error];
 
 		if ( groupRemoteDirectory != nil && error == nil ) {
 			// process any files (e.g. config files)
@@ -175,7 +174,7 @@
 			}
 
 			// fetch presentations
-			for ( ILobbyRemoteDirectory *remotePresentationDirectory in groupRemoteDirectory.subdirectories ) {
+			for ( RemoteDirectory *remotePresentationDirectory in groupRemoteDirectory.subdirectories ) {
 				PresentationStore *presentation = [PresentationStore newPresentationInGroup:group from:remotePresentationDirectory];
 
 				// if an active presentation has the same name then assign it as a parent

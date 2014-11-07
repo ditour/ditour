@@ -383,7 +383,7 @@ class TrackStore : RemoteContainerStore {
 
 
 	/* construct a new track in the specified presentation from the specified remote directory */
-	class func newTrackInPresentation(presentation: PresentationStore, from remoteDirectory: ILobbyRemoteDirectory) -> TrackStore {
+	class func newTrackInPresentation(presentation: PresentationStore, from remoteDirectory: RemoteDirectory) -> TrackStore {
 		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as TrackStore
 
 		track.presentation = presentation
@@ -532,7 +532,7 @@ class PresentationStore : RemoteContainerStore {
 
 
 	/* construct a new presentation in the specified group from the specified remote directory */
-	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: ILobbyRemoteDirectory) -> PresentationStore {
+	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: RemoteDirectory) -> PresentationStore {
 		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as PresentationStore
 
 		presentation.status = RemoteItemStatus.Pending.rawValue
@@ -548,7 +548,7 @@ class PresentationStore : RemoteContainerStore {
 
 		// fetch the tracks
 		// TODO: cleanup code once all code is in Swift
-		for remoteTrackDirectory in (remoteDirectory.subdirectories as [ILobbyRemoteDirectory]) {
+		for remoteTrackDirectory in (remoteDirectory.subdirectories as [RemoteDirectory]) {
 			TrackStore.newTrackInPresentation(presentation, from: remoteTrackDirectory)
 		}
 

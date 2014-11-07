@@ -21,6 +21,8 @@
 
 // Convert raw HTML to XHTML based on example code at: http://tidy.sourceforge.net/libintro.html#example
 - (NSString *)toXHTMLWithError:(NSError * __autoreleasing *)errorPtr {
+	if ( self.length == 0 )  return nil;	// no content to process so no valid XHTML possible
+
 	const char* input = [self UTF8String];
 
 	TidyBuffer output = {0};
