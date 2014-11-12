@@ -7,6 +7,140 @@
 //
 
 import Foundation
+import CoreData
+
+
+/* manages a session for downloading presentation media from the remote server */
+class PresentationDownloadSession : NSObject, NSURLSessionDelegate {
+	/* main model */
+	let mainModel : DitourModel
+
+	/* unique background session identifier */
+	let backgroundSessionID : String
+
+	/* indicates whether the session is actively downloading */
+	var active = true
+
+	/* indicates whether the session has been canceled */
+	var canceled = false
+
+	/* file download status keyed by task */
+	let downloadTaskRemoteItems = ConcurrentDictionary<String,String>()
+
+	/* URL Session for managing the download */
+	let downloadSession : NSURLSession!
+
+	/* completion handler for background session */
+	private var backgroundSessionCompletionHandler : ( ()->Void )?
+
+	/* download status of the group */
+	private(set) var groupStatus : ILobbyDownloadContainerStatus?
+
+
+	init(mainModel: DitourModel) {
+		self.mainModel = mainModel
+
+		self.backgroundSessionID = PresentationDownloadSession.makeBackgroundSessionID()
+
+		let configuration = PresentationDownloadSession.makeBackgroundConfiguration(self.backgroundSessionID)
+		configuration.HTTPMaximumConnectionsPerHost = 4
+
+		super.init()
+
+		self.downloadSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+	}
+
+
+	/* create a unique background session identifier */
+	private class func makeBackgroundSessionID() -> String {
+		let formatter = NSDateFormatter()
+		formatter.dateFormat = "yyyyMMdd'-'HHmmss.SSSS"
+
+		let timestamp = formatter.stringFromDate(NSDate())
+		return "DiTour.DownloadSession_\(timestamp)"
+	}
+
+
+	/* make a new background configuration */
+	private class func makeBackgroundConfiguration(backgroundSessionID: String) -> NSURLSessionConfiguration {
+		// need to call best method available for making a new background configuraton
+		if NSURLSessionConfiguration.respondsToSelector("backgroundSessionConfigurationWithIdentifier:") {
+			// proper method to call in iOS 8 (available starting in iOS 8)
+			return NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(backgroundSessionID)
+		}
+		else {
+			// needed for iOS 7 but deprecated in iOS 8
+			return NSURLSessionConfiguration.backgroundSessionConfiguration(backgroundSessionID)
+		}
+	}
+
+
+	/* if background session ID matches the specified identifier, then handle events for background session and return true otherwise return false */
+	func handleEventsForBackgroundURLSession( identifier: String, completionHandler: ()->Void ) -> Bool {
+		if identifier == self.backgroundSessionID {
+			self.backgroundSessionCompletionHandler = completionHandler
+			return true
+		} else {
+			return false
+		}
+	}
+
+
+	/* cancel the session due to an explicit request or error */
+	func cancel() {
+		if self.active {
+			self.active = false
+			self.canceled = true
+
+			self.groupStatus?.canceled = true
+			self.downloadSession.invalidateAndCancel()
+			self.publishChanges()
+		}
+	}
+
+
+	/* stop the session due to normal termination */
+	func stop() {
+		if self.active {
+			self.active = false
+
+			self.downloadSession.invalidateAndCancel()
+			self.publishChanges()
+		}
+	}
+
+
+	/* update the group status */
+	func updateStatus() {
+		self.groupStatus?.updateProgress()
+
+		// if all tasks have been submitted and no tasks remain then we can cancel the session
+		if (self.groupStatus?.completed ?? false) && self.downloadTaskRemoteItems.count == 0 {
+			self.stop()
+			self.publishChanges()
+			self.mainModel.reloadPresentationNextCycle()
+		}
+	}
+
+
+	/* publish changes to the persistent storage */
+	func publishChanges() {
+		if let groupStatus = self.groupStatus {
+			let group = groupStatus.remoteItem
+			group.managedObjectContext!.performBlockAndWait{ () -> Void in
+				group.managedObjectContext!.refreshObject(group, mergeChanges: true)
+			}
+			self.persistentSaveContext(groupStatus.remoteItem.managedObjectContext!, error: nil)
+		}
+	}
+
+
+	/* save the specified context all the way to the root persistent store */
+	func persistentSaveContext(context: NSManagedObjectContext, error errorPtr: NSErrorPointer) -> Bool {
+		return self.mainModel.persistentSaveContext(context, error: errorPtr)
+	}
+}
+
 
 
 // protocol for remote directory items (RemoteFile or RemoteDirectory)
