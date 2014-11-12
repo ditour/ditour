@@ -39,6 +39,7 @@
 		4CEFB41519CA20180095DCD2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39819CA1F4B0095DCD2 /* InfoPlist.strings */; };
 		4CF0ABA319CB0C1400DEA8D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */; };
 		4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */; };
+		4CF28F4B1A11437000145972 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF28F4A1A11437000145972 /* Utilities.swift */; };
 		4CF72B781A0C0C2200FAF651 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF72B771A0C0C2200FAF651 /* Download.swift */; };
 		4CF72B7D1A0C175400FAF651 /* DiTourTidyWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF72B7C1A0C175400FAF651 /* DiTourTidyWrapper.m */; };
 /* End PBXBuildFile section */
@@ -94,6 +95,7 @@
 		4CF0ABA119CB0C1400DEA8D8 /* DiTour-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "DiTour-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CF0ABA219CB0C1400DEA8D8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4CF0ABA419CB1B2600DEA8D8 /* MainModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MainModel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		4CF28F4A1A11437000145972 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		4CF72B771A0C0C2200FAF651 /* Download.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		4CF72B7B1A0C175400FAF651 /* DiTourTidyWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiTourTidyWrapper.h; sourceTree = "<group>"; };
 		4CF72B7C1A0C175400FAF651 /* DiTourTidyWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiTourTidyWrapper.m; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				4CBDAFDD19FFD0400001069D /* Slides.swift */,
 				4CB7E8FE1A02758C005447E8 /* Persistence.swift */,
 				4CF72B771A0C0C2200FAF651 /* Download.swift */,
+				4CF28F4A1A11437000145972 /* Utilities.swift */,
 				4CEFB41E19CA23120095DCD2 /* Utilities */,
 				4CEFB41919CA21920095DCD2 /* Download */,
 				4CEFB41B19CA21CF0095DCD2 /* Views */,
@@ -321,6 +324,7 @@
 				4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */,
 				4CEFB3F219CA1F4B0095DCD2 /* ILobbyDownloadStatusCell.m in Sources */,
 				4CEFB3EF19CA1F4B0095DCD2 /* ILobbyConcurrentDictionary.m in Sources */,
+				4CF28F4B1A11437000145972 /* Utilities.swift in Sources */,
 				4CEFB40D19CA1F4B0095DCD2 /* ILobbyTrackViewCell.m in Sources */,
 				4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */,
 				4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */,
