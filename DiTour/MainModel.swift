@@ -10,8 +10,7 @@ import Foundation
 import CoreData
 
 
-// MARK: -
-// MARK: Main Model Container
+// MARK: - Main Model Container
 // Objects that contain the main model
 @objc protocol DitourModelContainer {
 	var ditourModel: DitourModel? { get set }
@@ -22,8 +21,7 @@ import CoreData
 private let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringByAppendingPathComponent( "PresentationGroups" )
 
 
-// MARK: -
-// MARK: Main Model
+// MARK: - Main Model
 // main model for DiTour where the primary state is maintained
 public class DitourModel : NSObject {
 	// container of static properties
@@ -99,9 +97,7 @@ public class DitourModel : NSObject {
 	}
 
 
-	// MARK: -
-	// MARK: Loading presentations
-
+	// MARK: - Loading presentations
 
 	func loadDefaultPresentation() -> Bool {
 		self.hasPresentationUpdate = false
@@ -161,8 +157,7 @@ public class DitourModel : NSObject {
 	}
 
 
-	//MARK: -
-	//MARK: Download session support
+	//MARK: - Download session support
 
 	func cancelDownload() {
 		self.downloadSession?.cancel()
@@ -194,8 +189,7 @@ public class DitourModel : NSObject {
 	}
 
 
-	//MARK: -
-	//MARK: Playback
+	//MARK: - Playback
 
 	func play() -> Bool {
 		if self.canPlay {
@@ -261,8 +255,7 @@ public class DitourModel : NSObject {
 	}
 
 
-	//MARK: -
-	//MARK: Directory paths
+	//MARK: - Directory paths
 
 	class func presentationGroupsRoot() -> String {
 		return PRESENTATION_GROUP_ROOT
@@ -285,8 +278,7 @@ public class DitourModel : NSObject {
 	}
 
 
-	//MARK: -
-	//MARK: Persistent store support
+	//MARK: - Persistent store support
 
 	private class func setupDataModel() -> ( model: NSManagedObjectModel, context: NSManagedObjectContext) {
 		let storeURL = NSURL.fileURLWithPath( DitourModel.applicationDocumentsDirectory().stringByAppendingPathComponent("iLobby.db") )
@@ -389,8 +381,7 @@ public class DitourModel : NSObject {
 
 
 
-//MARK: -
-//MARK: Private functions
+//MARK: - Private functions
 
 private func purgeVersion1Data() {
 	let oldPresentationPath = fetchDocumentDirectoryURL().path!.stringByAppendingPathComponent("Presentation")

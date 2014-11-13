@@ -37,8 +37,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	private(set) var groupStatus : ILobbyDownloadContainerStatus?
 
 
-	//MARK: -
-	//MARK: Configuration and initialization
+	//MARK: - Configuration and initialization
 
 	init(mainModel: DitourModel) {
 		self.mainModel = mainModel
@@ -89,8 +88,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	}
 
 
-	//MARK: -
-	//MARK: State control
+	//MARK: - State control
 
 	/* cancel the session due to an explicit request or error */
 	func cancel() {
@@ -141,8 +139,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	}
 
 
-	//MARK: -
-	//MARK: Download
+	//MARK: - Download
 
 	/* initiate downloading of the specified group and provide updates to the specified delegate */
 	func downloadGroup(group: PresentationGroupStore, delegate: ILobbyDownloadStatusDelegate) -> ILobbyDownloadContainerStatus {
@@ -172,8 +169,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	}
 
 
-	//MARK: -
-	//MARK: NSURLSession Task and Download Delegate Implementation
+	//MARK: - NSURLSession Task and Download Delegate Implementation
 
 	/* download task incrementally wrote some data */
 	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
@@ -207,8 +203,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	}
 
 
-	//MARK: -
-	//MARK: Private Utility
+	//MARK: - Private Utility
 
 	/* remove the file at the specified path */
 	private func removeFileAt( path: String ) {
