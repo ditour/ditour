@@ -11,7 +11,7 @@ import CoreData
 
 
 /* manages a session for downloading presentation media from the remote server */
-class PresentationDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
+class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
 	/* main model */
 	let mainModel : DitourModel
 
@@ -43,9 +43,9 @@ class PresentationDownloadSession : NSObject, NSURLSessionDelegate, NSURLSession
 	init(mainModel: DitourModel) {
 		self.mainModel = mainModel
 
-		self.backgroundSessionID = PresentationDownloadSession.makeBackgroundSessionID()
+		self.backgroundSessionID = PresentationGroupDownloadSession.makeBackgroundSessionID()
 
-		let configuration = PresentationDownloadSession.makeBackgroundConfiguration(self.backgroundSessionID)
+		let configuration = PresentationGroupDownloadSession.makeBackgroundConfiguration(self.backgroundSessionID)
 		configuration.HTTPMaximumConnectionsPerHost = 4
 
 		super.init()
