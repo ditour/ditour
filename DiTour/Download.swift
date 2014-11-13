@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-
+// MARK: Presentation Group Download Session
 /* manages a session for downloading presentation media from the remote server */
 class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
 	/* main model */
@@ -229,6 +229,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 
 
+// MARK: - Remote Directory Item Protocol
 // protocol for remote directory items (RemoteFile or RemoteDirectory)
 protocol RemoteDirectoryItem {
 	/* remote location of the item */
@@ -240,16 +241,19 @@ protocol RemoteDirectoryItem {
 
 
 
+// MARK: - Remote Parsed Item Protocol
 // parsed item for a remote (either NSURL representing a directory or RemoteFile)
 private protocol RemoteParsedItem {}
 
 
 
+// MARK: - NSRUL Extension - Remote Parsed Item
 // extend NSURL to conform to the RemoteParsedItem protocol used in parsing
 extension NSURL : RemoteParsedItem {}
 
 
 
+// MARK: Remote File
 /* Represents a file on a remote server */
 class RemoteFile : NSObject, RemoteDirectoryItem, RemoteParsedItem {
 	/* remote location of the file */
@@ -276,6 +280,7 @@ class RemoteFile : NSObject, RemoteDirectoryItem, RemoteParsedItem {
 
 
 
+// MARK: Remote Directory
 /* Represents a directory on a remote server */
 class RemoteDirectory : NSObject, RemoteDirectoryItem {
 	/* remote location of the file */
@@ -321,7 +326,7 @@ class RemoteDirectory : NSObject, RemoteDirectoryItem {
 }
 
 
-
+// MARK: Remote Directory Parser
 /* generates a remote directory from a remote location and the content of the associated HTML directory pages */
 private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 	/* location of the the dremote directory to parse */
