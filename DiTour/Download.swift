@@ -92,7 +92,6 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	//MARK: -
 	//MARK: State control
 
-
 	/* cancel the session due to an explicit request or error */
 	func cancel() {
 		if self.active {
@@ -144,7 +143,6 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 	//MARK: -
 	//MARK: Download
-
 
 	/* initiate downloading of the specified group and provide updates to the specified delegate */
 	func downloadGroup(group: PresentationGroupStore, delegate: ILobbyDownloadStatusDelegate) -> ILobbyDownloadContainerStatus {
