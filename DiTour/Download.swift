@@ -11,7 +11,7 @@ import CoreData
 
 
 /* manages a session for downloading presentation media from the remote server */
-class PresentationDownloadSession : NSObject, NSURLSessionDelegate {
+class PresentationDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
 	/* main model */
 	let mainModel : DitourModel
 
@@ -36,6 +36,9 @@ class PresentationDownloadSession : NSObject, NSURLSessionDelegate {
 	/* download status of the group */
 	private(set) var groupStatus : ILobbyDownloadContainerStatus?
 
+
+	//MARK: -
+	//MARK: Configuration and initialization
 
 	init(mainModel: DitourModel) {
 		self.mainModel = mainModel
@@ -84,6 +87,10 @@ class PresentationDownloadSession : NSObject, NSURLSessionDelegate {
 			return false
 		}
 	}
+
+
+	//MARK: -
+	//MARK: State control
 
 
 	/* cancel the session due to an explicit request or error */
@@ -135,8 +142,94 @@ class PresentationDownloadSession : NSObject, NSURLSessionDelegate {
 	}
 
 
+	//MARK: -
+	//MARK: Download
+
+
+	/* initiate downloading of the specified group and provide updates to the specified delegate */
+	func downloadGroup(group: PresentationGroupStore, delegate: ILobbyDownloadStatusDelegate) -> ILobbyDownloadContainerStatus {
+		let status = ILobbyDownloadContainerStatus(item: group, container: nil)
+
+		// TODO: implement code
+
+		return status
+	}
+
+
+	/* Download a presentation */
+	private func downloadPresentation(presentation: PresentationStore, groupStatus: ILobbyDownloadContainerStatus) {
+		// TODO: implement code
+	}
+
+
+	/* Download a track */
+	private func downloadTrack(track: TrackStore, presentationStatus: ILobbyDownloadContainerStatus, cache: [RemoteFileStore:String]) {
+		// TODO: implement code
+	}
+
+
+	/* Download a remote file */
+	private func downloadRemoteFile(remoteFile: RemoteFileStore, containerStatus: ILobbyDownloadContainerStatus, cache: [RemoteFileStore:String]) {
+		// TODO: implement code
+	}
+
+
+	//MARK: -
+	//MARK: NSURLSession Task and Download Delegate Implementation
+
+	/* download task incrementally wrote some data */
+	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+		// TODO: implement code
+	}
+
+
+	/* download task finished normally */
+	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+		// TODO: implement code
+	}
+
+
+	/* download task completed with an error */
+	func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+		// TODO: implement code
+	}
+
+
+	/*
+	If an application has received an -application:handleEventsForBackgroundURLSession:completionHandler: message, the session delegate will receive this message to indicate that all messages previously enqueued for this session have been delivered. At this time it is safe to invoke the previously stored completion handler, or to begin any internal updates that will result in invoking the completion handler.
+	*/
+	func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
+		// TODO: implement code
+	}
+
+
+	/* download resumed */
+	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
+		// Not yet supported
+	}
+
+
+	//MARK: -
+	//MARK: Private Utility
+
+	/* remove the file at the specified path */
+	private func removeFileAt( path: String ) {
+		var possibleError: NSError?
+		let fileManager = NSFileManager.defaultManager()
+
+		if fileManager.fileExistsAtPath(path) {
+			fileManager.removeItemAtPath(path, error: &possibleError)
+		}
+
+		if let error = possibleError {
+			println( "Error deleting existing file at destination: \(path) with error: \(error.localizedDescription)" )
+			self.cancel()
+		}
+	}
+
+
 	/* save the specified context all the way to the root persistent store */
-	func persistentSaveContext(context: NSManagedObjectContext, error errorPtr: NSErrorPointer) -> Bool {
+	private func persistentSaveContext(context: NSManagedObjectContext, error errorPtr: NSErrorPointer) -> Bool {
 		return self.mainModel.persistentSaveContext(context, error: errorPtr)
 	}
 }
