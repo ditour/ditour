@@ -158,8 +158,30 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 
 	/* Download a track */
-	private func downloadTrack(track: TrackStore, presentationStatus: ILobbyDownloadContainerStatus, cache: [RemoteFileStore:String]) {
-		// TODO: implement code
+	private func downloadTrack(track: TrackStore, presentationStatus: ILobbyDownloadContainerStatus, cache: [String:RemoteFileStore]) {
+		let status = ILobbyDownloadContainerStatus(forRemoteItem: track, container: presentationStatus)
+
+		track.managedObjectContext!.performBlock { () -> Void in
+			var possibleError : NSError?
+			NSFileManager.defaultManager().createDirectoryAtPath(track.absolutePath, withIntermediateDirectories: true, attributes: nil, error: &possibleError)
+
+			if let error = possibleError {
+				status.error = error
+				println("Error creating track directory: \(error.localizedDescription)")
+			} else {
+				track.markDownloading()
+
+				if let configuration = track.configuration {
+					self.downloadRemoteFile(configuration, containerStatus: status, cache: cache)
+				}
+
+				for remoteMedia in (track.remoteMedia.array as [RemoteMediaStore]) {
+					self.downloadRemoteFile(remoteMedia, containerStatus: status, cache: cache)
+				}
+
+				status.submitted = true
+			}
+		}
 	}
 
 
