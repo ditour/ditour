@@ -164,8 +164,45 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 
 	/* Download a remote file */
-	private func downloadRemoteFile(remoteFile: RemoteFileStore, containerStatus: ILobbyDownloadContainerStatus, cache: [RemoteFileStore:String]) {
-		// TODO: implement code
+	private func downloadRemoteFile(remoteFile: RemoteFileStore, containerStatus: ILobbyDownloadContainerStatus, cache: [String:RemoteFileStore]) {
+		let status = ILobbyDownloadFileStatus(forRemoteItem: remoteFile, container: containerStatus)
+		remoteFile.managedObjectContext!.performBlock { () -> Void in
+			if remoteFile.isPending {
+				// first see if the local cache has a current version of the file we want
+				if let cachedFile = cache[remoteFile.remoteLocation] {
+					let cacheInfo = cachedFile.remoteInfo
+					let remoteInfo = remoteFile.remoteInfo
+					if remoteInfo == cacheInfo {
+						let fileManager = NSFileManager.defaultManager()
+
+						if fileManager.fileExistsAtPath(cachedFile.absolutePath) {
+							// create a hard link from the original path to the new path so we save space
+							var error : NSError?
+							let success = fileManager.linkItemAtPath(cachedFile.absolutePath, toPath: remoteFile.absolutePath, error: &error)
+							if success {
+								remoteFile.markReady()
+								status.setCompleted(true)
+								status.setProgress(Float(1.0))
+								self.updateStatus()
+								return
+							} else {
+								status.error = error
+								println("Error creating hard link to remote file: \(remoteFile.absolutePath) from existing file at \(cachedFile.absolutePath)")
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// anything that fails in using the cache file will fall through to here which forces a fresh fetch to the server
+		//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
+		let downloadURL = remoteFile.remoteURL
+		let request = NSURLRequest(URL: downloadURL!)
+		let downloadTask = self.downloadSession.downloadTaskWithRequest(request)
+		self.downloadTaskRemoteItems[downloadTask] = status
+		remoteFile.markDownloading()
+		downloadTask.resume()
 	}
 
 
