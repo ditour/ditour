@@ -173,17 +173,58 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 	/* download task incrementally wrote some data */
 	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-		// TODO: implement code
+		// report progress on the task
+		let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
+		if let downloadStatus = self.downloadTaskRemoteItems[downloadTask] {
+			downloadStatus.setProgress(Float(progress))
+		}
 	}
 
 
 	/* download task finished normally */
 	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
-		// TODO: implement code
+		if let downloadStatus = self.downloadTaskRemoteItems[downloadTask] {
+			let remoteFile = downloadStatus.remoteItem as RemoteFileStore
+			var destination : String!
+			var remoteURL : NSURL!
+			remoteFile.managedObjectContext?.performBlockAndWait{ () -> Void in
+				destination = remoteFile.absolutePath
+				remoteURL = remoteFile.remoteURL
+			}
+
+			let fileManager = NSFileManager.defaultManager()
+			var error : NSError?
+
+			if fileManager.fileExistsAtPath(destination) {
+				println("Error: Existing file at destination: \(destination) for remote: \(remoteURL)")
+			} else {
+				fileManager.copyItemAtPath(location.path!, toPath: destination, error: &error)
+			}
+
+			if error != nil {
+				// cached the current cancel state since we will be canceling
+				let alreadyCanceled = self.canceled
+
+				self.cancel()
+				downloadStatus.error = error
+
+				// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
+				if !alreadyCanceled {
+					self.groupStatus?.error = error
+					println("Error copying file from \(location) to \(destination), \(error!.localizedDescription)")
+				}
+			}
+
+			downloadStatus.setCompleted(true)
+			downloadStatus.setProgress(Float(1.0))
+
+			self.persistentSaveContext(remoteFile.managedObjectContext!, error: nil)
+			self.updateStatus()
+		}
 	}
 
 
-	/* download task completed with the possibility of an error */
+	/* task completed with the possibility of an error */
 	func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
 		if let downloadStatus = self.downloadTaskRemoteItems[task] {
 			let remoteFile = downloadStatus.remoteItem as RemoteFileStore
