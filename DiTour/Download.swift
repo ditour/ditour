@@ -24,8 +24,8 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	/* indicates whether the session has been canceled */
 	var canceled = false
 
-	/* file download status keyed by task */
-	let downloadTaskRemoteItems = ConcurrentDictionary<String,String>()
+	/* file download status keyed by download task */
+	let downloadTaskRemoteItems = ConcurrentDictionary<NSURLSessionTask,ILobbyDownloadFileStatus>()
 
 	/* URL Session for managing the download */
 	let downloadSession : NSURLSession!
@@ -183,9 +183,46 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	}
 
 
-	/* download task completed with an error */
+	/* download task completed with the possibility of an error */
 	func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-		// TODO: implement code
+		if let downloadStatus = self.downloadTaskRemoteItems[task] {
+			let remoteFile = downloadStatus.remoteItem as RemoteFileStore
+
+			if error == nil {	// normal completion
+				remoteFile.managedObjectContext?.performBlock{ () -> Void in
+					remoteFile.markReady()
+				}
+			} else {		// completed with error
+				// cached the current cancel state since we will be canceling
+				let alreadyCanceled = self.canceled
+
+				self.cancel()
+				downloadStatus.error = error
+
+				// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
+				if !alreadyCanceled {
+					self.groupStatus?.error = error
+					println("Task: \(task) completed with error: \(error?.localizedDescription)")
+				}
+
+				remoteFile.managedObjectContext?.performBlock{ () -> Void in
+					remoteFile.markPending()
+				}
+			}
+
+			// download completed whether successful or not
+			downloadStatus.setCompleted(true)
+
+			self.downloadTaskRemoteItems.removeValueForKey(task)
+
+			// if all tasks have been submitted and no tasks remain then we can cancel the session
+			if self.groupStatus!.completed && self.downloadTaskRemoteItems.count == 0 {
+				self.stop()
+			}
+
+			self.persistentSaveContext(remoteFile.managedObjectContext!, error: nil)
+			self.updateStatus()
+		}
 	}
 
 
@@ -193,7 +230,10 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	If an application has received an -application:handleEventsForBackgroundURLSession:completionHandler: message, the session delegate will receive this message to indicate that all messages previously enqueued for this session have been delivered. At this time it is safe to invoke the previously stored completion handler, or to begin any internal updates that will result in invoking the completion handler.
 	*/
 	func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
-		// TODO: implement code
+		if let completionHandler = self.backgroundSessionCompletionHandler {
+			self.backgroundSessionCompletionHandler = nil
+			completionHandler()
+		}
 	}
 
 
