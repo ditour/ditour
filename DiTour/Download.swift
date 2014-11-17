@@ -153,7 +153,32 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 	/* Download a presentation */
 	private func downloadPresentation(presentation: PresentationStore, groupStatus: ILobbyDownloadContainerStatus) {
-		// TODO: implement code
+		let status = ILobbyDownloadContainerStatus(forRemoteItem: presentation, container: groupStatus)
+
+		presentation.managedObjectContext!.performBlock { () -> Void in
+			var possibleError : NSError? = nil
+			NSFileManager.defaultManager().createDirectoryAtPath(presentation.absolutePath, withIntermediateDirectories: true, attributes: nil, error: &possibleError)
+
+			if let error = possibleError {
+				status.error = error
+				println("Error creating presentation directory: \(presentation.absolutePath) with error: \(error.localizedDescription)")
+			} else {
+				presentation.markDownloading()
+
+				// generate the cache of local items in the parent if any keyed by URL spec
+				let localCache = presentation.parent?.generateFileDictionaryKeyedByURL() ?? [String:RemoteFileStore]()
+
+				if let configuration = presentation.configuration {
+					self.downloadRemoteFile(configuration, containerStatus: status, cache: localCache)
+				}
+
+				for track in presentation.tracks.array as [TrackStore] {
+					self.downloadTrack(track, presentationStatus: status, cache: localCache)
+				}
+
+				status.submitted = true
+			}
+		}
 	}
 
 

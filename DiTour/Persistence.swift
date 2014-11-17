@@ -588,10 +588,9 @@ class PresentationStore : RemoteContainerStore {
 
 
 	/* generate a dictionary of every model object associated with this presentation keyed by its remote URL */
-	// TODO: NSDictionary is really [String:RemoteFileStore]
-	func generateFileDictionaryKeyedByURL() -> NSDictionary {
+	func generateFileDictionaryKeyedByURL() -> [String:RemoteFileStore] {
 		let fileManager = NSFileManager.defaultManager()
-		var dictionary = NSMutableDictionary()
+		var dictionary = [String:RemoteFileStore]()
 
 		// record the presentation configuration if any
 		if let configuration = self.configuration {
@@ -617,7 +616,7 @@ class PresentationStore : RemoteContainerStore {
 			}
 		}
 
-		return dictionary.copy() as NSDictionary
+		return dictionary
 	}
 }
 
