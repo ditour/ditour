@@ -341,17 +341,17 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 						}
 					}
 				}
+
+				// anything that fails in using the cache file will fall through to here which forces a fresh fetch to the server
+				//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
+				let downloadURL = remoteFile.remoteURL
+				let request = NSURLRequest(URL: downloadURL!)
+				let downloadTask = self.downloadSession.downloadTaskWithRequest(request)
+				self.downloadTaskRemoteItems[downloadTask] = status
+				remoteFile.markDownloading()
+				downloadTask.resume()
 			}
 		}
-
-		// anything that fails in using the cache file will fall through to here which forces a fresh fetch to the server
-		//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
-		let downloadURL = remoteFile.remoteURL
-		let request = NSURLRequest(URL: downloadURL!)
-		let downloadTask = self.downloadSession.downloadTaskWithRequest(request)
-		self.downloadTaskRemoteItems[downloadTask] = status
-		remoteFile.markDownloading()
-		downloadTask.resume()
 	}
 
 

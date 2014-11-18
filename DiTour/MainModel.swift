@@ -58,7 +58,7 @@ public class DitourModel : NSObject {
 
 	var canPlay : Bool { return self.tracks.count > 0 }
 
-	var downloadSession : ILobbyDownloadSession? = nil
+	var downloadSession : PresentationGroupDownloadSession? = nil
 
 	var downloading : Bool { return self.downloadSession?.active ?? false }
 
@@ -173,9 +173,9 @@ public class DitourModel : NSObject {
 
 
 	func downloadGroup( group: PresentationGroupStore, delegate: ILobbyDownloadStatusDelegate ) -> ILobbyDownloadContainerStatus {
-		let downloadSession = ILobbyDownloadSession(model: self)
+		let downloadSession = PresentationGroupDownloadSession(mainModel: self)
 		self.downloadSession = downloadSession
-		return downloadSession.downloadGroup( group, withDelegate: delegate )
+		return downloadSession.downloadGroup( group, delegate: delegate )
 	}
 
 
