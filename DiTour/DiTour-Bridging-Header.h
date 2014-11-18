@@ -3,6 +3,5 @@
 //
 
 #import "ILobbyDownloadStatus.h"
-#import "ILobbyDownloadSession.h"
 
 #import "DiTourTidyWrapper.h"
