@@ -510,23 +510,23 @@ protocol DownloadStatusDelegate: class {
 
 /* holds the status of a container or file being downloaded */
 class DownloadStatus : NSObject {
-	/* download progress */
-	var progress : Double = 0.0
-
-	/* download progress as a float - convenience property */
-	var floatProgress : Float { return Float( self.progress ) }
-
 	/* remote item being downloaded */
 	let remoteItem : RemoteItemStore
 
 	/* container status if any of this status */
 	let container : DownloadContainerStatus?
 
+	/* download progress */
+	dynamic var progress : Double = 0.0
+
+	/* download progress as a float - convenience property */
+	var floatProgress : Float { return Float( self.progress ) }
+	
 	/* indicates whether the corresponding download is complete */
-	var completed = false
+	dynamic var completed = false
 
 	/* indicates whether the corresponding download was canceled */
-	var canceled = false
+	dynamic var canceled = false
 
 	/* download error if any */
 	var possibleError : NSError?
@@ -541,6 +541,18 @@ class DownloadStatus : NSObject {
 		super.init()
 
 		container?.addChildStatus(self)
+	}
+
+
+	/* set the completion property */
+	func setCompleted( completed : Bool ) {
+		self.completed = completed
+	}
+
+
+	/* set the canceled property */
+	func setCanceled( cancel : Bool ) {
+		self.canceled = cancel
 	}
 
 
@@ -573,46 +585,120 @@ class DownloadContainerStatus : DownloadStatus {
 	/* indicates whether the corresponding remote item was submitted for download */
 	var submitted = false
 
+	/* child status items keyed by child status' remote item object ID */
+	let childStatusItems : ConcurrentDictionary<String,DownloadStatus>
 
-	/* override to add a property observer */
+
+	override init(remoteItem: RemoteItemStore, container: DownloadContainerStatus?) {
+		self.childStatusItems = ConcurrentDictionary()
+
+		super.init(remoteItem: remoteItem, container: container)
+	}
+
+
+	/* override to add an observer */
 	override var canceled : Bool {
 		didSet(cancel) {
 			if cancel {
 				// push events down
-				// TODO: implement code
+				for (_,childStatus) in self.childStatusItems {
+					childStatus.canceled = cancel
+				}
+
+				// we're done and post event
+				self.completed = true
 			}
+		}
+	}
+
+
+	/* update the progress */
+	private func updateProgress() {
+		// WARNING: child items may be added after this is called since they get dispatched for download immediately after being added (verify using self.submitted boolean)
+		if self.childStatusItems.count > 0 {
+			var childCount = 0
+			var completionCount = 0
+			var progressSum = 0.0			// cumulative progress of all children
+			var possibleChildError : NSError?
+
+			for (_,childStatus) in self.childStatusItems {
+				++childCount
+
+				progressSum += childStatus.progress
+
+				// count the number of child items completed
+				if childStatus.completed {
+					++completionCount
+				}
+
+				if childStatus.possibleError != nil {
+					possibleChildError = childStatus.possibleError
+				}
+			}
+
+			// the progress of this container is the average progress over all children
+			self.progress = childCount > 0 ? progressSum / Double(childCount) : 1.0
+
+			// bubble error up if this is the causal error
+			if self.possibleError == nil && possibleChildError != nil {
+				self.possibleError = possibleChildError
+			}
+
+			if self.submitted && completionCount == childCount {
+				self.completed = true
+			}
+		} else if self.submitted {
+			self.completed = true
 		}
 	}
 
 
 	/* add the specified status as a child status */
 	func addChildStatus(childStatus: DownloadStatus) {
-		// TODO: implement code
+		var possibleChildPath : String?
+		let remoteChildItem = childStatus.remoteItem
+		remoteChildItem.managedObjectContext!.performBlockAndWait { () -> Void in
+			possibleChildPath = remoteChildItem.path
+		}
+
+		if let childPath = possibleChildPath {
+			self.childStatusItems[childPath] = childStatus
+			self.updateProgress()
+		}
+	}
+
+
+	/* get the child status if any for the specified remote item path */
+	func childStatusForRemoteItemPath(path: String) -> DownloadStatus? {
+		return self.childStatusItems[path]
 	}
 
 
 	/* get the child status corresponding to the specified child remote item */
 	func childStatusForRemoteItem(remoteItem: RemoteItemStore) -> DownloadStatus? {
-		// TODO: implement code
-		return nil
+		var path : String?
+		remoteItem.managedObjectContext!.performBlockAndWait { () -> Void in
+			path = remoteItem.path
+		}
+
+		return path != nil ? self.childStatusForRemoteItemPath(path!) : nil
 	}
 
 
-	/* update the progress */
-	func updateProgress() {
-		// TODO: implement code
-	}
-
-
-	/* set a common delegate for each child */
+	/* set a common delegate on each child */
 	func setChildrenDelegate(childrenDelegate: DownloadStatusDelegate) {
-		// TODO: implement code
+		for (_,childStatus) in self.childStatusItems {
+			childStatus.delegate = childrenDelegate
+		}
 	}
 
 
 	/* print child info */
 	func printChildInfo() {
-		// TODO: implement code
+		println("Child count: \(self.childStatusItems.count)")
+		for (path,_) in self.childStatusItems {
+			println("Child Path: \(path)")
+		}
 	}
 }
 
@@ -621,9 +707,7 @@ class DownloadContainerStatus : DownloadStatus {
 // MARK: - Download File Status
 
 /* download status for a file */
-class DownloadFileStatus : DownloadStatus {
-
-}
+class DownloadFileStatus : DownloadStatus {}
 
 
 
