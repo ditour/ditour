@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 
+
 // MARK: Presentation Group Download Session
 /* manages a session for downloading presentation media from the remote server */
 class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
@@ -492,6 +493,136 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	private func persistentSaveContext(context: NSManagedObjectContext, error errorPtr: NSErrorPointer) -> Bool {
 		return self.mainModel.persistentSaveContext(context, error: errorPtr)
 	}
+}
+
+
+
+// MARK: - Download Status Delegate
+
+/* Protocol (applies to classes only) for download status delegation */
+protocol DownloadStatusDelegate: class {
+	func downloadStatusChanged( status: DownloadStatus )
+}
+
+
+
+// MARK: - Download Status
+
+/* holds the status of a container or file being downloaded */
+class DownloadStatus : NSObject {
+	/* download progress */
+	var progress : Double = 0.0
+
+	/* download progress as a float - convenience property */
+	var floatProgress : Float { return Float( self.progress ) }
+
+	/* remote item being downloaded */
+	let remoteItem : RemoteItemStore
+
+	/* container status if any of this status */
+	let container : DownloadContainerStatus?
+
+	/* indicates whether the corresponding download is complete */
+	var completed = false
+
+	/* indicates whether the corresponding download was canceled */
+	var canceled = false
+
+	/* download error if any */
+	var possibleError : NSError?
+
+	/* delegate for download status changes */
+	weak var delegate : DownloadStatusDelegate?
+
+	init(remoteItem: RemoteItemStore, container: DownloadContainerStatus?) {
+		self.remoteItem = remoteItem
+		self.container = container
+
+		super.init()
+
+		container?.addChildStatus(self)
+	}
+
+
+	/* determine whether this object's remote item matches (same objectID) the other remote item */
+	func matchesRemoteItem(otherRemoteItem: RemoteItemStore) -> Bool {
+		if self.remoteItem == otherRemoteItem {		// reference identity is sufficient
+			return true
+		} else {
+			var remoteItemID : NSManagedObjectID?
+			self.remoteItem.managedObjectContext!.performBlockAndWait{ () -> Void in
+				remoteItemID = self.remoteItem.objectID
+			}
+
+			var otherRemoteItemID: NSManagedObjectID?
+			otherRemoteItem.managedObjectContext!.performBlockAndWait{ () -> Void in
+				otherRemoteItemID = otherRemoteItem.objectID
+			}
+
+			return remoteItemID == otherRemoteItemID
+		}
+	}
+}
+
+
+
+// MARK: - Download Container Status
+
+/* download status for a container */
+class DownloadContainerStatus : DownloadStatus {
+	/* indicates whether the corresponding remote item was submitted for download */
+	var submitted = false
+
+
+	/* override to add a property observer */
+	override var canceled : Bool {
+		didSet(cancel) {
+			if cancel {
+				// push events down
+				// TODO: implement code
+			}
+		}
+	}
+
+
+	/* add the specified status as a child status */
+	func addChildStatus(childStatus: DownloadStatus) {
+		// TODO: implement code
+	}
+
+
+	/* get the child status corresponding to the specified child remote item */
+	func childStatusForRemoteItem(remoteItem: RemoteItemStore) -> DownloadStatus? {
+		// TODO: implement code
+		return nil
+	}
+
+
+	/* update the progress */
+	func updateProgress() {
+		// TODO: implement code
+	}
+
+
+	/* set a common delegate for each child */
+	func setChildrenDelegate(childrenDelegate: DownloadStatusDelegate) {
+		// TODO: implement code
+	}
+
+
+	/* print child info */
+	func printChildInfo() {
+		// TODO: implement code
+	}
+}
+
+
+
+// MARK: - Download File Status
+
+/* download status for a file */
+class DownloadFileStatus : DownloadStatus {
+
 }
 
 
