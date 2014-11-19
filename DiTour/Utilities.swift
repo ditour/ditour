@@ -11,7 +11,7 @@ import Foundation
 
 
 /* dictionary that allows thread safe concurrent access */
-class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject {
+class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType {
 	/* internal dictionary */
 	var dictionary : [KeyType:ValueType]
 
@@ -66,5 +66,11 @@ class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject {
 			oldValue = self.dictionary.removeValueForKey(key)
 		}
 		return oldValue
+	}
+
+
+	/* Generator of key-value pairs suitable for for-in loops */
+	func generate() -> Dictionary<KeyType,ValueType>.Generator {
+		return self.dictionary.generate()
 	}
 }
