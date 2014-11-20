@@ -230,8 +230,9 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					self.removeFileAt(initialConfigPath)
 				}
 
+				// perform the updates on the global queue
 				dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { () -> Void in
-					// download the presentations
+					// download the presentations and immediately perform all the copies from existing files
 					for pendingPresentation in group.pendingPresentations {
 						self.downloadPresentation(pendingPresentation, groupStatus: status)
 					}
@@ -241,9 +242,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					self.updateStatus()
 
 					// loop over all download tasks and begin running them
-					println("resuming \(self.downloadTaskRemoteItems.count) download tasks.")
 					for (downloadTask,_) in self.downloadTaskRemoteItems {
-						println("resuming download task: downloadTask")
 						downloadTask.resume()
 					}
 				}
@@ -355,10 +354,6 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 				// anything that fails in using the cache file will fall through to here which forces a fresh fetch to the server
 				//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
-
-				println("\n***********************************************************************************")
-				println("Submit task to download file at: \(remoteFile.remoteURL)")
-				println("***********************************************************************************\n")
 
 				let downloadURL = remoteFile.remoteURL
 				let request = NSURLRequest(URL: downloadURL!)
