@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "ILobbyLabelCell.h"
-#import "ILobbyDownloadStatus.h"
 
 @class DownloadStatus;
 

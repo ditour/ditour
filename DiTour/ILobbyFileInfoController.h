@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ILobbyDownloadStatus.h"
 #import "DiTour-Swift.h"
 
 
