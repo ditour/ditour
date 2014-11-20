@@ -16,6 +16,6 @@
 
 @property (nonatomic) DitourModel *ditourModel;
 @property (nonatomic, strong) TrackStore *track;
-@property (nonatomic, strong) ILobbyDownloadContainerStatus *trackDownloadStatus;
+@property (nonatomic, strong) DownloadContainerStatus *trackDownloadStatus;
 
 @end

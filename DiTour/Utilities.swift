@@ -21,7 +21,11 @@ class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType 
 
 	/* count of key-value pairs in this dicitionary */
 	var count : Int {
-		return self.dictionary.count
+		var count = 0
+		dispatch_sync(self.queue) { () -> Void in
+			count = self.dictionary.count
+		}
+		return count
 	}
 
 
@@ -40,7 +44,11 @@ class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType 
 	/* provide subscript accessors */
 	subscript(key: KeyType) -> ValueType? {
 		get {
-			return self.dictionary[key]
+			var value : ValueType?
+			dispatch_sync(self.queue) { () -> Void in
+				value = self.dictionary[key]
+			}
+			return value
 		}
 
 		set {
@@ -71,6 +79,10 @@ class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType 
 
 	/* Generator of key-value pairs suitable for for-in loops */
 	func generate() -> Dictionary<KeyType,ValueType>.Generator {
-		return self.dictionary.generate()
+		var generator : Dictionary<KeyType,ValueType>.Generator!
+		dispatch_sync(self.queue) { () -> Void in
+			generator = self.dictionary.generate()
+		}
+		return generator
 	}
 }

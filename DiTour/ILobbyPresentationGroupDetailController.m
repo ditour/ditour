@@ -32,7 +32,7 @@ static NSString *SEGUE_SHOW_FILE_INFO_ID = @"GroupDetailShowFileInfo";
 static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileInfo";
 
 
-@interface ILobbyPresentationGroupDetailController () <ILobbyDownloadStatusDelegate>
+@interface ILobbyPresentationGroupDetailController () <DownloadStatusDelegate>
 
 // TODO: add property for configuration
 
@@ -41,7 +41,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 - (IBAction)downloadPresentations:(id)sender;
 - (IBAction)cancelGroupDownload:(id)sender;
 
-@property ILobbyDownloadContainerStatus *groupDownloadStatus;
+@property DownloadContainerStatus *groupDownloadStatus;
 
 @end
 
@@ -117,8 +117,8 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	else {
 		self.groupDownloadStatus = [self.ditourModel downloadGroup:self.group delegate:self];
 
-		if ( self.groupDownloadStatus.error != nil ) {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download Error" message:self.groupDownloadStatus.error.localizedDescription delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+		if ( self.groupDownloadStatus.possibleError != nil ) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download Error" message:self.groupDownloadStatus.possibleError.localizedDescription delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
 			[alert show];
 		}
 
@@ -134,9 +134,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
 
 // the download state has changed (can be called at a very high frequency)
-- (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
+- (void)downloadStatusChanged:(DownloadStatus *)status {
+//	NSLog(@"Group download status changed: %@", status);
+
 	// throttle the updates to dramatically lower CPU load and reduce backlog of events
 	if ( !_updateScheduled ) {		// skip if an update has already been scheduled since the display will be refreshed
+//		NSLog( @"Group update scheduled..." );
 		_updateScheduled = YES;		// indicate that an update will be scheduled
 
 		static dispatch_time_t nanoSecondDelay = 1000 * 1000 * 1000 * 0.25;	// refresh the display at most every 0.25 seconds
@@ -145,6 +148,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 			_updateScheduled = NO;	// allow another update to be scheduled since we will begin processing the current one
 			[self updateDownloadIndicator];
 			[self.tableView reloadData];
+//			NSLog(@"Group table reloaded for download status: %@", status);
 		});
 	}
 }
@@ -216,7 +220,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 		return NO;
 	}
 	else {
-		ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteItem];
+		DownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteItem];
 		return downloadStatus != nil && !downloadStatus.completed ? YES : NO;
 	}
 }
@@ -355,10 +359,10 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 	cell.title = presentation.name;
 	cell.subtitle = nil;
 
-	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
+	DownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:presentation];
 	cell.downloadStatus = downloadStatus;
 
-	if ( downloadStatus.error != nil ) {
+	if ( downloadStatus.possibleError != nil ) {
 		cell.subtitle = @"Failed";
 	}
 	else if ( downloadStatus.canceled ) {
@@ -403,12 +407,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
-	ILobbyDownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteFile];
+	DownloadStatus *downloadStatus = [self.groupDownloadStatus childStatusForRemoteItem:remoteFile];
 
 	cell.downloadStatus = downloadStatus;
 	cell.title = remoteFile.name;
 
-	if ( downloadStatus.error != nil ) {
+	if ( downloadStatus.possibleError != nil ) {
 		cell.subtitle = @"Failed";
 	}
 	else if ( downloadStatus.canceled ) {
@@ -439,7 +443,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 		presentationController.presentation = presentation;
 
 		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID] ) {
-			ILobbyDownloadContainerStatus *downloadStatus = (ILobbyDownloadContainerStatus *)[self.groupDownloadStatus childStatusForRemoteItem:presentation];
+			DownloadContainerStatus *downloadStatus = (DownloadContainerStatus *)[self.groupDownloadStatus childStatusForRemoteItem:presentation];
 			presentationController.presentationDownloadStatus = downloadStatus;
 		}
     }

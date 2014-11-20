@@ -27,7 +27,7 @@ static NSString *SEGUE_SHOW_FILE_INFO_ID = @"PresentationDetailShowFileInfo";
 static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendingFileInfo";
 
 
-@interface ILobbyPresentationDetailController () <ILobbyDownloadStatusDelegate>
+@interface ILobbyPresentationDetailController () <DownloadStatusDelegate>
 
 // TODO: add property for configuration
 
@@ -64,7 +64,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 }
 
 
-- (void)setPresentationDownloadStatus:(ILobbyDownloadContainerStatus *)presentationDownloadStatus {
+- (void)setPresentationDownloadStatus:(DownloadContainerStatus *)presentationDownloadStatus {
 	_presentationDownloadStatus = presentationDownloadStatus;
 	presentationDownloadStatus.delegate = self;
 	_updateScheduled = NO;
@@ -105,7 +105,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 
 // the download state has changed (can be called at a very high frequency)
-- (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
+- (void)downloadStatusChanged:(DownloadStatus *)status {
 	// throttle the updates to dramatically lower CPU load and reduce backlog of events
 	if ( !_updateScheduled ) {		// skip if an update has already been scheduled since the display will be refreshed
 		_updateScheduled = YES;		// indicate that an update will be scheduled
@@ -208,7 +208,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 		return NO;
 	}
 	else {
-		ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteItem];
+		DownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteItem];
 		return downloadStatus != nil && !downloadStatus.completed ? YES : NO;
 	}
 }
@@ -270,13 +270,13 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
 
-	ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:track];
+	DownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:track];
 	//NSLog( @"Track: %@, Ready: %@, Download status: %@, Pointer: %@, Context: %@", track.title, track.status, downloadStatus, track, track.managedObjectContext );
 
 	cell.downloadStatus = downloadStatus;
 	cell.title = track.title;
 	
-	if ( downloadStatus.error != nil ) {
+	if ( downloadStatus.possibleError != nil ) {
 		cell.subtitle = @"Failed";
 	}
 	else if ( downloadStatus.canceled ) {
@@ -318,12 +318,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
-	ILobbyDownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];
+	DownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];
 
 	cell.downloadStatus = downloadStatus;
 	cell.title = remoteFile.name;
 
-	if ( downloadStatus.error != nil ) {
+	if ( downloadStatus.possibleError != nil ) {
 		cell.subtitle = @"Failed";
 	}
 	else if ( downloadStatus.canceled ) {
@@ -408,7 +408,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 		trackController.track = track;
 
 		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_TRACK_DETAIL_ID] ) {
-			ILobbyDownloadContainerStatus *downloadStatus = (ILobbyDownloadContainerStatus *)[self.presentationDownloadStatus childStatusForRemoteItem:track];
+			DownloadContainerStatus *downloadStatus = (DownloadContainerStatus *)[self.presentationDownloadStatus childStatusForRemoteItem:track];
 			trackController.trackDownloadStatus = downloadStatus;
 		}
     }

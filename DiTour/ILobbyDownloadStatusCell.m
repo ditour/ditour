@@ -7,6 +7,7 @@
 //
 
 #import "ILobbyDownloadStatusCell.h"
+#import "DiTour-Swift.h"
 
 
 static NSNumberFormatter *PROGRESS_FORMAT = nil;
@@ -53,7 +54,7 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 }
 
 
-- (void)setDownloadStatus:(ILobbyDownloadStatus *)status {
+- (void)setDownloadStatus:(DownloadStatus *)status {
 	float progress = status != nil ? status.progress : 0.0;
 
 	self.progressView.progress = progress;

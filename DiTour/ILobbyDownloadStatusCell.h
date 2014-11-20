@@ -11,12 +11,14 @@
 #import "ILobbyLabelCell.h"
 #import "ILobbyDownloadStatus.h"
 
+@class DownloadStatus;
+
 
 @interface ILobbyDownloadStatusCell : ILobbyLabelCell
 
 @property (nonatomic, weak) IBOutlet UIProgressView *progressView;
 @property (nonatomic, weak) IBOutlet UILabel *progressLabel;
 
-- (void)setDownloadStatus:(ILobbyDownloadStatus *)status;
+- (void)setDownloadStatus:(DownloadStatus *)status;
 
 @end

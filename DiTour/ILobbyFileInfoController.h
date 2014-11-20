@@ -15,7 +15,7 @@
 @interface ILobbyFileInfoController : UIViewController <DitourModelContainer>
 
 @property (nonatomic, strong) RemoteFileStore *remoteFile;
-@property (nonatomic, strong) ILobbyDownloadStatus *downloadStatus;
+@property (nonatomic, strong) DownloadStatus *downloadStatus;
 @property (nonatomic, readwrite, strong) DitourModel *ditourModel;
 
 @end

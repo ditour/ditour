@@ -25,7 +25,7 @@ static NSString *SEGUE_SHOW_FILE_INFO_ID = @"TrackDetailShowFileInfo";
 static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileInfo";
 
 
-@interface ILobbyTrackDetailController () <ILobbyDownloadStatusDelegate>
+@interface ILobbyTrackDetailController () <DownloadStatusDelegate>
 
 @end
 
@@ -57,7 +57,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 }
 
 
-- (void)setTrackDownloadStatus:(ILobbyDownloadContainerStatus *)trackDownloadStatus {
+- (void)setTrackDownloadStatus:(DownloadContainerStatus *)trackDownloadStatus {
 	_trackDownloadStatus = trackDownloadStatus;
 	trackDownloadStatus.delegate = self;
 	_updateScheduled = NO;
@@ -98,7 +98,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
 
 // the download state has changed (can be called at a very high frequency)
-- (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
+- (void)downloadStatusChanged:(DownloadStatus *)status {
 	// throttle the updates to dramatically lower CPU load and reduce backlog of events
 	if ( !_updateScheduled ) {		// skip if an update has already been scheduled since the display will be refreshed
 		_updateScheduled = YES;		// indicate that an update will be scheduled
@@ -185,7 +185,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 		return NO;
 	}
 	else {
-		ILobbyDownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteItem];
+		DownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteItem];
 		return downloadStatus != nil && !downloadStatus.completed ? YES : NO;
 	}
 }
@@ -261,12 +261,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 
     ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
-	ILobbyDownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteFile];
+	DownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteFile];
 
 	cell.downloadStatus = downloadStatus;
 	cell.title = remoteFile.name;
 	
-	if ( downloadStatus.error != nil ) {
+	if ( downloadStatus.possibleError != nil ) {
 		cell.subtitle = @"Failed";
 	}
 	else if ( downloadStatus.canceled ) {

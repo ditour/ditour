@@ -172,14 +172,14 @@ public class DitourModel : NSObject {
 	}
 
 
-	func downloadGroup( group: PresentationGroupStore, delegate: ILobbyDownloadStatusDelegate ) -> ILobbyDownloadContainerStatus {
+	func downloadGroup( group: PresentationGroupStore, delegate: DownloadStatusDelegate ) -> DownloadContainerStatus {
 		let downloadSession = PresentationGroupDownloadSession(mainModel: self)
 		self.downloadSession = downloadSession
 		return downloadSession.downloadGroup( group, delegate: delegate )
 	}
 
 
-	func downloadStatusForGroup( group : PresentationGroupStore ) -> ILobbyDownloadContainerStatus? {
+	func downloadStatusForGroup( group : PresentationGroupStore ) -> DownloadContainerStatus? {
 		if let status = self.downloadSession?.groupStatus {
 			return status.matchesRemoteItem( group ) ? status : nil
 		}

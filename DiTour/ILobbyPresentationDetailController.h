@@ -16,6 +16,6 @@
 
 @property (nonatomic) DitourModel *ditourModel;
 @property (nonatomic, strong) PresentationStore *presentation;
-@property (nonatomic, strong) ILobbyDownloadContainerStatus *presentationDownloadStatus;
+@property (nonatomic, strong) DownloadContainerStatus *presentationDownloadStatus;
 
 @end

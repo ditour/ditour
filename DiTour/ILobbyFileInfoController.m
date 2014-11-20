@@ -11,7 +11,7 @@
 #import "ILobbyFileInfoController.h"
 
 
-@interface ILobbyFileInfoController () <ILobbyDownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource>
+@interface ILobbyFileInfoController () <DownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource>
 
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;
 @property (nonatomic, weak) IBOutlet UIButton *previewButton;
@@ -51,7 +51,7 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 }
 
 
-- (void)setDownloadStatus:(ILobbyDownloadStatus *)downloadStatus {
+- (void)setDownloadStatus:(DownloadStatus *)downloadStatus {
 	if ( downloadStatus ) {
 		downloadStatus.delegate = self;
 	}
@@ -81,7 +81,7 @@ static NSNumberFormatter *PROGRESS_FORMAT = nil;
 
 
 // the download state has changed (can be called at a very high frequency)
-- (void)downloadStatusChanged:(ILobbyDownloadStatus *)status {
+- (void)downloadStatusChanged:(DownloadStatus *)status {
 	// throttle the updates to dramatically lower CPU load and reduce backlog of events
 	if ( !_updateScheduled ) {		// skip if an update has already been scheduled since the display will be refreshed
 		_updateScheduled = YES;		// indicate that an update will be scheduled

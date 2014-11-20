@@ -26,7 +26,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	var canceled = false
 
 	/* file download status keyed by download task */
-	let downloadTaskRemoteItems = ConcurrentDictionary<NSURLSessionTask,ILobbyDownloadFileStatus>()
+	let downloadTaskRemoteItems = ConcurrentDictionary<NSURLSessionTask,DownloadFileStatus>()
 
 	/* URL Session for managing the download */
 	let downloadSession : NSURLSession!
@@ -35,7 +35,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	private var backgroundSessionCompletionHandler : ( ()->Void )?
 
 	/* download status of the group */
-	private(set) var groupStatus : ILobbyDownloadContainerStatus?
+	private(set) var groupStatus : DownloadContainerStatus?
 
 
 	//MARK: - Configuration and initialization
@@ -143,8 +143,8 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	//MARK: - Download
 
 	/* initiate downloading of the specified group and provide updates to the specified delegate */
-	func downloadGroup(group: PresentationGroupStore, delegate: ILobbyDownloadStatusDelegate) -> ILobbyDownloadContainerStatus {
-		let status = ILobbyDownloadContainerStatus(item: group, container: nil)
+	func downloadGroup(group: PresentationGroupStore, delegate: DownloadStatusDelegate) -> DownloadContainerStatus {
+		let status = DownloadContainerStatus(remoteItem: group, container: nil)
 
 		status.delegate = delegate
 		self.groupStatus = status
@@ -230,17 +230,27 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					self.removeFileAt(initialConfigPath)
 				}
 
-				// download the presentations
-				for pendingPresentation in group.pendingPresentations {
-					self.downloadPresentation(pendingPresentation, groupStatus: status)
-				}
+				dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { () -> Void in
+					// download the presentations
+					for pendingPresentation in group.pendingPresentations {
+						self.downloadPresentation(pendingPresentation, groupStatus: status)
+					}
 
-				status.submitted = true
-				self.updateStatus()
+					// at this point all status items have been submitted
+					status.submitted = true
+					self.updateStatus()
+
+					// loop over all download tasks and begin running them
+					println("resuming \(self.downloadTaskRemoteItems.count) download tasks.")
+					for (downloadTask,_) in self.downloadTaskRemoteItems {
+						println("resuming download task: downloadTask")
+						downloadTask.resume()
+					}
+				}
 			} else {	// something happened that caused the remote directory parsing to fail
 				if let error = possibleError {
 					println("Error downloading group: \(error.localizedDescription)")
-					status.error = error
+					status.possibleError = error
 					self.cancel()
 				} else {
 					self.stop()
@@ -255,15 +265,15 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 
 	/* Download a presentation */
-	private func downloadPresentation(presentation: PresentationStore, groupStatus: ILobbyDownloadContainerStatus) {
-		let status = ILobbyDownloadContainerStatus(forRemoteItem: presentation, container: groupStatus)
+	private func downloadPresentation(presentation: PresentationStore, groupStatus: DownloadContainerStatus) {
+		let status = DownloadContainerStatus(remoteItem: presentation, container: groupStatus)
 
-		presentation.managedObjectContext!.performBlock { () -> Void in
+		presentation.managedObjectContext!.performBlockAndWait { () -> Void in
 			var possibleError : NSError? = nil
 			NSFileManager.defaultManager().createDirectoryAtPath(presentation.absolutePath, withIntermediateDirectories: true, attributes: nil, error: &possibleError)
 
 			if let error = possibleError {
-				status.error = error
+				status.possibleError = error
 				println("Error creating presentation directory: \(presentation.absolutePath) with error: \(error.localizedDescription)")
 			} else {
 				presentation.markDownloading()
@@ -286,15 +296,15 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 
 	/* Download a track */
-	private func downloadTrack(track: TrackStore, presentationStatus: ILobbyDownloadContainerStatus, cache: [String:RemoteFileStore]) {
-		let status = ILobbyDownloadContainerStatus(forRemoteItem: track, container: presentationStatus)
+	private func downloadTrack(track: TrackStore, presentationStatus: DownloadContainerStatus, cache: [String:RemoteFileStore]) {
+		let status = DownloadContainerStatus(remoteItem: track, container: presentationStatus)
 
-		track.managedObjectContext!.performBlock { () -> Void in
+		track.managedObjectContext!.performBlockAndWait { () -> Void in
 			var possibleError : NSError?
 			NSFileManager.defaultManager().createDirectoryAtPath(track.absolutePath, withIntermediateDirectories: true, attributes: nil, error: &possibleError)
 
 			if let error = possibleError {
-				status.error = error
+				status.possibleError = error
 				println("Error creating track directory: \(error.localizedDescription)")
 			} else {
 				track.markDownloading()
@@ -314,9 +324,9 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 
 	/* Download a remote file */
-	private func downloadRemoteFile(remoteFile: RemoteFileStore, containerStatus: ILobbyDownloadContainerStatus, cache: [String:RemoteFileStore]) {
-		let status = ILobbyDownloadFileStatus(forRemoteItem: remoteFile, container: containerStatus)
-		remoteFile.managedObjectContext!.performBlock { () -> Void in
+	private func downloadRemoteFile(remoteFile: RemoteFileStore, containerStatus: DownloadContainerStatus, cache: [String:RemoteFileStore]) {
+		let status = DownloadFileStatus(remoteItem: remoteFile, container: containerStatus)
+		remoteFile.managedObjectContext!.performBlockAndWait { () -> Void in
 			if remoteFile.isPending {
 				// first see if the local cache has a current version of the file we want
 				if let cachedFile = cache[remoteFile.remoteLocation] {
@@ -332,11 +342,11 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 							if success {
 								remoteFile.markReady()
 								status.setCompleted(true)
-								status.setProgress(Float(1.0))
+								status.setAndPropagateProgress(1.0, forcePropagation: true)
 								self.updateStatus()
 								return
 							} else {
-								status.error = error
+								status.possibleError = error
 								println("Error creating hard link to remote file: \(remoteFile.absolutePath) from existing file at \(cachedFile.absolutePath)")
 							}
 						}
@@ -345,12 +355,17 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 				// anything that fails in using the cache file will fall through to here which forces a fresh fetch to the server
 				//Create a new download task using the URL session. Tasks start in the “suspended” state; to start a task you need to explicitly call -resume on a task after creating it.
+
+				println("\n***********************************************************************************")
+				println("Submit task to download file at: \(remoteFile.remoteURL)")
+				println("***********************************************************************************\n")
+
 				let downloadURL = remoteFile.remoteURL
 				let request = NSURLRequest(URL: downloadURL!)
 				let downloadTask = self.downloadSession.downloadTaskWithRequest(request)
 				self.downloadTaskRemoteItems[downloadTask] = status
 				remoteFile.markDownloading()
-				downloadTask.resume()
+//				downloadTask.resume()
 			}
 		}
 	}
@@ -363,7 +378,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 		// report progress on the task
 		let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
 		if let downloadStatus = self.downloadTaskRemoteItems[downloadTask] {
-			downloadStatus.setProgress(Float(progress))
+			downloadStatus.setAndPropagateProgress(progress, forcePropagation: false)
 		}
 	}
 
@@ -393,17 +408,17 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 				let alreadyCanceled = self.canceled
 
 				self.cancel()
-				downloadStatus.error = error
+				downloadStatus.possibleError = error
 
 				// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
 				if !alreadyCanceled {
-					self.groupStatus?.error = error
+					self.groupStatus?.possibleError = error
 					println("Error copying file from \(location) to \(destination), \(error!.localizedDescription)")
 				}
 			}
 
 			downloadStatus.setCompleted(true)
-			downloadStatus.setProgress(Float(1.0))
+			downloadStatus.setAndPropagateProgress(1.0, forcePropagation: true)
 
 			self.persistentSaveContext(remoteFile.managedObjectContext!, error: nil)
 			self.updateStatus()
@@ -425,11 +440,11 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 				let alreadyCanceled = self.canceled
 
 				self.cancel()
-				downloadStatus.error = error
+				downloadStatus.possibleError = error
 
 				// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
 				if !alreadyCanceled {
-					self.groupStatus?.error = error
+					self.groupStatus?.possibleError = error
 					println("Task: \(task) completed with error: \(error?.localizedDescription)")
 				}
 
@@ -500,7 +515,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 // MARK: - Download Status Delegate
 
 /* Protocol (applies to classes only) for download status delegation */
-protocol DownloadStatusDelegate: class {
+@objc protocol DownloadStatusDelegate: class {
 	func downloadStatusChanged( status: DownloadStatus )
 }
 
@@ -516,23 +531,48 @@ class DownloadStatus : NSObject {
 	/* container status if any of this status */
 	let container : DownloadContainerStatus?
 
-	/* download progress */
+	/* bare download progress */
 	dynamic var progress : Double = 0.0
+//	{
+//		didSet {
+//			println("progress updated from \(oldValue) to \(self.progress) for item at: \(self.remoteItem.path)")
+//		}
+//	}
+
 
 	/* download progress as a float - convenience property */
 	var floatProgress : Float { return Float( self.progress ) }
 	
 	/* indicates whether the corresponding download is complete */
-	dynamic var completed = false
+	dynamic var completed : Bool = false {
+		didSet {
+			if completed {
+				processCompleted()
+			}
+		}
+	}
 
 	/* indicates whether the corresponding download was canceled */
-	dynamic var canceled = false
+	dynamic var canceled : Bool = false {
+		didSet {
+			if canceled {
+				processCanceled()
+			}
+		}
+	}
 
 	/* download error if any */
 	var possibleError : NSError?
 
 	/* delegate for download status changes */
 	weak var delegate : DownloadStatusDelegate?
+
+
+	/* description of this status */
+	override var description : String {
+		return "location: \(self.remoteItem.remoteLocation), progress: \(self.progress), complete: \(self.completed)"
+	}
+
 
 	init(remoteItem: RemoteItemStore, container: DownloadContainerStatus?) {
 		self.remoteItem = remoteItem
@@ -550,9 +590,45 @@ class DownloadStatus : NSObject {
 	}
 
 
+	private func processCompleted() {
+		// important for the following code to block since marking ready must complete before setting the progress which in turn propagates progress state
+		self.remoteItem.managedObjectContext!.performBlockAndWait{ () -> Void in
+			if self.possibleError == nil && !self.canceled {	// normal completion
+				self.remoteItem.markReady()
+			}
+
+			if let container = self.container {
+				let remoteContainer = container.remoteItem
+				// force any fetched properties of the containing object to refresh
+				self.remoteItem.managedObjectContext!.refreshObject(remoteContainer, mergeChanges: true)
+			}
+		}
+
+		self.setAndPropagateProgress(1.0, forcePropagation: true)
+	}
+
+
 	/* set the canceled property */
-	func setCanceled( cancel : Bool ) {
-		self.canceled = cancel
+	private func processCanceled() {
+		// we're done and post event
+		self.completed = true
+	}
+
+
+	/* set progress and force propagation on change or if flag is true */
+	func setAndPropagateProgress(progress: Double, forcePropagation: Bool=true) {
+		// only need to propagate changes if there is actually a change or forced to do so
+		if progress != self.progress || forcePropagation {
+			self.progress = progress
+			propagateProgress()
+		}
+	}
+
+
+	/* propagate progress up to the container */
+	private func propagateProgress() {
+		self.container?.updateProgress()
+		self.delegate?.downloadStatusChanged(self)
 	}
 
 
@@ -583,7 +659,13 @@ class DownloadStatus : NSObject {
 /* download status for a container */
 class DownloadContainerStatus : DownloadStatus {
 	/* indicates whether the corresponding remote item was submitted for download */
-	var submitted = false
+	var submitted : Bool = false {
+		didSet {
+			if submitted {
+				self.updateProgress()
+			}
+		}
+	}
 
 	/* child status items keyed by child status' remote item object ID */
 	let childStatusItems : ConcurrentDictionary<String,DownloadStatus>
@@ -596,25 +678,14 @@ class DownloadContainerStatus : DownloadStatus {
 	}
 
 
-	/* override to add an observer */
-	override var canceled : Bool {
-		didSet(cancel) {
-			if cancel {
-				// push events down
-				for (_,childStatus) in self.childStatusItems {
-					childStatus.canceled = cancel
-				}
-
-				// we're done and post event
-				self.completed = true
-			}
-		}
+	/* description of this status */
+	override var description : String {
+		return super.description + ", submitted: \(self.submitted)"
 	}
 
 
 	/* update the progress */
 	private func updateProgress() {
-		// WARNING: child items may be added after this is called since they get dispatched for download immediately after being added (verify using self.submitted boolean)
 		if self.childStatusItems.count > 0 {
 			var childCount = 0
 			var completionCount = 0
@@ -637,7 +708,7 @@ class DownloadContainerStatus : DownloadStatus {
 			}
 
 			// the progress of this container is the average progress over all children
-			self.progress = childCount > 0 ? progressSum / Double(childCount) : 1.0
+			self.setAndPropagateProgress(childCount > 0 ? progressSum / Double(childCount) : 1.0, forcePropagation: false)
 
 			// bubble error up if this is the causal error
 			if self.possibleError == nil && possibleChildError != nil {
@@ -650,6 +721,17 @@ class DownloadContainerStatus : DownloadStatus {
 		} else if self.submitted {
 			self.completed = true
 		}
+	}
+
+
+	/* set the canceled property */
+	override private func processCanceled() {
+		// push events down
+		for (_,childStatus) in self.childStatusItems {
+			childStatus.canceled = true
+		}
+
+		super.processCanceled()
 	}
 
 
