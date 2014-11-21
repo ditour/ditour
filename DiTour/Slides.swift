@@ -23,7 +23,7 @@ class Slide : NSObject {
 	/* container of static constants */
 	struct Statics {
 		static var ALL_SUPPORTED_EXTENSIONS = NSSet()
-		static var SLIDE_CLASS_NAMES_BY_EXTENSION = [String:String]()
+		static var SLIDE_CLASSES_BY_EXTENSION = [String:Slide.Type]()
 	}
 
 
@@ -48,13 +48,8 @@ class Slide : NSObject {
 	class func makeSlideWithFile(file: String, duration: Float) -> Slide? {
 		let fileExtension = file.pathExtension.lowercaseString
 
-		if let slideClassName = Statics.SLIDE_CLASS_NAMES_BY_EXTENSION[fileExtension] {
-			if let SlideType = NSClassFromString( slideClassName ) as? Slide.Type {
-				return SlideType(file: file, duration: duration)
-			}
-			else {
-				return nil;
-			}
+		if let SlideType = Statics.SLIDE_CLASSES_BY_EXTENSION[fileExtension] {
+			return SlideType(file: file, duration: duration)
 		}
 		else {
 			return nil;
@@ -66,13 +61,13 @@ class Slide : NSObject {
 	private class func registerSlideClass() {
 		// store the class names keyed by lower case extension for later use when instantiating slides
 		let className = NSStringFromClass( self )
-		var slideClassNamesByExtension = Statics.SLIDE_CLASS_NAMES_BY_EXTENSION
+		var slideClassesByExtension = Statics.SLIDE_CLASSES_BY_EXTENSION
 		let fileExtensions = self.supportedExtensions()
 		for fileExtension in fileExtensions {
 			let extensionKey = fileExtension.lowercaseString
-			slideClassNamesByExtension[extensionKey] = className;
+			slideClassesByExtension[extensionKey] = self;
 		}
-		Statics.SLIDE_CLASS_NAMES_BY_EXTENSION = slideClassNamesByExtension
+		Statics.SLIDE_CLASSES_BY_EXTENSION = slideClassesByExtension
 
 		self.appendSupportedExtensions(fileExtensions)
 	}
