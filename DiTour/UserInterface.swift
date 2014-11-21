@@ -72,8 +72,8 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 			case let ( .Some( oldTrack as Track ), .Some( currentTrack as Track ) ) where oldTrack === currentTrack :
 				break
 
-			// matches the case where oldTrack is a pointer to null but not nil and hence not a Track instance as excluded by preceding cases
-			case ( .Some, .Some(let currentTrack as Track) ) :
+			// matches the case where oldTrack NSNull and hence only the current track exists so we need to update its cell
+			case let ( .Some(oldTrack as NSNull), .Some(currentTrack as Track) ) :
 				if let newItem = find(tracks, currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
@@ -84,8 +84,8 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
-			// matches the case where currentTrack is a pointer to null but not nil and hence not a Track instance as excluded by preceding cases
-			case ( .Some( let oldTrack as Track ), .Some ) :
+			// matches the case where currentTrack NSNull and hence only the old track exists and there is no current so update the cell for the old track
+			case let ( .Some(oldTrack as Track), .Some(currentTrack as NSNull) ) :
 				if let oldItem = find(tracks, oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
