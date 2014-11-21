@@ -60,7 +60,6 @@ class Slide : NSObject {
 	/* register a slide class so we can instantiate it by file extension */
 	private class func registerSlideClass() {
 		// store the class names keyed by lower case extension for later use when instantiating slides
-		let className = NSStringFromClass( self )
 		var slideClassesByExtension = Statics.SLIDE_CLASSES_BY_EXTENSION
 		let fileExtensions = self.supportedExtensions()
 		for fileExtension in fileExtensions {
