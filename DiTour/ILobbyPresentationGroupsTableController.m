@@ -10,6 +10,7 @@
 #import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupEditCell.h"
 #import "ILobbyPresentationGroupDetailController.h"
+#import "DiTour-Swift.h"
 
 
 // enum of table sections
