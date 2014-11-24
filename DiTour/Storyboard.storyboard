@@ -734,7 +734,7 @@
                                     <outlet property="openURLButton" destination="grY-J8-Yep" id="MKy-rX-cIc"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PresentationGroupEditCell" id="hSR-8T-xft" customClass="ILobbyPresentationGroupEditCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PresentationGroupEditCell" id="hSR-8T-xft" customClass="PresentationGroupEditCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="131" width="1024" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hSR-8T-xft" id="fxL-cX-hxs">

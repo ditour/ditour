@@ -331,3 +331,44 @@ class DownloadStatusCell : LabelCell {
 
 
 
+/* table cell for displaying editable information about a group */
+class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
+	/* text field for editing and displaying the group's URL */
+	@IBOutlet weak var locationField: UITextField!
+
+	/* handler to call when editing is complete */
+	var editCompletionHandler : ((source: PresentationGroupEditCell, text: String?)->Void)?
+
+
+	/* custom initialization after loading the cell from the nib */
+	override func awakeFromNib() {
+		super.awakeFromNib()
+
+		// handle the text field events in this class
+		self.locationField.delegate = self
+	}
+
+
+	/* handle the text field delegate return key press to commit the edit */
+	func textFieldShouldReturn(textField: UITextField) -> Bool {
+		// automatically prefix with "http://" if not already specified
+		if let text = textField.text {
+			if !text.hasPrefix("http://") {
+				textField.text = "http://\(text)"
+			}
+		}
+
+		// run the completion handler if any
+		self.editCompletionHandler?(source: self, text: textField.text)
+
+		// resign focus (e.g. dismiss the keyboard)
+		textField.resignFirstResponder()
+
+		return true
+	}
+}
+
+
+
+
+

@@ -8,7 +8,6 @@
 
 #import "ILobbyPresentationGroupsTableController.h"
 #import "ILobbyPresentationGroupCell.h"
-#import "ILobbyPresentationGroupEditCell.h"
 #import "ILobbyPresentationGroupDetailController.h"
 #import "DiTour-Swift.h"
 
@@ -45,7 +44,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 
 // indicates which group is being edited
 @property (nonatomic, readwrite, strong) PresentationGroupStore *editingGroup;
-@property (nonatomic, readwrite, strong) ILobbyPresentationGroupEditCell *editingCell;
+@property (nonatomic, readwrite, strong) PresentationGroupEditCell *editingCell;
 
 @property (nonatomic, assign) EditMode editMode;
 
@@ -358,7 +357,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		if ( !self.editingCell ) {
 			self.editingCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_EDIT_CELL_ID forIndexPath:indexPath];
 			ILobbyPresentationGroupsTableController * __weak weakSelf = self;
-			[self.editingCell setDoneHandler:^(ILobbyPresentationGroupEditCell *source, NSString *text) {
+			[self.editingCell setEditCompletionHandler:^(PresentationGroupEditCell *source, NSString *text) {
 				ILobbyPresentationGroupsTableController *strongSelf = weakSelf;
 				if ( strongSelf ) {
 					[strongSelf confirmGroupEditing];
@@ -367,7 +366,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		}
 
 		// configure the editing cell
-		ILobbyPresentationGroupEditCell *editingCell = self.editingCell;
+		PresentationGroupEditCell *editingCell = self.editingCell;
 		editingCell.locationField.text = group.remoteLocation;
 		[editingCell.locationField becomeFirstResponder];
 
