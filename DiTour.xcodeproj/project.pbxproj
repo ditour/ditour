@@ -20,7 +20,6 @@
 		4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDAFDD19FFD0400001069D /* Slides.swift */; };
 		4CEFB3EA19CA1F4B0095DCD2 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */; };
 		4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */; };
-		4CEFB3F319CA1F4B0095DCD2 /* ILobbyFileInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */; };
 		4CEFB3F919CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */; };
 		4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */; };
 		4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3BD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m */; };
@@ -54,8 +53,6 @@
 		4CEFB39719CA1F4B0095DCD2 /* DiTour-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiTour-Prefix.pch"; sourceTree = "<group>"; };
 		4CEFB39919CA1F4B0095DCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CEFB39B19CA1F4B0095DCD2 /* iLobby 2.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0.xcdatamodel"; sourceTree = "<group>"; };
-		4CEFB3A619CA1F4B0095DCD2 /* ILobbyFileInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyFileInfoController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyFileInfoController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyPresentationDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationDetailController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3B819CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyPresentationGroupDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -162,8 +159,6 @@
 		4CEFB41B19CA21CF0095DCD2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4CEFB3A619CA1F4B0095DCD2 /* ILobbyFileInfoController.h */,
-				4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */,
 				4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */,
 				4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */,
 				4CEFB3B819CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.h */,
@@ -274,7 +269,6 @@
 				4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */,
 				4CEFB3F919CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m in Sources */,
 				4C2BA9591A1E7BA9008BDB55 /* UserInterface.swift in Sources */,
-				4CEFB3F319CA1F4B0095DCD2 /* ILobbyFileInfoController.m in Sources */,
 				4CF72B781A0C0C2200FAF651 /* Download.swift in Sources */,
 				4CB7E8FF1A02758C005447E8 /* Persistence.swift in Sources */,
 			);

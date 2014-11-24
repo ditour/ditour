@@ -8,7 +8,6 @@
 
 #import "ILobbyPresentationDetailController.h"
 #import "ILobbyTrackDetailController.h"
-#import "ILobbyFileInfoController.h"
 #import "DiTour-Swift.h"
 
 
@@ -412,7 +411,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
     }
 	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {
 		RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:self.tableView.indexPathForSelectedRow];
-		ILobbyFileInfoController *fileInfoController = segue.destinationViewController;
+		FileInfoController *fileInfoController = segue.destinationViewController;
 		fileInfoController.ditourModel = self.ditourModel;
 		fileInfoController.remoteFile = remoteFile;
 		fileInfoController.downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];

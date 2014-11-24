@@ -28,7 +28,7 @@
         <!--File Info-->
         <scene sceneID="yDU-VI-qaI">
             <objects>
-                <viewController id="Pd3-Nz-BAB" customClass="ILobbyFileInfoController" sceneMemberID="viewController">
+                <viewController id="Pd3-Nz-BAB" customClass="FileInfoController" customModule="DiTour" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XZN-Vb-i3q"/>
                         <viewControllerLayoutGuide type="bottom" id="4Ln-LM-AX4"/>

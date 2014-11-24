@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import QuickLook
 
 
 // segue IDs
@@ -293,21 +294,19 @@ class LabelCell : UITableViewCell {
 
 
 
+/* format used for displaying the numerical download progress */
+private let DOWNLOAD_PROGRESS_FORMAT : NSNumberFormatter = {
+	let format = NSNumberFormatter()
+	format.numberStyle = .PercentStyle
+	format.minimumFractionDigits = 2
+	format.maximumFractionDigits = 2
+	return format
+}()
+
+
+
 /* table cell displaying the download status */
 class DownloadStatusCell : LabelCell {
-	/* static constants */
-	private struct Constants {
-		/* format for displaying the numerical progress */
-		static let PROGRESS_FORMAT : NSNumberFormatter = {
-			let format = NSNumberFormatter()
-			format.numberStyle = .PercentStyle
-			format.minimumFractionDigits = 2
-			format.maximumFractionDigits = 2
-			return format
-		}()
-	}
-
-
 	/* progress indicator */
 	@IBOutlet weak var progressView: UIProgressView!
 
@@ -325,7 +324,7 @@ class DownloadStatusCell : LabelCell {
 	func setDownloadStatus(status: DownloadStatus?) {
 		let progress = status?.progress ?? 0.0
 		self.progressView.progress = Float(progress)
-		self.progressLabel.text = Constants.PROGRESS_FORMAT.stringFromNumber(progress)
+		self.progressLabel.text = DOWNLOAD_PROGRESS_FORMAT.stringFromNumber(progress)
 	}
 }
 
@@ -382,6 +381,155 @@ class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
 	}
 }
 
+
+
+/* display information about a media file */
+class FileInfoController : UIViewController, DitourModelContainer, DownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource {
+	/* label for displaying the file name */
+	@IBOutlet weak var nameLabel : UILabel!
+
+	/* button to display a preview of the file if available */
+	@IBOutlet weak var previewButton : UIButton!
+
+	/* view for displaying the download progress of the file */
+	@IBOutlet weak var progressView : UIProgressView!
+
+	/* label for displaying a numerical representation of the download progress */
+	@IBOutlet weak var progressLabel : UILabel!
+
+	/* view to display text information about the file */
+	@IBOutlet weak var infoView : UITextView!
+
+	/* reference to the remote file */
+	var remoteFile : RemoteFileStore!
+
+	/* download status */
+	var downloadStatus : DownloadStatus? {
+		willSet {
+			newValue?.delegate = self
+		}
+	}
+
+	/* main model */
+	var ditourModel : DitourModel?
+
+	/* flag indicating whether a request to update the file info display has been scheduled */
+	private var updateScheduled = false
+
+
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+	}
+
+
+	/* handle the view loaded event */
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: Selector("popToPlaying"))
+
+		self.nameLabel.text = self.remoteFile?.name
+
+		// if the file is already downloaded then hide the progress elements
+		if self.downloadStatus == nil {
+			self.progressLabel.hidden = true
+			self.progressView.hidden = true
+		}
+
+		// hide the preivew button if the file cannot be previewed
+		self.previewButton.hidden = !self.canPreview()
+
+		self.updateView()
+	}
+
+
+	// the download state has changed (can be called at a very high frequency)
+	func downloadStatusChanged( status: DownloadStatus ) {
+		// throttle the updates to dramatically lower CPU load and reduce backlog of events
+		if !self.updateScheduled {	// skip if an update has already been scheduled since the display will be refreshed
+			self.updateScheduled = true
+
+			// refresh the display at most every 0.25 seconds = 250 million nanoseconds
+			let nanoSecondDelay = 250_000_000 as Int64
+			let runTime = dispatch_time(DISPATCH_TIME_NOW, nanoSecondDelay)
+			dispatch_after(runTime, dispatch_get_main_queue()) { () -> Void in
+				self.updateScheduled = false	// allow further updates to be scheduled
+				self.updateView()
+			}
+		}
+	}
+
+
+	/* update the file info display */
+	func updateView() {
+		// determine whether the file is being downloaded and update accordingly
+		if let downloadStatus = self.downloadStatus {
+			let progress = downloadStatus.progress
+
+			self.progressView.progress = Float(progress)
+			self.progressLabel.text = DOWNLOAD_PROGRESS_FORMAT.stringFromNumber(progress)
+
+			if progress == 1.0 {
+				self.progressView.hidden = true
+			}
+
+			// only display the preview button if the file can be previewed
+			self.previewButton.hidden = !self.canPreview()
+		}
+
+		self.infoView.text = self.remoteFile.summary
+	}
+
+
+	/* pop this view controller back to the playing view */
+	func popToPlaying() {
+		self.navigationController?.popToRootViewControllerAnimated(true)
+	}
+
+
+	// MARK: - Preview support
+
+	/* indicates whether the file can be previewed */
+	func canPreview() -> Bool {
+		if let remoteFile = self.remoteFile {
+			if NSFileManager.defaultManager().fileExistsAtPath(remoteFile.absolutePath) {
+				// query the QuickLook engine to see if the item is a supported type
+				return QLPreviewController.canPreviewItem(self)
+			} else {
+				return false
+			}
+		} else {
+			return false
+		}
+	}
+
+
+	/* Local URL of the file */
+	var previewItemURL: NSURL! { return NSURL.fileURLWithPath(self.remoteFile.absolutePath) }
+
+
+	/* title of the file */
+	var previewItemTitle: String! { return self.remoteFile.name }
+
+
+	/* there is only one item to preview */
+	func numberOfPreviewItemsInPreviewController(controller: QLPreviewController!) -> Int {
+		return 1
+	}
+
+
+	/* this instance also serves as the preview item */
+	func previewController(controller: QLPreviewController!, previewItemAtIndex index: Int) -> QLPreviewItem! {
+		return self
+	}
+
+
+	@IBAction func displayPreview(sender: NSObject) {
+		let previewController = QLPreviewController()
+		previewController.dataSource = self
+		self.presentViewController(previewController, animated: true, completion: nil)
+	}
+}
 
 
 
