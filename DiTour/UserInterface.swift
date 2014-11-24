@@ -331,6 +331,20 @@ class DownloadStatusCell : LabelCell {
 
 
 
+/* table cell for displaying information about a group along with buttons for performing various actions on it */
+class PresentationGroupCell : UITableViewCell {
+	/* label displaying the Group's URL */
+	@IBOutlet weak var locationLabel : UILabel!
+
+	/* button for editing the group's URL */
+	@IBOutlet weak var editButton : UIButton!
+
+	/* button for opening the Group's URL */
+	@IBOutlet weak var openURLButton : UIButton!
+}
+
+
+
 /* table cell for displaying editable information about a group */
 class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
 	/* text field for editing and displaying the group's URL */

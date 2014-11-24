@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyPresentationGroupsTableController.h"
-#import "ILobbyPresentationGroupCell.h"
 #import "ILobbyPresentationGroupDetailController.h"
 #import "DiTour-Swift.h"
 
@@ -373,7 +372,7 @@ static NSString *SEGUE_SHOW_PRESENTAION_MASTERS_ID = @"GroupToPresentationMaster
 		return editingCell;
 	}
 	else {
-		ILobbyPresentationGroupCell *viewCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_VIEW_CELL_ID forIndexPath:indexPath];
+		PresentationGroupCell *viewCell = [self.tableView dequeueReusableCellWithIdentifier:GROUP_VIEW_CELL_ID forIndexPath:indexPath];
 		viewCell.locationLabel.text = group.remoteLocation;
 		viewCell.editButton.hidden = self.editing;		// hide the edit button when editing
 		viewCell.openURLButton.hidden = self.editing;	// hide the open URL button when editing

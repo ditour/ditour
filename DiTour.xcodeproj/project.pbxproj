@@ -22,7 +22,6 @@
 		4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */; };
 		4CEFB3F319CA1F4B0095DCD2 /* ILobbyFileInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */; };
 		4CEFB3F919CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */; };
-		4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B719CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m */; };
 		4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */; };
 		4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3BD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m */; };
 		4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3DD19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m */; };
@@ -59,8 +58,6 @@
 		4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyFileInfoController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyPresentationDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationDetailController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		4CEFB3B619CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyPresentationGroupCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4CEFB3B719CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILobbyPresentationGroupCell.m; sourceTree = "<group>"; };
 		4CEFB3B819CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyPresentationGroupDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationGroupDetailController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3BC19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILobbyPresentationGroupsTableController.h; sourceTree = "<group>"; };
@@ -169,8 +166,6 @@
 				4CEFB3A719CA1F4B0095DCD2 /* ILobbyFileInfoController.m */,
 				4CEFB3B419CA1F4B0095DCD2 /* ILobbyPresentationDetailController.h */,
 				4CEFB3B519CA1F4B0095DCD2 /* ILobbyPresentationDetailController.m */,
-				4CEFB3B619CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.h */,
-				4CEFB3B719CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m */,
 				4CEFB3B819CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.h */,
 				4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */,
 				4CEFB3BC19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.h */,
@@ -272,7 +267,6 @@
 				4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */,
 				4CEFB40C19CA1F4B0095DCD2 /* ILobbyTrackDetailController.m in Sources */,
 				4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */,
-				4CEFB3FA19CA1F4B0095DCD2 /* ILobbyPresentationGroupCell.m in Sources */,
 				4CF28F4B1A11437000145972 /* Utilities.swift in Sources */,
 				4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */,
 				4CEFB3FD19CA1F4B0095DCD2 /* ILobbyPresentationGroupsTableController.m in Sources */,
