@@ -7,8 +7,6 @@
 //
 
 #import "ILobbyPresentationDetailController.h"
-#import "ILobbyDownloadStatusCell.h"
-#import "ILobbyLabelCell.h"
 #import "ILobbyTrackDetailController.h"
 #import "ILobbyFileInfoController.h"
 #import "DiTour-Swift.h"
@@ -186,7 +184,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 			return [self heightForRemoteItemAtIndexPath:indexPath];
 
 		default:
-			return [ILobbyLabelCell defaultHeight];
+			return [LabelCell defaultHeight];
 	}
 }
 
@@ -195,10 +193,10 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 	RemoteItemStore *remoteItem = [self remoteItemAtIndexPath:indexPath];
 
 	if ( [self isRemoteItemDownloading:remoteItem] ) {
-		return [ILobbyDownloadStatusCell defaultHeight];
+		return [DownloadStatusCell defaultHeight];
 	}
 	else {
-		return [ILobbyLabelCell defaultHeight];
+		return [LabelCell defaultHeight];
 	}
 }
 
@@ -258,7 +256,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 - (UITableViewCell *)tableView:(UITableView *)tableView readyTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	TrackStore *track = self.presentation.tracks[indexPath.row];
 
-    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
+    LabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailActiveTrackCell" forIndexPath:indexPath];
 	cell.title = track.title;
 
 	return cell;
@@ -268,12 +266,12 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingTrackCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	TrackStore *track = self.presentation.tracks[indexPath.row];
 
-    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
+    DownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PresentationDetailPendingTrackCell" forIndexPath:indexPath];
 
 	DownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:track];
 	//NSLog( @"Track: %@, Ready: %@, Download status: %@, Pointer: %@, Context: %@", track.title, track.status, downloadStatus, track, track.managedObjectContext );
 
-	cell.downloadStatus = downloadStatus;
+	[cell setDownloadStatus:downloadStatus];
 	cell.title = track.title;
 	
 	if ( downloadStatus.possibleError != nil ) {
@@ -306,7 +304,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 - (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:indexPath];
 
-    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
+    LabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
 	cell.title = remoteFile.name;
 
 	return cell;
@@ -316,7 +314,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:indexPath];
 
-    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
+    DownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
 	DownloadStatus *downloadStatus = [self.presentationDownloadStatus childStatusForRemoteItem:remoteFile];
 

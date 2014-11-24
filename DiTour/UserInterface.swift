@@ -244,5 +244,90 @@ class TrackViewCell : UICollectionViewCell {
 
 
 
+/* Table View cell for displaying a title and subtitle */
+class LabelCell : UITableViewCell {
+	/* static constants */
+	private struct Constants {
+		/* green color used to indicate that a title is marked (e.g. current presentation) */
+		static let MARKED_COLOR = UIColor(red: 0.0, green: 0.5, blue: 0.0, alpha: 1.0)
+	}
+
+
+	/* label for displaying the title */
+	@IBOutlet weak var titleLabel: UILabel!
+
+	/* label for displaying the subtitle */
+	@IBOutlet weak var subtitleLabel: UILabel!
+
+	/* convenience accessor for the title */
+	var title : String? {
+		get { return titleLabel.text }
+		set { titleLabel.text = newValue }
+	}
+
+	/* convenience accessor for the title */
+	var subtitle : String? {
+		get { return subtitleLabel.text }
+		set { subtitleLabel.text = newValue }
+	}
+
+
+	/* default cell height */
+	class var defaultHeight : CGFloat {
+		return 44.0
+	}
+
+
+	/* override awake from nib to clear the subtitle which is optional and not always provided */
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		self.subtitle = ""		// prevents the placeholder from being displayed
+	}
+
+
+	/* sets whether the specified title should be marked (e.g. current presentation) */
+	func setMarked(marked: Bool) {
+		self.titleLabel.textColor = marked ? Constants.MARKED_COLOR : UIColor.blackColor()
+	}
+}
+
+
+
+/* table cell displaying the download status */
+class DownloadStatusCell : LabelCell {
+	/* static constants */
+	private struct Constants {
+		/* format for displaying the numerical progress */
+		static let PROGRESS_FORMAT : NSNumberFormatter = {
+			let format = NSNumberFormatter()
+			format.numberStyle = .PercentStyle
+			format.minimumFractionDigits = 2
+			format.maximumFractionDigits = 2
+			return format
+		}()
+	}
+
+
+	/* progress indicator */
+	@IBOutlet weak var progressView: UIProgressView!
+
+	/* label for displaying the progress */
+	@IBOutlet weak var progressLabel: UILabel!
+
+
+	/* default cell height */
+	override class var defaultHeight : CGFloat {
+		return 68.0
+	}
+
+
+	/* updates the cell to reflect the specified status */
+	func setDownloadStatus(status: DownloadStatus?) {
+		let progress = status?.progress ?? 0.0
+		self.progressView.progress = Float(progress)
+		self.progressLabel.text = Constants.PROGRESS_FORMAT.stringFromNumber(progress)
+	}
+}
+
 
 

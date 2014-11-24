@@ -7,8 +7,6 @@
 //
 
 #import "ILobbyTrackDetailController.h"
-#import "ILobbyDownloadStatusCell.h"
-#import "ILobbyLabelCell.h"
 #import "ILobbyFileInfoController.h"
 #import "DiTour-Swift.h"
 
@@ -163,7 +161,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 			return [self heightForRemoteItemAtIndexPath:indexPath];
 
 		default:
-			return [ILobbyLabelCell defaultHeight];
+			return [LabelCell defaultHeight];
 	}
 }
 
@@ -172,10 +170,10 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 	RemoteItemStore *remoteItem = [self remoteItemAtIndexPath:indexPath];
 
 	if ( [self isRemoteItemDownloading:remoteItem] ) {
-		return [ILobbyDownloadStatusCell defaultHeight];
+		return [DownloadStatusCell defaultHeight];
 	}
 	else {
-		return [ILobbyLabelCell defaultHeight];
+		return [LabelCell defaultHeight];
 	}
 }
 
@@ -249,7 +247,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 - (UITableViewCell *)tableView:(UITableView *)tableView readyRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:indexPath];
 
-    ILobbyLabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
+    LabelCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActiveFileCell" forIndexPath:indexPath];
 	cell.title = remoteFile.name;
 
 	return cell;
@@ -259,7 +257,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileI
 - (UITableViewCell *)tableView:(UITableView *)tableView pendingRemoteFileCellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	RemoteFileStore *remoteFile = (RemoteFileStore *)[self remoteItemAtIndexPath:indexPath];
 
-    ILobbyDownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
+    DownloadStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PendingFileCell" forIndexPath:indexPath];
 
 	DownloadStatus *downloadStatus = [self.trackDownloadStatus childStatusForRemoteItem:remoteFile];
 

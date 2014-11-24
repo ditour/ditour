@@ -159,7 +159,7 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="ILobbyLabelCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="thl-7H-h98" id="z6d-rc-9Ai">
@@ -193,7 +193,7 @@
                                     <segue destination="jnE-kG-HXj" kind="show" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="174" width="1024" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cKO-m0-obr" id="LmF-KQ-zzD">
@@ -243,7 +243,7 @@
                                     <segue destination="jnE-kG-HXj" kind="show" identifier="ShowPendingPresentationDetail" id="Js4-XC-Mie"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="pzb-Cl-t0f" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="pzb-Cl-t0f" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="240" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pzb-Cl-t0f" id="Xcp-AU-C0V">
@@ -277,7 +277,7 @@
                                     <segue destination="Pd3-Nz-BAB" kind="show" identifier="GroupDetailShowFileInfo" id="Rq2-ig-DTN"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="qBL-d6-z9F" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="qBL-d6-z9F" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="284" width="1024" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qBL-d6-z9F" id="atE-26-AK9">
@@ -378,7 +378,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationDetailActiveTrackCell" id="c2a-TE-sXK" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PresentationDetailActiveTrackCell" id="c2a-TE-sXK" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c2a-TE-sXK" id="B5I-QP-nmM">
@@ -412,7 +412,7 @@
                                     <segue destination="zoZ-Yz-hel" kind="show" identifier="ShowActiveTrackDetail" id="wfz-Ga-EAy"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PresentationDetailPendingTrackCell" rowHeight="68" id="DXi-Vu-bon" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="174" width="1024" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DXi-Vu-bon" id="X8H-pH-tqw">
@@ -462,7 +462,7 @@
                                     <segue destination="zoZ-Yz-hel" kind="show" identifier="ShowPendingTrackDetail" id="R2E-hK-DuA"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="QIo-Ob-o1D" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="QIo-Ob-o1D" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="242" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QIo-Ob-o1D" id="qBU-4F-efT">
@@ -496,7 +496,7 @@
                                     <segue destination="Pd3-Nz-BAB" kind="show" identifier="PresentationDetailShowFileInfo" id="oeD-4I-E0b"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="exz-ec-JYm" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="exz-ec-JYm" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="286" width="1024" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="exz-ec-JYm" id="1az-OP-vvD">
@@ -576,7 +576,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="Brm-HQ-8we" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="Brm-HQ-8we" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="86" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Brm-HQ-8we" id="4vr-Vb-XiR">
@@ -610,7 +610,7 @@
                                     <segue destination="Pd3-Nz-BAB" kind="show" identifier="TrackDetailShowFileInfo" id="mKP-ap-zYB"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="ZqQ-9G-TPX" customClass="ILobbyDownloadStatusCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="ZqQ-9G-TPX" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZqQ-9G-TPX" id="gn0-zM-OvC">
@@ -873,7 +873,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Js4-XC-Mie"/>
+        <segue reference="oI4-Xd-Af5"/>
         <segue reference="wfz-Ga-EAy"/>
-        <segue reference="mKP-ap-zYB"/>
     </inferredMetricsTieBreakers>
 </document>
