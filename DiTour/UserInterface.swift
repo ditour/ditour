@@ -127,7 +127,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 
 
 	override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TrackCell", forIndexPath: indexPath) as ILobbyTrackViewCell
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TrackCell", forIndexPath: indexPath) as TrackViewCell
 
 		let item = indexPath.item
 		if let model = self.ditourModel {
@@ -170,6 +170,78 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 		}
 	}
 }
+
+
+
+/* cell for displaying a track icon and label which can be selected to change the current track */
+class TrackViewCell : UICollectionViewCell {
+	@IBOutlet weak var label: UILabel!
+	@IBOutlet weak var imageView: UIImageView!
+
+	/* indicates whether the cell should be outlined indicating the current track */
+	var outlined : Bool = false {
+		didSet {
+			if outlined {
+				// white box
+				self.backgroundView = BackgroundView(stroke: UIColor.whiteColor(), fill: UIColor.blackColor())
+			} else {
+				// no outline
+				self.backgroundView = nil
+			}
+		}
+	}
+
+
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+
+		// change to our custom selected background view (pale blue)
+		self.selectedBackgroundView = BackgroundView(stroke: UIColor.blackColor(), fill: UIColor(red: 0.8, green: 0.8, blue: 1.0, alpha: 0.9))
+	}
+
+
+
+	/* nested background view for the track view cell to display when the cell is selected our outlined */
+	private class BackgroundView : UIView {
+		var strokeColor: UIColor
+		var fillColor: UIColor
+
+
+		init(frame: CGRect, stroke: UIColor, fill: UIColor) {
+			self.strokeColor = stroke
+			self.fillColor = fill
+
+			super.init(frame: frame)
+		}
+
+
+		/* make a background view with zero frame and the specified stroke and fill colors */
+		convenience init(stroke: UIColor, fill: UIColor) {
+			self.init(frame: CGRectZero, stroke: stroke, fill: fill)
+		}
+
+
+		required init(coder aDecoder: NSCoder) {
+			fatalError("init(coder:) has not been implemented")
+		}
+
+
+		/* draw this view */
+		override func drawRect(rect: CGRect) {
+			// draw a rounded rect bezier path
+			let context = UIGraphicsGetCurrentContext()
+			CGContextSaveGState(context)
+			let bezierPath = UIBezierPath(roundedRect: rect, cornerRadius: 5.0)
+			bezierPath.lineWidth = 5.0
+			self.fillColor.setFill()
+			bezierPath.fill()
+			self.strokeColor.setStroke()
+			bezierPath.stroke()
+			CGContextRestoreGState(context)
+		}
+	}
+}
+
 
 
 
