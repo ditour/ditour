@@ -11,7 +11,7 @@ import Foundation
 
 
 /* dictionary that allows thread safe concurrent access */
-class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType {
+class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType, DictionaryLiteralConvertible {
 	/* internal dictionary */
 	var dictionary : [KeyType:ValueType]
 
@@ -32,6 +32,18 @@ class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType 
 	/* initialize an empty dictionary */
 	override convenience init() {
 		self.init( dictionary: [KeyType:ValueType]() )
+	}
+
+
+	/* allow a concurrent dictionary to be initialized using a dictionary literal of form: [key1:value1, key2:value2, ...] */
+	convenience required init(dictionaryLiteral elements: (KeyType, ValueType)...) {
+		var dictionary = Dictionary<KeyType,ValueType>()
+
+		for (key,value) in elements {
+			dictionary[key] = value
+		}
+
+		self.init(dictionary: dictionary)
 	}
 
 
