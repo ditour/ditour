@@ -149,89 +149,89 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 		status.delegate = delegate
 		self.groupStatus = status
 
-		group.managedObjectContext!.performBlockAndWait { () -> Void in
-			var possibleError : NSError?
+		// perform the updates on the global queue
+		dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { () -> Void in
+			group.managedObjectContext!.performBlockAndWait { () -> Void in
+				var possibleError : NSError?
 
-			group.markDownloading()
+				group.markDownloading()
 
-			// cache the initial config if any so we can reuse the file if possible
-			let initialConfig = group.configuration
+				// cache the initial config if any so we can reuse the file if possible
+				let initialConfig = group.configuration
 
-			// remove any existing pending presentations as we will create new ones so stale ones are no longer useful
-			group.managedObjectContext!.refreshObject(group, mergeChanges: true)
-			for presentation in group.pendingPresentations as [PresentationStore] {
-				group.removePresentation(presentation)
-				group.managedObjectContext!.deleteObject(presentation)
-			}
-			self.persistentSaveContext(group.managedObjectContext!, error: &possibleError)
-
-			// ------------- fetch the directory references from the remote URL
-
-			if let groupRemoteDirectory = RemoteDirectory.parseDirectoryAtURL(group.remoteURL!, error: &possibleError) {
-				// process any files (e.g. config files)
-				for remoteFile in groupRemoteDirectory.files {
-					group.processRemoteFile(remoteFile)
+				// remove any existing pending presentations as we will create new ones so stale ones are no longer useful
+				group.managedObjectContext!.refreshObject(group, mergeChanges: true)
+				for presentation in group.pendingPresentations as [PresentationStore] {
+					group.removePresentation(presentation)
+					group.managedObjectContext!.deleteObject(presentation)
 				}
-
-				// store the active presentations by name so they can be used as parents if necessary
-				var activePresentationsByName = [String:PresentationStore]()
-				for presentation in group.activePresentations {
-					activePresentationsByName[presentation.name] = presentation
-				}
-
-				// fetch presentations
-				for remotePresentationDirectory in groupRemoteDirectory.subdirectories {
-					let presentation = PresentationStore.newPresentationInGroup(group, from: remotePresentationDirectory)
-
-					// if an active presentation has the same name then assign it as a parent
-					if let presentationParent = activePresentationsByName[presentation.name] {
-						presentation.parent = presentationParent
-					}
-				}
-
-				// any active presentation which does not have a revision should be removed except for the currently playing one if any
-				for presentation in group.activePresentations {
-					if presentation.revision == nil {
-						presentation.markDisposable()
-
-						if !presentation.isCurrent {
-							group.removePresentation(presentation)
-							group.managedObjectContext!.deleteObject(presentation)
-						}
-					}
-				}
-
 				self.persistentSaveContext(group.managedObjectContext!, error: &possibleError)
 
-				// updates fetched properties
-				group.managedObjectContext?.refreshObject(group, mergeChanges: true)
+				// ------------- fetch the directory references from the remote URL
 
-				// ----------- now begin downloading the files
+				if let groupRemoteDirectory = RemoteDirectory.parseDirectoryAtURL(group.remoteURL!, error: &possibleError) {
+					// process any files (e.g. config files)
+					for remoteFile in groupRemoteDirectory.files {
+						group.processRemoteFile(remoteFile)
+					}
 
-				// if the group has a configuration then determine whether the configuration file can be copied from the initial one
-				if let groupConfiguration = group.configuration {
-					// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
-					let fileManager = NSFileManager.defaultManager()
-					switch (initialConfig?.remoteInfo, initialConfig?.absolutePath) {
-					case (.Some(let initialConfigInfo), .Some(let initialConfigPath)) where initialConfigInfo == groupConfiguration.remoteInfo && initialConfigPath == groupConfiguration.absolutePath && fileManager.fileExistsAtPath(initialConfigPath):
-						groupConfiguration.markReady()
-					default:
-						// since there was no match dispose of the old config file if any
-						if let initialConfigPath = initialConfig?.absolutePath {
-							if fileManager.fileExistsAtPath(initialConfigPath) {
-								self.removeFileAt(initialConfigPath)
+					// store the active presentations by name so they can be used as parents if necessary
+					var activePresentationsByName = [String:PresentationStore]()
+					for presentation in group.activePresentations {
+						activePresentationsByName[presentation.name] = presentation
+					}
+
+					// fetch presentations
+					for remotePresentationDirectory in groupRemoteDirectory.subdirectories {
+						let presentation = PresentationStore.newPresentationInGroup(group, from: remotePresentationDirectory)
+
+						// if an active presentation has the same name then assign it as a parent
+						if let presentationParent = activePresentationsByName[presentation.name] {
+							presentation.parent = presentationParent
+						}
+					}
+
+					// any active presentation which does not have a revision should be removed except for the currently playing one if any
+					for presentation in group.activePresentations {
+						if presentation.revision == nil {
+							presentation.markDisposable()
+
+							if !presentation.isCurrent {
+								group.removePresentation(presentation)
+								group.managedObjectContext!.deleteObject(presentation)
 							}
 						}
-						// download a new config file
-						self.downloadRemoteFile(groupConfiguration, containerStatus: status, cache: [String:RemoteFileStore]())
 					}
-				} else if let initialConfigPath = initialConfig?.absolutePath {
-					// since the group no longer has a configuration but had one in the past we must remove the old configuration file
-					self.removeFileAt(initialConfigPath)
-				}
 
-				// perform the updates on the global queue
-				dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { () -> Void in
+					self.persistentSaveContext(group.managedObjectContext!, error: &possibleError)
+
+					// updates fetched properties
+					group.managedObjectContext?.refreshObject(group, mergeChanges: true)
+
+					// ----------- now begin downloading the files
+
+					// if the group has a configuration then determine whether the configuration file can be copied from the initial one
+					if let groupConfiguration = group.configuration {
+						// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
+						let fileManager = NSFileManager.defaultManager()
+						switch (initialConfig?.remoteInfo, initialConfig?.absolutePath) {
+						case (.Some(let initialConfigInfo), .Some(let initialConfigPath)) where initialConfigInfo == groupConfiguration.remoteInfo && initialConfigPath == groupConfiguration.absolutePath && fileManager.fileExistsAtPath(initialConfigPath):
+							groupConfiguration.markReady()
+						default:
+							// since there was no match dispose of the old config file if any
+							if let initialConfigPath = initialConfig?.absolutePath {
+								if fileManager.fileExistsAtPath(initialConfigPath) {
+									self.removeFileAt(initialConfigPath)
+								}
+							}
+							// download a new config file
+							self.downloadRemoteFile(groupConfiguration, containerStatus: status, cache: [String:RemoteFileStore]())
+						}
+					} else if let initialConfigPath = initialConfig?.absolutePath {
+						// since the group no longer has a configuration but had one in the past we must remove the old configuration file
+						self.removeFileAt(initialConfigPath)
+					}
+
 					// download the presentations and immediately perform all the copies from existing files
 					for pendingPresentation in group.pendingPresentations {
 						self.downloadPresentation(pendingPresentation, groupStatus: status)
@@ -245,17 +245,17 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					for (downloadTask,_) in self.downloadTaskRemoteItems {
 						downloadTask.resume()
 					}
+				} else {	// something happened that caused the remote directory parsing to fail
+					if let error = possibleError {
+						println("Error downloading group: \(error.localizedDescription)")
+						status.possibleError = error
+						self.cancel()
+					} else {
+						self.stop()
+					}
+					
+					group.markPending()
 				}
-			} else {	// something happened that caused the remote directory parsing to fail
-				if let error = possibleError {
-					println("Error downloading group: \(error.localizedDescription)")
-					status.possibleError = error
-					self.cancel()
-				} else {
-					self.stop()
-				}
-
-				group.markPending()
 			}
 		}
 
