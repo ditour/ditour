@@ -8,10 +8,13 @@
 
 import Foundation
 import QuickLook
+import CoreData
 
 
 // segue IDs
 private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
+private let SEGUE_SHOW_PRESENTATOIN_MASTERS_ID = "GroupToPresentationMasters"
+
 
 
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
@@ -382,7 +385,7 @@ class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
 }
 
 
-
+// MARK: - File Info Controller
 /* display information about a media file */
 class FileInfoController : UIViewController, DitourModelContainer, DownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource {
 	/* label for displaying the file name */
@@ -530,6 +533,265 @@ class FileInfoController : UIViewController, DitourModelContainer, DownloadStatu
 		self.presentViewController(previewController, animated: true, completion: nil)
 	}
 }
+
+
+
+// MARK: - Presentation Groups Table Controller
+/* table controller for displaying presentation groups */
+class PresentationGroupsTableController : UITableViewController, DitourModelContainer {
+	/* Cell constants */
+	private struct Cell {
+		static let VIEW_ID = "PresentationGroupCell"
+		static let EDIT_ID = "PresentationGroupEditCell"
+		static let ADD_ID = "PresentationGroupAddCell"
+	}
+
+
+	/* main model */
+	var ditourModel: DitourModel?
+
+	private var mainRootStore : RootStore?
+	private var editingRootStore : RootStore?
+	private var currentRootStore : RootStore?
+	private var editContext : NSManagedObjectContext?
+
+	/* group currently being edited if any */
+	private var editingGroup : PresentationGroupStore?
+
+	/* cell for editing if any */
+	private var editingCell : PresentationGroupEditCell?
+
+	/* editing mode */
+	private var editMode : EditMode = .None
+
+	/* add an observer to the view controller editing property */
+	override var editing : Bool {
+		didSet {
+			self.editMode = editing ? .Batch : .None
+			if editing {
+				self.setupEditing()
+			}
+
+			self.updateControls()
+			self.tableView.reloadData()
+		}
+	}
+
+
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+	}
+
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		self.tableView.allowsMultipleSelectionDuringEditing = true
+
+		// initialize properties
+		self.editMode = .None
+		self.editingGroup = nil
+		self.editingCell = nil
+
+		// setup the local edit context and its managed objects
+		self.mainRootStore = self.ditourModel?.mainStoreRoot
+		self.currentRootStore = self.mainRootStore
+
+		// preserve selection between presentations
+		self.clearsSelectionOnViewWillAppear = false
+
+		self.updateControls()
+	}
+
+
+	/* UI action handler for opening the focussed group's URL */
+	@IBAction func openGroupURL(sender: UIButton) {
+		let senderPoint = sender.bounds.origin		// point in the button's own coordinates
+		let pointInTable = sender.convertPoint(senderPoint, toView: self.tableView)		// point in the table view
+
+		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
+			let group = self.currentRootStore!.groups[indexPath.row] as PresentationGroupStore
+			if let url = group.remoteURL {
+				UIApplication.sharedApplication().openURL(url)
+			}
+		}
+	}
+
+
+	/* UI action handler for editing the focussed group */
+	@IBAction func editGroup(sender: UIButton) {
+		let senderPoint = sender.bounds.origin		// point in the button's own coordinates
+		let pointInTable = sender.convertPoint(senderPoint, toView: self.tableView)		// point in the table view
+
+		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
+			// enable editing for the corresponding group
+			self.editMode = .Single
+			self.setupEditing()
+
+			let group = self.mainRootStore?.groups[indexPath.row] as PresentationGroupStore
+			self.editingGroup = self.editingGroupForGroup(group)
+
+			self.updateControls()
+			self.tableView.reloadData()
+		}
+	}
+
+
+
+	/* get a group on the edit context corresponding to the specified group */
+	private func editingGroupForGroup(group: PresentationGroupStore) -> PresentationGroupStore {
+		var groupID : NSManagedObjectID!
+		group.managedObjectContext?.performBlockAndWait{ () -> Void in
+			groupID = group.objectID
+		}
+
+		var editingGroup : PresentationGroupStore!
+		self.editContext?.performBlockAndWait{ () -> Void in
+			editingGroup = self.editContext?.objectWithID(groupID) as PresentationGroupStore
+		}
+
+		return editingGroup
+	}
+
+
+	/* update the controls display */
+	private func updateControls() {
+		switch ( self.editingGroup, self.editing ) {
+		case (.Some, _):	// there is an editing group (e.g. editing the group name)
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelGroupEditing")
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmGroupEditing")
+		case (.None, true):		// no editing group, but editing (e.g. moving or deleting groups)
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "dismissEditing")
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "deleteSelectedRows")
+		case (.None, false):	// no editing group, not editing (e.g. not editing)
+			self.navigationItem.leftBarButtonItem = nil
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editTable")
+		default:
+			break		// the default case should never be reached
+		}
+	}
+
+
+	/* cancel the editing mode */
+	private func cancelGroupEditing() {
+		self.editingCell?.locationField.resignFirstResponder()
+
+		self.exitEditMode()
+
+		self.updateControls()
+		self.tableView.reloadData()
+	}
+
+
+	/* configure the editing state */
+	private func setupEditing() {
+		// create a new edit context
+		self.editContext = self.ditourModel!.createEditContextOnMain()
+
+		// get the current root ID
+		var storeRootID : NSManagedObjectID! = nil
+		self.mainRootStore!.managedObjectContext!.performBlockAndWait{ () -> Void in
+			storeRootID = self.mainRootStore?.objectID
+		}
+
+		// create a new root store corresponding to the same current root
+		self.editContext?.performBlockAndWait{ () -> Void in
+			self.editingRootStore = self.editContext!.objectWithID(storeRootID) as? RootStore
+		}
+
+		self.currentRootStore = self.editingRootStore
+	}
+
+
+	/* enter the batch editing mode */
+	private func editTable() {
+		self.editing = true
+	}
+
+
+	/* exit the editing mode */
+	private func exitEditMode() {
+		self.editMode = .None
+
+		self.editContext = nil
+
+		self.currentRootStore = self.mainRootStore
+		self.editingRootStore = nil
+
+		self.editing = false
+		self.editingGroup = nil
+		self.editingCell = nil
+	}
+
+
+	/* move the group at the specified index to another specified index */
+	func moveGroupAtIndex(fromIndex: Int, toIndex: Int) {
+		self.currentRootStore?.moveGroupAtIndex(fromIndex, toIndex: toIndex)
+	}
+
+
+	//MARK: - Presentation Group Table view data source
+
+	/* number of sections in the table */
+	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+		return Section.Count.rawValue
+	}
+
+
+	/* number of rows in the specified section */
+	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		switch (section, self.editMode) {
+		case (Section.GroupView.rawValue, _):
+			// one row per group in the view section
+			return self.currentRootStore?.groups.count ?? 0
+		case (Section.GroupAdd.rawValue, .None):
+			return 1	// there is one row in the Add section if we aren't editing
+		case (Section.GroupAdd.rawValue, _):
+			return 0	// if we are editing the table or a cell, hide the "add" cell
+		default:
+			return 0
+		}
+	}
+
+
+	/* move the groups from the source row to the destination row based on the drag event */
+	override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+		switch sourceIndexPath.section {
+		case Section.GroupView.rawValue:
+			self.moveGroupAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
+		default:
+			break
+		}
+	}
+
+
+	/* support rearranging rows in the table view */
+	override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+		switch indexPath.section {
+		case Section.GroupView.rawValue:
+			return true
+		default:
+			return false
+		}
+	}
+
+
+	/* enum of sections within the table */
+	private enum Section : Int {
+		case GroupView		// section to display each cell corresponding to a presentation group
+		case GroupAdd		// section to display a cell for adding a new presentation group
+		case Count			// number of sections
+	}
+
+
+	/* enum of editing states */
+	private enum EditMode {
+		case None		// no editing
+		case Batch		// editing multiple groups (e.g. multiple deletion)
+		case Single		// edit a single group (e.g. edit name of a group)
+	}
+}
+
 
 
 
