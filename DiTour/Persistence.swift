@@ -253,7 +253,7 @@ class ConfigurationStore : RemoteFileStore {
 		configuration.status = RemoteItemStatus.Pending.rawValue
 		configuration.remoteLocation = remoteFile.location.absoluteString!
 		configuration.remoteInfo = remoteFile.info
-		configuration.path = container.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent)
+		configuration.path = container.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent!)
 
 		return configuration
 	}
@@ -261,7 +261,7 @@ class ConfigurationStore : RemoteFileStore {
 
 	// indicates whether the candidate URL matches a type supported by the class
 	override class func matches(candidateURL: NSURL) -> Bool {
-		return candidateURL.lastPathComponent.lowercaseString == "config.json"
+		return candidateURL.lastPathComponent!.lowercaseString == "config.json"
 	}
 }
 
@@ -279,7 +279,7 @@ class RemoteMediaStore : RemoteFileStore {
 		mediaStore.status = RemoteItemStatus.Pending.rawValue
 		mediaStore.remoteLocation = remoteFile.location.absoluteString!
 		mediaStore.remoteInfo = remoteFile.info
-		mediaStore.path = track.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent)
+		mediaStore.path = track.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent!)
 
 		return mediaStore
 	}
@@ -390,7 +390,7 @@ class TrackStore : RemoteContainerStore {
 		track.status = RemoteItemStatus.Pending.rawValue
 		track.remoteLocation = remoteDirectory.location.absoluteString!
 
-		let rawName = remoteDirectory.location.lastPathComponent
+		let rawName = remoteDirectory.location.lastPathComponent!
 		track.path = presentation.path.stringByAppendingPathComponent(rawName)
 
 		// remove leading digits, replace underscores with spaces and trasnform to title case
@@ -538,7 +538,7 @@ class PresentationStore : RemoteContainerStore {
 		presentation.status = RemoteItemStatus.Pending.rawValue
 		presentation.timestamp = NSDate()
 		presentation.remoteLocation = remoteDirectory.location.absoluteString!
-		presentation.name = remoteDirectory.location.lastPathComponent
+		presentation.name = remoteDirectory.location.lastPathComponent!
 		presentation.group = group
 
 		let dateString = Constants.BASE_PATH_DATE_FORMATTER.stringFromDate( NSDate() )
