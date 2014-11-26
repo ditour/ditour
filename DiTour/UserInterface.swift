@@ -38,7 +38,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 
 
 	/* Load the latest version of the current presentation */
-	@IBAction func reloadPresentation(sender: NSObject) {
+	@IBAction func reloadPresentation(sender: AnyObject) {
 		self.ditourModel?.reloadPresentation()
 	}
 
@@ -51,8 +51,8 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 		// event due to model tracks change
 		case (_ as DitourModel, "tracks"):
 			// since the model's tracks have changed, relaod the collection view to display the new tracks
-			dispatch_async(dispatch_get_main_queue()) { () -> Void in
-				self.collectionView.reloadData()
+			dispatch_async(dispatch_get_main_queue()) {
+				self.collectionView!.reloadData()
 			}
 
 		// event due to model currentTrack change
@@ -107,8 +107,8 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 
 			// update the affected cells
 			if !cellPaths.isEmpty {
-				dispatch_async(dispatch_get_main_queue()) { () -> Void in
-					self.collectionView.reloadItemsAtIndexPaths(cellPaths)
+				dispatch_async(dispatch_get_main_queue()) {
+					self.collectionView!.reloadItemsAtIndexPaths(cellPaths)
 				}
 			}
 
@@ -146,7 +146,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 
 
 	override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-		self.collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+		self.collectionView!.deselectItemAtIndexPath(indexPath, animated: true)
 
 		self.ditourModel?.playTrackAtIndex(UInt(indexPath.item))
 	}
@@ -156,8 +156,8 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 		super.viewDidLoad()
 
 		// Do any additional setup after loading the view.
-		self.collectionView.allowsSelection = true
-		self.collectionView.allowsMultipleSelection = false
+		self.collectionView!.allowsSelection = true
+		self.collectionView!.allowsMultipleSelection = false
 
 		self.navigationController?.navigationBar.barStyle = .BlackTranslucent
 	}
@@ -455,7 +455,7 @@ class FileInfoController : UIViewController, DitourModelContainer, DownloadStatu
 			// refresh the display at most every 0.25 seconds = 250 million nanoseconds
 			let nanoSecondDelay = 250_000_000 as Int64
 			let runTime = dispatch_time(DISPATCH_TIME_NOW, nanoSecondDelay)
-			dispatch_after(runTime, dispatch_get_main_queue()) { () -> Void in
+			dispatch_after(runTime, dispatch_get_main_queue()) {
 				self.updateScheduled = false	// allow further updates to be scheduled
 				self.updateView()
 			}
@@ -527,7 +527,7 @@ class FileInfoController : UIViewController, DitourModelContainer, DownloadStatu
 	}
 
 
-	@IBAction func displayPreview(sender: NSObject) {
+	@IBAction func displayPreview(sender: AnyObject) {
 		let previewController = QLPreviewController()
 		previewController.dataSource = self
 		self.presentViewController(previewController, animated: true, completion: nil)
@@ -641,12 +641,12 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	/* get a group on the edit context corresponding to the specified group */
 	private func editingGroupForGroup(group: PresentationGroupStore) -> PresentationGroupStore {
 		var groupID : NSManagedObjectID!
-		group.managedObjectContext?.performBlockAndWait{ () -> Void in
+		group.managedObjectContext?.performBlockAndWait{
 			groupID = group.objectID
 		}
 
 		var editingGroup : PresentationGroupStore!
-		self.editContext?.performBlockAndWait{ () -> Void in
+		self.editContext?.performBlockAndWait{
 			editingGroup = self.editContext?.objectWithID(groupID) as PresentationGroupStore
 		}
 
@@ -683,6 +683,47 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	}
 
 
+	/* validate the user's group edit and commit if valid otherwise alert the user ignoring empty edits */
+	private func confirmGroupEditing() {
+		// get the group Location and strip white space
+		switch self.editingCell?.locationField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
+		case .Some(let groupLocationSpec) where countElements(groupLocationSpec) > 0:
+			switch NSURL(string: groupLocationSpec) {
+			case .Some(let groupURL) where groupURL.scheme != nil && groupURL.host != nil && groupURL.path != nil:
+				// validated so URL so save changes and dismiss editing
+				if groupURL.scheme == "http" || groupURL.scheme == "https" {
+					self.editingGroup?.remoteLocation = groupLocationSpec
+					self.saveChanges(nil)
+					self.cancelGroupEditing()
+				} else {
+					// alert the user that the URL is malformed and allow them to continue editing
+					let message = "The URL scheme must be either \"http\" or \"https\", but you have specified one with scheme: \"\(groupURL.scheme!)\""
+					let alertView = UIAlertView(title: "Unsupported URL Scheme", message: message, delegate: nil, cancelButtonTitle: "Dismiss")
+					alertView.show()
+				}
+			default:
+				// must be a malformed URL
+				let alertView = UIAlertView(title: "Malformed URL", message: "The URL specified is malformed.", delegate: nil, cancelButtonTitle: "Dismiss")
+				alertView.show()
+			}
+		default:
+			// empty Location -> just throw it away
+			self.cancelGroupEditing()
+		}
+	}
+
+
+	/* save changes to the persistent store */
+	private func saveChanges(error: NSErrorPointer) -> Bool {
+		switch self.editMode {
+		case .None:		// if there is no local edit mode just perform the default save
+			return self.ditourModel?.saveChanges(error) ?? false
+		default:
+			return self.ditourModel?.persistentSaveContext(self.editContext!, error: error) ?? false
+		}
+	}
+
+
 	/* configure the editing state */
 	private func setupEditing() {
 		// create a new edit context
@@ -690,22 +731,16 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 		// get the current root ID
 		var storeRootID : NSManagedObjectID! = nil
-		self.mainRootStore!.managedObjectContext!.performBlockAndWait{ () -> Void in
+		self.mainRootStore!.managedObjectContext!.performBlockAndWait{
 			storeRootID = self.mainRootStore?.objectID
 		}
 
 		// create a new root store corresponding to the same current root
-		self.editContext?.performBlockAndWait{ () -> Void in
+		self.editContext?.performBlockAndWait{
 			self.editingRootStore = self.editContext!.objectWithID(storeRootID) as? RootStore
 		}
 
 		self.currentRootStore = self.editingRootStore
-	}
-
-
-	/* enter the batch editing mode */
-	private func editTable() {
-		self.editing = true
 	}
 
 
@@ -724,6 +759,53 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	}
 
 
+	/* enter the batch editing mode */
+	private func editTable() {
+		self.editing = true
+	}
+
+
+	/* save changes and exit the edit mode */
+	private func dismissEditing() {
+		self.saveChanges(nil)
+		self.exitEditMode()
+	}
+
+
+	/* delete the selected rows */
+	private func deleteSelectedRows() {
+		if let selectedPaths = self.tableView.indexPathsForSelectedRows() {
+			// gather the indexes of the selected groups
+			let groupsToDeleteIndexes = NSMutableIndexSet()
+			for path in selectedPaths as [NSIndexPath] {
+				switch path.section {
+				case Section.GroupView.rawValue:
+					groupsToDeleteIndexes.addIndex(path.row)
+				default:
+					break
+				}
+			}
+
+			// delete the groups corresponding to the selected indexes
+			if groupsToDeleteIndexes.count > 0 {
+				self.currentRootStore?.removeGroupsAtIndexes( NSIndexSet(indexSet: groupsToDeleteIndexes) )
+				self.tableView.deleteRowsAtIndexPaths(selectedPaths, withRowAnimation: .Automatic)
+			}
+		}
+	}
+
+
+	/* delete the group at the specified index returning true for a valid index and false otherwise */
+	private func deleteGroupAtIndex(index: Int) -> Bool {
+		if index > 0 {
+			self.currentRootStore?.removeObjectFromGroupsAtIndex(UInt(index))
+			return true
+		} else {
+			return false
+		}
+	}
+
+
 	/* move the group at the specified index to another specified index */
 	func moveGroupAtIndex(fromIndex: Int, toIndex: Int) {
 		self.currentRootStore?.moveGroupAtIndex(fromIndex, toIndex: toIndex)
@@ -735,6 +817,12 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	/* number of sections in the table */
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		return Section.Count.rawValue
+	}
+
+
+	/* get the group add cell at the specified index path */
+	private func groupAddCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
+		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as UITableViewCell
 	}
 
 
@@ -775,6 +863,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 		}
 	}
 
+	//MARK: - Presentation Group Nested Enumerations
 
 	/* enum of sections within the table */
 	private enum Section : Int {
