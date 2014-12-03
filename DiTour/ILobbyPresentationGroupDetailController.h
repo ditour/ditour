@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 
 
-@protocol DitourModelContainer;
 @class DitourModel, PresentationGroupStore;
 
-@interface ILobbyPresentationGroupDetailController : UITableViewController <DitourModelContainer>
+
+@interface ILobbyPresentationGroupDetailController : UITableViewController
 
 @property (nonatomic, readwrite) DitourModel *ditourModel;
 @property (nonatomic, readwrite) PresentationGroupStore *group;

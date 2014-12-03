@@ -8,10 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DiTour-Swift.h"
+@class PresentationStore, DownloadContainerStatus, DitourModel;
 
-
-@interface ILobbyPresentationDetailController : UITableViewController <DitourModelContainer>
+@interface ILobbyPresentationDetailController : UITableViewController
 
 @property (nonatomic) DitourModel *ditourModel;
 @property (nonatomic, strong) PresentationStore *presentation;

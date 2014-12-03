@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DiTour-Swift.h"
+@class DitourModel, TrackStore, DownloadContainerStatus;
 
 
-@interface ILobbyTrackDetailController : UITableViewController <DitourModelContainer>
+@interface ILobbyTrackDetailController : UITableViewController
 
 @property (nonatomic) DitourModel *ditourModel;
 @property (nonatomic, strong) TrackStore *track;

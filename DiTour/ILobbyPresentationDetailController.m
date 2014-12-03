@@ -24,7 +24,7 @@ static NSString *SEGUE_SHOW_FILE_INFO_ID = @"PresentationDetailShowFileInfo";
 static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendingFileInfo";
 
 
-@interface ILobbyPresentationDetailController () <DownloadStatusDelegate>
+@interface ILobbyPresentationDetailController () <DownloadStatusDelegate, DitourModelContainer>
 
 // TODO: add property for configuration
 

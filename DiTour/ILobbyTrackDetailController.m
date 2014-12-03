@@ -22,7 +22,7 @@ static NSString *SEGUE_SHOW_FILE_INFO_ID = @"TrackDetailShowFileInfo";
 static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"TrackDetailShowPendingFileInfo";
 
 
-@interface ILobbyTrackDetailController () <DownloadStatusDelegate>
+@interface ILobbyTrackDetailController () <DownloadStatusDelegate, DitourModelContainer>
 
 @end
 
