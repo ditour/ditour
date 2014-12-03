@@ -903,10 +903,10 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 			default:
 				println("Error. Did select data row for unknown section at path: \(indexPath)")
 			}
-		}
 
-		self.updateControls()
-		self.tableView.reloadData()
+			self.updateControls()
+			self.tableView.reloadData()
+		}
 	}
 
 
