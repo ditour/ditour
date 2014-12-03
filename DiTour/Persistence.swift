@@ -106,6 +106,17 @@ class RemoteItemStore : NSManagedObject {
 	@NSManaged var path: String
 
 
+	/* provide initial values for the properties */
+	override func awakeFromInsert() {
+		super.awakeFromInsert()
+
+		self.status = RemoteItemStatus.Pending.rawValue
+		self.remoteInfo = ""
+		self.remoteLocation = ""
+		self.path = ""
+	}
+
+
 	/* get the remote location as a URL */
 	var remoteURL: NSURL? {
 		return NSURL(string: self.remoteLocation)

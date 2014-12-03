@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "DiTour-Swift.h"
 
+@protocol DitourModelContainer;
+@class DitourModel, PresentationGroupStore;
 
 @interface ILobbyPresentationGroupDetailController : UITableViewController <DitourModelContainer>
 

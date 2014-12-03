@@ -13,7 +13,7 @@ import CoreData
 
 // segue IDs
 private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
-private let SEGUE_SHOW_PRESENTATOIN_MASTERS_ID = "GroupToPresentationMasters"
+private let SEGUE_SHOW_PRESENTATION_MASTERS_ID = "GroupToPresentationMasters"
 
 
 
@@ -166,7 +166,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch ( segue.identifier, segue.destinationViewController ) {
 
-		case ( .Some(SEGUE_SHOW_CONFIGURATION_ID), let configController as ILobbyPresentationGroupsTableController ):
+		case ( .Some(SEGUE_SHOW_CONFIGURATION_ID), let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
 		default:
@@ -673,7 +673,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 
 	/* cancel the editing mode */
-	private func cancelGroupEditing() {
+	func cancelGroupEditing() {
 		self.editingCell?.locationField.resignFirstResponder()
 
 		self.exitEditMode()
@@ -684,7 +684,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 
 	/* validate the user's group edit and commit if valid otherwise alert the user ignoring empty edits */
-	private func confirmGroupEditing() {
+	func confirmGroupEditing() {
 		// get the group Location and strip white space
 		switch self.editingCell?.locationField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
 		case .Some(let groupLocationSpec) where countElements(groupLocationSpec) > 0:
@@ -760,20 +760,20 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 
 	/* enter the batch editing mode */
-	private func editTable() {
+	func editTable() {
 		self.editing = true
 	}
 
 
 	/* save changes and exit the edit mode */
-	private func dismissEditing() {
+	func dismissEditing() {
 		self.saveChanges(nil)
 		self.exitEditMode()
 	}
 
 
 	/* delete the selected rows */
-	private func deleteSelectedRows() {
+	func deleteSelectedRows() {
 		if let selectedPaths = self.tableView.indexPathsForSelectedRows() {
 			// gather the indexes of the selected groups
 			let groupsToDeleteIndexes = NSMutableIndexSet()
@@ -820,12 +820,6 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	}
 
 
-	/* get the group add cell at the specified index path */
-	private func groupAddCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
-		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as UITableViewCell
-	}
-
-
 	/* number of rows in the specified section */
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		switch (section, self.editMode) {
@@ -838,6 +832,104 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 			return 0	// if we are editing the table or a cell, hide the "add" cell
 		default:
 			return 0
+		}
+	}
+
+
+	/* get the cell at the specified index path */
+	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		switch indexPath.section {
+		case Section.GroupView.rawValue:
+			return self.groupViewCellAtIndexPath(indexPath)
+		case Section.GroupAdd.rawValue:
+			return self.groupAddCellAtIndexPath(indexPath)
+		default:
+			fatalError("No support to get a cell for presentation group section: \(indexPath.section)")
+		}
+	}
+
+
+	private func groupViewCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
+		let group = self.currentRootStore!.groups[indexPath.row] as PresentationGroupStore
+
+		if group === self.editingGroup {		// this is group currently being edited
+			// if the editing cell is nil then create one and assign it
+			if self.editingCell == nil {
+				self.editingCell = self.tableView.dequeueReusableCellWithIdentifier(Cell.EDIT_ID, forIndexPath: indexPath) as? PresentationGroupEditCell
+				self.editingCell?.editCompletionHandler = { [weak self] source, text in
+					if let strongSelf = self {
+						strongSelf.confirmGroupEditing()
+					}
+				}
+			}
+
+			// configure the editing cell
+			let editingCell = self.editingCell!
+			editingCell.locationField.text = group.remoteLocation
+			editingCell.locationField.becomeFirstResponder()
+
+			return editingCell
+		} else {
+			let viewCell = self.tableView.dequeueReusableCellWithIdentifier(Cell.VIEW_ID, forIndexPath: indexPath) as PresentationGroupCell
+			viewCell.locationLabel.text = group.remoteLocation
+			viewCell.editButton.hidden = self.editing			// hide the edit button when editing
+			viewCell.openURLButton.hidden = self.editing		// hide the open URL button when editing
+
+			return viewCell
+		}
+	}
+
+
+	/* get the group add cell at the specified index path */
+	private func groupAddCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
+		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as UITableViewCell
+	}
+
+
+	/* handle selection of a group or the add group row */
+	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		if !self.editing {	// only allow editing of a group if the table is not in the editing mode (i.e. delete/move mode)
+			self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
+
+			switch indexPath.section {
+			case Section.GroupAdd.rawValue:
+				// create a new group and enable editing
+				self.editMode = EditMode.Single	// edit the name of the group
+				self.setupEditing()
+				self.editingGroup = self.editingRootStore?.addNewPresentationGroup()
+			case Section.GroupView.rawValue:
+				// view the selected group in the detail view
+				self.performSegueWithIdentifier(SEGUE_SHOW_PRESENTATION_MASTERS_ID, sender: self.mainRootStore!.groups[indexPath.row])
+			default:
+				println("Error. Did select data row for unknown section at path: \(indexPath)")
+			}
+		}
+
+		self.updateControls()
+		self.tableView.reloadData()
+	}
+
+
+	/* Override to support conditional editing of the table view */
+	override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+		switch indexPath.section {
+		case Section.GroupView.rawValue:
+			return true
+		default:
+			return false
+		}
+	}
+
+
+	/* Override to support editing the table view. */
+	override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+		switch( editingStyle, indexPath.section ) {
+		case (.Delete, Section.GroupView.rawValue ):
+			// Delete the row from the data source
+			self.deleteGroupAtIndex(indexPath.row)
+			tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+		default:
+			break
 		}
 	}
 
@@ -862,6 +954,23 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 			return false
 		}
 	}
+
+
+	// MARK: - Navigation
+
+	/* prepare to navigate to a new view controller */
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		switch (segue.identifier, sender) {
+		case (.Some(SEGUE_SHOW_PRESENTATION_MASTERS_ID), let group as PresentationGroupStore):
+			let masterTableController = segue.destinationViewController as ILobbyPresentationGroupDetailController
+			masterTableController.ditourModel = self.ditourModel
+			masterTableController.group = group
+		default:
+			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+		}
+	}
+
+
 
 	//MARK: - Presentation Group Nested Enumerations
 
