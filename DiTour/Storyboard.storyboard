@@ -570,7 +570,7 @@
         <!--Track Detail-->
         <scene sceneID="76x-h2-bf1">
             <objects>
-                <tableViewController id="zoZ-Yz-hel" customClass="ILobbyTrackDetailController" sceneMemberID="viewController">
+                <tableViewController id="zoZ-Yz-hel" customClass="TrackDetailController" customModule="DiTour" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="eZY-Fn-wm2">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -873,7 +873,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Js4-XC-Mie"/>
-        <segue reference="oI4-Xd-Af5"/>
         <segue reference="wfz-Ga-EAy"/>
+        <segue reference="mKP-ap-zYB"/>
     </inferredMetricsTieBreakers>
 </document>

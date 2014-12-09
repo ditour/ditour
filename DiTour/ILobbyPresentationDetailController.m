@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyPresentationDetailController.h"
-#import "ILobbyTrackDetailController.h"
 #import "DiTour-Swift.h"
 
 
@@ -400,7 +399,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 		NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 		TrackStore *track = [self trackAtIndexPath:indexPath];
 
-		ILobbyTrackDetailController *trackController = segue.destinationViewController;
+		TrackDetailController *trackController = segue.destinationViewController;
 		trackController.ditourModel = self.ditourModel;
 		trackController.track = track;
 

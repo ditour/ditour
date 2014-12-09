@@ -1141,7 +1141,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 	}
 
 
-	func remoteItemAtIndexPath(indexPath: NSIndexPath) -> RemoteItemStore {
+	func remoteFileAtIndexPath(indexPath: NSIndexPath) -> RemoteFileStore {
 		switch indexPath.section {
 		case Section.Config.rawValue:
 			return self.track.configuration!
@@ -1166,7 +1166,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 
 	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteItemAtIndexPath(indexPath)
+		let remoteItem = remoteFileAtIndexPath(indexPath)
 
 		if self.isRemoteItemDownloading(remoteItem) {
 			return DownloadStatusCell.defaultHeight
@@ -1192,7 +1192,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		switch indexPath.section {
 		case Section.Config.rawValue:
-			let remoteItem = self.remoteItemAtIndexPath(indexPath)
+			let remoteItem = self.remoteFileAtIndexPath(indexPath)
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
@@ -1209,7 +1209,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 
 	private func readyRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
+		let remoteFile = self.remoteFileAtIndexPath(indexPath) as RemoteFileStore
 		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as LabelCell
 		cell.title = remoteFile.name
 
@@ -1218,7 +1218,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 
 	private func pendingRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
+		let remoteFile = self.remoteFileAtIndexPath(indexPath) as RemoteFileStore
 		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as DownloadStatusCell
 		let downloadStatus = self.trackDownloadStatus!.childStatusForRemoteItem(remoteFile)
 
@@ -1230,11 +1230,28 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 		} else if downloadStatus!.canceled {
 			cell.subtitle = "Canceled"
 		} else {
-			fatalError("No match for pending remote file at index path: \(indexPath)")
+			cell.subtitle = ""
 		}
 
 		return cell
 	}
+
+
+	// MARK - Track Detail Navigation
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		switch (segue.identifier) {
+		case .Some(SEGUE_SHOW_FILE_INFO_ID), .Some(SEGUE_SHOW_PENDING_FILE_INFO_ID):
+			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow()!)
+			let fileInfoController = segue.destinationViewController as FileInfoController
+			fileInfoController.ditourModel = self.ditourModel
+			fileInfoController.remoteFile = remoteFile
+			fileInfoController.downloadStatus = self.trackDownloadStatus?.childStatusForRemoteItem(remoteFile)
+		default:
+			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+		}
+	}
+
 
 
 	/* sections for the table view */
