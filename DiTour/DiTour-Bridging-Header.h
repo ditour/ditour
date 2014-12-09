@@ -3,4 +3,3 @@
 //
 
 #import "DiTourTidyWrapper.h"
-#import "ILobbyPresentationGroupDetailController.h"

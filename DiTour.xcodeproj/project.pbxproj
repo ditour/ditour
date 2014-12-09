@@ -20,7 +20,6 @@
 		4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDAFDD19FFD0400001069D /* Slides.swift */; };
 		4CEFB3EA19CA1F4B0095DCD2 /* DefaultSlideIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB39519CA1F4B0095DCD2 /* DefaultSlideIcon.png */; };
 		4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB39A19CA1F4B0095DCD2 /* iLobby.xcdatamodeld */; };
-		4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */; };
 		4CEFB41119CA1F4B0095DCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */; };
 		4CEFB41319CA1F4B0095DCD2 /* README.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E819CA1F4B0095DCD2 /* README.rtf */; };
 		4CEFB41419CA1F4B0095DCD2 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */; };
@@ -50,8 +49,6 @@
 		4CEFB39719CA1F4B0095DCD2 /* DiTour-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiTour-Prefix.pch"; sourceTree = "<group>"; };
 		4CEFB39919CA1F4B0095DCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CEFB39B19CA1F4B0095DCD2 /* iLobby 2.0.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iLobby 2.0.xcdatamodel"; sourceTree = "<group>"; };
-		4CEFB3B819CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ILobbyPresentationGroupDetailController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ILobbyPresentationGroupDetailController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CEFB3E619CA1F4B0095DCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4CEFB3E819CA1F4B0095DCD2 /* README.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
@@ -126,7 +123,6 @@
 				4C2BA9581A1E7BA9008BDB55 /* UserInterface.swift */,
 				4CF28F4A1A11437000145972 /* Utilities.swift */,
 				4CEFB41E19CA23120095DCD2 /* Utilities */,
-				4CEFB41B19CA21CF0095DCD2 /* Views */,
 				4CEFB41619CA21370095DCD2 /* Resources */,
 			);
 			path = DiTour;
@@ -145,15 +141,6 @@
 				4CEFB3E919CA1F4B0095DCD2 /* Storyboard.storyboard */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		4CEFB41B19CA21CF0095DCD2 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				4CEFB3B819CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.h */,
-				4CEFB3B919CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m */,
-			);
-			name = Views;
 			sourceTree = "<group>";
 		};
 		4CEFB41E19CA23120095DCD2 /* Utilities */ = {
@@ -247,7 +234,6 @@
 				4CBDAFDE19FFD0400001069D /* Slides.swift in Sources */,
 				4CEFB3ED19CA1F4B0095DCD2 /* iLobby.xcdatamodeld in Sources */,
 				4CF28F4B1A11437000145972 /* Utilities.swift in Sources */,
-				4CEFB3FB19CA1F4B0095DCD2 /* ILobbyPresentationGroupDetailController.m in Sources */,
 				4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */,
 				4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */,
 				4C2BA9591A1E7BA9008BDB55 /* UserInterface.swift in Sources */,

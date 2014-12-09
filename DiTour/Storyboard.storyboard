@@ -117,7 +117,7 @@
         <!--Group Detail-->
         <scene sceneID="zF6-rG-KUl">
             <objects>
-                <tableViewController id="0xE-St-MOE" customClass="ILobbyPresentationGroupDetailController" sceneMemberID="viewController">
+                <tableViewController id="0xE-St-MOE" customClass="PresentationGroupDetailController" customModule="DiTour" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Hj8-HD-Wur">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -872,8 +872,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="oI4-Xd-Af5"/>
         <segue reference="Js4-XC-Mie"/>
         <segue reference="wfz-Ga-EAy"/>
-        <segue reference="oeD-4I-E0b"/>
     </inferredMetricsTieBreakers>
 </document>
