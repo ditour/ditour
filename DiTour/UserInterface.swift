@@ -1102,7 +1102,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-		// determine the ready and pedning items for consistency with subsequent table data callbacks
+		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.track.remoteItemsByReadyStatus()
 
 		return Section.Count.rawValue
