@@ -405,7 +405,7 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"PresentationDetailShowPendi
 
 		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_TRACK_DETAIL_ID] ) {
 			DownloadContainerStatus *downloadStatus = (DownloadContainerStatus *)[self.presentationDownloadStatus childStatusForRemoteItem:track];
-			trackController.trackDownloadStatus = downloadStatus;
+			trackController.downloadStatus = downloadStatus;
 		}
     }
 	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {

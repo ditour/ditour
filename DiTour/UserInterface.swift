@@ -1040,9 +1040,9 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 	var track : TrackStore!
 
 	/* download status */
-	var trackDownloadStatus : DownloadContainerStatus? {
+	var downloadStatus : DownloadContainerStatus? {
 		didSet {
-			trackDownloadStatus?.delegate = self
+			downloadStatus?.delegate = self
 			self.updateScheduled = false
 		}
 	}
@@ -1180,8 +1180,8 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 		if remoteItem.isReady {
 			return false
 		} else {
-			if let downloadStatus = self.trackDownloadStatus?.childStatusForRemoteItem(remoteItem) {
-				return !downloadStatus.completed
+			if let itemDownloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteItem) {
+				return !itemDownloadStatus.completed
 			} else {
 				return false
 			}
@@ -1220,14 +1220,14 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 	private func pendingRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteFile = self.remoteFileAtIndexPath(indexPath) as RemoteFileStore
 		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as DownloadStatusCell
-		let downloadStatus = self.trackDownloadStatus!.childStatusForRemoteItem(remoteFile)
+		let itemDownloadStatus = self.downloadStatus!.childStatusForRemoteItem(remoteFile)
 
-		cell.setDownloadStatus(downloadStatus)
+		cell.setDownloadStatus(itemDownloadStatus)
 		cell.title = remoteFile.name
 
-		if downloadStatus?.possibleError != nil {
+		if itemDownloadStatus?.possibleError != nil {
 			cell.subtitle = "Failed"
-		} else if downloadStatus!.canceled {
+		} else if itemDownloadStatus!.canceled {
 			cell.subtitle = "Canceled"
 		} else {
 			cell.subtitle = ""
@@ -1246,7 +1246,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 			let fileInfoController = segue.destinationViewController as FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
-			fileInfoController.downloadStatus = self.trackDownloadStatus?.childStatusForRemoteItem(remoteFile)
+			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
 		default:
 			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
