@@ -4,4 +4,3 @@
 
 #import "DiTourTidyWrapper.h"
 #import "ILobbyPresentationGroupDetailController.h"
-#import "ILobbyPresentationDetailController.h"

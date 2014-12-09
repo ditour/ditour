@@ -7,7 +7,6 @@
 //
 
 #import "ILobbyPresentationGroupDetailController.h"
-#import "ILobbyPresentationDetailController.h"
 #import "DiTour-Swift.h"
 
 
@@ -435,13 +434,13 @@ static NSString *SEGUE_SHOW_PENDING_FILE_INFO_ID = @"GroupDetailShowPendingFileI
 		NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 		PresentationStore *presentation = [self presentationAtIndexPath:indexPath];
 
-		ILobbyPresentationDetailController *presentationController = segue.destinationViewController;
+		PresentationDetailController *presentationController = segue.destinationViewController;
 		presentationController.ditourModel = self.ditourModel;
 		presentationController.presentation = presentation;
 
 		if ( [segueID isEqualToString:SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID] ) {
 			DownloadContainerStatus *downloadStatus = (DownloadContainerStatus *)[self.groupDownloadStatus childStatusForRemoteItem:presentation];
-			presentationController.presentationDownloadStatus = downloadStatus;
+			presentationController.downloadStatus = downloadStatus;
 		}
     }
 	else if ( [segueID isEqualToString:SEGUE_SHOW_FILE_INFO_ID] || [segueID isEqualToString:SEGUE_SHOW_PENDING_FILE_INFO_ID] ) {

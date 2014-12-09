@@ -16,6 +16,8 @@ private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
 private let SEGUE_SHOW_PRESENTATION_MASTERS_ID = "GroupToPresentationMasters"
 private let SEGUE_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
 private let SEGUE_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
+private let SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = "ShowActiveTrackDetail"
+private let SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = "ShowPendingTrackDetail"
 
 
 
@@ -999,15 +1001,21 @@ protocol ConcreteRemoteItemContaining {
 	/* type of the remote items contained */
 	typealias ItemType : RemoteItemStore
 
+	var detailTitle : String { get }
+
 	func remoteItemsByReadyStatus() -> (ready: [ItemType], notReady: [ItemType])
 }
 
 
 
+// MARK: - Track Detail Controller
+
 /* extension to add remote item containing conformance and support for the detail view controllers */
 extension TrackStore : ConcreteRemoteItemContaining {
 	/* type of the remote items in this container */
 	typealias ItemType = RemoteMediaStore
+
+	var detailTitle : String { return "Track: \(self.title)" }
 
 
 	/* get the remote items and categorize them as to ready or not */
@@ -1028,8 +1036,6 @@ extension TrackStore : ConcreteRemoteItemContaining {
 }
 
 
-
-// MARK: - Track Detail Controller
 
 /* table controller for displaying detail for a specified track */
 class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
@@ -1069,7 +1075,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
 
-		self.title = "Track: \(self.track.title)"
+		self.title = self.track.detailTitle
 	}
 
 
@@ -1261,6 +1267,347 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 	}
 }
 
+
+
+
+// MARK: - Presentation Detail Controller
+
+/* extension to add remote item containing conformance and support for the detail view controllers */
+extension PresentationStore : ConcreteRemoteItemContaining {
+	/* type of the remote items in this container */
+	typealias ItemType = TrackStore
+
+	var detailTitle : String { return "Presentation: \(self.name)" }
+
+
+	/* get the remote items and categorize them as to ready or not */
+	func remoteItemsByReadyStatus() -> (ready: [ItemType], notReady: [ItemType]) {
+		var readyItems = [ItemType]()
+		var notReadyItems = [ItemType]()
+
+		for track in self.tracks.array as [TrackStore] {
+			if track.isReady {
+				readyItems.append(track)
+			} else {
+				notReadyItems.append(track)
+			}
+		}
+
+		return (ready: readyItems, notReady: notReadyItems)
+	}
+}
+
+
+
+/* table controller for displaying detail for a specified presentation */
+class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+	/* main model */
+	var ditourModel : DitourModel?
+
+	/* presentation for which to display detail */
+	var presentation : PresentationStore!
+
+	/* download status */
+	var downloadStatus : DownloadContainerStatus? {
+		didSet {
+			downloadStatus?.delegate = self
+			self.updateScheduled = false
+		}
+	}
+
+	/* switch for making the current presentation the default one */
+	@IBOutlet var defaultPresentationSwitch : UISwitch?
+
+	/* array of pending items */
+	var pendingItems = Array<PresentationStore.ItemType>()
+
+	/* array of ready items */
+	var readyItems = Array<PresentationStore.ItemType>()
+
+
+	/* indicates whether an update has been scheduled to process any pending changes */
+	private var updateScheduled = false
+
+
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		self.updateScheduled = false
+
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
+
+		self.title = presentation.detailTitle
+
+		self.updateView()
+	}
+
+
+	override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+
+		// allow updates to be scheduled immediately
+		self.updateScheduled = false
+	}
+
+
+	func popToPlaying() {
+		self.navigationController?.popToRootViewControllerAnimated(true)
+	}
+
+
+	@IBAction func changeDefaultPresentation(sender: AnyObject) {
+		self.presentation.current = self.defaultPresentationSwitch!.on;
+		self.ditourModel?.saveChanges(nil)
+		self.ditourModel?.reloadPresentation()
+	}
+
+
+	func updateView() {
+		self.updateScheduled = false	// allow another update to be scheduled since we will begin processing the current one
+
+		self.tableView.reloadData()
+
+		self.defaultPresentationSwitch?.on = self.presentation.isCurrent;
+		self.defaultPresentationSwitch?.enabled = self.presentation.isReady;
+	}
+
+
+	/* process a status change */
+	func downloadStatusChanged(status: DownloadStatus) {
+		// throttle the updates to dramatically lower CPU load and reduce backlog of events
+		if !self.updateScheduled { // skip if an update has already been scheduled since the display will be refreshed
+			self.updateScheduled = true		// indicate that an update will be scheduled
+			let NANO_SECOND_DELAY = Int64(250_000_000)	// refresh at most every 0.25 seconds
+			let runTime = dispatch_time(DISPATCH_TIME_NOW, NANO_SECOND_DELAY)
+			dispatch_after(runTime, dispatch_get_main_queue()) { () -> Void in
+				self.updateScheduled = false	// allow another update to be scheduled since we will begin processing the current one
+				self.tableView.reloadData()
+			}
+		}
+	}
+
+
+	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+		// determine the ready and pending items for consistency with subsequent table data callbacks
+		(self.readyItems, self.pendingItems) = self.presentation.remoteItemsByReadyStatus()
+
+		return Section.Count.rawValue
+	}
+
+
+	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
+			switch section {
+			case Section.Config.rawValue:
+				return "Configuration"
+			case Section.Pending.rawValue:
+				return "Pending Media"
+			case Section.Ready.rawValue:
+				return "Ready Media"
+			default:
+				return nil
+			}
+		} else {
+			return nil
+		}
+	}
+
+
+	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		switch section {
+		case Section.Config.rawValue:
+			return self.presentation.configuration != nil ? 1 : 0
+		case Section.Pending.rawValue:
+			return self.pendingItems.count
+		case Section.Ready.rawValue:
+			return self.readyItems.count
+		default:
+			return 0
+		}
+	}
+
+
+	func remoteItemAtIndexPath(indexPath: NSIndexPath) -> RemoteItemStore {
+		switch indexPath.section {
+		case Section.Config.rawValue:
+			return self.presentation.configuration!
+		case Section.Pending.rawValue:
+			return self.pendingItems[indexPath.row]
+		case Section.Ready.rawValue:
+			return self.readyItems[indexPath.row]
+		default:
+			fatalError("Failed request for remote item at index path: \(indexPath)")
+		}
+	}
+
+
+	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+		switch indexPath.section {
+		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
+			return self.heightForRemoteItemAtIndexPath(indexPath)
+		default:
+			return LabelCell.defaultHeight
+		}
+	}
+
+
+	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
+		let remoteItem = remoteItemAtIndexPath(indexPath)
+
+		if self.isRemoteItemDownloading(remoteItem) {
+			return DownloadStatusCell.defaultHeight
+		} else {
+			return LabelCell.defaultHeight
+		}
+	}
+
+
+	private func isRemoteItemDownloading(remoteItem: RemoteItemStore) -> Bool {
+		if remoteItem.isReady {
+			return false
+		} else {
+			if let itemDownloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteItem) {
+				return !itemDownloadStatus.completed
+			} else {
+				return false
+			}
+		}
+	}
+
+
+	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		switch indexPath.section {
+		case Section.Config.rawValue:
+			let remoteItem = self.remoteItemAtIndexPath(indexPath)
+			if self.isRemoteItemDownloading(remoteItem) {
+				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
+			} else {
+				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
+			}
+		case Section.Pending.rawValue:
+			return self.pendingTrackCell(tableView, indexPath: indexPath)
+		case Section.Ready.rawValue:
+			return self.readyTrackCell(tableView, indexPath: indexPath)
+		default:
+			fatalError("No match for cell at index path: \(indexPath)")
+		}
+	}
+
+
+	private func readyRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
+		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as LabelCell
+		cell.title = remoteFile.name
+
+		return cell
+	}
+
+
+	private func pendingRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
+		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as DownloadStatusCell
+		let itemDownloadStatus = self.downloadStatus!.childStatusForRemoteItem(remoteFile)
+
+		cell.setDownloadStatus(itemDownloadStatus)
+		cell.title = remoteFile.name
+
+		if itemDownloadStatus?.possibleError != nil {
+			cell.subtitle = "Failed"
+		} else if itemDownloadStatus!.canceled {
+			cell.subtitle = "Canceled"
+		} else {
+			cell.subtitle = ""
+		}
+
+		return cell
+	}
+
+
+	private func readyTrackCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+		let track = self.readyItems[indexPath.row]
+
+		let cell = tableView.dequeueReusableCellWithIdentifier("PresentationDetailActiveTrackCell", forIndexPath: indexPath) as LabelCell
+		cell.title = track.title
+
+		return cell
+	}
+
+
+	private func pendingTrackCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+		let track = self.pendingItems[indexPath.row]
+
+		let cell = tableView.dequeueReusableCellWithIdentifier("PresentationDetailPendingTrackCell", forIndexPath: indexPath) as DownloadStatusCell
+
+		let itemDownloadStatus = self.downloadStatus!.childStatusForRemoteItem(track)
+
+		cell.setDownloadStatus(itemDownloadStatus)
+		cell.title = track.title
+
+		if itemDownloadStatus?.possibleError != nil {
+			cell.subtitle = "Failed"
+		} else if itemDownloadStatus!.canceled {
+			cell.subtitle = "Canceled"
+		} else {
+			cell.subtitle = ""
+		}
+
+		return cell
+	}
+
+
+	private func trackAtPath(indexPath: NSIndexPath) -> TrackStore {
+		switch indexPath.section {
+		case Section.Pending.rawValue:
+			return self.pendingItems[indexPath.row]
+		case Section.Ready.rawValue:
+			return self.readyItems[indexPath.row]
+		default:
+			fatalError("No track at index path: \(indexPath)")
+		}
+	}
+
+
+	// MARK - Presentation Detail Navigation
+
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		switch (segue.identifier) {
+		case .Some(SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_TRACK_DETAIL_ID):
+			let indexPath = self.tableView.indexPathForSelectedRow()!
+			let track = trackAtPath(indexPath)
+
+			let trackController = segue.destinationViewController as TrackDetailController
+			trackController.ditourModel = self.ditourModel
+			trackController.track = track
+
+			if segue.identifier! == SEGUE_SHOW_PENDING_TRACK_DETAIL_ID {
+				let downloadStatus = self.downloadStatus!.childStatusForRemoteItem(track) as DownloadContainerStatus
+				trackController.downloadStatus = downloadStatus
+			}
+
+		case .Some(SEGUE_SHOW_FILE_INFO_ID), .Some(SEGUE_SHOW_PENDING_FILE_INFO_ID):
+			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!)
+			let fileInfoController = segue.destinationViewController as FileInfoController
+			fileInfoController.ditourModel = self.ditourModel
+			fileInfoController.remoteFile = remoteFile as RemoteFileStore
+			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
+			
+		default:
+			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+		}
+	}
+
+
+
+	/* sections for the table view */
+	private enum Section : Int {
+		case Config, Pending, Ready
+		case Count
+	}
+}
 
 
 

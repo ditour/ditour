@@ -353,7 +353,7 @@
         <!--Presentation Detail-->
         <scene sceneID="Fri-dJ-JfY">
             <objects>
-                <tableViewController id="jnE-kG-HXj" customClass="ILobbyPresentationDetailController" sceneMemberID="viewController">
+                <tableViewController id="jnE-kG-HXj" customClass="PresentationDetailController" customModule="DiTour" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="HmC-Hm-dt3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
