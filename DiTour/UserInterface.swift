@@ -2005,7 +2005,7 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 			presentationController.ditourModel = self.ditourModel
 			presentationController.presentation = presentation
 
-			if segue.identifier! == "SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID" {
+			if segue.identifier! == SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID {
 				presentationController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(presentation) as DownloadContainerStatus?
 			}
 
