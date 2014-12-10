@@ -20,8 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		self.ditourModel.presentationDelegate = self.presenter;
 
 		super.init()
-
-		println( "app delegate init..." )
 	}
 
 

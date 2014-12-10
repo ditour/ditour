@@ -159,35 +159,56 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailActivePresentationCell" id="thl-7H-h98" customClass="SelectionLabelCell" customModule="DiTour" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="130" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="thl-7H-h98" id="z6d-rc-9Ai">
                                     <rect key="frame" x="0.0" y="0.0" width="991" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Presentation Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDc-BQ-P85">
-                                            <rect key="frame" x="20" y="11" width="199" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CdD-tJ-rKc">
+                                            <rect key="frame" x="8" y="8" width="30" height="27"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <state key="normal" title="O"/>
+                                            <connections>
+                                                <action selector="markDefaultPresentation:" destination="0xE-St-MOE" eventType="touchUpInside" id="dQa-gP-LPH"/>
+                                            </connections>
+                                        </button>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUW-hU-So5">
                                             <rect key="frame" x="488" y="11" width="59" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Presentation Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDc-BQ-P85">
+                                            <rect key="frame" x="46" y="11" width="199" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="CdD-tJ-rKc" firstAttribute="bottom" secondItem="z6d-rc-9Ai" secondAttribute="bottomMargin" id="3FC-3u-Ut9"/>
+                                        <constraint firstItem="CdD-tJ-rKc" firstAttribute="leading" secondItem="uDc-BQ-P85" secondAttribute="trailing" constant="21" id="Cok-Qi-wt9"/>
                                         <constraint firstAttribute="centerY" secondItem="nUW-hU-So5" secondAttribute="centerY" id="JZ2-5c-MgD"/>
+                                        <constraint firstItem="uDc-BQ-P85" firstAttribute="leading" secondItem="CdD-tJ-rKc" secondAttribute="trailing" constant="8" id="VBf-aL-NTw"/>
                                         <constraint firstItem="uDc-BQ-P85" firstAttribute="leading" secondItem="z6d-rc-9Ai" secondAttribute="leading" constant="20" id="c2R-xJ-Z8h"/>
+                                        <constraint firstItem="CdD-tJ-rKc" firstAttribute="leading" secondItem="z6d-rc-9Ai" secondAttribute="leadingMargin" id="cZQ-Lm-X9E"/>
+                                        <constraint firstAttribute="centerY" secondItem="CdD-tJ-rKc" secondAttribute="centerY" id="csO-aM-AZ5"/>
                                         <constraint firstAttribute="trailing" secondItem="nUW-hU-So5" secondAttribute="trailing" constant="20" id="tfa-6I-RXZ"/>
                                         <constraint firstItem="nUW-hU-So5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uDc-BQ-P85" secondAttribute="trailing" constant="8" symbolic="YES" id="whY-dt-jPx"/>
+                                        <constraint firstItem="CdD-tJ-rKc" firstAttribute="baseline" secondItem="nUW-hU-So5" secondAttribute="baseline" id="xJv-KE-bz5"/>
                                         <constraint firstAttribute="centerY" secondItem="uDc-BQ-P85" secondAttribute="centerY" id="yUF-Iy-xkN"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="Cok-Qi-wt9"/>
+                                            <exclude reference="c2R-xJ-Z8h"/>
+                                        </mask>
+                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="selectionButton" destination="CdD-tJ-rKc" id="b0f-zo-e5l"/>
                                     <outlet property="subtitleLabel" destination="nUW-hU-So5" id="3NR-EJ-h0t"/>
                                     <outlet property="titleLabel" destination="uDc-BQ-P85" id="E7c-ey-8qP"/>
                                     <segue destination="jnE-kG-HXj" kind="show" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
@@ -872,8 +893,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="oI4-Xd-Af5"/>
         <segue reference="Js4-XC-Mie"/>
+        <segue reference="oI4-Xd-Af5"/>
         <segue reference="wfz-Ga-EAy"/>
     </inferredMetricsTieBreakers>
 </document>

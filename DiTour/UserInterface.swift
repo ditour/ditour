@@ -317,6 +317,14 @@ class LabelCell : UITableViewCell {
 
 
 
+/* Table View cell which is labeled and allows for selection */
+class SelectionLabelCell : LabelCell {
+	/* button for making and displaying selection */
+	@IBOutlet weak var selectionButton: UIButton!
+}
+
+
+
 /* format used for displaying the numerical download progress */
 private let DOWNLOAD_PROGRESS_FORMAT : NSNumberFormatter = {
 	let format = NSNumberFormatter()
@@ -1385,7 +1393,7 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 
 
 	@IBAction func changeDefaultPresentation(sender: AnyObject) {
-		self.presentation.current = self.defaultPresentationSwitch!.on;
+		self.presentation.current = self.defaultPresentationSwitch!.on
 		self.ditourModel?.saveChanges(nil)
 		self.ditourModel?.reloadPresentation()
 	}
@@ -1798,6 +1806,21 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 	}
 
 
+	/* UI action handler for selecting a presentations as default */
+	@IBAction func markDefaultPresentation(sender: UIButton) {
+		let senderPoint = sender.bounds.origin		// point in the button's own coordinates
+		let pointInTable = sender.convertPoint(senderPoint, toView: self.tableView)		// point in the table view
+
+		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
+			let presentation = self.presentationAtPath(indexPath)
+			presentation.current = true
+			self.ditourModel?.saveChanges(nil)
+			self.ditourModel?.reloadPresentation()
+			self.tableView.reloadData()
+		}
+	}
+
+
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.group.remoteItemsByReadyStatus()
@@ -1947,10 +1970,16 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 	private func readyPresentationCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let presentation = self.presentationAtPath(indexPath)
 
-		let cell = tableView.dequeueReusableCellWithIdentifier("GroupDetailActivePresentationCell", forIndexPath: indexPath) as LabelCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("GroupDetailActivePresentationCell", forIndexPath: indexPath) as SelectionLabelCell
 		cell.setMarked(presentation.isCurrent)
 		cell.title = presentation.name
 		cell.subtitle = TIMESTAMP_FORMATTER.stringFromDate(presentation.timestamp)
+
+		if presentation.current {
+			cell.selectionButton.setTitle("\u{2705}", forState: UIControlState.Normal)
+		} else {
+			cell.selectionButton.setTitle("\u{2611}\u{FE0F}", forState: UIControlState.Normal)
+		}
 
 		return cell
 	}
