@@ -354,10 +354,13 @@ class RemoteContainerStore : RemoteItemStore {
 	}
 
 
-	/* test whether the remote file corresponds to a configuration file and if so instantiate the configuration and assign it to this container */
-	func processRemoteFile(remoteFile: RemoteFile) {
+	/* If this container can process the file, processes the file and returns true otherwise returns false. */
+	func processRemoteFile(remoteFile: RemoteFile) -> Bool {
 		if ConfigurationStore.matches(remoteFile.location) {
 			ConfigurationStore.newConfigurationInContainer(self, at: remoteFile)
+			return true
+		} else {
+			return false
 		}
 	}
 }
@@ -416,13 +419,13 @@ class TrackStore : RemoteContainerStore {
 
 
 	/* process the remote file to get the media for slides in this track */
-	override func processRemoteFile(remoteFile: RemoteFile) {
+	override func processRemoteFile(remoteFile: RemoteFile) -> Bool {
 		let location = remoteFile.location
 		if RemoteMediaStore.matches(location) {
 			RemoteMediaStore.newRemoteMediaInTrack(self, at: remoteFile)
-		}
-		else {
-			super.processRemoteFile(remoteFile)
+			return true
+		} else {
+			return super.processRemoteFile(remoteFile)
 		}
 	}
 }

@@ -171,8 +171,9 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 				if let groupRemoteDirectory = RemoteDirectory.parseDirectoryAtURL(group.remoteURL!, error: &possibleError) {
 					// process any files (e.g. config files)
+					var hasRemoteConfig = false		// indicates whether there is a remote config file to load
 					for remoteFile in groupRemoteDirectory.files {
-						group.processRemoteFile(remoteFile)
+						hasRemoteConfig = group.processRemoteFile(remoteFile)
 					}
 
 					// store the active presentations by name so they can be used as parents if necessary
@@ -211,25 +212,27 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					// ----------- now begin downloading the files
 
 					// if the group has a configuration then determine whether the configuration file can be copied from the initial one
-					if let groupConfiguration = group.configuration {
-						// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
-						let fileManager = NSFileManager.defaultManager()
-						switch (initialConfig?.remoteInfo, initialConfig?.absolutePath) {
-						case (.Some(let initialConfigInfo), .Some(let initialConfigPath)) where initialConfigInfo == groupConfiguration.remoteInfo && initialConfigPath == groupConfiguration.absolutePath && fileManager.fileExistsAtPath(initialConfigPath):
-							groupConfiguration.markReady()
-						default:
-							// since there was no match dispose of the old config file if any
-							if let initialConfigPath = initialConfig?.absolutePath {
-								if fileManager.fileExistsAtPath(initialConfigPath) {
-									self.removeFileAt(initialConfigPath)
+					if hasRemoteConfig {
+						if let groupConfiguration = group.configuration {
+							// if the intial config exists and is up to date, we can just use it, otherwise download a new copy
+							let fileManager = NSFileManager.defaultManager()
+							switch (initialConfig?.remoteInfo, initialConfig?.absolutePath) {
+							case (.Some(let initialConfigInfo), .Some(let initialConfigPath)) where initialConfigInfo == groupConfiguration.remoteInfo && initialConfigPath == groupConfiguration.absolutePath && fileManager.fileExistsAtPath(initialConfigPath):
+								groupConfiguration.markReady()
+							default:
+								// since there was no match dispose of the old config file if any
+								if let initialConfigPath = initialConfig?.absolutePath {
+									if fileManager.fileExistsAtPath(initialConfigPath) {
+										self.removeFileAt(initialConfigPath)
+									}
 								}
+								// download a new config file
+								self.downloadRemoteFile(groupConfiguration, containerStatus: status, cache: [String:RemoteFileStore]())
 							}
-							// download a new config file
-							self.downloadRemoteFile(groupConfiguration, containerStatus: status, cache: [String:RemoteFileStore]())
 						}
-					} else if let initialConfigPath = initialConfig?.absolutePath {
-						// since the group no longer has a configuration but had one in the past we must remove the old configuration file
-						self.removeFileAt(initialConfigPath)
+					} else if initialConfig != nil {	// since the configuration is no longer used, remove it
+						group.configuration = nil
+						group.managedObjectContext!.deleteObject(initialConfig!)
 					}
 
 					// download the presentations and immediately perform all the copies from existing files
