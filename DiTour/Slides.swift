@@ -171,31 +171,35 @@ class ImageSlide : Slide {
 	/* display the image to the presenter */
 	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		if let image = UIImage(contentsOfFile: self.mediaFile) {
-			let displayAspectRatio = presenter.externalBounds.width / presenter.externalBounds.height
-			let imageAspectRatio = image.size.width / image.size.height
+			if presenter.externalBounds.height > 0.0 && image.size.height > 0.0 {
+				let displayAspectRatio = presenter.externalBounds.width / presenter.externalBounds.height
+				let imageAspectRatio = image.size.width / image.size.height
 
-			// set the image frame to fit in the display and preserve the image's aspect ratio
-			var imageFrame = presenter.externalBounds
-			if imageAspectRatio > displayAspectRatio {	// width constrained
-				let width = presenter.externalBounds.width
-				let height = width / imageAspectRatio
-				let offset = (presenter.externalBounds.height - height) / 2
-				imageFrame = CGRect(x: 0.0, y: offset, width: width, height: height)
-			} else {	// height constrained
-				let height = presenter.externalBounds.height
-				let width = height * imageAspectRatio
-				let offset = (presenter.externalBounds.width - width) / 2
-				imageFrame = CGRect(x: offset, y: 0.0, width: width, height: height)
-			}
+				// set the image frame to fit in the display and preserve the image's aspect ratio
+				var imageFrame = presenter.externalBounds
+				if imageAspectRatio > displayAspectRatio {	// width constrained
+					let width = presenter.externalBounds.width
+					let height = width / imageAspectRatio
+					let offset = (presenter.externalBounds.height - height) / 2
+					imageFrame = CGRect(x: 0.0, y: offset, width: width, height: height)
+				} else {	// height constrained
+					let height = presenter.externalBounds.height
+					let width = height * imageAspectRatio
+					let offset = (presenter.externalBounds.width - width) / 2
+					imageFrame = CGRect(x: offset, y: 0.0, width: width, height: height)
+				}
 
-			let imageView = UIImageView(frame: imageFrame)
-			imageView.image = UIImage(contentsOfFile: self.mediaFile)
+				let imageView = UIImageView(frame: imageFrame)
+				imageView.image = UIImage(contentsOfFile: self.mediaFile)
 
-			presenter.displayMediaView(imageView)
+				presenter.displayMediaView(imageView)
 
-			let delayInSeconds = Int64(self.duration)
-			let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-			dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+				let delayInSeconds = Int64(self.duration)
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+					completionHandler(self)
+				}
+			} else {
 				completionHandler(self)
 			}
 		} else {
