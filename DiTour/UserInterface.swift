@@ -14,14 +14,16 @@ import CoreData
 // segue IDs
 private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
 private let SEGUE_SHOW_PRESENTATION_MASTERS_ID = "GroupToPresentationMasters"
-private let SEGUE_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
-private let SEGUE_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
 private let SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = "ShowActiveTrackDetail"
 private let SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = "ShowPendingTrackDetail"
 private let SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = "ShowActivePresentationDetail"
 private let SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = "ShowPendingPresentationDetail"
 private let SEGUE_GROUP_SHOW_FILE_INFO_ID = "GroupDetailShowFileInfo";
 private let SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID = "GroupDetailShowPendingFileInfo";
+private let SEGUE_TRACK_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
+private let SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
+private let SEGUE_PRESENTATION_SHOW_FILE_INFO_ID = "PresentationDetailShowFileInfo"
+private let SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID = "PresentationDetailShowPendingFileInfo"
 
 
 /* formatter for timestamp */
@@ -186,7 +188,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 		case ( .Some(SEGUE_SHOW_CONFIGURATION_ID), let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
-		case ( .Some(SEGUE_SHOW_PENDING_FILE_INFO_ID), let configController as PresentationGroupsTableController ):
+		case ( .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID), let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
 		default:
@@ -1280,7 +1282,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch (segue.identifier) {
-		case .Some(SEGUE_SHOW_FILE_INFO_ID), .Some(SEGUE_SHOW_PENDING_FILE_INFO_ID):
+		case .Some(SEGUE_TRACK_SHOW_FILE_INFO_ID), .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID):
 			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow()!)
 			let fileInfoController = segue.destinationViewController as FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
@@ -1631,7 +1633,7 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 				trackController.downloadStatus = downloadStatus
 			}
 
-		case .Some(SEGUE_SHOW_FILE_INFO_ID), .Some(SEGUE_SHOW_PENDING_FILE_INFO_ID):
+		case .Some(SEGUE_PRESENTATION_SHOW_FILE_INFO_ID), .Some(SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID):
 			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!)
 			let fileInfoController = segue.destinationViewController as FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
