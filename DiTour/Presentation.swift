@@ -16,8 +16,6 @@ import QuartzCore
 private class ExternalViewController : UIViewController {
 	/* external view should always be displayed in portait mode */
 	override func supportedInterfaceOrientations() -> Int {
-		let x : UInt = 3
-		let y : Int = Int( x )
 		return Int( UIInterfaceOrientationMask.Portrait.rawValue )
 	}
 
