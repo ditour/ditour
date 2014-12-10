@@ -1975,10 +1975,18 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 		cell.title = presentation.name
 		cell.subtitle = TIMESTAMP_FORMATTER.stringFromDate(presentation.timestamp)
 
-		if presentation.current {
-			cell.selectionButton.setTitle("\u{2705}", forState: UIControlState.Normal)
+		// only allow users to select presentations that are ready
+		if presentation.isReady {
+			cell.selectionButton.enabled = true
+			if presentation.current {
+				cell.selectionButton.setTitle("\u{2705}", forState: UIControlState.Normal)
+			} else {
+				cell.selectionButton.setTitle("\u{2611}\u{FE0F}", forState: UIControlState.Normal)
+			}
 		} else {
-			cell.selectionButton.setTitle("\u{2611}\u{FE0F}", forState: UIControlState.Normal)
+			// presentation is not ready, so disable selection and hide button
+			cell.selectionButton.enabled = false
+			cell.selectionButton.setTitle("", forState: UIControlState.Normal)
 		}
 
 		return cell
