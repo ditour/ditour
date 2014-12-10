@@ -1967,6 +1967,7 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 	}
 
 
+	/* cell for displaying a presenation that which is neither pending nor downloading but not necessarily ready either (may have failed to download) */
 	private func readyPresentationCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let presentation = self.presentationAtPath(indexPath)
 
