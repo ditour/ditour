@@ -51,7 +51,9 @@ Presentation Group Directory\
 	- > Track directories plus optional config.json\
 		- > media files, icon file plus optional config.json\
 \
-The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf and urlspec. Any file named "Icon" with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.\
+The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf, dae (iOS 8 and later) and urlspec. Note that dae (COLLADA 3D model) files must be compressed and should contain any referenced materials internally and are only supported in iOS 8 and later.\
+\
+Any file named "Icon" with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.\
 \
 
 \b Web Page Slides
@@ -74,11 +76,9 @@ The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf and 
 \pard\tx560\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 \cf0 For example, to disable any scaling, one can specify the URL as: 
 \f2 \CocoaLigature0 http://web.ornl.gov/~t6p/Main/DiTour.html?ditour-zoom=none\
-\pard\tx560\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
-\f0 \cf0 \CocoaLigature1 Be aware that while most websites simply ignore keys they don't define (which is ideal), some websites do not and web pages may fail to load properly when they are given query keys they don't define. If a web page can't handle these query keys, just don't use them and the page will be rendered using the default behavior.\
-\pard\tx560\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
-\cf0 \
+\f0 \CocoaLigature1 Be aware that while most websites simply ignore keys they don't define (which is ideal), some websites do not and web pages may fail to load properly when they are given query keys they don't define. If a web page can't handle these query keys, just don't use them and the page will be rendered using the default behavior.\
+\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 \cf0 \
 \

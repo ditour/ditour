@@ -11,6 +11,7 @@ import AVFoundation
 import QuartzCore
 import JavaScriptCore
 import UIKit
+import SceneKit
 
 
 /* conversion for seconds to nanoseconds */
@@ -182,6 +183,67 @@ class ImageSlide : Slide {
 	}
 }
 
+
+
+/* Slide for displaying an COLLADA 3D model using SceneKit. */
+class SceneSlide : Slide {
+	/* container of static constants */
+	struct Statics {
+		// The dae file must be compressed and contain materials (if any referenced) internally.
+		static let SCENE_EXTENSIONS = NSSet(array: ["dae"])
+	}
+
+
+	/* register this slide class upon loading this class */
+	override class func load() {
+		// register if SceneKit is supported (available starting in iOS 8)
+		if NSClassFromString("SCNScene") != nil {
+			self.registerSlideClass()
+		}
+	}
+
+
+	/* get the supported extensions */
+	override class func supportedExtensions() -> NSSet {
+		return Statics.SCENE_EXTENSIONS
+	}
+
+
+	/* icon is the image itself */
+	override func icon() -> UIImage? {
+		return nil
+	}
+
+
+	/* slide displays just a single frame */
+	override func isSingleFrame() -> Bool {
+		return true
+	}
+
+
+	/* display the image to the presenter */
+	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
+		if let location = NSURL(fileURLWithPath: self.mediaFile) {
+			if let scene = SCNScene(URL: location, options: nil, error: nil) {
+				let view = SCNView(frame: presenter.externalBounds)
+				view.scene = scene
+				view.backgroundColor = UIColor.blackColor()
+
+				presenter.displayMediaView(view)
+
+				let delayInSeconds = Int64(self.duration)
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+					completionHandler(self)
+				}
+			} else {
+				completionHandler(self)
+			}
+		} else {
+			completionHandler(self)
+		}
+	}
+}
 
 
 /* slide for displaying a movie to the external screen */
