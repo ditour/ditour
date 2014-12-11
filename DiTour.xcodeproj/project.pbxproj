@@ -178,7 +178,7 @@
 		4C937D6B1631AAE200F251FF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = ILobby;
+				CLASSPREFIX = DiTour;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "UT-Battelle ORNL";
 				TargetAttributes = {
@@ -340,7 +340,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "DiTour/DiTour-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -368,8 +367,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8CB2130C-27FB-4B6D-BF8E-B1AB07656E4E";
 				SWIFT_OBJC_BRIDGING_HEADER = "DiTour/DiTour-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
