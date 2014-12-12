@@ -1982,9 +1982,9 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 		if presentation.isReady {
 			cell.selectionButton.enabled = true
 			if presentation.current {
-				cell.selectionButton.setTitle("\u{2705}", forState: UIControlState.Normal)
+				cell.selectionButton.setTitle("\u{2705}", forState: UIControlState.Normal)		// green selected checkbox
 			} else {
-				cell.selectionButton.setTitle("\u{2611}\u{FE0F}", forState: UIControlState.Normal)
+				cell.selectionButton.setTitle("\u{2610}", forState: UIControlState.Normal)		// empty box
 			}
 		} else {
 			// presentation is not ready, so disable selection and hide button
