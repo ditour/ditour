@@ -317,10 +317,8 @@ class RemoteContainerStore : RemoteItemStore {
 
 
 	/* Compute and store the effective configuration */
-	lazy var effectiveConfiguration : [String: AnyObject]? = {
-		return self.loadEffectiveConfiguration()
-		}()
-
+	lazy var effectiveConfiguration : [String: AnyObject]? = self.loadEffectiveConfiguration()
+	
 
 	/* load the effective configuration */
 	private func loadEffectiveConfiguration() -> [String: AnyObject]? {
