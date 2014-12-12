@@ -375,7 +375,7 @@ class TrackStore : RemoteContainerStore {
 
 
 	/* load the effective configuration */
-	private override func loadEffectiveConfiguration() -> [String: AnyObject] {
+	private override func loadEffectiveConfiguration() -> [String: AnyObject]? {
 		var effectiveConfig = [String: AnyObject]()
 
 		// first append the configuration inherited from the enclosing presentation
