@@ -254,9 +254,10 @@ class SceneSlide : Slide {
 				var minBox = SCNVector3(x: 0, y: 0, z: 0)
 				var maxBox = SCNVector3(x: 0, y: 0, z: 0)
 				scene.rootNode.getBoundingBoxMin(&minBox, max: &maxBox)
-				let sceneAspectRatio = CGFloat((maxBox.x - minBox.x) / (maxBox.y - minBox.y))
+				let sceneHeight = (maxBox.y - minBox.y)
 
-				if presenter.externalBounds.height > 0.0 {
+				if presenter.externalBounds.height > 0.0 && sceneHeight > 0.0 {
+					let sceneAspectRatio = CGFloat((maxBox.x - minBox.x) / sceneHeight)
 					let displayAspectRatio = presenter.externalBounds.width / presenter.externalBounds.height
 
 					// set the scene frame to fit in the display and preserve the scene's aspect ratio
