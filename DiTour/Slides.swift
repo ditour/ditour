@@ -250,15 +250,41 @@ class SceneSlide : Slide {
 	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		if let location = NSURL(fileURLWithPath: self.mediaFile) {
 			if let scene = SCNScene(URL: location, options: nil, error: nil) {
-				let view = SCNView(frame: presenter.externalBounds)
-				view.scene = scene
-				view.backgroundColor = UIColor.blackColor()
+				// get the bounding box
+				var minBox = SCNVector3(x: 0, y: 0, z: 0)
+				var maxBox = SCNVector3(x: 0, y: 0, z: 0)
+				scene.rootNode.getBoundingBoxMin(&minBox, max: &maxBox)
+				let sceneAspectRatio = CGFloat((maxBox.x - minBox.x) / (maxBox.y - minBox.y))
 
-				presenter.displayMediaView(view)
+				if presenter.externalBounds.height > 0.0 {
+					let displayAspectRatio = presenter.externalBounds.width / presenter.externalBounds.height
 
-				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+					// set the scene frame to fit in the display and preserve the scene's aspect ratio
+					var sceneFrame = presenter.externalBounds
+					if sceneAspectRatio > displayAspectRatio {	// width constrained
+						let width = presenter.externalBounds.width
+						let height = width / sceneAspectRatio
+						let offset = (presenter.externalBounds.height - height) / 2
+						sceneFrame = CGRect(x: 0.0, y: offset, width: width, height: height)
+					} else {	// height constrained
+						let height = presenter.externalBounds.height
+						let width = height * sceneAspectRatio
+						let offset = (presenter.externalBounds.width - width) / 2
+						sceneFrame = CGRect(x: offset, y: 0.0, width: width, height: height)
+					}
+
+					let view = SCNView(frame: sceneFrame)
+					view.scene = scene
+					view.backgroundColor = UIColor.blackColor()
+
+					presenter.displayMediaView(view)
+
+					let delayInSeconds = Int64(self.duration)
+					let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+					dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+						completionHandler(self)
+					}
+				} else {
 					completionHandler(self)
 				}
 			} else {
