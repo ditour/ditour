@@ -18,6 +18,7 @@ import SceneKit
 private let NANOS_PER_SECOND = Int64(1_000_000_000)
 
 
+// MARK: - Slide Base Class
 
 /* slide base class for displaying content to a presenter */
 class Slide : NSObject {
@@ -136,6 +137,34 @@ class Slide : NSObject {
 
 
 
+// MARK: - Private Slide Utility Functions
+
+/* calculate the largest media view frame which fits within the screen frame while preserving the media's aspect ratio */
+private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect? {
+	if mediaSize.height > 0 && screenFrame.height > 0 {
+		let screenAspectRatio = screenFrame.width / screenFrame.height
+		let mediaAspectRatio = mediaSize.width / mediaSize.height
+
+		// calculate the media's frame to fit in the display as large as possible while preserving the media's aspect ratio
+		if mediaAspectRatio > screenAspectRatio {				// width constrained
+			let width = screenFrame.width						// fill out the entire width available
+			let height = width / mediaAspectRatio				// scale the height preserving aspect ratio
+			let offset = (screenFrame.height - height) / 2		// center the media vertically
+			return CGRect(x: 0.0, y: offset, width: width, height: height)
+		} else {												// height constrained
+			let height = screenFrame.height						// fill out the entire height available
+			let width = height * mediaAspectRatio				// scale the width preserving aspect ratio
+			let offset = (screenFrame.width - width) / 2		// center the media horizontally
+			return CGRect(x: offset, y: 0.0, width: width, height: height)
+		}
+	} else {
+		return nil
+	}
+}
+
+
+// MARK: - Image Slide
+
 /* slide for displaying an image */
 class ImageSlide : Slide {
 	/* container of static constants */
@@ -171,24 +200,7 @@ class ImageSlide : Slide {
 	/* display the image to the presenter */
 	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
 		if let image = UIImage(contentsOfFile: self.mediaFile) {
-			if presenter.externalBounds.height > 0.0 && image.size.height > 0.0 {
-				let displayAspectRatio = presenter.externalBounds.width / presenter.externalBounds.height
-				let imageAspectRatio = image.size.width / image.size.height
-
-				// set the image frame to fit in the display and preserve the image's aspect ratio
-				var imageFrame = presenter.externalBounds
-				if imageAspectRatio > displayAspectRatio {	// width constrained
-					let width = presenter.externalBounds.width
-					let height = width / imageAspectRatio
-					let offset = (presenter.externalBounds.height - height) / 2
-					imageFrame = CGRect(x: 0.0, y: offset, width: width, height: height)
-				} else {	// height constrained
-					let height = presenter.externalBounds.height
-					let width = height * imageAspectRatio
-					let offset = (presenter.externalBounds.width - width) / 2
-					imageFrame = CGRect(x: offset, y: 0.0, width: width, height: height)
-				}
-
+			if let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
 				let imageView = UIImageView(frame: imageFrame)
 				imageView.image = UIImage(contentsOfFile: self.mediaFile)
 
@@ -209,6 +221,7 @@ class ImageSlide : Slide {
 }
 
 
+// MARK: - Slide for Displaying a 3D Scene
 
 /* Slide for displaying an COLLADA 3D model using SceneKit. */
 class SceneSlide : Slide {
@@ -254,26 +267,11 @@ class SceneSlide : Slide {
 				var minBox = SCNVector3(x: 0, y: 0, z: 0)
 				var maxBox = SCNVector3(x: 0, y: 0, z: 0)
 				scene.rootNode.getBoundingBoxMin(&minBox, max: &maxBox)
-				let sceneHeight = (maxBox.y - minBox.y)
+				let nativeSceneWidth =  CGFloat(maxBox.x - minBox.x)
+				let nativeSceneHeight = CGFloat(maxBox.y - minBox.y)
+				let nativeSceneSize = CGSize(width: nativeSceneWidth, height: nativeSceneHeight)
 
-				if presenter.externalBounds.height > 0.0 && sceneHeight > 0.0 {
-					let sceneAspectRatio = CGFloat((maxBox.x - minBox.x) / sceneHeight)
-					let displayAspectRatio = presenter.externalBounds.width / presenter.externalBounds.height
-
-					// set the scene frame to fit in the display and preserve the scene's aspect ratio
-					var sceneFrame = presenter.externalBounds
-					if sceneAspectRatio > displayAspectRatio {	// width constrained
-						let width = presenter.externalBounds.width
-						let height = width / sceneAspectRatio
-						let offset = (presenter.externalBounds.height - height) / 2
-						sceneFrame = CGRect(x: 0.0, y: offset, width: width, height: height)
-					} else {	// height constrained
-						let height = presenter.externalBounds.height
-						let width = height * sceneAspectRatio
-						let offset = (presenter.externalBounds.width - width) / 2
-						sceneFrame = CGRect(x: offset, y: 0.0, width: width, height: height)
-					}
-
+				if let sceneFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: nativeSceneSize) {
 					let view = SCNView(frame: sceneFrame)
 					view.scene = scene
 					view.backgroundColor = UIColor.blackColor()
@@ -297,6 +295,8 @@ class SceneSlide : Slide {
 	}
 }
 
+
+// MARK: - Movie Slide
 
 /* slide for displaying a movie to the external screen */
 class MovieSlide : Slide {
@@ -364,6 +364,7 @@ class MovieSlide : Slide {
 }
 
 
+// MARK: - PDF Slide
 
 /* slide for displaying pages from a PDF document as frames */
 class PDFSlide : Slide {
@@ -489,9 +490,10 @@ class PDFSlide : Slide {
 }
 
 
+// MARK: - Webpage Slide
 
 /* slide for displaying a rendering of a web page to the presenter */
-class WebSlide : Slide, UIWebViewDelegate {
+class WebpageSlide : Slide, UIWebViewDelegate {
 	/* container of static constants */
 	struct Statics {
 		static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
@@ -568,7 +570,7 @@ class WebSlide : Slide, UIWebViewDelegate {
 
 		if let slideWebSpec = NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding, error: nil) {
 			if let slideURL = NSURL(string: slideWebSpec) {
-				let queryDictionary = WebSlide.dictionaryForQuery(slideURL.query)
+				let queryDictionary = WebpageSlide.dictionaryForQuery(slideURL.query)
 				if let zoomModeID = queryDictionary["ditour-zoom"]?.lowercaseString {
 					self.zoomMode = ZoomMode(rawValue: zoomModeID) ?? .None
 				} else {
