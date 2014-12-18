@@ -371,7 +371,6 @@ class PDFSlide : Slide {
 	/* container of static constants */
 	struct Statics {
 		static let PDF_EXTENSIONS = NSSet(object: "pdf")
-		static var IMAGE_VIEW : UIImageView? = nil
 	}
 
 	/* run ID identifying the current Run (if any) */
@@ -417,7 +416,7 @@ class PDFSlide : Slide {
 
 
 	/* generate an image from the specified page */
-	private func imageFromPageRef( pageRef: CGPDFPageRef ) -> UIImage {
+	private func imageFromPageRef( pageRef: CGPDFPageRef ) -> UIImage? {
 		let bounds = CGPDFPageGetBoxRect(pageRef, kCGPDFCropBox)
 		let width = UInt( CGRectGetWidth(bounds) )
 		let height = UInt( CGRectGetHeight(bounds) )
@@ -427,9 +426,7 @@ class PDFSlide : Slide {
 		CGContextDrawPDFPage(context, pageRef)
 
 		let imageRef = CGBitmapContextCreateImage(context)
-		let image = UIImage(CGImage: imageRef)
-
-		return image!
+		return UIImage(CGImage: imageRef)
 	}
 
 
@@ -463,28 +460,32 @@ class PDFSlide : Slide {
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
 		let pageRef = CGPDFDocumentGetPage(documentRef, pageNumber)
-		let image = self.imageFromPageRef(pageRef)
+		if let image = self.imageFromPageRef(pageRef) {
+			if let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
+				let imageView = UIImageView(frame: imageFrame)
+				imageView.image = image
 
-		if Statics.IMAGE_VIEW == nil || Statics.IMAGE_VIEW?.bounds != presenter.externalBounds {
-			Statics.IMAGE_VIEW = UIImageView(frame: presenter.externalBounds)
-		}
-		Statics.IMAGE_VIEW?.image = image
+				presenter.displayMediaView(imageView)
 
-		presenter.displayMediaView(Statics.IMAGE_VIEW!)
-
-		let nextPageNumber = pageNumber + 1
-		let delayInSeconds = Int64(self.duration)
-		let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-		dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
-			if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
-				// if the page number is valid display the image for the page otherwise we are done
-				if ( nextPageNumber <= pageCount ) {
-					self.performTransition(presenter);
-					self.displayPage(nextPageNumber, to: presenter, completionHandler: completionHandler, runID: runID)
-				} else {	// no more pages to present
-					completionHandler( self );
+				let nextPageNumber = pageNumber + 1
+				let delayInSeconds = Int64(self.duration)
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+					if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
+						// if the page number is valid display the image for the page otherwise we are done
+						if ( nextPageNumber <= pageCount ) {
+							self.performTransition(presenter);
+							self.displayPage(nextPageNumber, to: presenter, completionHandler: completionHandler, runID: runID)
+						} else {	// no more pages to present
+							completionHandler( self );
+						}
+					}
 				}
+			} else {
+				completionHandler(self)
 			}
+		} else {
+			completionHandler(self)
 		}
 	}
 }
