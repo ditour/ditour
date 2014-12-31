@@ -334,7 +334,6 @@
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CODE_SIGN_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DiTour/DiTour-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -361,7 +360,6 @@
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CODE_SIGN_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DiTour/DiTour-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
