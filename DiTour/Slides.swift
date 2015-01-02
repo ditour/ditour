@@ -208,7 +208,7 @@ class ImageSlide : Slide {
 
 				let delayInSeconds = Int64(self.duration)
 				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+				dispatch_after(popTime, dispatch_get_main_queue()) {
 					completionHandler(self)
 				}
 			} else {
@@ -280,7 +280,7 @@ class SceneSlide : Slide {
 
 					let delayInSeconds = Int64(self.duration)
 					let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-					dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+					dispatch_after(popTime, dispatch_get_main_queue()) {
 						completionHandler(self)
 					}
 				} else {
@@ -470,7 +470,7 @@ class PDFSlide : Slide {
 				let nextPageNumber = pageNumber + 1
 				let delayInSeconds = Int64(self.duration)
 				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+				dispatch_after(popTime, dispatch_get_main_queue()) {
 					if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
 						// if the page number is valid display the image for the page otherwise we are done
 						if ( nextPageNumber <= pageCount ) {
@@ -589,7 +589,7 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 
 				let delayInSeconds = Int64(self.duration)
 				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
-				dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+				dispatch_after(popTime, dispatch_get_main_queue()) {
 					// since the web slides share a common web view we should not perform and cleanup upon cancelation as this may interrupt another web slide
 					if !self.canceled && currentRunID == presenter.currentRunID {
 						completionHandler(self)
