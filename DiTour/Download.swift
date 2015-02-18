@@ -884,7 +884,7 @@ class RemoteDirectory : NSObject, RemoteDirectoryItem {
 
 // MARK: Remote Directory Parser
 /* generates a remote directory from a remote location and the content of the associated HTML directory pages */
-private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
+class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 	/* location of the the dremote directory to parse */
 	let directoryURL : NSURL
 
