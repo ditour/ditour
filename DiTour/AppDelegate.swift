@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	override init() {
 		self.ditourModel.presentationDelegate = self.presenter;
 
+		Slide.registerSlideClasses()
+		
 		super.init()
 	}
 

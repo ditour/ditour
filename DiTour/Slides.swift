@@ -15,18 +15,16 @@ import SceneKit
 
 
 /* conversion for seconds to nanoseconds */
-private let NANOS_PER_SECOND = Int64(1_000_000_000)
+private let nanosPerSecond = Int64(1_000_000_000)
+
 
 
 // MARK: - Slide Base Class
 
 /* slide base class for displaying content to a presenter */
-class Slide : NSObject {
-	/* container of static constants */
-	struct Statics {
-		static var ALL_SUPPORTED_EXTENSIONS = NSSet()
-		static var SLIDE_CLASSES_BY_EXTENSION = [String:Slide.Type]()
-	}
+class Slide {
+	static var ALL_SUPPORTED_EXTENSIONS = NSSet()
+	static var SLIDE_CLASSES_BY_EXTENSION = [String:Slide.Type]()
 
 
 	/* duration of the slide's presentation */
@@ -46,11 +44,21 @@ class Slide : NSObject {
 	}
 
 
+	/* register the slide classes */
+	static func registerSlideClasses() {
+		ImageSlide.registerSlideClass()
+		SceneSlide.registerSlideClass()
+		MovieSlide.registerSlideClass()
+		PDFSlide.registerSlideClass()
+		WebpageSlide.registerSlideClass()
+	}
+
+
 	/* make a slide instance based on the file's extension */
-	class func makeSlideWithFile(file: String, duration: Float) -> Slide? {
+	static func makeSlideWithFile(file: String, duration: Float) -> Slide? {
 		let fileExtension = file.pathExtension.lowercaseString
 
-		if let SlideType = Statics.SLIDE_CLASSES_BY_EXTENSION[fileExtension] {
+		if let SlideType = SLIDE_CLASSES_BY_EXTENSION[fileExtension] {
 			return SlideType(file: file, duration: duration)
 		}
 		else {
@@ -62,13 +70,13 @@ class Slide : NSObject {
 	/* register a slide class so we can instantiate it by file extension */
 	private class func registerSlideClass() {
 		// store the class names keyed by lower case extension for later use when instantiating slides
-		var slideClassesByExtension = Statics.SLIDE_CLASSES_BY_EXTENSION
+		var slideClassesByExtension = SLIDE_CLASSES_BY_EXTENSION
 		let fileExtensions = self.supportedExtensions()
 		for fileExtension in fileExtensions {
 			let extensionKey = fileExtension.lowercaseString
 			slideClassesByExtension[extensionKey] = self;
 		}
-		Statics.SLIDE_CLASSES_BY_EXTENSION = slideClassesByExtension
+		SLIDE_CLASSES_BY_EXTENSION = slideClassesByExtension
 
 		self.appendSupportedExtensions(fileExtensions)
 	}
@@ -76,9 +84,9 @@ class Slide : NSObject {
 
 	// append the supported extensions to ALL_SUPPORTED_EXTENSIONS
 	private class func appendSupportedExtensions(fileExtensions: NSSet) {
-		let allExtensions = Statics.ALL_SUPPORTED_EXTENSIONS.mutableCopy() as NSMutableSet
-		allExtensions.unionSet(fileExtensions)
-		Statics.ALL_SUPPORTED_EXTENSIONS = allExtensions.copy()	as NSSet
+		let allExtensions = ALL_SUPPORTED_EXTENSIONS.mutableCopy() as! NSMutableSet
+		allExtensions.unionSet(fileExtensions as! Set<NSObject>)
+		ALL_SUPPORTED_EXTENSIONS = allExtensions.copy()	as! NSSet
 	}
 
 
@@ -89,7 +97,7 @@ class Slide : NSObject {
 
 
 	class func allSupportedExtensions() -> NSSet {
-		return Statics.ALL_SUPPORTED_EXTENSIONS
+		return ALL_SUPPORTED_EXTENSIONS
 	}
 
 
@@ -168,20 +176,12 @@ private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect?
 /* slide for displaying an image */
 class ImageSlide : Slide {
 	/* container of static constants */
-	struct Statics {
-		static let IMAGE_EXTENSIONS = NSSet(array: ["png", "jpg", "jpeg", "gif"])
-	}
-
-
-	/* register this slide class upon loading this class */
-	override class func load() {
-		self.registerSlideClass()
-	}
+	static let imageExtensions = NSSet(array: ["png", "jpg", "jpeg", "gif"])
 
 
 	/* get the supported extensions */
 	override class func supportedExtensions() -> NSSet {
-		return Statics.IMAGE_EXTENSIONS
+		return imageExtensions
 	}
 
 
@@ -207,7 +207,7 @@ class ImageSlide : Slide {
 				presenter.displayMediaView(imageView)
 
 				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
 				dispatch_after(popTime, dispatch_get_main_queue()) {
 					completionHandler(self)
 				}
@@ -232,11 +232,11 @@ class SceneSlide : Slide {
 	}
 
 
-	/* register this slide class upon loading this class */
-	override class func load() {
+	/* register a slide class so we can instantiate it by file extension */
+	private override class func registerSlideClass() {
 		// register if SceneKit is supported (available starting in iOS 8)
 		if NSClassFromString("SCNScene") != nil {
-			self.registerSlideClass()
+			super.registerSlideClass()
 		}
 	}
 
@@ -279,7 +279,7 @@ class SceneSlide : Slide {
 					presenter.displayMediaView(view)
 
 					let delayInSeconds = Int64(self.duration)
-					let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+					let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
 					dispatch_after(popTime, dispatch_get_main_queue()) {
 						completionHandler(self)
 					}
@@ -306,12 +306,6 @@ class MovieSlide : Slide {
 	}
 
 	var completionHandler : ((Slide)->Void)? = nil
-
-
-	/* register this slide class upon loading this class */
-	override class func load() {
-		self.registerSlideClass()
-	}
 
 
 	/* get the supported extensions */
@@ -375,12 +369,6 @@ class PDFSlide : Slide {
 
 	/* run ID identifying the current Run (if any) */
 	var currentRunID : NSObject? = nil
-
-
-	/* register this slide class upon loading this class */
-	override class func load() {
-		self.registerSlideClass()
-	}
 
 
 	/* get the supported extensions */
@@ -469,7 +457,7 @@ class PDFSlide : Slide {
 
 				let nextPageNumber = pageNumber + 1
 				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
 				dispatch_after(popTime, dispatch_get_main_queue()) {
 					if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
 						// if the page number is valid display the image for the page otherwise we are done
@@ -494,11 +482,9 @@ class PDFSlide : Slide {
 // MARK: - Webpage Slide
 
 /* slide for displaying a rendering of a web page to the presenter */
-class WebpageSlide : Slide, UIWebViewDelegate {
+class WebpageSlide : Slide {
 	/* container of static constants */
-	struct Statics {
-		static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
-	}
+	static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
 
 
 	/* options for zooming the web view to fit the external display bounds */
@@ -519,16 +505,21 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 	/* mode for zooming the web view to fit the external display bounds */
 	var zoomMode : ZoomMode = .Both
 
-
-	/* register this slide class upon loading this class */
-	override class func load() {
-		self.registerSlideClass()
-	}
+	/* handler of webview */
+	private var webViewHandler : WebViewHandler!
 
 
 	/* get the supported extensions */
 	override class func supportedExtensions() -> NSSet {
-		return Statics.WEB_EXTENSIONS
+		return WEB_EXTENSIONS
+	}
+
+
+	/* required initializer is used to dynamically initialize instances of any subclass */
+	required init(file: String, duration: Float) {
+		super.init(file: file, duration: duration)
+
+		self.webViewHandler = WebViewHandler(slide: self)
 	}
 
 
@@ -570,7 +561,7 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 		let currentRunID = presenter.currentRunID;
 
 		if let slideWebSpec = NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding, error: nil) {
-			if let slideURL = NSURL(string: slideWebSpec) {
+			if let slideURL = NSURL(string: slideWebSpec as! String) {
 				let queryDictionary = WebpageSlide.dictionaryForQuery(slideURL.query)
 				if let zoomModeID = queryDictionary["ditour-zoom"]?.lowercaseString {
 					self.zoomMode = ZoomMode(rawValue: zoomModeID) ?? .None
@@ -580,7 +571,7 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 
 				let webView = UIWebView(frame: presenter.externalBounds)
 				webView.scalesPageToFit = true
-				webView.delegate = self
+				webView.delegate = self.webViewHandler
 				webView.backgroundColor = UIColor.blackColor()
 				self.webView = webView
 
@@ -588,7 +579,7 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 				webView.loadRequest(NSURLRequest(URL: slideURL))
 
 				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NANOS_PER_SECOND )
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
 				dispatch_after(popTime, dispatch_get_main_queue()) {
 					// since the web slides share a common web view we should not perform and cleanup upon cancelation as this may interrupt another web slide
 					if !self.canceled && currentRunID == presenter.currentRunID {
@@ -604,59 +595,8 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 	}
 
 
-	/* handle the web page load completion */
-	func webViewDidFinishLoad(webView: UIWebView) {
-		// scale the web view's scroll zoom to match the content width so we can see the whole width
-		if !self.canceled && self.webView == webView {
-			let contentSize = webView.scrollView.contentSize
-
-			if contentSize.width > 0 && contentSize.height > 0 {
-				let widthZoom = CGRectGetWidth( webView.bounds ) / contentSize.width
-				let heightZoom = CGRectGetHeight( webView.bounds ) / contentSize.height
-				var zoomScale = CGFloat(1.0)
-
-				// initialize the content center variables with the default content view center
-				let contentView = webView.scrollView.subviews[0] as UIView
-				var xContentCenter = CGRectGetMidX( contentView.frame )
-				var yContentCenter = CGRectGetMidY( contentView.frame )
-
-				switch ( self.zoomMode ) {
-				case .Width:
-					zoomScale = widthZoom
-					xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )	// center the content horizontally in the scroll view
-
-				case .Height:
-					zoomScale = heightZoom;
-					yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )	// center the content vertically in the scroll view
-
-				case .Both:
-					// use the minimum zoom to fit both the content width and height on the page
-					zoomScale = widthZoom < heightZoom ? widthZoom : heightZoom
-
-					// center the content both horizontally and vertically in the scroll view
-					xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )
-					yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )
-
-				default:
-					zoomScale = 1.0
-				}
-
-				// set the scroll view zoom scale
-				if ( zoomScale != 1.0 ) {
-					webView.scrollView.minimumZoomScale = zoomScale
-					webView.scrollView.maximumZoomScale = zoomScale
-					webView.scrollView.zoomScale = zoomScale
-				}
-
-				// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
-				contentView.center = CGPointMake( xContentCenter, yContentCenter )
-			}
-		}
-	}
-
-
 	/* extract the key value pairs for the raw URL query and return then in a dictionary */
-	class func dictionaryForQuery(possibleQuery: String?) -> [String:String] {
+	static func dictionaryForQuery(possibleQuery: String?) -> [String:String] {
 		// dictionary of key/value string pairs corresponding to the input query
 		var dictionary = [String:String]()
 
@@ -675,6 +615,71 @@ class WebpageSlide : Slide, UIWebViewDelegate {
 		}
 
 		return dictionary
+	}
+
+
+	/* handles web view callbacks */
+	private class WebViewHandler : NSObject, UIWebViewDelegate {
+		/* slide for which the web view is managed */
+		unowned let slide : WebpageSlide
+
+
+		// initializer
+		init(slide: WebpageSlide) {
+			self.slide = slide
+			super.init()
+		}
+
+
+		/* handle the web page load completion */
+		func webViewDidFinishLoad(webView: UIWebView) {
+			// scale the web view's scroll zoom to match the content width so we can see the whole width
+			if !self.slide.canceled && self.slide.webView == webView {
+				let contentSize = webView.scrollView.contentSize
+
+				if contentSize.width > 0 && contentSize.height > 0 {
+					let widthZoom = CGRectGetWidth( webView.bounds ) / contentSize.width
+					let heightZoom = CGRectGetHeight( webView.bounds ) / contentSize.height
+					var zoomScale = CGFloat(1.0)
+
+					// initialize the content center variables with the default content view center
+					let contentView = webView.scrollView.subviews[0] as! UIView
+					var xContentCenter = CGRectGetMidX( contentView.frame )
+					var yContentCenter = CGRectGetMidY( contentView.frame )
+
+					switch ( self.slide.zoomMode ) {
+					case .Width:
+						zoomScale = widthZoom
+						xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )	// center the content horizontally in the scroll view
+
+					case .Height:
+						zoomScale = heightZoom;
+						yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )	// center the content vertically in the scroll view
+
+					case .Both:
+						// use the minimum zoom to fit both the content width and height on the page
+						zoomScale = widthZoom < heightZoom ? widthZoom : heightZoom
+
+						// center the content both horizontally and vertically in the scroll view
+						xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )
+						yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )
+
+					default:
+						zoomScale = 1.0
+					}
+
+					// set the scroll view zoom scale
+					if ( zoomScale != 1.0 ) {
+						webView.scrollView.minimumZoomScale = zoomScale
+						webView.scrollView.maximumZoomScale = zoomScale
+						webView.scrollView.zoomScale = zoomScale
+					}
+
+					// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
+					contentView.center = CGPointMake( xContentCenter, yContentCenter )
+				}
+			}
+		}
 	}
 }
 

@@ -150,7 +150,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 
 
 	override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TrackCell", forIndexPath: indexPath) as TrackViewCell
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TrackCell", forIndexPath: indexPath) as! TrackViewCell
 
 		let item = indexPath.item
 		if let model = self.ditourModel {
@@ -640,7 +640,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 		let pointInTable = sender.convertPoint(senderPoint, toView: self.tableView)		// point in the table view
 
 		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
-			let group = self.currentRootStore!.groups[indexPath.row] as PresentationGroupStore
+			let group = self.currentRootStore!.groups[indexPath.row] as! PresentationGroupStore
 			if let url = group.remoteURL {
 				UIApplication.sharedApplication().openURL(url)
 			}
@@ -658,7 +658,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 			self.editMode = .Single
 			self.setupEditing()
 
-			let group = self.mainRootStore?.groups[indexPath.row] as PresentationGroupStore
+			let group = self.mainRootStore?.groups[indexPath.row] as! PresentationGroupStore
 			self.editingGroup = self.editingGroupForGroup(group)
 
 			self.updateControls()
@@ -677,7 +677,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 		var editingGroup : PresentationGroupStore!
 		self.editContext?.performBlockAndWait{
-			editingGroup = self.editContext?.objectWithID(groupID) as PresentationGroupStore
+			editingGroup = self.editContext?.objectWithID(groupID) as! PresentationGroupStore
 		}
 
 		return editingGroup
@@ -717,7 +717,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	func confirmGroupEditing() {
 		// get the group Location and strip white space
 		switch self.editingCell?.locationField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
-		case .Some(let groupLocationSpec) where countElements(groupLocationSpec) > 0:
+		case .Some(let groupLocationSpec) where count(groupLocationSpec) > 0:
 			switch NSURL(string: groupLocationSpec) {
 			case .Some(let groupURL) where groupURL.scheme != nil && groupURL.host != nil && groupURL.path != nil:
 				// validated so URL so save changes and dismiss editing
@@ -807,7 +807,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 		if let selectedPaths = self.tableView.indexPathsForSelectedRows() {
 			// gather the indexes of the selected groups
 			let groupsToDeleteIndexes = NSMutableIndexSet()
-			for path in selectedPaths as [NSIndexPath] {
+			for path in selectedPaths as! [NSIndexPath] {
 				switch path.section {
 				case Section.GroupView.rawValue:
 					groupsToDeleteIndexes.addIndex(path.row)
@@ -880,7 +880,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 
 	private func groupViewCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
-		let group = self.currentRootStore!.groups[indexPath.row] as PresentationGroupStore
+		let group = self.currentRootStore!.groups[indexPath.row] as! PresentationGroupStore
 
 		if group === self.editingGroup {		// this is group currently being edited
 			// if the editing cell is nil then create one and assign it
@@ -900,7 +900,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 			return editingCell
 		} else {
-			let viewCell = self.tableView.dequeueReusableCellWithIdentifier(Cell.VIEW_ID, forIndexPath: indexPath) as PresentationGroupCell
+			let viewCell = self.tableView.dequeueReusableCellWithIdentifier(Cell.VIEW_ID, forIndexPath: indexPath) as! PresentationGroupCell
 			viewCell.locationLabel.text = group.remoteLocation
 			viewCell.editButton.hidden = self.editing			// hide the edit button when editing
 			viewCell.openURLButton.hidden = self.editing		// hide the open URL button when editing
@@ -912,7 +912,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 
 	/* get the group add cell at the specified index path */
 	private func groupAddCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
-		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as UITableViewCell
+		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as! UITableViewCell
 	}
 
 
@@ -992,7 +992,7 @@ class PresentationGroupsTableController : UITableViewController, DitourModelCont
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch (segue.identifier, sender) {
 		case (.Some(SEGUE_SHOW_PRESENTATION_MASTERS_ID), let group as PresentationGroupStore):
-			let masterTableController = segue.destinationViewController as PresentationGroupDetailController
+			let masterTableController = segue.destinationViewController as! PresentationGroupDetailController
 			masterTableController.ditourModel = self.ditourModel
 			masterTableController.group = group
 		default:
@@ -1049,7 +1049,7 @@ extension TrackStore : ConcreteRemoteItemContaining {
 		var readyItems = [ItemType]()
 		var notReadyItems = [ItemType]()
 
-		for remoteMedia in self.remoteMedia.array as [RemoteMediaStore] {
+		for remoteMedia in self.remoteMedia.array as! [RemoteMediaStore] {
 			if remoteMedia.isReady {
 				readyItems.append(remoteMedia)
 			} else {
@@ -1247,7 +1247,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 	private func readyRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteFile = self.remoteFileAtIndexPath(indexPath) as RemoteFileStore
-		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as LabelCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as! LabelCell
 		cell.title = remoteFile.name
 
 		return cell
@@ -1256,7 +1256,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 
 	private func pendingRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteFile = self.remoteFileAtIndexPath(indexPath) as RemoteFileStore
-		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as DownloadStatusCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as! DownloadStatusCell
 
 		cell.title = remoteFile.name
 
@@ -1284,7 +1284,7 @@ class TrackDetailController : UITableViewController, DownloadStatusDelegate, Dit
 		switch (segue.identifier) {
 		case .Some(SEGUE_TRACK_SHOW_FILE_INFO_ID), .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID):
 			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow()!)
-			let fileInfoController = segue.destinationViewController as FileInfoController
+			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
@@ -1320,7 +1320,7 @@ extension PresentationStore : ConcreteRemoteItemContaining {
 		var readyItems = [ItemType]()
 		var notReadyItems = [ItemType]()
 
-		for track in self.tracks.array as [TrackStore] {
+		for track in self.tracks.array as! [TrackStore] {
 			if track.isReady {
 				readyItems.append(track)
 			} else {
@@ -1539,8 +1539,8 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 
 
 	private func readyRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
-		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as LabelCell
+		let remoteFile = self.remoteItemAtIndexPath(indexPath) as! RemoteFileStore
+		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as! LabelCell
 		cell.title = remoteFile.name
 
 		return cell
@@ -1548,8 +1548,8 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 
 
 	private func pendingRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
-		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as DownloadStatusCell
+		let remoteFile = self.remoteItemAtIndexPath(indexPath) as! RemoteFileStore
+		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as! DownloadStatusCell
 
 		cell.title = remoteFile.name
 
@@ -1574,7 +1574,7 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 	private func readyTrackCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let track = self.trackAtPath(indexPath)
 
-		let cell = tableView.dequeueReusableCellWithIdentifier("PresentationDetailActiveTrackCell", forIndexPath: indexPath) as LabelCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("PresentationDetailActiveTrackCell", forIndexPath: indexPath) as! LabelCell
 		cell.title = track.title
 
 		return cell
@@ -1584,7 +1584,7 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 	private func pendingTrackCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let track = self.trackAtPath(indexPath)
 
-		let cell = tableView.dequeueReusableCellWithIdentifier("PresentationDetailPendingTrackCell", forIndexPath: indexPath) as DownloadStatusCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("PresentationDetailPendingTrackCell", forIndexPath: indexPath) as! DownloadStatusCell
 
 		cell.title = track.title
 
@@ -1624,20 +1624,20 @@ class PresentationDetailController : UITableViewController, DownloadStatusDelega
 			let indexPath = self.tableView.indexPathForSelectedRow()!
 			let track = trackAtPath(indexPath)
 
-			let trackController = segue.destinationViewController as TrackDetailController
+			let trackController = segue.destinationViewController as! TrackDetailController
 			trackController.ditourModel = self.ditourModel
 			trackController.track = track
 
 			if segue.identifier! == SEGUE_SHOW_PENDING_TRACK_DETAIL_ID {
-				let downloadStatus = self.downloadStatus?.childStatusForRemoteItem(track) as DownloadContainerStatus
+				let downloadStatus = self.downloadStatus?.childStatusForRemoteItem(track) as! DownloadContainerStatus
 				trackController.downloadStatus = downloadStatus
 			}
 
 		case .Some(SEGUE_PRESENTATION_SHOW_FILE_INFO_ID), .Some(SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID):
 			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!)
-			let fileInfoController = segue.destinationViewController as FileInfoController
+			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
-			fileInfoController.remoteFile = remoteFile as RemoteFileStore
+			fileInfoController.remoteFile = remoteFile as! RemoteFileStore
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
 			
 		default:
@@ -1673,7 +1673,7 @@ extension PresentationGroupStore : ConcreteRemoteItemContaining {
 		var notReadyItems = [ItemType]()
 
 		let sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-		let presentations = self.presentations?.sortedArrayUsingDescriptors(sortDescriptors) as [PresentationStore]
+		let presentations = self.presentations?.sortedArrayUsingDescriptors(sortDescriptors) as! [PresentationStore]
 
 		for presentation in presentations {
 			if presentation.isReady {
@@ -1936,8 +1936,8 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 
 
 	private func readyRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
-		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as LabelCell
+		let remoteFile = self.remoteItemAtIndexPath(indexPath) as! RemoteFileStore
+		let cell = tableView.dequeueReusableCellWithIdentifier("ActiveFileCell", forIndexPath: indexPath) as! LabelCell
 		cell.title = remoteFile.name
 
 		return cell
@@ -1945,8 +1945,8 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 
 
 	private func pendingRemoteFileCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-		let remoteFile = self.remoteItemAtIndexPath(indexPath) as RemoteFileStore
-		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as DownloadStatusCell
+		let remoteFile = self.remoteItemAtIndexPath(indexPath) as! RemoteFileStore
+		let cell = tableView.dequeueReusableCellWithIdentifier("PendingFileCell", forIndexPath: indexPath) as! DownloadStatusCell
 
 		cell.title = remoteFile.name
 
@@ -1973,7 +1973,7 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 	private func readyPresentationCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let presentation = self.presentationAtPath(indexPath)
 
-		let cell = tableView.dequeueReusableCellWithIdentifier("GroupDetailActivePresentationCell", forIndexPath: indexPath) as SelectionLabelCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("GroupDetailActivePresentationCell", forIndexPath: indexPath) as! SelectionLabelCell
 		cell.setMarked(presentation.isCurrent)
 		cell.title = presentation.name
 		cell.subtitle = TIMESTAMP_FORMATTER.stringFromDate(presentation.timestamp)
@@ -1999,7 +1999,7 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 	private func pendingPresentationCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
 		let presentation = self.presentationAtPath(indexPath)
 
-		let cell = tableView.dequeueReusableCellWithIdentifier("GroupDetailPendingPresentationCell", forIndexPath: indexPath) as DownloadStatusCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("GroupDetailPendingPresentationCell", forIndexPath: indexPath) as! DownloadStatusCell
 
 		cell.title = presentation.name
 
@@ -2041,17 +2041,17 @@ class PresentationGroupDetailController : UITableViewController, DownloadStatusD
 			let indexPath = self.tableView.indexPathForSelectedRow()!
 			let presentation = self.presentationAtPath(indexPath)
 
-			let presentationController = segue.destinationViewController as PresentationDetailController
+			let presentationController = segue.destinationViewController as! PresentationDetailController
 			presentationController.ditourModel = self.ditourModel
 			presentationController.presentation = presentation
 
 			if segue.identifier! == SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID {
-				presentationController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(presentation) as DownloadContainerStatus?
+				presentationController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(presentation) as! DownloadContainerStatus?
 			}
 
 		case .Some(SEGUE_GROUP_SHOW_FILE_INFO_ID), .Some(SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!) as RemoteFileStore
-			let fileInfoController = segue.destinationViewController as FileInfoController
+			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!) as! RemoteFileStore
+			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)

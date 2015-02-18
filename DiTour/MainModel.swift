@@ -85,7 +85,7 @@ public class DitourModel : NSObject {
 		let fetch = NSFetchRequest( entityName: PresentationStore.entityName )
 		// fetch presentations explicitly marked disposable or that have no group assignment
 		fetch.predicate = NSPredicate( format: "(status = %d) || (group = nil)", RemoteItemStatus.Disposable.rawValue )
-		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as [PresentationStore]
+		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as! [PresentationStore]
 
 		if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
 			for presentation in presentations {
@@ -117,7 +117,7 @@ public class DitourModel : NSObject {
 			if presentationStore.isReady {
 				var tracks = [Track]()
 				for trackStore in presentationStore.tracks.array {
-					let track = Track( trackStore: trackStore as TrackStore )
+					let track = Track( trackStore: trackStore as! TrackStore )
 					tracks.append( track )
 				}
 
@@ -167,7 +167,7 @@ public class DitourModel : NSObject {
 
 	func handleEventsForBackgroundURLSession( identifier : String, completionHandler : ()->Void ) {
 		if let session = self.downloadSession {
-			session.handleEventsForBackgroundURLSession( identifier, completionHandler )
+			session.handleEventsForBackgroundURLSession( identifier, completionHandler: completionHandler )
 		}
 	}
 
@@ -274,7 +274,7 @@ public class DitourModel : NSObject {
 
 	private class func applicationDocumentsDirectory() -> String {
 		let documentsDirectories = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true )
-		return documentsDirectories.last! as String
+		return documentsDirectories.last! as! String
 	}
 
 
@@ -319,7 +319,7 @@ public class DitourModel : NSObject {
 		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )!
 
 		if rootStores.count > 0 {
-			return (rootStores[0] as RootStore)
+			return (rootStores[0] as! RootStore)
 		}
 		else {
 			let rootStore = RootStore.insertNewRootStoreInContext( managedObjectContext )

@@ -29,7 +29,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	let downloadTaskRemoteItems = ConcurrentDictionary<NSURLSessionTask,DownloadFileStatus>()
 
 	/* URL Session for managing the download */
-	let downloadSession : NSURLSession!
+	private(set) var downloadSession : NSURLSession!
 
 	/* completion handler for background session */
 	private var backgroundSessionCompletionHandler : ( ()->Void )?
@@ -287,7 +287,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					self.downloadRemoteFile(configuration, containerStatus: status, cache: localCache)
 				}
 
-				for track in presentation.tracks.array as [TrackStore] {
+				for track in presentation.tracks.array as! [TrackStore] {
 					self.downloadTrack(track, presentationStatus: status, cache: localCache)
 				}
 
@@ -315,7 +315,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 					self.downloadRemoteFile(configuration, containerStatus: status, cache: cache)
 				}
 
-				for remoteMedia in (track.remoteMedia.array as [RemoteMediaStore]) {
+				for remoteMedia in (track.remoteMedia.array as! [RemoteMediaStore]) {
 					self.downloadRemoteFile(remoteMedia, containerStatus: status, cache: cache)
 				}
 
@@ -343,7 +343,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 							let success = fileManager.linkItemAtPath(cachedFile.absolutePath, toPath: remoteFile.absolutePath, error: &error)
 							if success {
 								remoteFile.markReady()
-								status.setCompleted(true)
+								status.completed = true
 								status.setAndPropagateProgress(1.0, forcePropagation: true)
 								self.updateStatus()
 								return
@@ -384,7 +384,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	/* download task finished normally */
 	func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
 		if let downloadStatus = self.downloadTaskRemoteItems[downloadTask] {
-			let remoteFile = downloadStatus.remoteItem as RemoteFileStore
+			let remoteFile = downloadStatus.remoteItem as! RemoteFileStore
 			var destination : String!
 			var remoteURL : NSURL!
 			remoteFile.managedObjectContext?.performBlockAndWait{ () -> Void in
@@ -415,7 +415,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 				}
 			}
 
-			downloadStatus.setCompleted(true)
+			downloadStatus.completed = true
 			downloadStatus.setAndPropagateProgress(1.0, forcePropagation: true)
 
 			self.persistentSaveContext(remoteFile.managedObjectContext!, error: nil)
@@ -427,7 +427,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 	/* task completed with the possibility of an error */
 	func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
 		if let downloadStatus = self.downloadTaskRemoteItems[task] {
-			let remoteFile = downloadStatus.remoteItem as RemoteFileStore
+			let remoteFile = downloadStatus.remoteItem as! RemoteFileStore
 
 			if error == nil {	// normal completion
 				remoteFile.managedObjectContext?.performBlock{ () -> Void in
@@ -452,7 +452,7 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 			}
 
 			// download completed whether successful or not
-			downloadStatus.setCompleted(true)
+			downloadStatus.completed = true
 
 			self.downloadTaskRemoteItems.removeValueForKey(task)
 
@@ -579,12 +579,6 @@ class DownloadStatus : NSObject {
 		super.init()
 
 		container?.addChildStatus(self)
-	}
-
-
-	/* set the completion property */
-	func setCompleted( completed : Bool ) {
-		self.completed = completed
 	}
 
 
@@ -992,7 +986,7 @@ private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 		if elementName.uppercaseString == "A" {
 			// convert all keys to uppercase so we can grab an attribute by key unambiguously
 			var anchorAttributes = [String: String]()
-			for (key, attribute) in attributeDict as [String: String] {
+			for (key, attribute) in attributeDict as! [String: String] {
 				anchorAttributes[key.uppercaseString] = attribute
 			}
 

@@ -85,7 +85,7 @@ class ExternalPresenter : NSObject, PresentationDelegate {
 		// remove all subviews from the content view (should just be the last media view but just in case remove all subviews)
 		if let contentView = self.contentView {
 			for subView in contentView.subviews {
-				(subView as UIView).removeFromSuperview()
+				(subView as! UIView).removeFromSuperview()
 			}
 
 			contentView.addSubview( mediaView )
@@ -107,7 +107,7 @@ class ExternalPresenter : NSObject, PresentationDelegate {
 
 	/* configure the external display */
 	func configureExternalDisplay() {
-		let screens = UIScreen.screens() as [UIScreen]
+		let screens = UIScreen.screens() as! [UIScreen]
 
 		// test whether there is an external screen in addition to the device's screen
 		if screens.count > 1 {
@@ -188,7 +188,7 @@ class Track : NSObject {
 	let defaultSlideDuration : Float
 
 	/* default transition source for each slide */
-	let defaultTransitionSource : TransitionSource? = nil
+	let defaultTransitionSource : TransitionSource?
 
 	/* extra delay over and above the slide duration (used when there is just a single image slide) */
 	let extraTrackDuration : Float
@@ -204,17 +204,19 @@ class Track : NSObject {
 		self.label = trackStore.title
 
 		let possibleConfig = trackStore.effectiveConfiguration
-		let defaultSlideDuration = possibleConfig?["slideDuration"] as? Float ?? DEFAULT_SLIDE_DURATION
+		let defaultSlideDuration = (possibleConfig?["slideDuration"] as? Float) ?? DEFAULT_SLIDE_DURATION
 		self.defaultSlideDuration = defaultSlideDuration
 
 		if let slideTransitionConfig = possibleConfig?["slideTransition"] as? [String: NSObject] {
 			self.defaultTransitionSource = TransitionSource( config: slideTransitionConfig )
+		} else {
+			self.defaultTransitionSource = nil
 		}
 
 		// add the track icon and the slides
 		var trackIcon : UIImage?
 		var slides = [Slide]()
-		for media in trackStore.remoteMedia.array as [RemoteMediaStore] {
+		for media in trackStore.remoteMedia.array as! [RemoteMediaStore] {
 			let mediaPath = media.absolutePath
 
 			// if the filename is Icon.* then it is the icon and all others are slides
@@ -248,7 +250,7 @@ class Track : NSObject {
 		if slides.count == 1 {
 			let firstSlide = slides[0]
 			if firstSlide.isSingleFrame() {		// it's an image
-				let trackDuration = possibleConfig?["singleImageSlideTrackDuration"] as? Float ?? DEFAULT_SINGLE_IMAGE_SLIDE_DURATION
+				let trackDuration = (possibleConfig?["singleImageSlideTrackDuration"] as? Float) ?? DEFAULT_SINGLE_IMAGE_SLIDE_DURATION
 				extraTrackDuration = ( trackDuration > defaultSlideDuration ) ? trackDuration - defaultSlideDuration : 0.0
 			}
 		}

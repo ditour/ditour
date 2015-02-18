@@ -33,7 +33,7 @@ class RootStore : NSManagedObject {
 
 	/* construct a new root and insert it into the managed object context */
 	class func insertNewRootStoreInContext(managedObjectContext: NSManagedObjectContext!) -> RootStore {
-		return NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as RootStore
+		return NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as! RootStore
 	}
 
 
@@ -49,7 +49,7 @@ class RootStore : NSManagedObject {
 	func removeObjectFromGroupsAtIndex(index: UInt) {
 		let groups = self.mutableOrderedSetValueForKey("Groups")
 
-		let group = groups.objectAtIndex(Int(index)) as PresentationGroupStore
+		let group = groups.objectAtIndex(Int(index)) as! PresentationGroupStore
 
 		// if the group for the current presentation is the group marked for removal then set the current master to nil
 		if self.currentPresentation?.group == group {
@@ -225,10 +225,10 @@ class RemoteFileStore : RemoteItemStore {
 		let fileManager = NSFileManager.defaultManager()
 		if fileManager.fileExistsAtPath(self.absolutePath) {
 			var error : NSError? = nil
-			let fileAttributes = fileManager.attributesOfItemAtPath(self.absolutePath, error: &error) as [String:NSObject]
+			let fileAttributes = fileManager.attributesOfItemAtPath(self.absolutePath, error: &error) as! [String:NSObject]
 			if ( error == nil ) {
-				let modDate = fileAttributes[NSFileModificationDate] as NSDate
-				let fileSize = fileAttributes[NSFileSize] as NSNumber
+				let modDate = fileAttributes[NSFileModificationDate] as! NSDate
+				let fileSize = fileAttributes[NSFileSize] as! NSNumber
 				let fileSizeString = NSByteCountFormatter.stringFromByteCount(fileSize.longLongValue, countStyle: .File)
 				return "Local ModificationDate:\n\t\(Constants.DATE_FORMATTER.stringFromDate(modDate))\n\nLocal File Size:\n\t\(fileSizeString)\n\n\(self.localDataSummary)"
 			}
@@ -258,7 +258,7 @@ class ConfigurationStore : RemoteFileStore {
 
 	/* generate a new instance */
 	class func newConfigurationInContainer(container: RemoteContainerStore, at remoteFile: RemoteFile) -> ConfigurationStore {
-		let configuration = NSEntityDescription.insertNewObjectForEntityForName( "Configuration", inManagedObjectContext: container.managedObjectContext!) as ConfigurationStore
+		let configuration = NSEntityDescription.insertNewObjectForEntityForName( "Configuration", inManagedObjectContext: container.managedObjectContext!) as! ConfigurationStore
 
 		configuration.container = container
 		configuration.status = RemoteItemStatus.Pending.rawValue
@@ -284,7 +284,7 @@ class RemoteMediaStore : RemoteFileStore {
 
 
 	class func newRemoteMediaInTrack(track: TrackStore, at remoteFile: RemoteFile) -> RemoteMediaStore {
-		let mediaStore = NSEntityDescription.insertNewObjectForEntityForName("RemoteMedia", inManagedObjectContext: track.managedObjectContext!) as RemoteMediaStore
+		let mediaStore = NSEntityDescription.insertNewObjectForEntityForName("RemoteMedia", inManagedObjectContext: track.managedObjectContext!) as! RemoteMediaStore
 
 		mediaStore.track = track
 		mediaStore.status = RemoteItemStatus.Pending.rawValue
@@ -396,7 +396,7 @@ class TrackStore : RemoteContainerStore {
 
 	/* construct a new track in the specified presentation from the specified remote directory */
 	class func newTrackInPresentation(presentation: PresentationStore, from remoteDirectory: RemoteDirectory) -> TrackStore {
-		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as TrackStore
+		let track = NSEntityDescription.insertNewObjectForEntityForName("Track", inManagedObjectContext: presentation.managedObjectContext!) as! TrackStore
 
 		track.presentation = presentation
 		track.status = RemoteItemStatus.Pending.rawValue
@@ -545,7 +545,7 @@ class PresentationStore : RemoteContainerStore {
 
 	/* construct a new presentation in the specified group from the specified remote directory */
 	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: RemoteDirectory) -> PresentationStore {
-		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as PresentationStore
+		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as! PresentationStore
 
 		presentation.status = RemoteItemStatus.Pending.rawValue
 		presentation.timestamp = NSDate()
@@ -612,7 +612,7 @@ class PresentationStore : RemoteContainerStore {
 		}
 
 		// record files associated with the tracks
-		for track in self.tracks.array as [TrackStore] {
+		for track in self.tracks.array as! [TrackStore] {
 			// record each track configurations if any
 			if let trackConfig = track.configuration {
 				if trackConfig.isReady && fileManager.fileExistsAtPath(trackConfig.absolutePath) {
@@ -621,7 +621,7 @@ class PresentationStore : RemoteContainerStore {
 			}
 
 			// record the each track's slide media
-			for media in track.remoteMedia.array as [RemoteMediaStore] {
+			for media in track.remoteMedia.array as! [RemoteMediaStore] {
 				if media.isReady && fileManager.fileExistsAtPath(media.absolutePath) {
 					dictionary[media.remoteLocation] = media
 				}
@@ -680,7 +680,7 @@ class PresentationGroupStore : RemoteContainerStore {
 
 	/* construct a new presentation group in the managed context and return it */
 	class func insertNewPresentationGroupInContext(managedObjectContext: NSManagedObjectContext!) -> PresentationGroupStore {
-		let group = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as PresentationGroupStore
+		let group = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as! PresentationGroupStore
 
 		// generate a unique path for the group based on the timestamp when the group was created
 		let timestampString = Constants.BASE_PATH_DATE_FORMATTER.stringFromDate(NSDate())
@@ -696,7 +696,7 @@ class PresentationGroupStore : RemoteContainerStore {
 		fetch.predicate = NSPredicate(format: query, argumentArray: [self])
 		fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
 		var error: NSError?
-		return self.managedObjectContext!.executeFetchRequest(fetch, error: &error) as [PresentationStore]
+		return self.managedObjectContext!.executeFetchRequest(fetch, error: &error) as! [PresentationStore]
 	}
 
 
