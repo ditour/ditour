@@ -51,8 +51,6 @@ class Slide {
 		MovieSlide.registerSlideClass()
 		PDFSlide.registerSlideClass()
 		WebpageSlide.registerSlideClass()
-
-		println("registered slide types: \(self.SLIDE_CLASSES_BY_EXTENSION)")
 	}
 
 
