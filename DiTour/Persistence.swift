@@ -300,7 +300,7 @@ class RemoteMediaStore : RemoteFileStore {
 	override class func matches(candidateURL: NSURL) -> Bool {
 		let supportedExtensions = Slide.allSupportedExtensions()
 		if let fileExtension = candidateURL.path?.pathExtension.lowercaseString {
-			return supportedExtensions.containsObject(fileExtension)
+			return supportedExtensions.contains(fileExtension)
 		}
 		else {
 			return false

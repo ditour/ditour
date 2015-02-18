@@ -23,7 +23,7 @@ private let nanosPerSecond = Int64(1_000_000_000)
 
 /* slide base class for displaying content to a presenter */
 class Slide {
-	static var ALL_SUPPORTED_EXTENSIONS = NSSet()
+	static var ALL_SUPPORTED_EXTENSIONS = Set<String>()
 	static var SLIDE_CLASSES_BY_EXTENSION = [String:Slide.Type]()
 
 
@@ -51,6 +51,8 @@ class Slide {
 		MovieSlide.registerSlideClass()
 		PDFSlide.registerSlideClass()
 		WebpageSlide.registerSlideClass()
+
+		println("registered slide types: \(self.SLIDE_CLASSES_BY_EXTENSION)")
 	}
 
 
@@ -83,27 +85,25 @@ class Slide {
 
 
 	// append the supported extensions to ALL_SUPPORTED_EXTENSIONS
-	private class func appendSupportedExtensions(fileExtensions: NSSet) {
-		let allExtensions = ALL_SUPPORTED_EXTENSIONS.mutableCopy() as! NSMutableSet
-		allExtensions.unionSet(fileExtensions as! Set<NSObject>)
-		ALL_SUPPORTED_EXTENSIONS = allExtensions.copy()	as! NSSet
+	private class func appendSupportedExtensions(fileExtensions: Set<String>) {
+		ALL_SUPPORTED_EXTENSIONS.unionInPlace(fileExtensions)
 	}
 
 
 	/* get the supported extensions */
-	class func supportedExtensions() -> NSSet {
-		return NSSet()
+	class func supportedExtensions() -> Set<String> {
+		return Set()
 	}
 
 
-	class func allSupportedExtensions() -> NSSet {
+	class func allSupportedExtensions() -> Set<String> {
 		return ALL_SUPPORTED_EXTENSIONS
 	}
 
 
 	/* determine whether this instance's subclass supports the specified extension */
 	func matchesExtension(fileExtension: String) -> Bool {
-		return self.dynamicType.supportedExtensions().containsObject(fileExtension)
+		return self.dynamicType.supportedExtensions().contains(fileExtension)
 	}
 
 
@@ -176,11 +176,11 @@ private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect?
 /* slide for displaying an image */
 class ImageSlide : Slide {
 	/* container of static constants */
-	static let imageExtensions = NSSet(array: ["png", "jpg", "jpeg", "gif"])
+	static let imageExtensions : Set<String> = ["png", "jpg", "jpeg", "gif"]
 
 
 	/* get the supported extensions */
-	override class func supportedExtensions() -> NSSet {
+	override class func supportedExtensions() -> Set<String> {
 		return imageExtensions
 	}
 
@@ -226,10 +226,9 @@ class ImageSlide : Slide {
 /* Slide for displaying an COLLADA 3D model using SceneKit. */
 class SceneSlide : Slide {
 	/* container of static constants */
-	struct Statics {
-		// The dae file must be compressed and contain materials (if any referenced) internally.
-		static let SCENE_EXTENSIONS = NSSet(array: ["dae"])
-	}
+
+	// The dae file must be compressed and contain materials (if any referenced) internally.
+	static let SCENE_EXTENSIONS : Set<String> = ["dae"]
 
 
 	/* register a slide class so we can instantiate it by file extension */
@@ -242,8 +241,8 @@ class SceneSlide : Slide {
 
 
 	/* get the supported extensions */
-	override class func supportedExtensions() -> NSSet {
-		return Statics.SCENE_EXTENSIONS
+	override class func supportedExtensions() -> Set<String> {
+		return SCENE_EXTENSIONS
 	}
 
 
@@ -301,16 +300,14 @@ class SceneSlide : Slide {
 /* slide for displaying a movie to the external screen */
 class MovieSlide : Slide {
 	/* container of static constants */
-	struct Statics {
-		static let MOVIE_EXTENSIONS = NSSet(array: ["m4v", "mp4", "mov"])
-	}
+	static let MOVIE_EXTENSIONS : Set<String> = ["m4v", "mp4", "mov"]
 
 	var completionHandler : ((Slide)->Void)? = nil
 
 
 	/* get the supported extensions */
-	override class func supportedExtensions() -> NSSet {
-		return Statics.MOVIE_EXTENSIONS
+	override class func supportedExtensions() -> Set<String> {
+		return MOVIE_EXTENSIONS
 	}
 
 
@@ -363,17 +360,15 @@ class MovieSlide : Slide {
 /* slide for displaying pages from a PDF document as frames */
 class PDFSlide : Slide {
 	/* container of static constants */
-	struct Statics {
-		static let PDF_EXTENSIONS = NSSet(object: "pdf")
-	}
+	static let PDF_EXTENSIONS : Set<String> = ["pdf"]
 
 	/* run ID identifying the current Run (if any) */
 	var currentRunID : NSObject? = nil
 
 
 	/* get the supported extensions */
-	override class func supportedExtensions() -> NSSet {
-		return Statics.PDF_EXTENSIONS
+	override class func supportedExtensions() -> Set<String> {
+		return PDF_EXTENSIONS
 	}
 
 
@@ -484,7 +479,7 @@ class PDFSlide : Slide {
 /* slide for displaying a rendering of a web page to the presenter */
 class WebpageSlide : Slide {
 	/* container of static constants */
-	static let WEB_EXTENSIONS = NSSet(array: ["urlspec"])
+	static let WEB_EXTENSIONS : Set<String> = ["urlspec"]
 
 
 	/* options for zooming the web view to fit the external display bounds */
@@ -510,7 +505,7 @@ class WebpageSlide : Slide {
 
 
 	/* get the supported extensions */
-	override class func supportedExtensions() -> NSSet {
+	override class func supportedExtensions() -> Set<String> {
 		return WEB_EXTENSIONS
 	}
 
