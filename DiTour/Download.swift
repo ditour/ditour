@@ -982,7 +982,7 @@ class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* enter a new element */
-	func parser(parser: NSXMLParser!, didStartElement elementName: String!, namespaceURI: String!, qualifiedName qName: String!, attributes attributeDict: [NSObject : AnyObject]!) {
+	func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [NSObject : AnyObject]) {
 		if elementName.uppercaseString == "A" {
 			// convert all keys to uppercase so we can grab an attribute by key unambiguously
 			var anchorAttributes = [String: String]()
@@ -1030,11 +1030,13 @@ class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* process text associated with the current element */
-	func parser(parser: NSXMLParser!, foundCharacters string: String!) {
-		if let currentFileLinkText = self.currentFileLinkText {
-			self.currentFileLinkText = currentFileLinkText + string
-		} else {
-			self.currentFileLinkText = string
+	func parser(parser: NSXMLParser, foundCharacters string: String?) {
+		if let text = string {
+			if let currentFileLinkText = self.currentFileLinkText {
+				self.currentFileLinkText = currentFileLinkText + text
+			} else {
+				self.currentFileLinkText = text
+			}
 		}
 	}
 }
