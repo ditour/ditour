@@ -991,22 +991,20 @@ class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 			}
 
 			// get the href attribute
-			if let href = anchorAttributes["HREF"] {
-				if let anchorURL = NSURL(string: href, relativeToURL: self.directoryURL) {
-					// reject query URLs
-					if anchorURL.query != nil {
-						self.closeFileLinkInfo()
-						return
-					}
+			if let href = anchorAttributes["HREF"], anchorURL = NSURL(string: href, relativeToURL: self.directoryURL) {
+				// reject query URLs
+				if anchorURL.query != nil {
+					self.closeFileLinkInfo()
+					return
+				}
 
-					// test whether the referenced item is a direct child of the directory otherwise reject it
-					if anchorURL.path?.stringByDeletingLastPathComponent == self.directoryURL.path {
-						if anchorURL.absoluteString!.hasSuffix("/") {	// it is a directory
-							self.closeFileLinkInfo()
-							self.items.append(anchorURL)
-						} else {
-							self.currentFileLink = anchorURL
-						}
+				// test whether the referenced item is a direct child of the directory otherwise reject it
+				if anchorURL.path?.stringByDeletingLastPathComponent == self.directoryURL.path {
+					if anchorURL.absoluteString!.hasSuffix("/") {	// it is a directory
+						self.closeFileLinkInfo()
+						self.items.append(anchorURL)
+					} else {
+						self.currentFileLink = anchorURL
 					}
 				}
 			}
