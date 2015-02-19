@@ -286,23 +286,21 @@ class Track : NSObject {
 		slide.presentTo(presenter){ theSlide -> Void in
 			if self.playing {
 				let nextSlideIndex = slideIndex + 1
-				if let currentRunID = presenter.currentRunID {	// verify the current run is the one we are on
-					if runID == currentRunID {
-						if nextSlideIndex < UInt(slides.count) {
-							self.presentSlide(atIndex: nextSlideIndex, to: presenter, forRun: runID, completionHandler: completionHandler)
-						} else {
-							let trackDelay = self.extraTrackDuration
+				if let currentRunID = presenter.currentRunID where runID == currentRunID {	// verify the current run is the one we are on
+					if nextSlideIndex < UInt(slides.count) {
+						self.presentSlide(atIndex: nextSlideIndex, to: presenter, forRun: runID, completionHandler: completionHandler)
+					} else {
+						let trackDelay = self.extraTrackDuration
 
-							// if there is an extra track delay then we will delay calling the completion handler
-							if trackDelay > 0.0 {
-								let delayInSeconds = Int64(trackDelay)
-								let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * Int64(1_000_000_000) )
-								dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
-									completionHandler(self)		// call this track's completion handler
-								}
-							} else {
-								completionHandler(self)	// call this track's completion handler
+						// if there is an extra track delay then we will delay calling the completion handler
+						if trackDelay > 0.0 {
+							let delayInSeconds = Int64(trackDelay)
+							let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * Int64(1_000_000_000) )
+							dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+								completionHandler(self)		// call this track's completion handler
 							}
+						} else {
+							completionHandler(self)	// call this track's completion handler
 						}
 					}
 				}
