@@ -23,9 +23,27 @@ private let nanosPerSecond = Int64(1_000_000_000)
 
 /* slide base class for displaying content to a presenter */
 class Slide {
-	static var ALL_SUPPORTED_EXTENSIONS = Set<String>()
-	static var SLIDE_CLASSES_BY_EXTENSION = [String:Slide.Type]()
+	/* set of all supported extensions and the slide classes keyed by extension */
+	static let (allSupportedExtensions, slideClassesByExtension) : (Set<String>, [String:Slide.Type]) = {
+		var allSupportedExtensions = Set<String>()
+		var classesByExtension = [String:Slide.Type]()
 
+		// get the curried function which references the variables for all supported extensions and classes by extension
+		let register = Slide.registerSlideClass(allSupportedExtensions: &allSupportedExtensions, classesByExtension: &classesByExtension)
+
+		// register each Slide subclass to append to the supported extensions
+		register(slideClass: ImageSlide.self)
+		register(slideClass: SceneSlide.self)
+		register(slideClass: MovieSlide.self)
+		register(slideClass: PDFSlide.self)
+		register(slideClass: WebpageSlide.self)
+
+		return (allSupportedExtensions, classesByExtension)
+	}()
+
+
+	/* supported extensions by the Slide subclass */
+	class var supportedExtensions : Set<String> { return [] }
 
 	/* duration of the slide's presentation */
 	private(set) var duration : Float
@@ -44,21 +62,11 @@ class Slide {
 	}
 
 
-	/* register the slide classes */
-	static func registerSlideClasses() {
-		ImageSlide.registerSlideClass()
-		SceneSlide.registerSlideClass()
-		MovieSlide.registerSlideClass()
-		PDFSlide.registerSlideClass()
-		WebpageSlide.registerSlideClass()
-	}
-
-
 	/* make a slide instance based on the file's extension */
 	static func makeSlideWithFile(file: String, duration: Float) -> Slide? {
 		let fileExtension = file.pathExtension.lowercaseString
 
-		if let SlideType = SLIDE_CLASSES_BY_EXTENSION[fileExtension] {
+		if let SlideType = slideClassesByExtension[fileExtension] {
 			return SlideType(file: file, duration: duration)
 		}
 		else {
@@ -68,40 +76,21 @@ class Slide {
 
 
 	/* register a slide class so we can instantiate it by file extension */
-	private class func registerSlideClass() {
-		// store the class names keyed by lower case extension for later use when instantiating slides
-		var slideClassesByExtension = SLIDE_CLASSES_BY_EXTENSION
-		let fileExtensions = self.supportedExtensions()
+	private static func registerSlideClass<T : Slide>(inout #allSupportedExtensions: Set<String>, inout classesByExtension : [String:Slide.Type])( slideClass : T.Type ) {
+		let fileExtensions = slideClass.supportedExtensions
+
+		allSupportedExtensions.unionInPlace( fileExtensions )
+
 		for fileExtension in fileExtensions {
 			let extensionKey = fileExtension.lowercaseString
-			slideClassesByExtension[extensionKey] = self;
+			classesByExtension[extensionKey] = self;
 		}
-		SLIDE_CLASSES_BY_EXTENSION = slideClassesByExtension
-
-		self.appendSupportedExtensions(fileExtensions)
-	}
-
-
-	// append the supported extensions to ALL_SUPPORTED_EXTENSIONS
-	private class func appendSupportedExtensions(fileExtensions: Set<String>) {
-		ALL_SUPPORTED_EXTENSIONS.unionInPlace(fileExtensions)
-	}
-
-
-	/* get the supported extensions */
-	class func supportedExtensions() -> Set<String> {
-		return Set()
-	}
-
-
-	class func allSupportedExtensions() -> Set<String> {
-		return ALL_SUPPORTED_EXTENSIONS
 	}
 
 
 	/* determine whether this instance's subclass supports the specified extension */
 	func matchesExtension(fileExtension: String) -> Bool {
-		return self.dynamicType.supportedExtensions().contains(fileExtension)
+		return self.dynamicType.supportedExtensions.contains(fileExtension)
 	}
 
 
@@ -173,14 +162,11 @@ private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect?
 
 /* slide for displaying an image */
 class ImageSlide : Slide {
-	/* container of static constants */
-	static let imageExtensions : Set<String> = ["png", "jpg", "jpeg", "gif"]
+	/* image extensions */
+	private static let imageExtensions : Set<String> = ["png", "jpg", "jpeg", "gif"]
 
-
-	/* get the supported extensions */
-	override class func supportedExtensions() -> Set<String> {
-		return imageExtensions
-	}
+	/* supported extensions by this Slide subclass */
+	override class var supportedExtensions : Set<String> { return imageExtensions }
 
 
 	/* icon is the image itself */
@@ -223,24 +209,14 @@ class ImageSlide : Slide {
 
 /* Slide for displaying an COLLADA 3D model using SceneKit. */
 class SceneSlide : Slide {
-	/* container of static constants */
-
 	// The dae file must be compressed and contain materials (if any referenced) internally.
-	static let SCENE_EXTENSIONS : Set<String> = ["dae"]
+	private static let sceneExtensions : Set<String> = ["dae"]
 
 
-	/* register a slide class so we can instantiate it by file extension */
-	private override class func registerSlideClass() {
+	/* supported extensions by this Slide subclass */
+	override class var supportedExtensions : Set<String> {
 		// register if SceneKit is supported (available starting in iOS 8)
-		if NSClassFromString("SCNScene") != nil {
-			super.registerSlideClass()
-		}
-	}
-
-
-	/* get the supported extensions */
-	override class func supportedExtensions() -> Set<String> {
-		return SCENE_EXTENSIONS
+		return NSClassFromString("SCNScene") != nil ? sceneExtensions : []
 	}
 
 
@@ -298,15 +274,13 @@ class SceneSlide : Slide {
 /* slide for displaying a movie to the external screen */
 class MovieSlide : Slide {
 	/* container of static constants */
-	static let MOVIE_EXTENSIONS : Set<String> = ["m4v", "mp4", "mov"]
+	private static let movieExtensions : Set<String> = ["m4v", "mp4", "mov"]
 
+	/* supported extensions by this Slide subclass */
+	override class var supportedExtensions : Set<String> { return movieExtensions }
+
+	/* handler to call upon completion of the movie */
 	var completionHandler : ((Slide)->Void)? = nil
-
-
-	/* get the supported extensions */
-	override class func supportedExtensions() -> Set<String> {
-		return MOVIE_EXTENSIONS
-	}
 
 
 	/* display the image to the presenter */
@@ -358,16 +332,13 @@ class MovieSlide : Slide {
 /* slide for displaying pages from a PDF document as frames */
 class PDFSlide : Slide {
 	/* container of static constants */
-	static let PDF_EXTENSIONS : Set<String> = ["pdf"]
+	private static let pdfExtensions : Set<String> = ["pdf"]
+
+	/* supported extensions by this Slide subclass */
+	override class var supportedExtensions : Set<String> { return pdfExtensions }
 
 	/* run ID identifying the current Run (if any) */
 	var currentRunID : NSObject? = nil
-
-
-	/* get the supported extensions */
-	override class func supportedExtensions() -> Set<String> {
-		return PDF_EXTENSIONS
-	}
 
 
 	private func newDocument() -> CGPDFDocumentRef {
@@ -477,7 +448,10 @@ class PDFSlide : Slide {
 /* slide for displaying a rendering of a web page to the presenter */
 class WebpageSlide : Slide {
 	/* container of static constants */
-	static let WEB_EXTENSIONS : Set<String> = ["urlspec"]
+	private static let webExtensions : Set<String> = ["urlspec"]
+
+	/* supported extensions by this Slide subclass */
+	override class var supportedExtensions : Set<String> { return webExtensions }
 
 
 	/* options for zooming the web view to fit the external display bounds */
@@ -500,12 +474,6 @@ class WebpageSlide : Slide {
 
 	/* handler of webview */
 	private var webViewHandler : WebViewHandler!
-
-
-	/* get the supported extensions */
-	override class func supportedExtensions() -> Set<String> {
-		return WEB_EXTENSIONS
-	}
 
 
 	/* required initializer is used to dynamically initialize instances of any subclass */
