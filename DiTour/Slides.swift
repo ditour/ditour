@@ -373,8 +373,8 @@ class PDFSlide : Slide {
 	/* generate an image from the specified page */
 	private func imageFromPageRef( pageRef: CGPDFPageRef ) -> UIImage? {
 		let bounds = CGPDFPageGetBoxRect(pageRef, kCGPDFCropBox)
-		let width = UInt( CGRectGetWidth(bounds) )
-		let height = UInt( CGRectGetHeight(bounds) )
+		let width = Int( CGRectGetWidth(bounds) )
+		let height = Int( CGRectGetHeight(bounds) )
 		let colorSpaceRef = CGColorSpaceCreateDeviceRGB()
 		let options = CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.PremultipliedFirst.rawValue
 		let context = CGBitmapContextCreate(nil, width, height, 8, 0, colorSpaceRef, CGBitmapInfo(options))
