@@ -296,11 +296,10 @@ class RemoteMediaStore : RemoteFileStore {
 	}
 
 
-	// indicates whether the candidate URL matches a type supported by the class
+	// indicates whether the candidate URL matches a type for which a Slide can be made
 	override class func matches(candidateURL: NSURL) -> Bool {
-		let supportedExtensions = Slide.allSupportedExtensions
-		if let fileExtension = candidateURL.path?.pathExtension.lowercaseString {
-			return supportedExtensions.contains(fileExtension)
+		if let fileExtension = candidateURL.path?.pathExtension {
+			return Slide.canMakeSlideForExtension(fileExtension)
 		}
 		else {
 			return false

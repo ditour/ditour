@@ -24,12 +24,11 @@ private let nanosPerSecond = Int64(1_000_000_000)
 /* slide base class for displaying content to a presenter */
 class Slide {
 	/* set of all supported extensions and the slide classes keyed by extension */
-	static let (allSupportedExtensions, slideClassesByExtension) : (Set<String>, [String:Slide.Type]) = {
-		var allSupportedExtensions = Set<String>()
+	static let slideClassesByExtension : [String:Slide.Type] = {
 		var classesByExtension = [String:Slide.Type]()
 
-		// get the curried function which references the variables for all supported extensions and classes by extension
-		let register = Slide.registerSlideClass(allSupportedExtensions: &allSupportedExtensions, classesByExtension: &classesByExtension)
+		// get the curried function which references the variable for classes by extension
+		let register = Slide.registerSlideClass(classesByExtension: &classesByExtension)
 
 		// register each Slide subclass to append to the supported extensions
 		register(slideClass: ImageSlide.self)
@@ -38,7 +37,7 @@ class Slide {
 		register(slideClass: PDFSlide.self)
 		register(slideClass: WebpageSlide.self)
 
-		return (allSupportedExtensions, classesByExtension)
+		return classesByExtension
 	}()
 
 
@@ -62,6 +61,12 @@ class Slide {
 	}
 
 
+	/* determine whether the specified file extensions is supported */
+	static func canMakeSlideForExtension(fileExtension : String) -> Bool {
+		return slideClassesByExtension[fileExtension.lowercaseString] != nil
+	}
+
+
 	/* make a slide instance based on the file's extension */
 	static func makeSlideWithFile(file: String, duration: Float) -> Slide? {
 		let fileExtension = file.pathExtension.lowercaseString
@@ -76,10 +81,8 @@ class Slide {
 
 
 	/* register a slide class so we can instantiate it by file extension */
-	private static func registerSlideClass<T : Slide>(inout #allSupportedExtensions: Set<String>, inout classesByExtension : [String:Slide.Type])( slideClass : T.Type ) {
+	private static func registerSlideClass<T : Slide>(inout #classesByExtension : [String:Slide.Type])( slideClass : T.Type ) {
 		let fileExtensions = slideClass.supportedExtensions
-
-		allSupportedExtensions.unionInPlace( fileExtensions )
 
 		for fileExtension in fileExtensions {
 			let extensionKey = fileExtension.lowercaseString
