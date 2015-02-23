@@ -86,7 +86,7 @@ class Slide {
 
 		for fileExtension in fileExtensions {
 			let extensionKey = fileExtension.lowercaseString
-			classesByExtension[extensionKey] = self;
+			classesByExtension[extensionKey] = slideClass;
 		}
 	}
 
