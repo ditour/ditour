@@ -42,14 +42,13 @@ class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSe
 
 	init(mainModel: DitourModel) {
 		self.mainModel = mainModel
-
 		self.backgroundSessionID = PresentationGroupDownloadSession.makeBackgroundSessionID()
-
-		let configuration = PresentationGroupDownloadSession.makeBackgroundConfiguration(self.backgroundSessionID)
-		configuration.HTTPMaximumConnectionsPerHost = 4
 
 		super.init()
 
+		// create the URL Download session
+		let configuration = self.dynamicType.makeBackgroundConfiguration(self.backgroundSessionID)
+		configuration.HTTPMaximumConnectionsPerHost = 4
 		self.downloadSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
 	}
 
