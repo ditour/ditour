@@ -27,7 +27,7 @@ class Slide {
 	static let slideClassesByExtension : [String:Slide.Type] = {
 		var classesByExtension = [String:Slide.Type]()
 
-		// get the curried function which references the variable for classes by extension
+		// get the curried function which references the common variable for classes by extension
 		let register = Slide.registerSlideClass(classesByExtension: &classesByExtension)
 
 		// register each Slide subclass to append to the supported extensions
