@@ -186,19 +186,15 @@ class ImageSlide : Slide {
 
 	/* display the image to the presenter */
 	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
-		if let image = UIImage(contentsOfFile: self.mediaFile) {
-			if let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
-				let imageView = UIImageView(frame: imageFrame)
-				imageView.image = UIImage(contentsOfFile: self.mediaFile)
+		if let image = UIImage(contentsOfFile: self.mediaFile), imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
+			let imageView = UIImageView(frame: imageFrame)
+			imageView.image = UIImage(contentsOfFile: self.mediaFile)
 
-				presenter.displayMediaView(imageView)
+			presenter.displayMediaView(imageView)
 
-				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
-				dispatch_after(popTime, dispatch_get_main_queue()) {
-					completionHandler(self)
-				}
-			} else {
+			let delayInSeconds = Int64(self.duration)
+			let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
+			dispatch_after(popTime, dispatch_get_main_queue()) {
 				completionHandler(self)
 			}
 		} else {
