@@ -579,7 +579,7 @@ class WebpageSlide : Slide {
 
 
 	/* handles web view callbacks */
-	private class WebViewHandler : NSObject, UIWebViewDelegate {
+	class WebViewHandler : NSObject, UIWebViewDelegate {
 		/* slide for which the web view is managed */
 		unowned let slide : WebpageSlide
 
