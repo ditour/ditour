@@ -911,69 +911,68 @@ class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 		var error: NSError?
 		var usedEncoding: UnsafeMutablePointer<UInt> = nil
 
-		let rawDirectoryContents = NSString(contentsOfURL: directoryURL, usedEncoding: usedEncoding, error: &error)
+		if let rawDirectoryContents = NSString(contentsOfURL: directoryURL, usedEncoding: usedEncoding, error: &error) where error == nil {
 
-		if error != nil {
-			// propagate the error
-			if errorPtr != nil {
-				errorPtr.memory = error
+			// tidy the HTML to convert it to proper XHTML so we can use the XML Parser
+			// we are responsible for freeing the returned xhtml pointer
+			let xhtmlPtr = ConvertC_HTML_TO_XHTML(rawDirectoryContents as String)
+
+			// if there are directory contents to process convert to XHTML and parse it
+			if let directoryContents = String.fromCString(xhtmlPtr) {
+				free(xhtmlPtr)	// free the XHTML ptr returned from the C library
+
+				if let directoryData = directoryContents.dataUsingEncoding(NSUTF8StringEncoding) {
+					let xmlParser = NSXMLParser(data: directoryData)
+					let directoryParser = RemoteDirectoryParser(location: directoryURL)
+					xmlParser.delegate = directoryParser
+
+					// if parsing succeeds construct the remote directory
+					if xmlParser.parse() {
+						// a remote item may either be a RemoteFile (ordinary file) or RemoteDirectory (subdirectory)
+						var directoryItems = [RemoteDirectoryItem]()
+						var files = [RemoteFile]()
+						var subdirectories = [RemoteDirectory]()
+
+						// pass files to remote directory and parse subdirectory URLs converting them to subdirectories and passing them on to the remote directory
+						for parserItem in directoryParser.items {
+							switch parserItem {
+							case let subdirectoryURL as NSURL:
+								var subError : NSError?
+								if let subdirectory = RemoteDirectory.parseDirectoryAtURL(subdirectoryURL, error: &subError) {
+									directoryItems.append(subdirectory)
+									subdirectories.append(subdirectory)
+								} else if ( subError != nil ) {
+									println("Subdirectory parsing error: \(subError)")
+								}
+							case let remoteFile as RemoteFile:
+								directoryItems.append(remoteFile)
+								files.append(remoteFile)
+							default:
+								// getting here is an error
+								println( "Error: parser item is neither an URL nor remote file." )
+								break
+							}
+						}
+						remoteDirectory.items = directoryItems
+						remoteDirectory.files = files
+						remoteDirectory.subdirectories = subdirectories
+					} else {
+						if errorPtr != nil {
+							errorPtr.memory = xmlParser.parserError
+						}
+						return nil
+					}
+				}
 			}
-
-			return nil
-		}
-
-		// if there are directory contents to process convert to XHTML and parse it
-		if let directoryContents = rawDirectoryContents?.toXHTMLWithError(&error) {
+		} else {
 			if error != nil {
+				// propagate the error
 				if errorPtr != nil {
 					errorPtr.memory = error
 				}
-
-				return nil
 			}
 
-			if let directoryData = directoryContents.dataUsingEncoding(NSUTF8StringEncoding) {
-				let xmlParser = NSXMLParser(data: directoryData)
-				let directoryParser = RemoteDirectoryParser(location: directoryURL)
-				xmlParser.delegate = directoryParser
-
-				// if parsing succeeds construct the remote directory
-				if xmlParser.parse() {
-					// a remote item may either be a RemoteFile (ordinary file) or RemoteDirectory (subdirectory)
-					var directoryItems = [RemoteDirectoryItem]()
-					var files = [RemoteFile]()
-					var subdirectories = [RemoteDirectory]()
-
-					// pass files to remote directory and parse subdirectory URLs converting them to subdirectories and passing them on to the remote directory
-					for parserItem in directoryParser.items {
-						switch parserItem {
-						case let subdirectoryURL as NSURL:
-							var subError : NSError?
-							if let subdirectory = RemoteDirectory.parseDirectoryAtURL(subdirectoryURL, error: &subError) {
-								directoryItems.append(subdirectory)
-								subdirectories.append(subdirectory)
-							} else if ( subError != nil ) {
-								println("Subdirectory parsing error: \(subError)")
-							}
-						case let remoteFile as RemoteFile:
-							directoryItems.append(remoteFile)
-							files.append(remoteFile)
-						default:
-							// getting here is an error
-							println( "Error: parser item is neither an URL nor remote file." )
-							break
-						}
-					}
-					remoteDirectory.items = directoryItems
-					remoteDirectory.files = files
-					remoteDirectory.subdirectories = subdirectories
-				} else {
-					if errorPtr != nil {
-						errorPtr.memory = xmlParser.parserError
-					}
-					return nil
-				}
-			}
+			return nil
 		}
 
 		return remoteDirectory
