@@ -591,7 +591,7 @@ class WebpageSlide : Slide {
 		}
 
 
-		/* Handle the web page load completion. Must mark optional method @objc to be visible on Objective-C side for UIWebViewDelegate protocol. */
+		/* Handle the web page load completion. Must mark the optional UIWebViewDelegate protocol method @objc so it will be considered as implemented. */
 		@objc func webViewDidFinishLoad(webView: UIWebView) {
 			// scale the web view's scroll zoom to match the content width so we can see the whole width
 			if !self.slide.canceled && self.slide.webView == webView {
