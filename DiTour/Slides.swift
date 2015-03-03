@@ -579,7 +579,7 @@ class WebpageSlide : Slide {
 
 
 	/* handles web view callbacks */
-	class WebViewHandler : NSObject, UIWebViewDelegate {
+	private class WebViewHandler : NSObject, UIWebViewDelegate {
 		/* slide for which the web view is managed */
 		unowned let slide : WebpageSlide
 
@@ -591,8 +591,8 @@ class WebpageSlide : Slide {
 		}
 
 
-		/* handle the web page load completion */
-		func webViewDidFinishLoad(webView: UIWebView) {
+		/* Handle the web page load completion. Must mark optional method @objc to be visible on Objective-C side for UIWebViewDelegate protocol. */
+		@objc func webViewDidFinishLoad(webView: UIWebView) {
 			// scale the web view's scroll zoom to match the content width so we can see the whole width
 			if !self.slide.canceled && self.slide.webView == webView {
 				let contentSize = webView.scrollView.contentSize
