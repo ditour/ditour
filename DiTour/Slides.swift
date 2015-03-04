@@ -164,7 +164,7 @@ private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect?
 // MARK: - Image Slide
 
 /* slide for displaying an image */
-class ImageSlide : Slide {
+private class ImageSlide : Slide {
 	/* image extensions */
 	private static let imageExtensions : Set<String> = ["png", "jpg", "jpeg", "gif"]
 
@@ -207,7 +207,7 @@ class ImageSlide : Slide {
 // MARK: - Slide for Displaying a 3D Scene
 
 /* Slide for displaying an COLLADA 3D model using SceneKit. */
-class SceneSlide : Slide {
+private class SceneSlide : Slide {
 	// The dae file must be compressed and contain materials (if any referenced) internally.
 	private static let sceneExtensions : Set<String> = ["dae"]
 
@@ -271,7 +271,7 @@ class SceneSlide : Slide {
 // MARK: - Movie Slide
 
 /* slide for displaying a movie to the external screen */
-class MovieSlide : Slide {
+private class MovieSlide : Slide {
 	/* container of static constants */
 	private static let movieExtensions : Set<String> = ["m4v", "mp4", "mov"]
 
@@ -329,7 +329,7 @@ class MovieSlide : Slide {
 // MARK: - PDF Slide
 
 /* slide for displaying pages from a PDF document as frames */
-class PDFSlide : Slide {
+private class PDFSlide : Slide {
 	/* container of static constants */
 	private static let pdfExtensions : Set<String> = ["pdf"]
 
@@ -445,7 +445,7 @@ class PDFSlide : Slide {
 // MARK: - Webpage Slide
 
 /* slide for displaying a rendering of a web page to the presenter */
-class WebpageSlide : Slide {
+private class WebpageSlide : Slide {
 	/* container of static constants */
 	private static let webExtensions : Set<String> = ["urlspec"]
 
