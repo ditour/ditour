@@ -13,7 +13,7 @@ import QuartzCore
 
 
 /* view controller for displaying content on the external screen */
-private class ExternalViewController : UIViewController {
+private final class ExternalViewController : UIViewController {
 	/* external view should always be displayed in portait mode */
 	override func supportedInterfaceOrientations() -> Int {
 		return Int( UIInterfaceOrientationMask.Portrait.rawValue )
@@ -49,7 +49,7 @@ private class ExternalViewController : UIViewController {
 
 
 /* presents the media to an external screen */
-class ExternalPresenter : NSObject, PresentationDelegate {
+final class ExternalPresenter : NSObject, PresentationDelegate {
 	/* unique identifier of the current run */
 	var currentRunID : NSObject?
 
@@ -142,7 +142,7 @@ class ExternalPresenter : NSObject, PresentationDelegate {
 
 
 /* Generater of a transition */
-class TransitionSource : NSObject {
+final class TransitionSource : NSObject {
 	var duration : CFTimeInterval = 0.0
 	var type : String?
 	var subType : String?
@@ -174,7 +174,7 @@ private let DEFAULT_SLIDE_DURATION = Float(5.0)
 private let DEFAULT_SINGLE_IMAGE_SLIDE_DURATION = Float(600.0)
 
 /* Track of sequential slides to present */
-class Track : NSObject {
+final class Track : NSObject {
 	/* this track's icon */
 	let icon : UIImage
 

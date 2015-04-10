@@ -12,7 +12,7 @@ import CoreData
 
 // MARK: Presentation Group Download Session
 /* manages a session for downloading presentation media from the remote server */
-class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
+final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate {
 	/* main model */
 	let mainModel : DitourModel
 
@@ -648,7 +648,7 @@ class DownloadStatus : NSObject {
 // MARK: - Download Container Status
 
 /* download status for a container */
-class DownloadContainerStatus : DownloadStatus {
+final class DownloadContainerStatus : DownloadStatus {
 	/* indicates whether the corresponding remote item was submitted for download */
 	var submitted : Bool = false {
 		didSet {
@@ -780,7 +780,7 @@ class DownloadContainerStatus : DownloadStatus {
 // MARK: - Download File Status
 
 /* download status for a file */
-class DownloadFileStatus : DownloadStatus {}
+final class DownloadFileStatus : DownloadStatus {}
 
 
 
@@ -810,7 +810,7 @@ extension NSURL : RemoteParsedItem {}
 
 // MARK: Remote File
 /* Represents a file on a remote server */
-class RemoteFile : NSObject, RemoteDirectoryItem, RemoteParsedItem {
+final class RemoteFile : NSObject, RemoteDirectoryItem, RemoteParsedItem {
 	/* remote location of the file */
 	private(set) var location: NSURL
 
@@ -837,7 +837,7 @@ class RemoteFile : NSObject, RemoteDirectoryItem, RemoteParsedItem {
 
 // MARK: Remote Directory
 /* Represents a directory on a remote server */
-class RemoteDirectory : NSObject, RemoteDirectoryItem {
+final class RemoteDirectory : NSObject, RemoteDirectoryItem {
 	/* remote location of the file */
 	private(set) var location: NSURL
 
@@ -883,7 +883,7 @@ class RemoteDirectory : NSObject, RemoteDirectoryItem {
 
 // MARK: Remote Directory Parser
 /* generates a remote directory from a remote location and the content of the associated HTML directory pages */
-class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
+final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 	/* location of the the dremote directory to parse */
 	let directoryURL : NSURL
 

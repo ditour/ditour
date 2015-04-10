@@ -37,7 +37,7 @@ private let TIMESTAMP_FORMATTER : NSDateFormatter = {
 
 
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
-class PresentationViewController : UICollectionViewController, DitourModelContainer {
+final class PresentationViewController : UICollectionViewController, DitourModelContainer {
 	var ditourModel: DitourModel? {
 		willSet {
 			self.ditourModel?.removeObserver(self, forKeyPath: "tracks")
@@ -200,7 +200,7 @@ class PresentationViewController : UICollectionViewController, DitourModelContai
 
 
 /* cell for displaying a track icon and label which can be selected to change the current track */
-class TrackViewCell : UICollectionViewCell {
+final class TrackViewCell : UICollectionViewCell {
 	@IBOutlet weak var label: UILabel!
 	@IBOutlet weak var imageView: UIImageView!
 
@@ -320,7 +320,7 @@ class LabelCell : UITableViewCell {
 
 
 /* Table View cell which is labeled and allows for selection */
-class SelectionLabelCell : LabelCell {
+final class SelectionLabelCell : LabelCell {
 	/* button for making and displaying selection */
 	@IBOutlet weak var selectionButton: UIButton!
 }
@@ -339,7 +339,7 @@ private let DOWNLOAD_PROGRESS_FORMAT : NSNumberFormatter = {
 
 
 /* table cell displaying the download status */
-class DownloadStatusCell : LabelCell {
+final class DownloadStatusCell : LabelCell {
 	/* progress indicator */
 	@IBOutlet weak var progressView: UIProgressView!
 
@@ -364,7 +364,7 @@ class DownloadStatusCell : LabelCell {
 
 
 /* table cell for displaying information about a group along with buttons for performing various actions on it */
-class PresentationGroupCell : UITableViewCell {
+final class PresentationGroupCell : UITableViewCell {
 	/* label displaying the Group's URL */
 	@IBOutlet weak var locationLabel : UILabel!
 
@@ -378,7 +378,7 @@ class PresentationGroupCell : UITableViewCell {
 
 
 /* table cell for displaying editable information about a group */
-class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
+final class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
 	/* text field for editing and displaying the group's URL */
 	@IBOutlet weak var locationField: UITextField!
 
@@ -417,7 +417,7 @@ class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
 
 // MARK: - File Info Controller
 /* display information about a media file */
-class FileInfoController : UIViewController, DitourModelContainer, DownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource {
+final class FileInfoController : UIViewController, DitourModelContainer, DownloadStatusDelegate, QLPreviewItem, QLPreviewControllerDataSource {
 	/* label for displaying the file name */
 	@IBOutlet weak var nameLabel : UILabel!
 
@@ -568,7 +568,7 @@ class FileInfoController : UIViewController, DitourModelContainer, DownloadStatu
 
 // MARK: - Presentation Groups Table Controller
 /* table controller for displaying presentation groups */
-class PresentationGroupsTableController : UITableViewController, DitourModelContainer {
+final class PresentationGroupsTableController : UITableViewController, DitourModelContainer {
 	/* Cell constants */
 	private struct Cell {
 		static let VIEW_ID = "PresentationGroupCell"
@@ -1064,7 +1064,7 @@ extension TrackStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified track */
-class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1335,7 +1335,7 @@ extension PresentationStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified presentation */
-class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1689,7 +1689,7 @@ extension PresentationGroupStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified presentation group */
-class PresentationGroupDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class PresentationGroupDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
 	/* main model */
 	var ditourModel : DitourModel?
 

@@ -45,13 +45,13 @@ class Slide {
 	class var supportedExtensions : Set<String> { return [] }
 
 	/* duration of the slide's presentation */
-	private(set) var duration : Float
+	final private(set) var duration : Float
 
 	/* file which contain's this slide's media */
-	private(set) var mediaFile : String
+	final private(set) var mediaFile : String
 
 	/* source of transition to this slide */
-	var transitionSource : TransitionSource?
+	final var transitionSource : TransitionSource?
 
 
 	/* required initializer is used to dynamically initialize instances of any subclass */
@@ -92,7 +92,7 @@ class Slide {
 
 
 	/* determine whether this instance's subclass supports the specified extension */
-	func matchesExtension(fileExtension: String) -> Bool {
+	final func matchesExtension(fileExtension: String) -> Bool {
 		return self.dynamicType.supportedExtensions.contains(fileExtension)
 	}
 
@@ -117,7 +117,7 @@ class Slide {
 
 
 	/* perform the transition */
-	func performTransition(presenter: PresentationDelegate) {
+	final func performTransition(presenter: PresentationDelegate) {
 		if let transitionSource = self.transitionSource {
 			let transition = transitionSource.generate()
 			presenter.beginTransition(transition)
@@ -164,7 +164,7 @@ private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect?
 // MARK: - Image Slide
 
 /* slide for displaying an image */
-private class ImageSlide : Slide {
+private final class ImageSlide : Slide {
 	/* image extensions */
 	private static let imageExtensions : Set<String> = ["png", "jpg", "jpeg", "gif"]
 
@@ -207,7 +207,7 @@ private class ImageSlide : Slide {
 // MARK: - Slide for Displaying a 3D Scene
 
 /* Slide for displaying an COLLADA 3D model using SceneKit. */
-private class SceneSlide : Slide {
+private final class SceneSlide : Slide {
 	// The dae file must be compressed and contain materials (if any referenced) internally.
 	private static let sceneExtensions : Set<String> = ["dae"]
 
@@ -271,7 +271,7 @@ private class SceneSlide : Slide {
 // MARK: - Movie Slide
 
 /* slide for displaying a movie to the external screen */
-private class MovieSlide : Slide {
+private final class MovieSlide : Slide {
 	/* container of static constants */
 	private static let movieExtensions : Set<String> = ["m4v", "mp4", "mov"]
 
@@ -329,7 +329,7 @@ private class MovieSlide : Slide {
 // MARK: - PDF Slide
 
 /* slide for displaying pages from a PDF document as frames */
-private class PDFSlide : Slide {
+private final class PDFSlide : Slide {
 	/* container of static constants */
 	private static let pdfExtensions : Set<String> = ["pdf"]
 
@@ -445,7 +445,7 @@ private class PDFSlide : Slide {
 // MARK: - Webpage Slide
 
 /* slide for displaying a rendering of a web page to the presenter */
-private class WebpageSlide : Slide {
+private final class WebpageSlide : Slide {
 	/* container of static constants */
 	private static let webExtensions : Set<String> = ["urlspec"]
 
@@ -579,7 +579,7 @@ private class WebpageSlide : Slide {
 
 
 	/* handles web view callbacks */
-	private class WebViewHandler : NSObject, UIWebViewDelegate {
+	private final class WebViewHandler : NSObject, UIWebViewDelegate {
 		/* slide for which the web view is managed */
 		unowned let slide : WebpageSlide
 
