@@ -184,9 +184,16 @@ class RemoteItemStore : NSManagedObject {
 		let fileManager = NSFileManager.defaultManager()
 
 		if fileManager.fileExistsAtPath(self.absolutePath) {
-			let success = fileManager.removeItemAtPath(self.absolutePath, error: &error)
+			let success: Bool
+			do {
+				try fileManager.removeItemAtPath(self.absolutePath)
+				success = true
+			} catch let error1 as NSError {
+				error = error1
+				success = false
+			}
 			if !success {
-				println("Error deleting store remote item at path: \(self.absolutePath) due to error: \(error)")
+				print("Error deleting store remote item at path: \(self.absolutePath) due to error: \(error)")
 			}
 		}
 
@@ -224,13 +231,14 @@ class RemoteFileStore : RemoteItemStore {
 
 		let fileManager = NSFileManager.defaultManager()
 		if fileManager.fileExistsAtPath(self.absolutePath) {
-			var error : NSError? = nil
-			let fileAttributes = fileManager.attributesOfItemAtPath(self.absolutePath, error: &error) as! [String:NSObject]
-			if ( error == nil ) {
+			do {
+				let fileAttributes = try fileManager.attributesOfItemAtPath(self.absolutePath)
 				let modDate = fileAttributes[NSFileModificationDate] as! NSDate
 				let fileSize = fileAttributes[NSFileSize] as! NSNumber
 				let fileSizeString = NSByteCountFormatter.stringFromByteCount(fileSize.longLongValue, countStyle: .File)
 				return "Local ModificationDate:\n\t\(Constants.DATE_FORMATTER.stringFromDate(modDate))\n\nLocal File Size:\n\t\(fileSizeString)\n\n\(self.localDataSummary)"
+			} catch {
+				print("Failure getting attributes of file at path: \(self.absolutePath), with error: \(error)")
 			}
 		}
 
@@ -262,7 +270,7 @@ class ConfigurationStore : RemoteFileStore {
 
 		configuration.container = container
 		configuration.status = RemoteItemStatus.Pending.rawValue
-		configuration.remoteLocation = remoteFile.location.absoluteString!
+		configuration.remoteLocation = remoteFile.location.absoluteString
 		configuration.remoteInfo = remoteFile.info
 		configuration.path = container.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent!)
 
@@ -288,7 +296,7 @@ class RemoteMediaStore : RemoteFileStore {
 
 		mediaStore.track = track
 		mediaStore.status = RemoteItemStatus.Pending.rawValue
-		mediaStore.remoteLocation = remoteFile.location.absoluteString!
+		mediaStore.remoteLocation = remoteFile.location.absoluteString
 		mediaStore.remoteInfo = remoteFile.info
 		mediaStore.path = track.path.stringByAppendingPathComponent(remoteFile.location.lastPathComponent!)
 
@@ -327,25 +335,15 @@ class RemoteContainerStore : RemoteItemStore {
 
 	/* parse the configuration file at configuration.absolutePath */
 	func parseConfiguration() -> [String: AnyObject]? {
-		if let path = self.configuration?.absolutePath {
-			if let jsonData = NSData(contentsOfFile: path) {
-				var error : NSError?
-				// all of our JSON files are formatted as dictionaries keyed by string
-				if let jsonObject = NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions(0), error: &error) as? [String: AnyObject] {
-					if error != nil {
-						println( "Error parsing json configuration: \(error) at: \(path)" )
-						return nil
-					} else {
-						return jsonObject
-					}
-				} else {
-					return nil
-				}
-			} else {
-				return nil
-			}
+		guard let path = self.configuration?.absolutePath else { return nil }
 
-		} else {
+		do {
+			guard let jsonData = NSData(contentsOfFile: path) else { return nil }
+			// all of our JSON files are formatted as dictionaries keyed by string
+			guard let jsonObject = try NSJSONSerialization.JSONObjectWithData(jsonData, options: []) as? [String: AnyObject] else { return nil }
+			return jsonObject
+		} catch {
+			print("Error: \(error) parsing configuration at path: \(path)")
 			return nil
 		}
 	}
@@ -399,7 +397,7 @@ class TrackStore : RemoteContainerStore {
 
 		track.presentation = presentation
 		track.status = RemoteItemStatus.Pending.rawValue
-		track.remoteLocation = remoteDirectory.location.absoluteString!
+		track.remoteLocation = remoteDirectory.location.absoluteString
 
 		let rawName = remoteDirectory.location.lastPathComponent!
 		track.path = presentation.path.stringByAppendingPathComponent(rawName)
@@ -431,7 +429,7 @@ class TrackStore : RemoteContainerStore {
 
 // regular expression to match a series of consecutive digits followed by a single underscore
 private let REGEX_DIGITS_UNDERSCORE: NSRegularExpression = {
-	return NSRegularExpression(pattern: "\\d+_", options:.CaseInsensitive, error: nil)!
+	return try! NSRegularExpression(pattern: "\\d+_", options:.CaseInsensitive)
 }()
 
 /* extend String to add convenience methods for Track name processing */
@@ -449,7 +447,7 @@ extension String {
 	/* strip leading digits and underscore */
 	func stripLeadingDigitsAndUnderscore() -> String {
 		let stringLength = (self as NSString).length
-		if let match = REGEX_DIGITS_UNDERSCORE.firstMatchInString(self, options: NSMatchingOptions(0), range: NSMakeRange(0, stringLength)) {
+		if let match = REGEX_DIGITS_UNDERSCORE.firstMatchInString(self, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, stringLength)) {
 			if ( match.range.location == 0 && match.range.length < stringLength ) {
 				return (self as NSString).substringFromIndex(match.range.length)
 			}
@@ -548,7 +546,7 @@ class PresentationStore : RemoteContainerStore {
 
 		presentation.status = RemoteItemStatus.Pending.rawValue
 		presentation.timestamp = NSDate()
-		presentation.remoteLocation = remoteDirectory.location.absoluteString!
+		presentation.remoteLocation = remoteDirectory.location.absoluteString
 		presentation.name = remoteDirectory.location.lastPathComponent!
 		presentation.group = group
 
@@ -694,8 +692,12 @@ class PresentationGroupStore : RemoteContainerStore {
 		let fetch = NSFetchRequest(entityName: PresentationStore.entityName)
 		fetch.predicate = NSPredicate(format: query, argumentArray: [self])
 		fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-		var error: NSError?
-		return self.managedObjectContext!.executeFetchRequest(fetch, error: &error) as! [PresentationStore]
+		do {
+			let presentationStores = try self.managedObjectContext!.executeFetchRequest(fetch) as! [PresentationStore]
+			return presentationStores
+		} catch {
+			fatalError("Error fetching presentation stores: \(error)")
+		}
 	}
 
 

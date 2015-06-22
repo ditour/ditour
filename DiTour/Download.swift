@@ -65,12 +65,10 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 
 	/* make a new background configuration */
 	private class func makeBackgroundConfiguration(backgroundSessionID: String) -> NSURLSessionConfiguration {
-		// need to call best method available for making a new background configuraton
-		if NSURLSessionConfiguration.respondsToSelector("backgroundSessionConfigurationWithIdentifier:") {
+		if #available(iOS 8.0, *) {
 			// proper method to call in iOS 8 (available starting in iOS 8)
 			return NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(backgroundSessionID)
-		}
-		else {
+		} else {
 			// needed for iOS 7 but deprecated in iOS 8
 			return NSURLSessionConfiguration.backgroundSessionConfiguration(backgroundSessionID)
 		}
@@ -134,7 +132,10 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 			group.managedObjectContext!.performBlockAndWait{ () -> Void in
 				group.managedObjectContext!.refreshObject(group, mergeChanges: true)
 			}
-			self.persistentSaveContext(groupStatus.remoteItem.managedObjectContext!, error: nil)
+			do {
+				try self.persistentSaveContext(groupStatus.remoteItem.managedObjectContext!)
+			} catch _ {
+			}
 		}
 	}
 
@@ -148,8 +149,15 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 		status.delegate = delegate
 		self.groupStatus = status
 
-		// perform the updates on the global queue
-		dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { () -> Void in
+		// perform the updates on a global queue
+		let queue : dispatch_queue_t
+		if #available(iOS 8, *) {
+			queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+		} else {
+			// pre iOS 8
+			queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+		}
+		dispatch_async(queue) { () -> Void in
 			group.managedObjectContext!.performBlockAndWait { () -> Void in
 				var possibleError : NSError?
 
@@ -164,11 +172,18 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 					group.removePresentation(presentation)
 					group.managedObjectContext!.deleteObject(presentation)
 				}
-				self.persistentSaveContext(group.managedObjectContext!, error: &possibleError)
+				do {
+					try self.persistentSaveContext(group.managedObjectContext!)
+				} catch let error as NSError {
+					possibleError = error
+				} catch {
+					fatalError()
+				}
 
 				// ------------- fetch the directory references from the remote URL
-
-				if let groupRemoteDirectory = RemoteDirectory.parseDirectoryAtURL(group.remoteURL!, error: &possibleError) {
+				
+				do {
+					let groupRemoteDirectory = try RemoteDirectory.parseDirectoryAtURL(group.remoteURL!)
 					// process any files (e.g. config files)
 					var hasRemoteConfig = false		// indicates whether there is a remote config file to load
 					for remoteFile in groupRemoteDirectory.files {
@@ -203,7 +218,11 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 						}
 					}
 
-					self.persistentSaveContext(group.managedObjectContext!, error: &possibleError)
+					do {
+						try self.persistentSaveContext(group.managedObjectContext!)
+					} catch let error as NSError {
+						possibleError = error
+					}
 
 					// updates fetched properties
 					group.managedObjectContext?.refreshObject(group, mergeChanges: true)
@@ -247,9 +266,10 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 					for (downloadTask,_) in self.downloadTaskRemoteItems {
 						downloadTask.resume()
 					}
-				} else {	// something happened that caused the remote directory parsing to fail
+				} catch let error1 as NSError {	// something happened that caused the remote directory parsing to fail
+					possibleError = error1
 					if let error = possibleError {
-						println("Error downloading group: \(error.localizedDescription)")
+						print("Error downloading group: \(error.localizedDescription)")
 						status.possibleError = error
 						self.cancel()
 					} else {
@@ -257,6 +277,8 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 					}
 					
 					group.markPending()
+				} catch {
+					fatalError()
 				}
 			}
 		}
@@ -271,11 +293,17 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 
 		presentation.managedObjectContext!.performBlockAndWait { () -> Void in
 			var possibleError : NSError? = nil
-			NSFileManager.defaultManager().createDirectoryAtPath(presentation.absolutePath, withIntermediateDirectories: true, attributes: nil, error: &possibleError)
+			do {
+				try NSFileManager.defaultManager().createDirectoryAtPath(presentation.absolutePath, withIntermediateDirectories: true, attributes: nil)
+			} catch let error as NSError {
+				possibleError = error
+			} catch {
+				fatalError()
+			}
 
 			if let error = possibleError {
 				status.possibleError = error
-				println("Error creating presentation directory: \(presentation.absolutePath) with error: \(error.localizedDescription)")
+				print("Error creating presentation directory: \(presentation.absolutePath) with error: \(error.localizedDescription)")
 			} else {
 				presentation.markDownloading()
 
@@ -302,11 +330,17 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 
 		track.managedObjectContext!.performBlockAndWait { () -> Void in
 			var possibleError : NSError?
-			NSFileManager.defaultManager().createDirectoryAtPath(track.absolutePath, withIntermediateDirectories: true, attributes: nil, error: &possibleError)
+			do {
+				try NSFileManager.defaultManager().createDirectoryAtPath(track.absolutePath, withIntermediateDirectories: true, attributes: nil)
+			} catch let error as NSError {
+				possibleError = error
+			} catch {
+				fatalError()
+			}
 
 			if let error = possibleError {
 				status.possibleError = error
-				println("Error creating track directory: \(error.localizedDescription)")
+				print("Error creating track directory: \(error.localizedDescription)")
 			} else {
 				track.markDownloading()
 
@@ -339,7 +373,16 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 						if fileManager.fileExistsAtPath(cachedFile.absolutePath) {
 							// create a hard link from the original path to the new path so we save space
 							var error : NSError?
-							let success = fileManager.linkItemAtPath(cachedFile.absolutePath, toPath: remoteFile.absolutePath, error: &error)
+							let success: Bool
+							do {
+								try fileManager.linkItemAtPath(cachedFile.absolutePath, toPath: remoteFile.absolutePath)
+								success = true
+							} catch let error1 as NSError {
+								error = error1
+								success = false
+							} catch {
+								fatalError()
+							}
 							if success {
 								remoteFile.markReady()
 								status.completed = true
@@ -348,7 +391,7 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 								return
 							} else {
 								status.possibleError = error
-								println("Error creating hard link to remote file: \(remoteFile.absolutePath) from existing file at \(cachedFile.absolutePath)")
+								print("Error creating hard link to remote file: \(remoteFile.absolutePath) from existing file at \(cachedFile.absolutePath)")
 							}
 						}
 					}
@@ -359,10 +402,9 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 
 				let downloadURL = remoteFile.remoteURL
 				let request = NSURLRequest(URL: downloadURL!)
-				let downloadTask = self.downloadSession.downloadTaskWithRequest(request)
+				guard let downloadTask = self.downloadSession.downloadTaskWithRequest(request) else { return }
 				self.downloadTaskRemoteItems[downloadTask] = status
 				remoteFile.markDownloading()
-//				downloadTask.resume()
 			}
 		}
 	}
@@ -395,9 +437,13 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 			var error : NSError?
 
 			if fileManager.fileExistsAtPath(destination) {
-				println("Error: Existing file at destination: \(destination) for remote: \(remoteURL)")
+				print("Error: Existing file at destination: \(destination) for remote: \(remoteURL)")
 			} else {
-				fileManager.copyItemAtPath(location.path!, toPath: destination, error: &error)
+				do {
+					try fileManager.copyItemAtPath(location.path!, toPath: destination)
+				} catch let error1 as NSError {
+					error = error1
+				}
 			}
 
 			if error != nil {
@@ -410,14 +456,17 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 				// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
 				if !alreadyCanceled {
 					self.groupStatus?.possibleError = error
-					println("Error copying file from \(location) to \(destination), \(error!.localizedDescription)")
+					print("Error copying file from \(location) to \(destination), \(error!.localizedDescription)")
 				}
 			}
 
 			downloadStatus.completed = true
 			downloadStatus.setAndPropagateProgress(1.0, forcePropagation: true)
 
-			self.persistentSaveContext(remoteFile.managedObjectContext!, error: nil)
+			do {
+				try self.persistentSaveContext(remoteFile.managedObjectContext!)
+			} catch _ {
+			}
 			self.updateStatus()
 		}
 	}
@@ -442,7 +491,7 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 				// if not already canceled then this is the causal error for the group since we will get a flood of errors due to the cancel which we can ignore
 				if !alreadyCanceled {
 					self.groupStatus?.possibleError = error
-					println("Task: \(task) completed with error: \(error?.localizedDescription)")
+					print("Task: \(task) completed with error: \(error?.localizedDescription)")
 				}
 
 				remoteFile.managedObjectContext?.performBlock{ () -> Void in
@@ -460,7 +509,10 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 				self.stop()
 			}
 
-			self.persistentSaveContext(remoteFile.managedObjectContext!, error: nil)
+			do {
+				try self.persistentSaveContext(remoteFile.managedObjectContext!)
+			} catch _ {
+			}
 			self.updateStatus()
 		}
 	}
@@ -491,19 +543,23 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 		let fileManager = NSFileManager.defaultManager()
 
 		if fileManager.fileExistsAtPath(path) {
-			fileManager.removeItemAtPath(path, error: &possibleError)
+			do {
+				try fileManager.removeItemAtPath(path)
+			} catch let error as NSError {
+				possibleError = error
+			}
 		}
 
 		if let error = possibleError {
-			println( "Error deleting existing file at destination: \(path) with error: \(error.localizedDescription)" )
+			print( "Error deleting existing file at destination: \(path) with error: \(error.localizedDescription)" )
 			self.cancel()
 		}
 	}
 
 
 	/* save the specified context all the way to the root persistent store */
-	private func persistentSaveContext(context: NSManagedObjectContext, error errorPtr: NSErrorPointer) -> Bool {
-		return self.mainModel.persistentSaveContext(context, error: errorPtr)
+	private func persistentSaveContext(context: NSManagedObjectContext) throws {
+		try self.mainModel.persistentSaveContext(context)
 	}
 }
 
@@ -768,9 +824,9 @@ final class DownloadContainerStatus : DownloadStatus {
 
 	/* print child info */
 	func printChildInfo() {
-		println("Child count: \(self.childStatusItems.count)")
+		print("Child count: \(self.childStatusItems.count)")
 		for (path,_) in self.childStatusItems {
-			println("Child Path: \(path)")
+			print("Child Path: \(path)")
 		}
 	}
 }
@@ -860,8 +916,8 @@ final class RemoteDirectory : NSObject, RemoteDirectoryItem {
 
 
 	/* parse the specified URL to generate a remote directory */
-	class func parseDirectoryAtURL(directoryURL: NSURL, error errorPtr: NSErrorPointer) -> RemoteDirectory? {
-		return RemoteDirectoryParser.parseDirectoryAtURL(directoryURL, error: errorPtr)
+	class func parseDirectoryAtURL(directoryURL: NSURL) throws -> RemoteDirectory {
+		return try RemoteDirectoryParser.parseDirectoryAtURL(directoryURL)
 	}
 
 
@@ -906,73 +962,63 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* Parse the directory at the specified loation */
-	class func parseDirectoryAtURL(directoryURL: NSURL, error errorPtr: NSErrorPointer) -> RemoteDirectory? {
+	class func parseDirectoryAtURL(directoryURL: NSURL) throws -> RemoteDirectory {
 		let remoteDirectory = RemoteDirectory(location: directoryURL)
-		var error: NSError?
-		var usedEncoding: UnsafeMutablePointer<UInt> = nil
+		var usedEncoding: UInt = 0
 
-		if let rawDirectoryContents = NSString(contentsOfURL: directoryURL, usedEncoding: usedEncoding, error: &error) where error == nil {
+		let rawDirectoryContents = try NSString(contentsOfURL: directoryURL, usedEncoding: &usedEncoding)
 
-			// tidy the HTML to convert it to proper XHTML so we can use the XML Parser
-			// we are responsible for freeing the returned xhtml pointer
-			let xhtmlPtr = ConvertC_HTML_TO_XHTML(rawDirectoryContents as String)
+		// tidy the HTML to convert it to proper XHTML so we can use the XML Parser
+		// we are responsible for freeing the returned xhtml pointer
+		let xhtmlPtr = ConvertC_HTML_TO_XHTML(rawDirectoryContents as String)
+		defer {
+			free(xhtmlPtr)	// free the XHTML ptr returned from the C library
+		}
 
-			// if there are directory contents to process convert to XHTML and parse it
-			if let directoryContents = String.fromCString(xhtmlPtr) {
-				free(xhtmlPtr)	// free the XHTML ptr returned from the C library
+		// if there are directory contents to process convert to XHTML and parse it
+		guard let directoryContents = String.fromCString(xhtmlPtr) else { return remoteDirectory }
+		guard let directoryData = directoryContents.dataUsingEncoding(NSUTF8StringEncoding) else { return remoteDirectory }
 
-				if let directoryData = directoryContents.dataUsingEncoding(NSUTF8StringEncoding) {
-					let xmlParser = NSXMLParser(data: directoryData)
-					let directoryParser = RemoteDirectoryParser(location: directoryURL)
-					xmlParser.delegate = directoryParser
+		let xmlParser = NSXMLParser(data: directoryData)
+		let directoryParser = RemoteDirectoryParser(location: directoryURL)
+		xmlParser.delegate = directoryParser
 
-					// if parsing succeeds construct the remote directory
-					if xmlParser.parse() {
-						// a remote item may either be a RemoteFile (ordinary file) or RemoteDirectory (subdirectory)
-						var directoryItems = [RemoteDirectoryItem]()
-						var files = [RemoteFile]()
-						var subdirectories = [RemoteDirectory]()
+		// if parsing succeeds construct the remote directory
+		if xmlParser.parse() {
+			// a remote item may either be a RemoteFile (ordinary file) or RemoteDirectory (subdirectory)
+			var directoryItems = [RemoteDirectoryItem]()
+			var files = [RemoteFile]()
+			var subdirectories = [RemoteDirectory]()
 
-						// pass files to remote directory and parse subdirectory URLs converting them to subdirectories and passing them on to the remote directory
-						for parserItem in directoryParser.items {
-							switch parserItem {
-							case let subdirectoryURL as NSURL:
-								var subError : NSError?
-								if let subdirectory = RemoteDirectory.parseDirectoryAtURL(subdirectoryURL, error: &subError) {
-									directoryItems.append(subdirectory)
-									subdirectories.append(subdirectory)
-								} else if ( subError != nil ) {
-									println("Subdirectory parsing error: \(subError)")
-								}
-							case let remoteFile as RemoteFile:
-								directoryItems.append(remoteFile)
-								files.append(remoteFile)
-							default:
-								// getting here is an error
-								println( "Error: parser item is neither an URL nor remote file." )
-								break
-							}
-						}
-						remoteDirectory.items = directoryItems
-						remoteDirectory.files = files
-						remoteDirectory.subdirectories = subdirectories
-					} else {
-						if errorPtr != nil {
-							errorPtr.memory = xmlParser.parserError
-						}
-						return nil
+			// pass files to remote directory and parse subdirectory URLs converting them to subdirectories and passing them on to the remote directory
+			for parserItem in directoryParser.items {
+				switch parserItem {
+				case let subdirectoryURL as NSURL:
+					do {
+						let subdirectory = try RemoteDirectory.parseDirectoryAtURL(subdirectoryURL)
+						directoryItems.append(subdirectory)
+						subdirectories.append(subdirectory)
+					} catch let subError as NSError {
+						print("Subdirectory parsing error: \(subError)")
 					}
+				case let remoteFile as RemoteFile:
+					directoryItems.append(remoteFile)
+					files.append(remoteFile)
+				default:
+					// getting here is an error
+					print( "Error: parser item is neither an URL nor remote file." )
+					break
 				}
 			}
+			remoteDirectory.items = directoryItems
+			remoteDirectory.files = files
+			remoteDirectory.subdirectories = subdirectories
 		} else {
-			if error != nil {
-				// propagate the error
-				if errorPtr != nil {
-					errorPtr.memory = error
-				}
+			if let parserError = xmlParser.parserError {
+				throw parserError
+			} else {
+				throw NSError(domain: "Directory Parser", code: 0, userInfo: nil)
 			}
-
-			return nil
 		}
 
 		return remoteDirectory
@@ -980,15 +1026,16 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* enter a new element */
-	func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [NSObject : AnyObject]) {
+	@objc func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
 		if elementName.uppercaseString == "A" {
 			// convert all keys to uppercase so we can grab an attribute by key unambiguously
 			var anchorAttributes = [String: String]()
-			for (key, attribute) in attributeDict as! [String: String] {
+			for (key, attribute) in attributeDict {
 				anchorAttributes[key.uppercaseString] = attribute
 			}
 
 			// get the href attribute
+			//TODO: candidate for converting to guard
 			if let href = anchorAttributes["HREF"], anchorURL = NSURL(string: href, relativeToURL: self.directoryURL) {
 				// reject query URLs
 				if anchorURL.query != nil {
@@ -998,7 +1045,7 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 				// test whether the referenced item is a direct child of the directory otherwise reject it
 				if anchorURL.path?.stringByDeletingLastPathComponent == self.directoryURL.path {
-					if anchorURL.absoluteString!.hasSuffix("/") {	// it is a directory
+					if anchorURL.absoluteString.hasSuffix("/") {	// it is a directory
 						self.closeFileLinkInfo()
 						self.items.append(anchorURL)
 					} else {
@@ -1026,13 +1073,11 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* process text associated with the current element */
-	func parser(parser: NSXMLParser, foundCharacters string: String?) {
-		if let text = string {
-			if let currentFileLinkText = self.currentFileLinkText {
-				self.currentFileLinkText = currentFileLinkText + text
-			} else {
-				self.currentFileLinkText = text
-			}
+	@objc func parser(parser: NSXMLParser, foundCharacters text: String) {
+		if let currentFileLinkText = self.currentFileLinkText {
+			self.currentFileLinkText = currentFileLinkText + text
+		} else {
+			self.currentFileLinkText = text
 		}
 	}
 }

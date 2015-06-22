@@ -15,8 +15,8 @@ import QuartzCore
 /* view controller for displaying content on the external screen */
 private final class ExternalViewController : UIViewController {
 	/* external view should always be displayed in portait mode */
-	override func supportedInterfaceOrientations() -> Int {
-		return Int( UIInterfaceOrientationMask.Portrait.rawValue )
+	override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+		return UIInterfaceOrientationMask.Portrait
 	}
 
 
@@ -85,7 +85,7 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 		// remove all subviews from the content view (should just be the last media view but just in case remove all subviews)
 		if let contentView = self.contentView {
 			for subView in contentView.subviews {
-				(subView as! UIView).removeFromSuperview()
+				(subView as UIView).removeFromSuperview()
 			}
 
 			contentView.addSubview( mediaView )
@@ -107,7 +107,7 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 
 	/* configure the external display */
 	func configureExternalDisplay() {
-		let screens = UIScreen.screens() as! [UIScreen]
+		let screens = UIScreen.screens() as [UIScreen]
 
 		// test whether there is an external screen in addition to the device's screen
 		if screens.count > 1 {
@@ -133,7 +133,7 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 			self.externalWindow?.hidden = false
 		}
 		else {
-			println( "No external screen..." )
+			print( "No external screen..." )
 			self.externalWindow = nil
 		}
 	}
@@ -142,19 +142,17 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 
 
 /* Generater of a transition */
+//TODO: candidate for converting to struct
 final class TransitionSource : NSObject {
-	var duration : CFTimeInterval = 0.0
-	var type : String?
-	var subType : String?
+	var duration : CFTimeInterval
+	var type : String
+	var subType : String
 
 
 	init( config : [String:NSObject] ) {
-		if let duration = config["duration"] as? Double {
-			self.duration = duration
-		}
-
-		self.type = config["type"] as? String
-		self.subType = config["subtype"] as? String
+		self.duration = config["duration"] as? Double ?? 0.0
+		self.type = config["type"] as? String ?? kCATransitionFade
+		self.subType = config["subtype"] as? String ?? kCATransitionFromRight
 	}
 
 

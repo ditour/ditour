@@ -46,7 +46,7 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 
 		didSet {
 			self.ditourModel?.addObserver(self, forKeyPath: "tracks", options: .New, context: nil)
-			self.ditourModel?.addObserver(self, forKeyPath: "currentTrack", options: (.Old | .New), context: nil)
+			self.ditourModel?.addObserver(self, forKeyPath: "currentTrack", options: ([.Old, .New]), context: nil)
 		}
 	}
 
@@ -63,7 +63,10 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 
 
 	/* handle changes to the model's tracks or current track to update the display accordingly */
-	override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+	override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [NSObject : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+		// if keyPath is nil there is nothing to do as it doesn't match anything observable
+		guard let keyPath = keyPath else { return }
+
 		// test against the source object and the keyPath
 		switch (object, keyPath) {
 
@@ -79,15 +82,18 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 			let tracks = model.tracks
 			var cellPaths = [NSIndexPath]()		// these are the cell paths to refresh
 
+			// if there is no change then there is nothing to handle
+			guard let change = change else { return }
+
 			// reload just the cells of the collection view that need updating (e.g. to change highlighting)
 			switch ( change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey] ) {
 
 			//  old and current track exist and are not equal so we need to update their corresponding cells
 			case let ( .Some( oldTrack as Track ), .Some( currentTrack as Track ) ) where oldTrack !== currentTrack :
-				if let oldItem = find(tracks, oldTrack) {
+				if let oldItem = tracks.indexOf(oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
-				if let newItem = find(tracks, currentTrack) {
+				if let newItem = tracks.indexOf(currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
@@ -96,26 +102,26 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 				break
 
 			// matches the case where oldTrack NSNull and hence only the current track exists so we need to update its cell
-			case let ( .Some(oldTrack as NSNull), .Some(currentTrack as Track) ) :
-				if let newItem = find(tracks, currentTrack) {
+			case let ( .Some(_ as NSNull), .Some(currentTrack as Track) ) :
+				if let newItem = tracks.indexOf(currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
 			// only the current track exists so we need to update its cell
 			case ( .None, .Some( let currentTrack as Track ) ) :
-				if let newItem = find(tracks, currentTrack) {
+				if let newItem = tracks.indexOf(currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
 			// matches the case where currentTrack NSNull and hence only the old track exists and there is no current so update the cell for the old track
-			case let ( .Some(oldTrack as Track), .Some(currentTrack as NSNull) ) :
-				if let oldItem = find(tracks, oldTrack) {
+			case let ( .Some(oldTrack as Track), .Some(_ as NSNull) ) :
+				if let oldItem = tracks.indexOf(oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
 
 			// only the old track exists and there is no current so update the cell for the old track
 			case ( .Some( let oldTrack as Track ), .None ) :
-				if let oldItem = find(tracks, oldTrack) {
+				if let oldItem = tracks.indexOf(oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
 
@@ -192,7 +198,7 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 			configController.ditourModel = self.ditourModel
 
 		default:
-			println("Segue ID: \"\(segue.identifier)\" does not match a known ID in prepare for segue with destination view controller: \(segue.destinationViewController) ")
+			print("Segue ID: \"\(segue.identifier)\" does not match a known ID in prepare for segue with destination view controller: \(segue.destinationViewController) ")
 		}
 	}
 }
@@ -538,21 +544,21 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 
 
 	/* Local URL of the file */
-	var previewItemURL: NSURL! { return NSURL.fileURLWithPath(self.remoteFile.absolutePath) }
+	var previewItemURL: NSURL { return NSURL.fileURLWithPath(self.remoteFile.absolutePath) }
 
 
 	/* title of the file */
-	var previewItemTitle: String! { return self.remoteFile.name }
+	var previewItemTitle: String? { return self.remoteFile.name }
 
 
 	/* there is only one item to preview */
-	func numberOfPreviewItemsInPreviewController(controller: QLPreviewController!) -> Int {
+	func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
 		return 1
 	}
 
 
 	/* this instance also serves as the preview item */
-	func previewController(controller: QLPreviewController!, previewItemAtIndex index: Int) -> QLPreviewItem! {
+	func previewController(controller: QLPreviewController, previewItemAtIndex index: Int) -> QLPreviewItem {
 		return self
 	}
 
@@ -696,8 +702,6 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 		case (.None, false):	// no editing group, not editing (e.g. not editing)
 			self.navigationItem.leftBarButtonItem = nil
 			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editTable")
-		default:
-			break		// the default case should never be reached
 		}
 	}
 
@@ -716,18 +720,21 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	/* validate the user's group edit and commit if valid otherwise alert the user ignoring empty edits */
 	func confirmGroupEditing() {
 		// get the group Location and strip white space
-		switch self.editingCell?.locationField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
-		case .Some(let groupLocationSpec) where count(groupLocationSpec) > 0:
+		switch self.editingCell?.locationField?.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
+		case .Some(let groupLocationSpec) where groupLocationSpec.characters.count > 0:
 			switch NSURL(string: groupLocationSpec) {
-			case .Some(let groupURL) where groupURL.scheme != nil && groupURL.host != nil && groupURL.path != nil:
+			case .Some(let groupURL) where groupURL.host != nil && groupURL.path != nil:
 				// validated so URL so save changes and dismiss editing
 				if groupURL.scheme == "http" || groupURL.scheme == "https" {
 					self.editingGroup?.remoteLocation = groupLocationSpec
-					self.saveChanges(nil)
+					do {
+						try self.saveChanges()
+					} catch _ {
+					}
 					self.cancelGroupEditing()
 				} else {
 					// alert the user that the URL is malformed and allow them to continue editing
-					let message = "The URL scheme must be either \"http\" or \"https\", but you have specified one with scheme: \"\(groupURL.scheme!)\""
+					let message = "The URL scheme must be either \"http\" or \"https\", but you have specified one with scheme: \"\(groupURL.scheme)\""
 					let alertView = UIAlertView(title: "Unsupported URL Scheme", message: message, delegate: nil, cancelButtonTitle: "Dismiss")
 					alertView.show()
 				}
@@ -744,12 +751,12 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 
 	/* save changes to the persistent store */
-	private func saveChanges(error: NSErrorPointer) -> Bool {
+	private func saveChanges() throws {
 		switch self.editMode {
 		case .None:		// if there is no local edit mode just perform the default save
-			return self.ditourModel?.saveChanges(error) ?? false
+			try self.ditourModel?.saveChanges()
 		default:
-			return self.ditourModel?.persistentSaveContext(self.editContext!, error: error) ?? false
+			try self.ditourModel?.persistentSaveContext(self.editContext!)
 		}
 	}
 
@@ -797,17 +804,20 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* save changes and exit the edit mode */
 	func dismissEditing() {
-		self.saveChanges(nil)
+		do {
+			try self.saveChanges()
+		} catch _ {
+		}
 		self.exitEditMode()
 	}
 
 
 	/* delete the selected rows */
 	func deleteSelectedRows() {
-		if let selectedPaths = self.tableView.indexPathsForSelectedRows() {
+		if let selectedPaths = self.tableView.indexPathsForSelectedRows {
 			// gather the indexes of the selected groups
 			let groupsToDeleteIndexes = NSMutableIndexSet()
-			for path in selectedPaths as! [NSIndexPath] {
+			for path in selectedPaths as [NSIndexPath] {
 				switch path.section {
 				case Section.GroupView.rawValue:
 					groupsToDeleteIndexes.addIndex(path.row)
@@ -912,7 +922,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* get the group add cell at the specified index path */
 	private func groupAddCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
-		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as! UITableViewCell
+		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as UITableViewCell
 	}
 
 
@@ -931,7 +941,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 				// view the selected group in the detail view
 				self.performSegueWithIdentifier(SEGUE_SHOW_PRESENTATION_MASTERS_ID, sender: self.mainRootStore!.groups[indexPath.row])
 			default:
-				println("Error. Did select data row for unknown section at path: \(indexPath)")
+				print("Error. Did select data row for unknown section at path: \(indexPath)")
 			}
 
 			self.updateControls()
@@ -996,7 +1006,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 			masterTableController.ditourModel = self.ditourModel
 			masterTableController.group = group
 		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
@@ -1283,13 +1293,13 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch (segue.identifier) {
 		case .Some(SEGUE_TRACK_SHOW_FILE_INFO_ID), .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow()!)
+			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow!)
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
 		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
@@ -1396,7 +1406,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 	@IBAction func changeDefaultPresentation(sender: AnyObject) {
 		self.presentation.current = self.defaultPresentationSwitch!.on
-		self.ditourModel?.saveChanges(nil)
+		do {
+			try self.ditourModel?.saveChanges()
+		} catch _ {
+		}
 		self.ditourModel?.reloadPresentation()
 	}
 
@@ -1621,7 +1634,7 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch (segue.identifier) {
 		case .Some(SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_TRACK_DETAIL_ID):
-			let indexPath = self.tableView.indexPathForSelectedRow()!
+			let indexPath = self.tableView.indexPathForSelectedRow!
 			let track = trackAtPath(indexPath)
 
 			let trackController = segue.destinationViewController as! TrackDetailController
@@ -1634,14 +1647,14 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 			}
 
 		case .Some(SEGUE_PRESENTATION_SHOW_FILE_INFO_ID), .Some(SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!)
+			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow!)
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile as! RemoteFileStore
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
 			
 		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
@@ -1816,7 +1829,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
 			let presentation = self.presentationAtPath(indexPath)
 			presentation.current = true
-			self.ditourModel?.saveChanges(nil)
+			do {
+				try self.ditourModel?.saveChanges()
+			} catch _ {
+			}
 			self.ditourModel?.reloadPresentation()
 			self.tableView.reloadData()
 		}
@@ -2038,7 +2054,7 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch (segue.identifier) {
 		case .Some(SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID):
-			let indexPath = self.tableView.indexPathForSelectedRow()!
+			let indexPath = self.tableView.indexPathForSelectedRow!
 			let presentation = self.presentationAtPath(indexPath)
 
 			let presentationController = segue.destinationViewController as! PresentationDetailController
@@ -2050,14 +2066,14 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 			}
 
 		case .Some(SEGUE_GROUP_SHOW_FILE_INFO_ID), .Some(SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!) as! RemoteFileStore
+			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow!) as! RemoteFileStore
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
 
 		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
