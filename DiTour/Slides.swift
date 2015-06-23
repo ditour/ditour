@@ -76,7 +76,7 @@ class Slide {
 		let fileExtension = file.pathExtension.lowercaseString
 
 		if let SlideType = slideClassesByExtension[fileExtension] {
-			return SlideType(file: file, duration: duration)
+			return SlideType.init(file: file, duration: duration)
 		}
 		else {
 			return nil;
@@ -345,7 +345,7 @@ private final class PDFSlide : Slide {
 
 	private func newDocument() -> CGPDFDocumentRef {
 		let mediaURL = NSURL(fileURLWithPath: self.mediaFile)
-		return CGPDFDocumentCreateWithURL(mediaURL)
+		return CGPDFDocumentCreateWithURL(mediaURL)!
 	}
 
 
@@ -360,7 +360,7 @@ private final class PDFSlide : Slide {
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
 		if ( pageCount > 0 ) {
-			let pageRef = CGPDFDocumentGetPage(documentRef, 1)
+			let pageRef = CGPDFDocumentGetPage(documentRef, 1)!
 			let image = self.imageFromPageRef(pageRef)
 			return image
 		} else {
@@ -371,7 +371,7 @@ private final class PDFSlide : Slide {
 
 	/* generate an image from the specified page */
 	private func imageFromPageRef( pageRef: CGPDFPageRef ) -> UIImage? {
-		let bounds = CGPDFPageGetBoxRect(pageRef, kCGPDFCropBox)
+		let bounds = CGPDFPageGetBoxRect(pageRef, .CropBox)
 		let width = Int( CGRectGetWidth(bounds) )
 		let height = Int( CGRectGetHeight(bounds) )
 		let colorSpaceRef = CGColorSpaceCreateDeviceRGB()
@@ -379,7 +379,7 @@ private final class PDFSlide : Slide {
 		let context = CGBitmapContextCreate(nil, width, height, 8, 0, colorSpaceRef, options)
 		CGContextDrawPDFPage(context, pageRef)
 
-		let imageRef = CGBitmapContextCreateImage(context)
+		guard let imageRef = CGBitmapContextCreateImage(context) else { return nil }
 		return UIImage(CGImage: imageRef)
 	}
 
@@ -413,33 +413,28 @@ private final class PDFSlide : Slide {
 		let documentRef = self.newDocument()
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
-		let pageRef = CGPDFDocumentGetPage(documentRef, pageNumber)
-		if let image = self.imageFromPageRef(pageRef) {
-			if let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
-				let imageView = UIImageView(frame: imageFrame)
-				imageView.image = image
+		guard let pageRef = CGPDFDocumentGetPage(documentRef, pageNumber) else { completionHandler(self); return }
+		guard let image = self.imageFromPageRef(pageRef) else { completionHandler(self); return }
+		guard let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) else { completionHandler(self); return }
 
-				presenter.displayMediaView(imageView)
+		let imageView = UIImageView(frame: imageFrame)
+		imageView.image = image
 
-				let nextPageNumber = pageNumber + 1
-				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
-				dispatch_after(popTime, dispatch_get_main_queue()) {
-					if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
-						// if the page number is valid display the image for the page otherwise we are done
-						if ( nextPageNumber <= pageCount ) {
-							self.performTransition(presenter);
-							self.displayPage(nextPageNumber, to: presenter, completionHandler: completionHandler, runID: runID)
-						} else {	// no more pages to present
-							completionHandler( self );
-						}
-					}
+		presenter.displayMediaView(imageView)
+
+		let nextPageNumber = pageNumber + 1
+		let delayInSeconds = Int64(self.duration)
+		let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
+		dispatch_after(popTime, dispatch_get_main_queue()) {
+			if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
+				// if the page number is valid display the image for the page otherwise we are done
+				if ( nextPageNumber <= pageCount ) {
+					self.performTransition(presenter);
+					self.displayPage(nextPageNumber, to: presenter, completionHandler: completionHandler, runID: runID)
+				} else {	// no more pages to present
+					completionHandler( self );
 				}
-			} else {
-				completionHandler(self)
 			}
-		} else {
-			completionHandler(self)
 		}
 	}
 }
