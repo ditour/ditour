@@ -25,63 +25,46 @@ char *ConvertC_HTML_TO_XHTML(const char *input) {
 	if ( input == NULL || strlen(input) == 0 )  return NULL;	// no content to process so no valid XHTML possible
 
 	TidyBuffer output = {0};
-	TidyBuffer errbuf = {0};
 	int returnCode = -1;
-	Bool ok;
 
-	TidyDoc tdoc = tidyCreate();                     // Initialize "document"
-	//	printf( "Tidying:\t%s\n", input );
+	// create the tidy document
+	TidyDoc tidyDocument = tidyCreate();
 
-	ok = tidyOptSetBool( tdoc, TidyXhtmlOut, yes );  // Convert to XHTML
-	if ( ok )
-		returnCode = tidySetErrorBuffer( tdoc, &errbuf );      // Capture diagnostics
-	if ( returnCode >= 0 )
-		returnCode = tidyParseString( tdoc, input );           // Parse the input
-	if ( returnCode >= 0 )
-		returnCode = tidyCleanAndRepair( tdoc );               // Tidy it up!
-	if ( returnCode >= 0 )
-		returnCode = tidyRunDiagnostics( tdoc );               // Kvetch
-	if ( returnCode > 1 )                                    // If error, force output.
-		returnCode = ( tidyOptSetBool(tdoc, TidyForceOutput, yes) ? returnCode : -1 );
-	if ( returnCode >= 0 )
-		returnCode = tidySaveBuffer( tdoc, &output );          // Pretty Print
+	// configure the tidy options: generate XHTML
+	short success = tidyOptSetBool( tidyDocument, TidyXhtmlOut, yes ) == 1;
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyQuiet, yes ) == 1;
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyShowWarnings, no ) == 1;
 
-	short success = ok == 1 && returnCode >= 0;
+	// parse the input
+	if ( success )  returnCode = tidyParseString( tidyDocument, input );
 
-	unsigned outputSize = 0;
-	char *outbuffer = NULL;
-	if ( success ) {
-		outputSize = 0;
-		returnCode = tidySaveString( tdoc, NULL, &outputSize );			// need this to get the output size
+	// attempt to cleanup and repair HTML
+	if ( returnCode >= 0 )  returnCode = tidyCleanAndRepair( tidyDocument );
 
-		if ( returnCode == -ENOMEM ) {
-			outbuffer = (char *)malloc( outputSize + 1 );
-			outbuffer[outputSize] = '\0';			// terminate the string with a null character
-			returnCode = tidySaveString( tdoc, outbuffer, &outputSize );
-		}
-		else {
-			printf( "Tidy error with return code: %d", returnCode );
-			success = 0;
-		}
-	}
-	else {
-		printf( "Tidy error with return code: %d", returnCode );
+	// print diagnostic messages
+	if ( returnCode >= 0 )  returnCode = tidyRunDiagnostics( tidyDocument );
+
+	// save the document to the output buffer
+	if ( returnCode >= 0 )  returnCode = tidySaveBuffer( tidyDocument, &output );
+
+	success = success && returnCode >= 0;
+
+	if ( !success ) {
+		printf( "Tidy error with return code: %d\n", returnCode );
 	}
 
 	// buffer to hold output XHTML plus null termination character
 	char *outputXHTML = NULL;
-	if ( success && outputSize > 0 ) {
-		// need to be careful as the outbuffer is not null terminated and so we must make sure to only copy the characters specified by the output size
-		outputXHTML = (char *)malloc( outputSize + 1 );		// this pointer must be freed by the caller
-		memcpy( outputXHTML, outbuffer, outputSize );
-		outputXHTML[outputSize] = NULL;		// NULL termination
+	if ( success && output.size > 0 ) {
+		// need to be careful as the output buffer is not null terminated and so we must make sure to only copy the characters specified by the output size
+		outputXHTML = (char *)malloc( output.size + 1 );		// this pointer must be freed by the caller
+		memcpy( outputXHTML, output.bp, output.size );
+		outputXHTML[output.size] = NULL;		// NULL termination
 	}
-	
-	if ( outbuffer )  free( outbuffer );
 
+	// free tidy allocated memory
 	tidyBufFree( &output );
-	tidyBufFree( &errbuf );
-	tidyRelease( tdoc );
+	tidyRelease( tidyDocument );
 
 	return outputXHTML;
 }
