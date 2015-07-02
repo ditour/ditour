@@ -39,45 +39,28 @@ char *ConvertC_HTML_TO_XHTML(const char *input) {
 	// attempt to cleanup and repair HTML
 	if ( returnCode >= 0 )  returnCode = tidyCleanAndRepair( tidyDocument );
 
+	// print diagnostic messages
+	if ( returnCode >= 0 )  returnCode = tidyRunDiagnostics( tidyDocument );
+
 	// save the document to the output buffer
 	if ( returnCode >= 0 )  returnCode = tidySaveBuffer( tidyDocument, &output );
 
 	success = success && returnCode >= 0;
 
-	// write the Tidy Buffer data to outbuffer which is a simple character buffer
-	unsigned outputSize = 0;
-	char *outbuffer = NULL;
-	if ( success ) {
-		outputSize = 0;
-		returnCode = tidySaveString( tidyDocument, NULL, &outputSize );			// need this to get the output size (should return error since buffer not yet allocated)
-
-		// now that we know the outputSize, really save the save string
-		if ( returnCode == -ENOMEM ) {		// we expect this error since we haven't allocated any space to our buffer yet
-			outbuffer = (char *)malloc( outputSize + 1 );
-			outbuffer[outputSize] = '\0';			// terminate the string with a null character
-			printf("outputSize: %d, buffer size: %d", outputSize, output.size);
-			returnCode = tidySaveString( tidyDocument, outbuffer, &outputSize );
-		}
-		else {
-			printf( "Tidy error with return code: %d", returnCode );
-			success = 0;
-		}
-	}
-	else {
-		printf( "Tidy error with return code: %d", returnCode );
+	if ( !success ) {
+		printf( "Tidy error with return code: %d\n", returnCode );
 	}
 
 	// buffer to hold output XHTML plus null termination character
 	char *outputXHTML = NULL;
-	if ( success && outputSize > 0 ) {
-		// need to be careful as the outbuffer is not null terminated and so we must make sure to only copy the characters specified by the output size
-		outputXHTML = (char *)malloc( outputSize + 1 );		// this pointer must be freed by the caller
-		memcpy( outputXHTML, outbuffer, outputSize );
-		outputXHTML[outputSize] = NULL;		// NULL termination
+	if ( success && output.size > 0 ) {
+		// need to be careful as the output buffer is not null terminated and so we must make sure to only copy the characters specified by the output size
+		outputXHTML = (char *)malloc( output.size + 1 );		// this pointer must be freed by the caller
+		memcpy( outputXHTML, output.bp, output.size );
+		outputXHTML[output.size] = NULL;		// NULL termination
 	}
-	
-	if ( outbuffer )  free( outbuffer );
 
+	// free tidy allocated memory
 	tidyBufFree( &output );
 	tidyRelease( tidyDocument );
 
