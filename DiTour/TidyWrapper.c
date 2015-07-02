@@ -32,6 +32,8 @@ char *ConvertC_HTML_TO_XHTML(const char *input) {
 
 	// configure the tidy options: generate XHTML
 	short success = tidyOptSetBool( tidyDocument, TidyXhtmlOut, yes ) == 1;
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyQuiet, yes ) == 1;
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyShowWarnings, no ) == 1;
 
 	// parse the input
 	if ( success )  returnCode = tidyParseString( tidyDocument, input );
