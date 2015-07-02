@@ -883,7 +883,7 @@ final class RemoteDirectory : NSObject, RemoteDirectoryItem {
 
 // MARK: Remote Directory Parser
 /* generates a remote directory from a remote location and the content of the associated HTML directory pages */
-final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
+@objc final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 	/* location of the the dremote directory to parse */
 	let directoryURL : NSURL
 
@@ -980,7 +980,7 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* enter a new element */
-	func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [NSObject : AnyObject]) {
+	@objc func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [NSObject : AnyObject]) {
 		if elementName.uppercaseString == "A" {
 			// convert all keys to uppercase so we can grab an attribute by key unambiguously
 			var anchorAttributes = [String: String]()
@@ -1014,7 +1014,7 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* used to complete the current file link if any */
-	func closeFileLinkInfo() {
+	@objc func closeFileLinkInfo() {
 		if let currentFileLink = self.currentFileLink {
 			let remoteFile = RemoteFile(location: currentFileLink, info: self.currentFileLinkText!)
 			self.items.append(remoteFile)
@@ -1026,7 +1026,7 @@ final private class RemoteDirectoryParser : NSObject, NSXMLParserDelegate {
 
 
 	/* process text associated with the current element */
-	func parser(parser: NSXMLParser, foundCharacters string: String?) {
+	@objc func parser(parser: NSXMLParser, foundCharacters string: String?) {
 		if let text = string {
 			if let currentFileLinkText = self.currentFileLinkText {
 				self.currentFileLinkText = currentFileLinkText + text
