@@ -1014,7 +1014,7 @@ final class RemoteDirectory : NSObject, RemoteDirectoryItem {
 
 
 	/* used to complete the current file link if any */
-	@objc func closeFileLinkInfo() {
+	func closeFileLinkInfo() {
 		if let currentFileLink = self.currentFileLink {
 			let remoteFile = RemoteFile(location: currentFileLink, info: self.currentFileLinkText!)
 			self.items.append(remoteFile)
