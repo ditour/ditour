@@ -24,16 +24,17 @@
 char *ConvertC_HTML_TO_XHTML(const char *input) {
 	if ( input == NULL || strlen(input) == 0 )  return NULL;	// no content to process so no valid XHTML possible
 
-	TidyBuffer output = {0};
+	// create the tidy document and output buffer
+	TidyDoc tidyDocument = tidyCreate();
+	TidyBuffer outputBuffer = {0};
+
+	// return code for tidy calls
 	int returnCode = -1;
 
-	// create the tidy document
-	TidyDoc tidyDocument = tidyCreate();
-
-	// configure the tidy options: generate XHTML
-	short success = tidyOptSetBool( tidyDocument, TidyXhtmlOut, yes ) == 1;
-	if ( success )  success = tidyOptSetBool( tidyDocument, TidyQuiet, yes ) == 1;
-	if ( success )  success = tidyOptSetBool( tidyDocument, TidyShowWarnings, no ) == 1;
+	// configure the tidy options: generate XHTML, quiet output, supress warnings
+	short success = tidyOptSetBool( tidyDocument, TidyXhtmlOut, yes ) == 1;					// generate XHTML
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyQuiet, yes ) == 1;			// quiet output
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyShowWarnings, no ) == 1;	// supress warnings
 
 	// parse the input
 	if ( success )  returnCode = tidyParseString( tidyDocument, input );
@@ -45,7 +46,7 @@ char *ConvertC_HTML_TO_XHTML(const char *input) {
 	if ( returnCode >= 0 )  returnCode = tidyRunDiagnostics( tidyDocument );
 
 	// save the document to the output buffer
-	if ( returnCode >= 0 )  returnCode = tidySaveBuffer( tidyDocument, &output );
+	if ( returnCode >= 0 )  returnCode = tidySaveBuffer( tidyDocument, &outputBuffer );
 
 	success = success && returnCode >= 0;
 
@@ -53,17 +54,17 @@ char *ConvertC_HTML_TO_XHTML(const char *input) {
 		printf( "Tidy error with return code: %d\n", returnCode );
 	}
 
-	// buffer to hold output XHTML plus null termination character
+	// output XHTML plus null termination character
 	char *outputXHTML = NULL;
-	if ( success && output.size > 0 ) {
+	if ( success && outputBuffer.size > 0 ) {
 		// need to be careful as the output buffer is not null terminated and so we must make sure to only copy the characters specified by the output size
-		outputXHTML = (char *)malloc( output.size + 1 );		// this pointer must be freed by the caller
-		memcpy( outputXHTML, output.bp, output.size );
-		outputXHTML[output.size] = NULL;		// NULL termination
+		outputXHTML = (char *)malloc( outputBuffer.size + 1 );		// this pointer must be freed by the caller
+		memcpy( outputXHTML, outputBuffer.bp, outputBuffer.size );
+		outputXHTML[outputBuffer.size] = NULL;		// NULL termination
 	}
 
 	// free tidy allocated memory
-	tidyBufFree( &output );
+	tidyBufFree( &outputBuffer );
 	tidyRelease( tidyDocument );
 
 	return outputXHTML;
