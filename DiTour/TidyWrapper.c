@@ -34,7 +34,7 @@ char *ConvertC_HTML_TO_XHTML(const char *input) {
 	// configure the tidy options: generate XHTML, quiet output, supress warnings
 	short success = tidyOptSetBool( tidyDocument, TidyXhtmlOut, yes ) == 1;					// generate XHTML
 	if ( success )  success = tidyOptSetBool( tidyDocument, TidyQuiet, yes ) == 1;			// quiet output
-	if ( success )  success = tidyOptSetBool( tidyDocument, TidyShowWarnings, no ) == 1;	// supress warnings
+	if ( success )  success = tidyOptSetBool( tidyDocument, TidyShowWarnings, no ) == 1;	// suppress warnings
 
 	// parse the input
 	if ( success )  returnCode = tidyParseString( tidyDocument, input );
