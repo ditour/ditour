@@ -404,9 +404,7 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 				let request = NSURLRequest(URL: downloadURL!)
 				guard let downloadTask = self.downloadSession.downloadTaskWithRequest(request) else { return }
 
-				// TODO: restore the original code once the compiler bug with subscript assignment is fixed
-				//self.downloadTaskRemoteItems[downloadTask] = status
-				self.downloadTaskRemoteItems.setValue(status, forKey: downloadTask)		// workaround for compiler bug with subscript assignment
+				self.downloadTaskRemoteItems[downloadTask] = status
 
 				remoteFile.markDownloading()
 			}
@@ -795,10 +793,7 @@ final class DownloadContainerStatus : DownloadStatus {
 		}
 
 		if let childPath = possibleChildPath {
-			// TODO: restore the original code once the compiler bug with subscript assignment is fixed
-			//self.childStatusItems[childPath] = childStatus
-			self.childStatusItems.setValue(childStatus, forKey: childPath)		// workaround for compiler bug with subscript assignment
-
+			self.childStatusItems[childPath] = childStatus
 			self.updateProgress()
 		}
 	}

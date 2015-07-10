@@ -63,17 +63,14 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 			return value
 		}
 
-		/*
-		// comment out this code since it causes a compiler crash in Xcode 7 beta
 		set {
 			setValue(newValue, forKey: key)
 		}
-		*/
 	}
 
 
 	/* assign the specified value to the specified key */
-	func setValue(value: ValueType, forKey key: KeyType) {
+	func setValue(value: ValueType?, forKey key: KeyType) {
 		// need to synchronize writes for consistent modifications
 		dispatch_barrier_async(self.queue) { () -> Void in
 			self.dictionary[key] = value
