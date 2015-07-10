@@ -224,13 +224,13 @@ final class TrackViewCell : UICollectionViewCell {
 	}
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	/* handle awake from nib event */
+	override func awakeFromNib() {
+		super.awakeFromNib()
 
 		// change to our custom selected background view (pale blue)
 		self.selectedBackgroundView = BackgroundView(stroke: UIColor.blackColor(), fill: UIColor(red: 0.8, green: 0.8, blue: 1.0, alpha: 0.9))
 	}
-
 
 
 	/* nested background view for the track view cell to display when the cell is selected our outlined */
