@@ -838,9 +838,8 @@
                                             <rect key="frame" x="13" y="9" width="162" height="108"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Oxn-LN-aQ7">
-                                            <rect key="frame" x="7" y="124" width="175" height="34"/>
+                                            <rect key="frame" x="17" y="124" width="155" height="34"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="175" id="MvD-5s-NFe"/>
                                                 <constraint firstAttribute="height" constant="34" id="fAF-gE-EsQ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -854,6 +853,7 @@
                                 <constraints>
                                     <constraint firstItem="e2f-0R-9A3" firstAttribute="centerX" secondItem="Oxn-LN-aQ7" secondAttribute="centerX" id="82U-Te-7hf"/>
                                     <constraint firstAttribute="trailing" secondItem="e2f-0R-9A3" secondAttribute="trailing" constant="14" id="8PH-1C-ebw"/>
+                                    <constraint firstItem="Oxn-LN-aQ7" firstAttribute="leading" secondItem="kDi-V4-nxc" secondAttribute="leadingMargin" constant="9" id="9oK-Yh-ae7"/>
                                     <constraint firstAttribute="bottom" secondItem="Oxn-LN-aQ7" secondAttribute="bottom" constant="9" id="Po9-a6-1qw"/>
                                     <constraint firstItem="e2f-0R-9A3" firstAttribute="leading" secondItem="kDi-V4-nxc" secondAttribute="leading" constant="13" id="Qcr-F4-3Y7"/>
                                     <constraint firstItem="Oxn-LN-aQ7" firstAttribute="top" secondItem="e2f-0R-9A3" secondAttribute="bottom" constant="7" id="TWc-zE-RP3"/>
