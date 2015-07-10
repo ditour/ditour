@@ -12,6 +12,7 @@ import CoreData
 
 
 // segue IDs
+// TODO: replace these segue ID strings with SegueHandling SegueID enums
 private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
 private let SEGUE_SHOW_PRESENTATION_MASTERS_ID = "GroupToPresentationMasters"
 private let SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = "ShowActiveTrackDetail"
@@ -36,8 +37,33 @@ private let TIMESTAMP_FORMATTER : NSDateFormatter = {
 
 
 
+/* provides a common segue handling protocol for view controllers (based on example in WWDC 2015 Session 411 "Swift in Practice") */
+private protocol SegueHandling {
+	typealias SegueID : RawRepresentable
+}
+
+
+/* provide default implementation for handling segues of UIViewControllers with String based SegueIdentifier enums (based on example in WWDC 2015 Session 411 "Swift in Practice") */
+extension SegueHandling where Self: UIViewController, SegueID.RawValue == String {
+	func getSegueID(segue: UIStoryboardSegue) -> SegueID {
+		guard let identifier = segue.identifier, segueIdentifier = SegueID(rawValue: identifier) else {
+			fatalError("Invalid segue identifier: \(segue.identifier) for view controller of type: \(self.dynamicType).")
+		}
+
+		return segueIdentifier
+	}
+}
+
+
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
-final class PresentationViewController : UICollectionViewController, DitourModelContainer {
+final class PresentationViewController : UICollectionViewController, DitourModelContainer, SegueHandling {
+	// enum for SegueHandling
+	// TODO: remove case string assignments when Swift supports default case assignment
+	enum SegueID : String {
+		case MainToGroups = "MainToGroups"
+		case TrackDetailShowPendingFileInfo = "TrackDetailShowPendingFileInfo"
+	}
+
 	var ditourModel: DitourModel? {
 		willSet {
 			self.ditourModel?.removeObserver(self, forKeyPath: "tracks")
@@ -199,12 +225,12 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch ( segue.identifier, segue.destinationViewController ) {
+		switch ( getSegueID(segue), segue.destinationViewController ) {
 
-		case ( .Some(SEGUE_SHOW_CONFIGURATION_ID), let configController as PresentationGroupsTableController ):
+		case ( .MainToGroups, let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
-		case ( .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID), let configController as PresentationGroupsTableController ):
+		case ( .TrackDetailShowPendingFileInfo, let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
 		default:
