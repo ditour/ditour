@@ -185,6 +185,16 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 		self.collectionView!.allowsMultipleSelection = false
 
 		self.navigationController?.navigationBar.barStyle = .BlackTranslucent
+
+		// adjust the flow layout item size based on horizontal size class to prevent track icon cells from being too big on iPhone
+		if let layout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+			switch self.traitCollection.horizontalSizeClass {
+			case .Compact:
+				layout.itemSize = CGSizeMake(150.0, 132.0)
+			default:
+				break
+			}
+		}
 	}
 
 
