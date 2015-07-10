@@ -71,6 +71,7 @@
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="os8-xt-d02" secondAttribute="trailing" id="2xT-yK-gpV"/>
                             <constraint firstItem="JoP-RC-OcW" firstAttribute="centerY" secondItem="moX-ML-Uxr" secondAttribute="centerY" id="6Zp-8r-gad"/>
+                            <constraint firstItem="os8-xt-d02" firstAttribute="top" secondItem="moX-ML-Uxr" secondAttribute="bottom" constant="18" id="6wa-LH-UXj"/>
                             <constraint firstItem="os8-xt-d02" firstAttribute="top" secondItem="e5E-gD-bH1" secondAttribute="topMargin" constant="50" id="Ase-LU-FGD"/>
                             <constraint firstItem="os8-xt-d02" firstAttribute="leading" secondItem="e5E-gD-bH1" secondAttribute="leadingMargin" id="AyI-1p-xOu"/>
                             <constraint firstItem="KZ5-XT-ruM" firstAttribute="centerY" secondItem="JoP-RC-OcW" secondAttribute="centerY" id="Egw-I0-QeT"/>
@@ -87,7 +88,6 @@
                             <constraint firstItem="JoP-RC-OcW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KZ5-XT-ruM" secondAttribute="trailing" constant="8" symbolic="YES" id="mVT-0f-3mv"/>
                             <constraint firstItem="KZ5-XT-ruM" firstAttribute="top" secondItem="XZN-Vb-i3q" secondAttribute="bottom" constant="16" id="pfT-Re-vev"/>
                             <constraint firstItem="dlp-rE-8r6" firstAttribute="trailing" secondItem="e5E-gD-bH1" secondAttribute="trailingMargin" id="uVP-ee-Miq"/>
-                            <constraint firstItem="os8-xt-d02" firstAttribute="top" secondItem="moX-ML-Uxr" secondAttribute="bottom" constant="18" id="z6A-WC-XiS"/>
                             <constraint firstItem="moX-ML-Uxr" firstAttribute="top" secondItem="KZ5-XT-ruM" secondAttribute="bottom" constant="8" symbolic="YES" id="zlT-aY-e3U"/>
                         </constraints>
                         <variation key="default">
@@ -189,12 +189,14 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="CdD-tJ-rKc" firstAttribute="bottom" secondItem="z6d-rc-9Ai" secondAttribute="bottomMargin" id="3FC-3u-Ut9"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="uDc-BQ-P85" secondAttribute="bottom" constant="3" id="6Fp-qz-JbP"/>
                                         <constraint firstItem="CdD-tJ-rKc" firstAttribute="leading" secondItem="uDc-BQ-P85" secondAttribute="trailing" constant="21" id="Cok-Qi-wt9"/>
                                         <constraint firstAttribute="centerY" secondItem="nUW-hU-So5" secondAttribute="centerY" id="JZ2-5c-MgD"/>
                                         <constraint firstItem="uDc-BQ-P85" firstAttribute="leading" secondItem="CdD-tJ-rKc" secondAttribute="trailing" constant="8" id="VBf-aL-NTw"/>
                                         <constraint firstItem="uDc-BQ-P85" firstAttribute="leading" secondItem="z6d-rc-9Ai" secondAttribute="leading" constant="20" id="c2R-xJ-Z8h"/>
                                         <constraint firstItem="CdD-tJ-rKc" firstAttribute="leading" secondItem="z6d-rc-9Ai" secondAttribute="leadingMargin" id="cZQ-Lm-X9E"/>
                                         <constraint firstAttribute="centerY" secondItem="CdD-tJ-rKc" secondAttribute="centerY" id="csO-aM-AZ5"/>
+                                        <constraint firstItem="uDc-BQ-P85" firstAttribute="top" secondItem="z6d-rc-9Ai" secondAttribute="topMargin" constant="3" id="p90-W5-yb5"/>
                                         <constraint firstAttribute="trailing" secondItem="nUW-hU-So5" secondAttribute="trailing" constant="20" id="tfa-6I-RXZ"/>
                                         <constraint firstItem="nUW-hU-So5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uDc-BQ-P85" secondAttribute="trailing" constant="8" symbolic="YES" id="whY-dt-jPx"/>
                                         <constraint firstItem="CdD-tJ-rKc" firstAttribute="baseline" secondItem="nUW-hU-So5" secondAttribute="baseline" id="xJv-KE-bz5"/>
@@ -214,11 +216,11 @@
                                     <segue destination="jnE-kG-HXj" kind="show" identifier="ShowActivePresentationDetail" id="E37-Q3-lde"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="66" id="cKO-m0-obr" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="174" width="600" height="66"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="GroupDetailPendingPresentationCell" rowHeight="76" id="cKO-m0-obr" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="174" width="600" height="76"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cKO-m0-obr" id="LmF-KQ-zzD">
-                                    <rect key="frame" x="0.0" y="0.0" width="567" height="65"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="75"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Presentation Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AgP-2y-IrQ">
@@ -247,9 +249,11 @@
                                         <constraint firstItem="VnP-YA-K09" firstAttribute="leading" secondItem="aTC-jr-BLn" secondAttribute="trailing" constant="8" symbolic="YES" id="16K-kx-fnA"/>
                                         <constraint firstItem="AgP-2y-IrQ" firstAttribute="leading" secondItem="aTC-jr-BLn" secondAttribute="leading" id="5If-oh-7B9"/>
                                         <constraint firstItem="aTC-jr-BLn" firstAttribute="top" secondItem="AgP-2y-IrQ" secondAttribute="bottom" constant="7" id="5MM-nT-AxH"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="aTC-jr-BLn" secondAttribute="bottom" constant="7" id="DUe-bp-gcG"/>
                                         <constraint firstAttribute="trailing" secondItem="DpM-Zb-vOB" secondAttribute="trailing" constant="20" id="NCZ-K4-tMR"/>
                                         <constraint firstItem="AgP-2y-IrQ" firstAttribute="top" secondItem="LmF-KQ-zzD" secondAttribute="top" constant="11" id="SdS-2h-mij"/>
                                         <constraint firstItem="DpM-Zb-vOB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="AgP-2y-IrQ" secondAttribute="trailing" constant="8" symbolic="YES" id="bH9-ke-RQX"/>
+                                        <constraint firstItem="aTC-jr-BLn" firstAttribute="top" secondItem="AgP-2y-IrQ" secondAttribute="bottom" constant="7" id="jhZ-EW-LYw"/>
                                         <constraint firstItem="VnP-YA-K09" firstAttribute="top" secondItem="AgP-2y-IrQ" secondAttribute="bottom" constant="17" id="jki-72-RsB"/>
                                         <constraint firstItem="DpM-Zb-vOB" firstAttribute="top" secondItem="LmF-KQ-zzD" secondAttribute="top" constant="20" id="n9j-Oc-len"/>
                                         <constraint firstItem="AgP-2y-IrQ" firstAttribute="leading" secondItem="LmF-KQ-zzD" secondAttribute="leading" constant="20" symbolic="YES" id="qAo-0Y-JAk"/>
@@ -265,7 +269,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ActiveFileCell" id="pzb-Cl-t0f" customClass="LabelCell" customModule="DiTour" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="240" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="250" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pzb-Cl-t0f" id="Xcp-AU-C0V">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
@@ -286,7 +290,9 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="yYz-hp-E0U" secondAttribute="centerY" id="GMd-kS-8ig"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="yYz-hp-E0U" secondAttribute="bottom" constant="3" id="KRf-5F-44G"/>
                                         <constraint firstItem="c9V-b9-hkc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yYz-hp-E0U" secondAttribute="trailing" constant="8" symbolic="YES" id="Zsa-yf-Av3"/>
+                                        <constraint firstItem="yYz-hp-E0U" firstAttribute="top" secondItem="Xcp-AU-C0V" secondAttribute="topMargin" constant="3" id="fhH-bu-rsg"/>
                                         <constraint firstAttribute="trailing" secondItem="c9V-b9-hkc" secondAttribute="trailing" constant="20" id="jFz-kK-6mL"/>
                                         <constraint firstItem="yYz-hp-E0U" firstAttribute="leading" secondItem="Xcp-AU-C0V" secondAttribute="leading" constant="20" id="ulO-CF-w9C"/>
                                         <constraint firstAttribute="centerY" secondItem="c9V-b9-hkc" secondAttribute="centerY" id="vG0-pr-aoD"/>
@@ -299,7 +305,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PendingFileCell" rowHeight="68" id="qBL-d6-z9F" customClass="DownloadStatusCell" customModule="DiTour" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="284" width="600" height="68"/>
+                                <rect key="frame" x="0.0" y="294" width="600" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qBL-d6-z9F" id="atE-26-AK9">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="67"/>
@@ -330,7 +336,6 @@
                                     <constraints>
                                         <constraint firstItem="L2g-Im-0jX" firstAttribute="top" secondItem="atE-26-AK9" secondAttribute="top" constant="11" id="0ch-QI-Hqe"/>
                                         <constraint firstItem="Zpk-cU-jcN" firstAttribute="leading" secondItem="atE-26-AK9" secondAttribute="leadingMargin" constant="90" id="4ET-Go-hBG"/>
-                                        <constraint firstItem="Zpk-cU-jcN" firstAttribute="leading" secondItem="atE-26-AK9" secondAttribute="leadingMargin" constant="90" id="5sH-hs-orz"/>
                                         <constraint firstAttribute="trailing" secondItem="Zpk-cU-jcN" secondAttribute="trailing" constant="20" id="8PY-rr-imt"/>
                                         <constraint firstItem="Bly-sR-87g" firstAttribute="top" secondItem="L2g-Im-0jX" secondAttribute="bottom" constant="3" id="F8A-GK-t4Y"/>
                                         <constraint firstAttribute="trailing" secondItem="hwA-gX-oha" secondAttribute="trailing" constant="20" id="Id2-96-KAi"/>
@@ -338,15 +343,10 @@
                                         <constraint firstItem="Bly-sR-87g" firstAttribute="leading" secondItem="atE-26-AK9" secondAttribute="leadingMargin" constant="12" id="Kvq-vk-9t2"/>
                                         <constraint firstItem="L2g-Im-0jX" firstAttribute="leading" secondItem="atE-26-AK9" secondAttribute="leading" constant="20" id="ZKx-oH-ACf"/>
                                         <constraint firstItem="L2g-Im-0jX" firstAttribute="centerY" secondItem="hwA-gX-oha" secondAttribute="centerY" id="hnI-hn-fdU"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Bly-sR-87g" secondAttribute="bottom" constant="3" id="lmb-jm-Afe"/>
+                                        <constraint firstItem="Bly-sR-87g" firstAttribute="top" secondItem="L2g-Im-0jX" secondAttribute="bottom" constant="3" id="pEn-MO-oOv"/>
                                         <constraint firstItem="hwA-gX-oha" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="L2g-Im-0jX" secondAttribute="trailing" constant="8" symbolic="YES" id="q4a-Ee-FdY"/>
-                                        <constraint firstItem="Zpk-cU-jcN" firstAttribute="leading" secondItem="atE-26-AK9" secondAttribute="leadingMargin" constant="90" id="tYz-42-mIT"/>
                                     </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="5sH-hs-orz"/>
-                                            <exclude reference="tYz-42-mIT"/>
-                                        </mask>
-                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="progressLabel" destination="Bly-sR-87g" id="lpl-q3-yue"/>
@@ -422,6 +422,8 @@
                                     <constraints>
                                         <constraint firstItem="vAQ-Dl-LxE" firstAttribute="leading" secondItem="B5I-QP-nmM" secondAttribute="leading" constant="20" id="47M-Ao-K5T"/>
                                         <constraint firstAttribute="centerY" secondItem="vAQ-Dl-LxE" secondAttribute="centerY" id="BYR-Lt-LJM"/>
+                                        <constraint firstItem="vAQ-Dl-LxE" firstAttribute="top" secondItem="B5I-QP-nmM" secondAttribute="topMargin" constant="3" id="Wax-zH-6Ac"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="vAQ-Dl-LxE" secondAttribute="bottom" constant="3" id="Xe1-lW-8lA"/>
                                         <constraint firstAttribute="trailing" secondItem="Hag-Pc-UJ1" secondAttribute="trailing" constant="20" id="c6q-I3-E1G"/>
                                         <constraint firstItem="Hag-Pc-UJ1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vAQ-Dl-LxE" secondAttribute="trailing" constant="8" symbolic="YES" id="d99-Xk-Hkh"/>
                                         <constraint firstAttribute="centerY" secondItem="Hag-Pc-UJ1" secondAttribute="centerY" id="h0w-Nl-oP5"/>
@@ -469,6 +471,7 @@
                                         <constraint firstAttribute="trailing" secondItem="4uh-hc-BhP" secondAttribute="trailing" constant="20" id="87z-dp-2b0"/>
                                         <constraint firstItem="4uh-hc-BhP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="jSC-nP-Zb9" secondAttribute="trailing" constant="8" symbolic="YES" id="L7N-IQ-bvt"/>
                                         <constraint firstItem="sdl-Hc-OQa" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="98" id="bHe-NL-SkV"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="cKc-72-pxo" secondAttribute="bottom" constant="3" id="fob-cp-KyL"/>
                                         <constraint firstItem="jSC-nP-Zb9" firstAttribute="leading" secondItem="X8H-pH-tqw" secondAttribute="leading" constant="20" id="haN-BB-rP7"/>
                                         <constraint firstItem="cKc-72-pxo" firstAttribute="top" secondItem="jSC-nP-Zb9" secondAttribute="bottom" constant="3" id="mZF-RI-Kgx"/>
                                         <constraint firstItem="4uh-hc-BhP" firstAttribute="centerY" secondItem="jSC-nP-Zb9" secondAttribute="centerY" id="oTq-cK-Mqr"/>
@@ -505,8 +508,10 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="zIw-yO-3jA" secondAttribute="trailing" constant="20" id="1fE-3V-CaY"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="yd2-GK-Rtf" secondAttribute="bottom" constant="3" id="8z8-sT-azI"/>
                                         <constraint firstItem="zIw-yO-3jA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yd2-GK-Rtf" secondAttribute="trailing" constant="8" symbolic="YES" id="C8b-3P-tI3"/>
                                         <constraint firstItem="yd2-GK-Rtf" firstAttribute="leading" secondItem="qBU-4F-efT" secondAttribute="leading" constant="20" id="HFd-1z-lW9"/>
+                                        <constraint firstItem="yd2-GK-Rtf" firstAttribute="top" secondItem="qBU-4F-efT" secondAttribute="topMargin" constant="3" id="LTr-xn-yqd"/>
                                         <constraint firstAttribute="centerY" secondItem="yd2-GK-Rtf" secondAttribute="centerY" id="bxc-jO-Uq4"/>
                                         <constraint firstAttribute="centerY" secondItem="zIw-yO-3jA" secondAttribute="centerY" id="ogb-cg-CMv"/>
                                     </constraints>
@@ -554,6 +559,7 @@
                                         <constraint firstItem="q4n-7d-jLn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="RTc-pN-Vex" secondAttribute="trailing" constant="8" symbolic="YES" id="H13-vm-Ufk"/>
                                         <constraint firstItem="E9C-0x-DwO" firstAttribute="centerY" secondItem="5MX-mE-29Q" secondAttribute="centerY" id="Hbl-v4-GrO"/>
                                         <constraint firstItem="E9C-0x-DwO" firstAttribute="leading" secondItem="1az-OP-vvD" secondAttribute="leadingMargin" constant="12" id="U3e-Jf-DOg"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="E9C-0x-DwO" secondAttribute="bottom" constant="3" id="cN6-iR-Kop"/>
                                         <constraint firstItem="q4n-7d-jLn" firstAttribute="centerY" secondItem="RTc-pN-Vex" secondAttribute="centerY" id="eay-pI-ZSQ"/>
                                         <constraint firstAttribute="trailing" secondItem="q4n-7d-jLn" secondAttribute="trailing" constant="20" id="fDg-m1-09e"/>
                                         <constraint firstItem="5MX-mE-29Q" firstAttribute="top" secondItem="RTc-pN-Vex" secondAttribute="bottom" constant="13" id="rR1-dY-ZgX"/>
@@ -620,8 +626,10 @@
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="t4j-OB-9eI" secondAttribute="centerY" id="19M-q7-Z7g"/>
                                         <constraint firstAttribute="trailing" secondItem="t4j-OB-9eI" secondAttribute="trailing" constant="20" id="4KM-dt-LLu"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="tN3-T1-E5A" secondAttribute="bottom" constant="3" id="Bd9-6C-csn"/>
                                         <constraint firstItem="t4j-OB-9eI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tN3-T1-E5A" secondAttribute="trailing" constant="8" symbolic="YES" id="NA8-dU-WY3"/>
                                         <constraint firstItem="tN3-T1-E5A" firstAttribute="leading" secondItem="4vr-Vb-XiR" secondAttribute="leading" constant="20" id="PPe-ts-nye"/>
+                                        <constraint firstItem="tN3-T1-E5A" firstAttribute="top" secondItem="4vr-Vb-XiR" secondAttribute="topMargin" constant="3" id="hFF-V3-uxn"/>
                                         <constraint firstAttribute="centerY" secondItem="tN3-T1-E5A" secondAttribute="centerY" id="l0P-iS-lh2"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -670,6 +678,7 @@
                                         <constraint firstItem="i9E-S1-M8e" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leadingMargin" constant="90" id="dQy-2E-zz7"/>
                                         <constraint firstItem="eeY-Kg-xvq" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leading" constant="20" id="iQL-ab-5kV"/>
                                         <constraint firstItem="i9E-S1-M8e" firstAttribute="top" secondItem="eeY-Kg-xvq" secondAttribute="bottom" constant="13" id="mUw-09-vUA"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="38K-ki-SJm" secondAttribute="bottom" constant="3" id="puf-O3-2z9"/>
                                         <constraint firstItem="38K-ki-SJm" firstAttribute="leading" secondItem="gn0-zM-OvC" secondAttribute="leadingMargin" constant="12" id="vzF-Sa-VJm"/>
                                         <constraint firstItem="i9E-S1-M8e" firstAttribute="centerY" secondItem="38K-ki-SJm" secondAttribute="centerY" id="vzP-PM-FpB"/>
                                     </constraints>
@@ -742,11 +751,12 @@
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="grY-J8-Yep" secondAttribute="centerY" id="Fsx-Zi-Kyu"/>
                                         <constraint firstItem="grY-J8-Yep" firstAttribute="leading" secondItem="mtW-96-yQC" secondAttribute="trailing" constant="8" id="Gc9-qL-tsD"/>
-                                        <constraint firstAttribute="centerY" secondItem="fZA-2T-bgu" secondAttribute="centerY" id="NGk-a9-OxF"/>
+                                        <constraint firstItem="fZA-2T-bgu" firstAttribute="top" secondItem="TRb-70-vNx" secondAttribute="topMargin" constant="3" id="Qgj-e7-DoB"/>
                                         <constraint firstAttribute="trailing" secondItem="grY-J8-Yep" secondAttribute="trailing" constant="20" id="UwZ-Vy-9Jh"/>
                                         <constraint firstItem="mtW-96-yQC" firstAttribute="centerY" secondItem="grY-J8-Yep" secondAttribute="centerY" id="bpD-UI-XnE"/>
                                         <constraint firstItem="fZA-2T-bgu" firstAttribute="leading" secondItem="TRb-70-vNx" secondAttribute="leading" constant="20" id="dCb-Xm-Bu4"/>
                                         <constraint firstItem="mtW-96-yQC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fZA-2T-bgu" secondAttribute="trailing" constant="8" symbolic="YES" id="dU9-9R-IAy"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="fZA-2T-bgu" secondAttribute="bottom" constant="4" id="f4M-UN-R3t"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -769,9 +779,10 @@
                                         </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="centerY" secondItem="sTc-Fg-mUe" secondAttribute="centerY" id="8xa-w4-64G"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="sTc-Fg-mUe" secondAttribute="bottom" constant="3" id="9s5-wq-4xr"/>
                                         <constraint firstAttribute="trailing" secondItem="sTc-Fg-mUe" secondAttribute="trailing" constant="20" id="NCj-gb-6Kc"/>
                                         <constraint firstItem="sTc-Fg-mUe" firstAttribute="leading" secondItem="fxL-cX-hxs" secondAttribute="leading" constant="20" id="SnS-pk-TTS"/>
+                                        <constraint firstItem="sTc-Fg-mUe" firstAttribute="top" secondItem="fxL-cX-hxs" secondAttribute="topMargin" constant="4" id="hhe-Ey-PAx"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -793,8 +804,9 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="centerY" secondItem="ZYo-nl-vRY" secondAttribute="centerY" id="S3l-Nr-VY0"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="ZYo-nl-vRY" secondAttribute="bottom" constant="4" id="4ya-ZQ-jOy"/>
                                         <constraint firstAttribute="centerX" secondItem="ZYo-nl-vRY" secondAttribute="centerX" id="nyb-3t-ChI"/>
+                                        <constraint firstItem="ZYo-nl-vRY" firstAttribute="top" secondItem="4Id-S8-ahB" secondAttribute="topMargin" constant="3" id="yc5-GB-Kuu"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -893,8 +905,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="oI4-Xd-Af5"/>
         <segue reference="Js4-XC-Mie"/>
+        <segue reference="oI4-Xd-Af5"/>
         <segue reference="R2E-hK-DuA"/>
     </inferredMetricsTieBreakers>
 </document>

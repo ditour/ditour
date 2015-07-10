@@ -636,6 +636,10 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 		// preserve selection between presentations
 		self.clearsSelectionOnViewWillAppear = false
 
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
+
 		self.updateControls()
 	}
 
@@ -1112,6 +1116,10 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
 
 		self.title = self.track.detailTitle
+
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
@@ -1193,27 +1201,6 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("Failed request for remote item at index path: \(indexPath)")
-		}
-	}
-
-
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		switch indexPath.section {
-		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
-			return self.heightForRemoteItemAtIndexPath(indexPath)
-		default:
-			return LabelCell.defaultHeight
-		}
-	}
-
-
-	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteFileAtIndexPath(indexPath)
-
-		if self.isRemoteItemDownloading(remoteItem) {
-			return DownloadStatusCell.defaultHeight
-		} else {
-			return LabelCell.defaultHeight
 		}
 	}
 
@@ -1387,6 +1374,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 		self.title = presentation.detailTitle
 
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
+
 		self.updateView()
 	}
 
@@ -1489,27 +1480,6 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("Failed request for remote item at index path: \(indexPath)")
-		}
-	}
-
-
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		switch indexPath.section {
-		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
-			return self.heightForRemoteItemAtIndexPath(indexPath)
-		default:
-			return LabelCell.defaultHeight
-		}
-	}
-
-
-	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteItemAtIndexPath(indexPath)
-
-		if self.isRemoteItemDownloading(remoteItem) {
-			return DownloadStatusCell.defaultHeight
-		} else {
-			return LabelCell.defaultHeight
 		}
 	}
 
@@ -1747,6 +1717,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 		self.title = self.group.detailTitle
 
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
+
 		self.updateDownloadIndicator()
 	}
 
@@ -1889,27 +1863,6 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("Failed request for remote item at index path: \(indexPath)")
-		}
-	}
-
-
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		switch indexPath.section {
-		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
-			return self.heightForRemoteItemAtIndexPath(indexPath)
-		default:
-			return LabelCell.defaultHeight
-		}
-	}
-
-
-	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteItemAtIndexPath(indexPath)
-
-		if self.isRemoteItemDownloading(remoteItem) {
-			return DownloadStatusCell.defaultHeight
-		} else {
-			return LabelCell.defaultHeight
 		}
 	}
 
