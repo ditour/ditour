@@ -33,10 +33,8 @@ class Slide {
 		// register each Slide subclass to append to the supported extensions
 		register(slideClass: ImageSlide.self)
 
-		if #available(iOS 8.0, *) {
-		    register(slideClass: SceneSlide.self)
-		}
-		
+		register(slideClass: SceneSlide.self)
+
 		register(slideClass: MovieSlide.self)
 		register(slideClass: PDFSlide.self)
 		register(slideClass: WebpageSlide.self)

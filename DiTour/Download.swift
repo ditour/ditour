@@ -65,13 +65,8 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 
 	/* make a new background configuration */
 	private class func makeBackgroundConfiguration(backgroundSessionID: String) -> NSURLSessionConfiguration {
-		if #available(iOS 8.0, *) {
-			// proper method to call in iOS 8 (available starting in iOS 8)
-			return NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(backgroundSessionID)
-		} else {
-			// needed for iOS 7 but deprecated in iOS 8
-			return NSURLSessionConfiguration.backgroundSessionConfiguration(backgroundSessionID)
-		}
+		// proper method to call in iOS 8 (available starting in iOS 8)
+		return NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(backgroundSessionID)
 	}
 
 
@@ -150,13 +145,7 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 		self.groupStatus = status
 
 		// perform the updates on a global queue
-		let queue : dispatch_queue_t
-		if #available(iOS 8, *) {
-			queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-		} else {
-			// pre iOS 8
-			queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-		}
+		let queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
 		dispatch_async(queue) { () -> Void in
 			group.managedObjectContext!.performBlockAndWait { () -> Void in
 				var possibleError : NSError?

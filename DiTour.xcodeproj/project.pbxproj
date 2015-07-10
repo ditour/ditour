@@ -338,6 +338,7 @@
 					/usr/include/tidy,
 				);
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "gov.ornl.neutrons.${PRODUCT_NAME}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -363,6 +364,7 @@
 					/usr/include/tidy,
 				);
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "gov.ornl.neutrons.${PRODUCT_NAME}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
