@@ -623,7 +623,7 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 
 // MARK: - Presentation Groups Table Controller
 /* table controller for displaying presentation groups */
-final class PresentationGroupsTableController : UITableViewController, DitourModelContainer {
+final class PresentationGroupsTableController : UITableViewController, DitourModelContainer, SegueHandling {
 	/* Cell constants */
 	private struct Cell {
 		static let VIEW_ID = "PresentationGroupCell"
@@ -1048,19 +1048,25 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* prepare to navigate to a new view controller */
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier, sender) {
-		case (.Some(SEGUE_SHOW_PRESENTATION_MASTERS_ID), let group as PresentationGroupStore):
+		switch (getSegueID(segue), sender) {
+		case (.GroupToPresentationMasters, let group as PresentationGroupStore):
 			let masterTableController = segue.destinationViewController as! PresentationGroupDetailController
 			masterTableController.ditourModel = self.ditourModel
 			masterTableController.group = group
 		default:
-			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+			fatalError("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
 
 
 	//MARK: - Presentation Group Nested Enumerations
+
+	// SegueID for prepareForSegue
+	enum SegueID : String {
+		case GroupToPresentationMasters
+	}
+
 
 	/* enum of sections within the table */
 	private enum Section : Int, CaseCountable {
