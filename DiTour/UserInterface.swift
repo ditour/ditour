@@ -37,6 +37,25 @@ private let TIMESTAMP_FORMATTER : NSDateFormatter = {
 
 
 
+// enum which provides a count of its cases
+private protocol CaseCountable {
+	static func countCases() -> Int
+}
+
+
+// provide a default implementation to count the cases for Int enums assuming starting at 0 and contiguous
+private extension CaseCountable where Self : RawRepresentable, Self.RawValue == Int {
+	// count the number of cases in the enum
+	static func countCases() -> Int {
+		// starting at zero, verify whether the enum can be instantiated from the Int and increment until it cannot
+		var count = 0
+		while let _ = Self(rawValue: count) { count++ }
+		return count
+	}
+}
+
+
+
 /* provides a common segue handling protocol for view controllers (based on example in WWDC 2015 Session 411 "Swift in Practice") */
 private protocol SegueHandling {
 	typealias SegueID : RawRepresentable
@@ -53,6 +72,7 @@ extension SegueHandling where Self: UIViewController, SegueID.RawValue == String
 		return segueIdentifier
 	}
 }
+
 
 
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
@@ -884,7 +904,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* number of sections in the table */
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
@@ -1043,10 +1063,10 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	//MARK: - Presentation Group Nested Enumerations
 
 	/* enum of sections within the table */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case GroupView		// section to display each cell corresponding to a presentation group
 		case GroupAdd		// section to display a cell for adding a new presentation group
-		case Count			// number of sections
+		static let caseCount = Section.countCases()
 	}
 
 
@@ -1175,7 +1195,7 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.track.remoteItemsByReadyStatus()
 
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
@@ -1311,11 +1331,10 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	}
 
 
-
 	/* sections for the table view */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case Config, Pending, Ready
-		case Count
+		static let caseCount = Section.countCases()
 	}
 }
 
@@ -1450,7 +1469,7 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.presentation.remoteItemsByReadyStatus()
 
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
@@ -1645,11 +1664,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	}
 
 
-
 	/* sections for the table view */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case Config, Pending, Ready
-		case Count
+		static let caseCount = Section.countCases()
 	}
 }
 
@@ -1829,7 +1847,7 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.group.remoteItemsByReadyStatus()
 
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
@@ -2045,9 +2063,9 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 
 	/* sections for the table view */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case Config, Pending, Ready
-		case Count
+		static let caseCount = Section.countCases()
 	}
 }
 
