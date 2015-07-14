@@ -58,10 +58,8 @@ extension SegueHandling where Self: UIViewController, SegueID.RawValue == String
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
 final class PresentationViewController : UICollectionViewController, DitourModelContainer, SegueHandling {
 	// enum for SegueHandling
-	// TODO: remove case string assignments when Swift supports default case assignment
 	enum SegueID : String {
-		case MainToGroups = "MainToGroups"
-		case TrackDetailShowPendingFileInfo = "TrackDetailShowPendingFileInfo"
+		case MainToGroups, TrackDetailShowPendingFileInfo
 	}
 
 	var ditourModel: DitourModel? {
@@ -89,7 +87,7 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 
 
 	/* handle changes to the model's tracks or current track to update the display accordingly */
-	override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [NSObject : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+	override  func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
 		// if keyPath is nil there is nothing to do as it doesn't match anything observable
 		guard let keyPath = keyPath else { return }
 
@@ -492,11 +490,6 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 	private var updateScheduled = false
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
-
-
 	/* handle the view loaded event */
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -647,11 +640,6 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 			self.updateControls()
 			self.tableView.reloadData()
 		}
-	}
-
-
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
 	}
 
 
@@ -1140,10 +1128,6 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	private var updateScheduled = false
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -1396,10 +1380,6 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	/* indicates whether an update has been scheduled to process any pending changes */
 	private var updateScheduled = false
 
-
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -1736,10 +1716,6 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	/* indicates whether an update has been scheduled to process any pending changes */
 	private var updateScheduled = false
 
-
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
