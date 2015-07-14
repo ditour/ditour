@@ -974,22 +974,30 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	}
 
 
+	/* Convenience method to get the section from an index path */
+	private func toSection(indexPath: NSIndexPath, line : Int = __LINE__, call : StaticString = __FUNCTION__) -> Section {
+		guard let section = Section(rawValue: indexPath.section) else {
+			fatalError("Error! Unknown section at path: \(indexPath) called from \(call) at line: \(line) in file: \(__FILE__)")
+		}
+
+		return section
+	}
+
+
 	/* handle selection of a group or the add group row */
 	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		if !self.editing {	// only allow editing of a group if the table is not in the editing mode (i.e. delete/move mode)
 			self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
 
-			switch indexPath.section {
-			case Section.GroupAdd.rawValue:
+			switch toSection(indexPath) {
+			case .GroupAdd:
 				// create a new group and enable editing
 				self.editMode = EditMode.Single	// edit the name of the group
 				self.setupEditing()
 				self.editingGroup = self.editingRootStore?.addNewPresentationGroup()
-			case Section.GroupView.rawValue:
+			case .GroupView:
 				// view the selected group in the detail view
 				self.performSegueWithIdentifier(SEGUE_SHOW_PRESENTATION_MASTERS_ID, sender: self.mainRootStore!.groups[indexPath.row])
-			default:
-				print("Error. Did select data row for unknown section at path: \(indexPath)")
 			}
 
 			self.updateControls()
@@ -1000,8 +1008,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* Override to support conditional editing of the table view */
 	override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		switch indexPath.section {
-		case Section.GroupView.rawValue:
+		switch toSection(indexPath) {
+		case .GroupView:
 			return true
 		default:
 			return false
@@ -1011,8 +1019,10 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* Override to support editing the table view. */
 	override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-		switch( editingStyle, indexPath.section ) {
-		case (.Delete, Section.GroupView.rawValue ):
+		let section = toSection(indexPath)
+
+		switch(editingStyle, section) {
+		case (.Delete, .GroupView):
 			// Delete the row from the data source
 			self.deleteGroupAtIndex(indexPath.row)
 			tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
@@ -1024,8 +1034,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* move the groups from the source row to the destination row based on the drag event */
 	override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-		switch sourceIndexPath.section {
-		case Section.GroupView.rawValue:
+		switch toSection(sourceIndexPath) {
+		case .GroupView:
 			self.moveGroupAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
 		default:
 			break
@@ -1035,8 +1045,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* support rearranging rows in the table view */
 	override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		switch indexPath.section {
-		case Section.GroupView.rawValue:
+		switch toSection(indexPath) {
+		case .GroupView:
 			return true
 		default:
 			return false
