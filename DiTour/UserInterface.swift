@@ -909,30 +909,30 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 
 	/* number of rows in the specified section */
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(tableView: UITableView, numberOfRowsInSection rawSection: Int) -> Int {
+		guard let section = Section(rawValue: rawSection) else {
+			fatalError("Error! Unknown section \(rawSection) in \(__FUNCTION__) at line \(__LINE__)")
+		}
+
 		switch (section, self.editMode) {
-		case (Section.GroupView.rawValue, _):
+		case (.GroupView, _):
 			// one row per group in the view section
 			return self.currentRootStore?.groups.count ?? 0
-		case (Section.GroupAdd.rawValue, .None):
+		case (.GroupAdd, .None):
 			return 1	// there is one row in the Add section if we aren't editing
-		case (Section.GroupAdd.rawValue, _):
+		case (.GroupAdd, _):
 			return 0	// if we are editing the table or a cell, hide the "add" cell
-		default:
-			return 0
 		}
 	}
 
 
 	/* get the cell at the specified index path */
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		switch indexPath.section {
-		case Section.GroupView.rawValue:
+		switch toSection(indexPath) {
+		case .GroupView:
 			return self.groupViewCellAtIndexPath(indexPath)
-		case Section.GroupAdd.rawValue:
+		case .GroupAdd:
 			return self.groupAddCellAtIndexPath(indexPath)
-		default:
-			fatalError("No support to get a cell for presentation group section: \(indexPath.section)")
 		}
 	}
 
