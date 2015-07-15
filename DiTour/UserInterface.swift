@@ -75,6 +75,20 @@ extension SegueHandling where Self: UIViewController, SegueID.RawValue == String
 
 
 
+/* Convenience for UITableViewControllers to covert an Int section to an Int based enum of SectionType */
+private extension Int {
+	/* Convert a raw Int to an Int based enum of EnumType */
+	func toEnum<EnumType : RawRepresentable where EnumType.RawValue == Int>(line : Int = __LINE__, call : StaticString = __FUNCTION__) -> EnumType {
+		guard let enumItem = EnumType(rawValue: self) else {
+			fatalError("Error! Cannot convert raw value to enumeration of type \(EnumType.self) for Int: \(self) called from \(call) at line: \(line) in file: \(__FILE__)")
+		}
+
+		return enumItem
+	}
+}
+
+
+
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
 final class PresentationViewController : UICollectionViewController, DitourModelContainer, SegueHandling {
 	// enum for SegueHandling
@@ -866,8 +880,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 			// gather the indexes of the selected groups
 			let groupsToDeleteIndexes = NSMutableIndexSet()
 			for path in selectedPaths as [NSIndexPath] {
-				switch path.section {
-				case Section.GroupView.rawValue:
+				switch path.section.toEnum() as Section {
+				case .GroupView:
 					groupsToDeleteIndexes.addIndex(path.row)
 				default:
 					break
@@ -910,10 +924,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* number of rows in the specified section */
 	override func tableView(tableView: UITableView, numberOfRowsInSection rawSection: Int) -> Int {
-		guard let section = Section(rawValue: rawSection) else {
-			fatalError("Error! Unknown section \(rawSection) in \(__FUNCTION__) at line \(__LINE__)")
-		}
-
+		let section : Section = rawSection.toEnum()
 		switch (section, self.editMode) {
 		case (.GroupView, _):
 			// one row per group in the view section
@@ -928,7 +939,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* get the cell at the specified index path */
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		switch toSection(indexPath) {
+		switch indexPath.section.toEnum() as Section {
 		case .GroupView:
 			return self.groupViewCellAtIndexPath(indexPath)
 		case .GroupAdd:
@@ -974,22 +985,12 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	}
 
 
-	/* Convenience method to get the section from an index path */
-	private func toSection(indexPath: NSIndexPath, line : Int = __LINE__, call : StaticString = __FUNCTION__) -> Section {
-		guard let section = Section(rawValue: indexPath.section) else {
-			fatalError("Error! Unknown section at path: \(indexPath) called from \(call) at line: \(line) in file: \(__FILE__)")
-		}
-
-		return section
-	}
-
-
 	/* handle selection of a group or the add group row */
 	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		if !self.editing {	// only allow editing of a group if the table is not in the editing mode (i.e. delete/move mode)
 			self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
 
-			switch toSection(indexPath) {
+			switch indexPath.section.toEnum() as Section {
 			case .GroupAdd:
 				// create a new group and enable editing
 				self.editMode = EditMode.Single	// edit the name of the group
@@ -1008,7 +1009,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* Override to support conditional editing of the table view */
 	override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		switch toSection(indexPath) {
+		switch indexPath.section.toEnum() as Section {
 		case .GroupView:
 			return true
 		default:
@@ -1019,7 +1020,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* Override to support editing the table view. */
 	override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-		let section = toSection(indexPath)
+		let section : Section = indexPath.section.toEnum()
 
 		switch(editingStyle, section) {
 		case (.Delete, .GroupView):
@@ -1034,7 +1035,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* move the groups from the source row to the destination row based on the drag event */
 	override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-		switch toSection(sourceIndexPath) {
+		switch sourceIndexPath.section.toEnum() as Section {
 		case .GroupView:
 			self.moveGroupAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
 		default:
@@ -1045,7 +1046,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* support rearranging rows in the table view */
 	override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		switch toSection(indexPath) {
+		switch indexPath.section.toEnum() as Section {
 		case .GroupView:
 			return true
 		default:
@@ -1217,15 +1218,13 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
-			switch section {
-			case Section.Config.rawValue:
+			switch section.toEnum() as Section {
+			case .Config:
 				return "Configuration"
-			case Section.Pending.rawValue:
+			case .Pending:
 				return "Pending Media"
-			case Section.Ready.rawValue:
+			case .Ready:
 				return "Ready Media"
-			default:
-				return nil
 			}
 		} else {
 			return nil
@@ -1234,29 +1233,25 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case Section.Config.rawValue:
+		switch section.toEnum() as Section {
+		case .Config:
 			return self.track.configuration != nil ? 1 : 0
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems.count
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems.count
-		default:
-			return 0
 		}
 	}
 
 
 	func remoteFileAtIndexPath(indexPath: NSIndexPath) -> RemoteFileStore {
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Config:
 			return self.track.configuration!
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
-		default:
-			fatalError("Failed request for remote item at index path: \(indexPath)")
 		}
 	}
 
@@ -1277,23 +1272,21 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteItem = self.remoteFileAtIndexPath(indexPath)
 
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Config:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Pending.rawValue:
+		case .Pending:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyRemoteFileCell(tableView, indexPath: indexPath)
-		default:
-			fatalError("No match for cell at index path: \(indexPath)")
 		}
 	}
 
@@ -1491,15 +1484,13 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
-			switch section {
-			case Section.Config.rawValue:
+			switch section.toEnum() as Section {
+			case .Config:
 				return "Configuration"
-			case Section.Pending.rawValue:
+			case .Pending:
 				return "Pending Tracks"
-			case Section.Ready.rawValue:
+			case .Ready:
 				return "Ready Tracks"
-			default:
-				return nil
 			}
 		} else {
 			return nil
@@ -1508,29 +1499,25 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case Section.Config.rawValue:
+		switch section.toEnum() as Section {
+		case .Config:
 			return self.presentation.configuration != nil ? 1 : 0
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems.count
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems.count
-		default:
-			return 0
 		}
 	}
 
 
 	func remoteItemAtIndexPath(indexPath: NSIndexPath) -> RemoteItemStore {
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Config:
 			return self.presentation.configuration!
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
-		default:
-			fatalError("Failed request for remote item at index path: \(indexPath)")
 		}
 	}
 
@@ -1551,23 +1538,21 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteItem = self.remoteItemAtIndexPath(indexPath)
 
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Config:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Pending.rawValue:
+		case .Pending:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingTrackCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyTrackCell(tableView, indexPath: indexPath)
 			}
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyTrackCell(tableView, indexPath: indexPath)
-		default:
-			fatalError("No match for cell at index path: \(indexPath)")
 		}
 	}
 
@@ -1639,10 +1624,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 
 	private func trackAtPath(indexPath: NSIndexPath) -> TrackStore {
-		switch indexPath.section {
-		case Section.Pending.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("No track at index path: \(indexPath)")
@@ -1869,15 +1854,13 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
-			switch section {
-			case Section.Config.rawValue:
+			switch section.toEnum() as Section {
+			case .Config:
 				return "Configuration"
-			case Section.Pending.rawValue:
+			case .Pending:
 				return "Pending Presentations"
-			case Section.Ready.rawValue:
+			case .Ready:
 				return "Ready Presentations"
-			default:
-				return nil
 			}
 		} else {
 			return nil
@@ -1886,29 +1869,25 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case Section.Config.rawValue:
+		switch section.toEnum() as Section {
+		case .Config:
 			return self.group.configuration != nil ? 1 : 0
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems.count
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems.count
-		default:
-			return 0
 		}
 	}
 
 
 	func remoteItemAtIndexPath(indexPath: NSIndexPath) -> RemoteItemStore {
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Config:
 			return self.group.configuration!
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
-		default:
-			fatalError("Failed request for remote item at index path: \(indexPath)")
 		}
 	}
 
@@ -1929,23 +1908,21 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteItem = self.remoteItemAtIndexPath(indexPath)
 
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Config:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Pending.rawValue:
+		case .Pending:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingPresentationCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyPresentationCell(tableView, indexPath: indexPath)
 			}
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyPresentationCell(tableView, indexPath: indexPath)
-		default:
-			fatalError("No match for cell at index path: \(indexPath)")
 		}
 	}
 
@@ -2037,10 +2014,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 
 	private func presentationAtPath(indexPath: NSIndexPath) -> PresentationStore {
-		switch indexPath.section {
-		case Section.Pending.rawValue:
+		switch indexPath.section.toEnum() as Section {
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("No track at index path: \(indexPath)")
