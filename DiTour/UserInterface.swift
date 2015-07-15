@@ -78,9 +78,9 @@ extension SegueHandling where Self: UIViewController, SegueID.RawValue == String
 /* Convenience for UITableViewControllers to covert an Int section to an Int based enum of SectionType */
 private extension Int {
 	/* Convert a raw Int to an Int based enum of EnumType */
-	func toEnum<EnumType : RawRepresentable where EnumType.RawValue == Int>(line : Int = __LINE__, call : StaticString = __FUNCTION__) -> EnumType {
+	func toEnum<EnumType : RawRepresentable where EnumType.RawValue == Int>(line : Int = __LINE__, call : StaticString = __FUNCTION__, file : StaticString = __FILE__) -> EnumType {
 		guard let enumItem = EnumType(rawValue: self) else {
-			fatalError("Error! Cannot convert raw value to enumeration of type \(EnumType.self) for Int: \(self) called from \(call) at line: \(line) in file: \(__FILE__)")
+			fatalError("Error! Cannot convert raw value to enumeration of type \(EnumType.self) for Int: \(self) called from \(call) at line: \(line) in file: \(file)")
 		}
 
 		return enumItem
