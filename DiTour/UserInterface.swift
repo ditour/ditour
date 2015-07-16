@@ -11,12 +11,6 @@ import QuickLook
 import CoreData
 
 
-// segue IDs
-// TODO: replace these segue ID strings with SegueHandling SegueID enums
-private let SEGUE_TRACK_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
-private let SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
-
-
 /* formatter for timestamp */
 private let TIMESTAMP_FORMATTER : NSDateFormatter = {
 	let formatter = NSDateFormatter()
@@ -1132,7 +1126,7 @@ extension TrackStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified track */
-final class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer, SegueHandling {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1153,9 +1147,13 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	/* array of ready items */
 	var readyItems = Array<TrackStore.ItemType>()
 
-
 	/* indicates whether an update has been scheduled to process any pending changes */
 	private var updateScheduled = false
+
+	/* segue enum for segue identifiers */
+	enum SegueID : String {
+		case TrackDetailShowFileInfo, TrackDetailShowPendingFileInfo
+	}
 
 
 	override func viewDidLoad() {
@@ -1320,15 +1318,13 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	// MARK - Track Detail Navigation
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier) {
-		case .Some(SEGUE_TRACK_SHOW_FILE_INFO_ID), .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID):
+		switch (getSegueID(segue)) {
+		case .TrackDetailShowFileInfo, .TrackDetailShowPendingFileInfo:
 			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow!)
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
-		default:
-			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
