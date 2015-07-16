@@ -13,10 +13,6 @@ import CoreData
 
 // segue IDs
 // TODO: replace these segue ID strings with SegueHandling SegueID enums
-private let SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = "ShowActivePresentationDetail"
-private let SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = "ShowPendingPresentationDetail"
-private let SEGUE_GROUP_SHOW_FILE_INFO_ID = "GroupDetailShowFileInfo";
-private let SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID = "GroupDetailShowPendingFileInfo";
 private let SEGUE_TRACK_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
 private let SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
 
@@ -1708,7 +1704,7 @@ extension PresentationGroupStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified presentation group */
-final class PresentationGroupDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class PresentationGroupDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer, SegueHandling {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1735,6 +1731,12 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 	/* indicates whether an update has been scheduled to process any pending changes */
 	private var updateScheduled = false
+
+
+	/* SegueID enumerating over possible segue identifiers */
+	enum SegueID : String {
+		case ShowActivePresentationDetail, ShowPendingPresentationDetail, GroupDetailShowFileInfo, GroupDetailShowPendingFileInfo
+	}
 
 
 	override func viewDidLoad() {
@@ -2029,8 +2031,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	// MARK - Presentation Group Detail Navigation
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier) {
-		case .Some(SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID):
+		let segueID = getSegueID(segue)
+
+		switch (segueID) {
+		case .ShowActivePresentationDetail, .ShowPendingPresentationDetail:
 			let indexPath = self.tableView.indexPathForSelectedRow!
 			let presentation = self.presentationAtPath(indexPath)
 
@@ -2038,19 +2042,16 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 			presentationController.ditourModel = self.ditourModel
 			presentationController.presentation = presentation
 
-			if segue.identifier! == SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID {
+			if segueID == .ShowPendingPresentationDetail {
 				presentationController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(presentation) as! DownloadContainerStatus?
 			}
 
-		case .Some(SEGUE_GROUP_SHOW_FILE_INFO_ID), .Some(SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID):
+		case .GroupDetailShowFileInfo, .GroupDetailShowPendingFileInfo:
 			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow!) as! RemoteFileStore
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
-
-		default:
-			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
