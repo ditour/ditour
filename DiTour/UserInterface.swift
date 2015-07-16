@@ -13,16 +13,12 @@ import CoreData
 
 // segue IDs
 // TODO: replace these segue ID strings with SegueHandling SegueID enums
-private let SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = "ShowActiveTrackDetail"
-private let SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = "ShowPendingTrackDetail"
 private let SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = "ShowActivePresentationDetail"
 private let SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = "ShowPendingPresentationDetail"
 private let SEGUE_GROUP_SHOW_FILE_INFO_ID = "GroupDetailShowFileInfo";
 private let SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID = "GroupDetailShowPendingFileInfo";
 private let SEGUE_TRACK_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
 private let SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
-private let SEGUE_PRESENTATION_SHOW_FILE_INFO_ID = "PresentationDetailShowFileInfo"
-private let SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID = "PresentationDetailShowPendingFileInfo"
 
 
 /* formatter for timestamp */
@@ -1381,7 +1377,7 @@ extension PresentationStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified presentation */
-final class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer, SegueHandling {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1408,6 +1404,12 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 	/* indicates whether an update has been scheduled to process any pending changes */
 	private var updateScheduled = false
+
+
+	/* SegueID enum for performing/preparing for segues */
+	enum SegueID : String {
+		case ShowActiveTrackDetail, ShowPendingTrackDetail, PresentationDetailShowFileInfo, PresentationDetailShowPendingFileInfo
+	}
 
 
 	override func viewDidLoad() {
@@ -1639,8 +1641,9 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	// MARK - Presentation Detail Navigation
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier) {
-		case .Some(SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_TRACK_DETAIL_ID):
+		let segueID = getSegueID(segue)
+		switch (segueID) {
+		case .ShowActiveTrackDetail, .ShowPendingTrackDetail:
 			let indexPath = self.tableView.indexPathForSelectedRow!
 			let track = trackAtPath(indexPath)
 
@@ -1648,20 +1651,17 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 			trackController.ditourModel = self.ditourModel
 			trackController.track = track
 
-			if segue.identifier! == SEGUE_SHOW_PENDING_TRACK_DETAIL_ID {
+			if segueID == .ShowPendingTrackDetail {
 				let downloadStatus = self.downloadStatus?.childStatusForRemoteItem(track) as! DownloadContainerStatus
 				trackController.downloadStatus = downloadStatus
 			}
 
-		case .Some(SEGUE_PRESENTATION_SHOW_FILE_INFO_ID), .Some(SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID):
+		case .PresentationDetailShowFileInfo, .PresentationDetailShowPendingFileInfo:
 			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow!)
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile as! RemoteFileStore
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
-			
-		default:
-			print("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
