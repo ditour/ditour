@@ -13,8 +13,6 @@ import CoreData
 
 // segue IDs
 // TODO: replace these segue ID strings with SegueHandling SegueID enums
-private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
-private let SEGUE_SHOW_PRESENTATION_MASTERS_ID = "GroupToPresentationMasters"
 private let SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = "ShowActiveTrackDetail"
 private let SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = "ShowPendingTrackDetail"
 private let SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = "ShowActivePresentationDetail"
@@ -74,12 +72,19 @@ private protocol SegueHandling {
 
 /* provide default implementation for handling segues of UIViewControllers with String based SegueIdentifier enums (based on example in WWDC 2015 Session 411 "Swift in Practice") */
 extension SegueHandling where Self: UIViewController, SegueID.RawValue == String {
+	// get a SegueID from a segue
 	func getSegueID(segue: UIStoryboardSegue) -> SegueID {
 		guard let identifier = segue.identifier, segueIdentifier = SegueID(rawValue: identifier) else {
 			fatalError("Invalid segue identifier: \(segue.identifier) for view controller of type: \(self.dynamicType).")
 		}
 
 		return segueIdentifier
+	}
+
+
+	// perform segue with a SegueID enum which allows for compile time checking for valid Segue ID
+	func performSegueWithSegueID(segueID: SegueID, sender: AnyObject?) {
+		self.performSegueWithIdentifier(segueID.rawValue, sender: sender)
 	}
 }
 
@@ -994,7 +999,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 				self.editingGroup = self.editingRootStore?.addNewPresentationGroup()
 			case .GroupView:
 				// view the selected group in the detail view
-				self.performSegueWithIdentifier(SEGUE_SHOW_PRESENTATION_MASTERS_ID, sender: self.mainRootStore!.groups[indexPath.row])
+				self.performSegueWithSegueID(.GroupToPresentationMasters, sender: self.mainRootStore!.groups[indexPath.row])
 			}
 
 			self.updateControls()
