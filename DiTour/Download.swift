@@ -391,7 +391,7 @@ final class PresentationGroupDownloadSession : NSObject, NSURLSessionDelegate, N
 
 				let downloadURL = remoteFile.remoteURL
 				let request = NSURLRequest(URL: downloadURL!)
-				guard let downloadTask = self.downloadSession.downloadTaskWithRequest(request) else { return }
+				let downloadTask = self.downloadSession.downloadTaskWithRequest(request)
 
 				self.downloadTaskRemoteItems[downloadTask] = status
 
