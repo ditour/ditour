@@ -9,6 +9,30 @@
 import Foundation
 
 
+/* convenience extensions to provide required NSString properties and methods */
+extension String {
+	var pathExtension : String {
+		return (self as NSString).pathExtension
+	}
+
+	var lastPathComponent : String {
+		return (self as NSString).lastPathComponent
+	}
+
+	var stringByDeletingPathExtension : String {
+		return (self as NSString).stringByDeletingPathExtension
+	}
+
+	var stringByDeletingLastPathComponent : String {
+		return (self as NSString).stringByDeletingLastPathComponent
+	}
+
+	func stringByAppendingPathComponent(component: String) -> String {
+		return (self as NSString).stringByAppendingPathComponent(component)
+	}
+}
+
+
 
 /* dictionary that allows thread safe concurrent access */
 final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType, DictionaryLiteralConvertible {
