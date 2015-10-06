@@ -11,21 +11,6 @@ import QuickLook
 import CoreData
 
 
-// segue IDs
-private let SEGUE_SHOW_CONFIGURATION_ID = "MainToGroups"
-private let SEGUE_SHOW_PRESENTATION_MASTERS_ID = "GroupToPresentationMasters"
-private let SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID = "ShowActiveTrackDetail"
-private let SEGUE_SHOW_PENDING_TRACK_DETAIL_ID = "ShowPendingTrackDetail"
-private let SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID = "ShowActivePresentationDetail"
-private let SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID = "ShowPendingPresentationDetail"
-private let SEGUE_GROUP_SHOW_FILE_INFO_ID = "GroupDetailShowFileInfo";
-private let SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID = "GroupDetailShowPendingFileInfo";
-private let SEGUE_TRACK_SHOW_FILE_INFO_ID = "TrackDetailShowFileInfo"
-private let SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID = "TrackDetailShowPendingFileInfo"
-private let SEGUE_PRESENTATION_SHOW_FILE_INFO_ID = "PresentationDetailShowFileInfo"
-private let SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID = "PresentationDetailShowPendingFileInfo"
-
-
 /* formatter for timestamp */
 private let TIMESTAMP_FORMATTER : NSDateFormatter = {
 	let formatter = NSDateFormatter()
@@ -36,8 +21,68 @@ private let TIMESTAMP_FORMATTER : NSDateFormatter = {
 
 
 
+// enum which provides a count of its cases
+private protocol CaseCountable {
+	static func countCases() -> Int
+}
+
+
+// provide a default implementation to count the cases for Int enums assuming starting at 0 and contiguous
+private extension CaseCountable where Self : RawRepresentable, Self.RawValue == Int {
+	// count the number of cases in the enum
+	static func countCases() -> Int {
+		// starting at zero, verify whether the enum can be instantiated from the Int and increment until it cannot
+		var count = 0
+		while let _ = Self(rawValue: count) { count++ }
+		return count
+	}
+
+
+	// Make an enum from the raw value which is expected to be valid (otherwise it is fatal).
+	static func from(rawValue: Int, line : Int = __LINE__, call : StaticString = __FUNCTION__, file : StaticString = __FILE__) -> Self {
+		guard let enumItem = Self(rawValue: rawValue) else {
+			fatalError("Error! Cannot convert raw value to enumeration of type \(Self.self) for Int: \(rawValue) called from \(call) at line: \(line) in file: \(file)")
+		}
+
+		return enumItem
+	}
+}
+
+
+
+/* provides a common segue handling protocol for view controllers (based on example in WWDC 2015 Session 411 "Swift in Practice") */
+private protocol SegueHandling {
+	typealias SegueID : RawRepresentable
+}
+
+
+/* provide default implementation for handling segues of UIViewControllers with String based SegueIdentifier enums (based on example in WWDC 2015 Session 411 "Swift in Practice") */
+extension SegueHandling where Self: UIViewController, SegueID.RawValue == String {
+	// get a SegueID from a segue
+	func getSegueID(segue: UIStoryboardSegue) -> SegueID {
+		guard let identifier = segue.identifier, segueIdentifier = SegueID(rawValue: identifier) else {
+			fatalError("Invalid segue identifier: \(segue.identifier) for view controller of type: \(self.dynamicType).")
+		}
+
+		return segueIdentifier
+	}
+
+
+	// perform segue with a SegueID enum which allows for compile time checking for valid Segue ID
+	func performSegueWithSegueID(segueID: SegueID, sender: AnyObject?) {
+		self.performSegueWithIdentifier(segueID.rawValue, sender: sender)
+	}
+}
+
+
+
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
-final class PresentationViewController : UICollectionViewController, DitourModelContainer {
+final class PresentationViewController : UICollectionViewController, DitourModelContainer, SegueHandling {
+	// enum for SegueHandling
+	enum SegueID : String {
+		case MainToGroups, TrackDetailShowPendingFileInfo
+	}
+
 	var ditourModel: DitourModel? {
 		willSet {
 			self.ditourModel?.removeObserver(self, forKeyPath: "tracks")
@@ -46,7 +91,7 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 
 		didSet {
 			self.ditourModel?.addObserver(self, forKeyPath: "tracks", options: .New, context: nil)
-			self.ditourModel?.addObserver(self, forKeyPath: "currentTrack", options: (.Old | .New), context: nil)
+			self.ditourModel?.addObserver(self, forKeyPath: "currentTrack", options: ([.Old, .New]), context: nil)
 		}
 	}
 
@@ -63,7 +108,10 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 
 
 	/* handle changes to the model's tracks or current track to update the display accordingly */
-	override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+	override  func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+		// if keyPath is nil there is nothing to do as it doesn't match anything observable
+		guard let keyPath = keyPath else { return }
+
 		// test against the source object and the keyPath
 		switch (object, keyPath) {
 
@@ -79,15 +127,18 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 			let tracks = model.tracks
 			var cellPaths = [NSIndexPath]()		// these are the cell paths to refresh
 
+			// if there is no change then there is nothing to handle
+			guard let change = change else { return }
+
 			// reload just the cells of the collection view that need updating (e.g. to change highlighting)
 			switch ( change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey] ) {
 
 			//  old and current track exist and are not equal so we need to update their corresponding cells
 			case let ( .Some( oldTrack as Track ), .Some( currentTrack as Track ) ) where oldTrack !== currentTrack :
-				if let oldItem = find(tracks, oldTrack) {
+				if let oldItem = tracks.indexOf(oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
-				if let newItem = find(tracks, currentTrack) {
+				if let newItem = tracks.indexOf(currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
@@ -96,26 +147,26 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 				break
 
 			// matches the case where oldTrack NSNull and hence only the current track exists so we need to update its cell
-			case let ( .Some(oldTrack as NSNull), .Some(currentTrack as Track) ) :
-				if let newItem = find(tracks, currentTrack) {
+			case let ( .Some(_ as NSNull), .Some(currentTrack as Track) ) :
+				if let newItem = tracks.indexOf(currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
 			// only the current track exists so we need to update its cell
 			case ( .None, .Some( let currentTrack as Track ) ) :
-				if let newItem = find(tracks, currentTrack) {
+				if let newItem = tracks.indexOf(currentTrack) {
 					cellPaths.append(NSIndexPath(forItem: newItem, inSection: 0))
 				}
 
 			// matches the case where currentTrack NSNull and hence only the old track exists and there is no current so update the cell for the old track
-			case let ( .Some(oldTrack as Track), .Some(currentTrack as NSNull) ) :
-				if let oldItem = find(tracks, oldTrack) {
+			case let ( .Some(oldTrack as Track), .Some(_ as NSNull) ) :
+				if let oldItem = tracks.indexOf(oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
 
 			// only the old track exists and there is no current so update the cell for the old track
 			case ( .Some( let oldTrack as Track ), .None ) :
-				if let oldItem = find(tracks, oldTrack) {
+				if let oldItem = tracks.indexOf(oldTrack) {
 					cellPaths.append(NSIndexPath(forItem: oldItem, inSection: 0))
 				}
 
@@ -179,20 +230,30 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 		self.collectionView!.allowsMultipleSelection = false
 
 		self.navigationController?.navigationBar.barStyle = .BlackTranslucent
+
+		// adjust the flow layout item size based on horizontal size class to prevent track icon cells from being too big on iPhone
+		if let layout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+			switch self.traitCollection.horizontalSizeClass {
+			case .Compact:
+				layout.itemSize = CGSizeMake(150.0, 132.0)
+			default:
+				break
+			}
+		}
 	}
 
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch ( segue.identifier, segue.destinationViewController ) {
+		switch ( getSegueID(segue), segue.destinationViewController ) {
 
-		case ( .Some(SEGUE_SHOW_CONFIGURATION_ID), let configController as PresentationGroupsTableController ):
+		case ( .MainToGroups, let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
-		case ( .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID), let configController as PresentationGroupsTableController ):
+		case ( .TrackDetailShowPendingFileInfo, let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
 		default:
-			println("Segue ID: \"\(segue.identifier)\" does not match a known ID in prepare for segue with destination view controller: \(segue.destinationViewController) ")
+			print("Segue ID: \"\(segue.identifier)\" does not match a known ID in prepare for segue with destination view controller: \(segue.destinationViewController) ")
 		}
 	}
 }
@@ -218,13 +279,13 @@ final class TrackViewCell : UICollectionViewCell {
 	}
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	/* handle awake from nib event */
+	override func awakeFromNib() {
+		super.awakeFromNib()
 
 		// change to our custom selected background view (pale blue)
 		self.selectedBackgroundView = BackgroundView(stroke: UIColor.blackColor(), fill: UIColor(red: 0.8, green: 0.8, blue: 1.0, alpha: 0.9))
 	}
-
 
 
 	/* nested background view for the track view cell to display when the cell is selected our outlined */
@@ -450,11 +511,6 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 	private var updateScheduled = false
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
-
-
 	/* handle the view loaded event */
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -538,21 +594,21 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 
 
 	/* Local URL of the file */
-	var previewItemURL: NSURL! { return NSURL.fileURLWithPath(self.remoteFile.absolutePath) }
+	var previewItemURL: NSURL { return NSURL.fileURLWithPath(self.remoteFile.absolutePath) }
 
 
 	/* title of the file */
-	var previewItemTitle: String! { return self.remoteFile.name }
+	var previewItemTitle: String? { return self.remoteFile.name }
 
 
 	/* there is only one item to preview */
-	func numberOfPreviewItemsInPreviewController(controller: QLPreviewController!) -> Int {
+	func numberOfPreviewItemsInPreviewController(controller: QLPreviewController) -> Int {
 		return 1
 	}
 
 
 	/* this instance also serves as the preview item */
-	func previewController(controller: QLPreviewController!, previewItemAtIndex index: Int) -> QLPreviewItem! {
+	func previewController(controller: QLPreviewController, previewItemAtIndex index: Int) -> QLPreviewItem {
 		return self
 	}
 
@@ -568,7 +624,7 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 
 // MARK: - Presentation Groups Table Controller
 /* table controller for displaying presentation groups */
-final class PresentationGroupsTableController : UITableViewController, DitourModelContainer {
+final class PresentationGroupsTableController : UITableViewController, DitourModelContainer, SegueHandling {
 	/* Cell constants */
 	private struct Cell {
 		static let VIEW_ID = "PresentationGroupCell"
@@ -608,11 +664,6 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	}
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
-
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -629,6 +680,10 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 		// preserve selection between presentations
 		self.clearsSelectionOnViewWillAppear = false
+
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
 
 		self.updateControls()
 	}
@@ -696,8 +751,6 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 		case (.None, false):	// no editing group, not editing (e.g. not editing)
 			self.navigationItem.leftBarButtonItem = nil
 			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editTable")
-		default:
-			break		// the default case should never be reached
 		}
 	}
 
@@ -716,18 +769,21 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	/* validate the user's group edit and commit if valid otherwise alert the user ignoring empty edits */
 	func confirmGroupEditing() {
 		// get the group Location and strip white space
-		switch self.editingCell?.locationField.text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
-		case .Some(let groupLocationSpec) where count(groupLocationSpec) > 0:
+		switch self.editingCell?.locationField?.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
+		case .Some(let groupLocationSpec) where groupLocationSpec.characters.count > 0:
 			switch NSURL(string: groupLocationSpec) {
-			case .Some(let groupURL) where groupURL.scheme != nil && groupURL.host != nil && groupURL.path != nil:
+			case .Some(let groupURL) where groupURL.host != nil && groupURL.path != nil:
 				// validated so URL so save changes and dismiss editing
 				if groupURL.scheme == "http" || groupURL.scheme == "https" {
 					self.editingGroup?.remoteLocation = groupLocationSpec
-					self.saveChanges(nil)
+					do {
+						try self.saveChanges()
+					} catch _ {
+					}
 					self.cancelGroupEditing()
 				} else {
 					// alert the user that the URL is malformed and allow them to continue editing
-					let message = "The URL scheme must be either \"http\" or \"https\", but you have specified one with scheme: \"\(groupURL.scheme!)\""
+					let message = "The URL scheme must be either \"http\" or \"https\", but you have specified one with scheme: \"\(groupURL.scheme)\""
 					let alertView = UIAlertView(title: "Unsupported URL Scheme", message: message, delegate: nil, cancelButtonTitle: "Dismiss")
 					alertView.show()
 				}
@@ -744,12 +800,12 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 
 	/* save changes to the persistent store */
-	private func saveChanges(error: NSErrorPointer) -> Bool {
+	private func saveChanges() throws {
 		switch self.editMode {
 		case .None:		// if there is no local edit mode just perform the default save
-			return self.ditourModel?.saveChanges(error) ?? false
+			try self.ditourModel?.saveChanges()
 		default:
-			return self.ditourModel?.persistentSaveContext(self.editContext!, error: error) ?? false
+			try self.ditourModel?.persistentSaveContext(self.editContext!)
 		}
 	}
 
@@ -797,19 +853,22 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* save changes and exit the edit mode */
 	func dismissEditing() {
-		self.saveChanges(nil)
+		do {
+			try self.saveChanges()
+		} catch _ {
+		}
 		self.exitEditMode()
 	}
 
 
 	/* delete the selected rows */
 	func deleteSelectedRows() {
-		if let selectedPaths = self.tableView.indexPathsForSelectedRows() {
+		if let selectedPaths = self.tableView.indexPathsForSelectedRows {
 			// gather the indexes of the selected groups
 			let groupsToDeleteIndexes = NSMutableIndexSet()
-			for path in selectedPaths as! [NSIndexPath] {
-				switch path.section {
-				case Section.GroupView.rawValue:
+			for path in selectedPaths as [NSIndexPath] {
+				switch Section.from(path.section) {
+				case .GroupView:
 					groupsToDeleteIndexes.addIndex(path.row)
 				default:
 					break
@@ -846,35 +905,32 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* number of sections in the table */
 	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
 	/* number of rows in the specified section */
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(tableView: UITableView, numberOfRowsInSection rawSection: Int) -> Int {
+		let section = Section.from(rawSection)
 		switch (section, self.editMode) {
-		case (Section.GroupView.rawValue, _):
+		case (.GroupView, _):
 			// one row per group in the view section
 			return self.currentRootStore?.groups.count ?? 0
-		case (Section.GroupAdd.rawValue, .None):
+		case (.GroupAdd, .None):
 			return 1	// there is one row in the Add section if we aren't editing
-		case (Section.GroupAdd.rawValue, _):
+		case (.GroupAdd, _):
 			return 0	// if we are editing the table or a cell, hide the "add" cell
-		default:
-			return 0
 		}
 	}
 
 
 	/* get the cell at the specified index path */
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		switch indexPath.section {
-		case Section.GroupView.rawValue:
+		switch Section.from(indexPath.section) {
+		case .GroupView:
 			return self.groupViewCellAtIndexPath(indexPath)
-		case Section.GroupAdd.rawValue:
+		case .GroupAdd:
 			return self.groupAddCellAtIndexPath(indexPath)
-		default:
-			fatalError("No support to get a cell for presentation group section: \(indexPath.section)")
 		}
 	}
 
@@ -912,7 +968,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* get the group add cell at the specified index path */
 	private func groupAddCellAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell {
-		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as! UITableViewCell
+		return self.tableView.dequeueReusableCellWithIdentifier(Cell.ADD_ID, forIndexPath: indexPath) as UITableViewCell
 	}
 
 
@@ -921,17 +977,15 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 		if !self.editing {	// only allow editing of a group if the table is not in the editing mode (i.e. delete/move mode)
 			self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
 
-			switch indexPath.section {
-			case Section.GroupAdd.rawValue:
+			switch Section.from(indexPath.section) {
+			case .GroupAdd:
 				// create a new group and enable editing
 				self.editMode = EditMode.Single	// edit the name of the group
 				self.setupEditing()
 				self.editingGroup = self.editingRootStore?.addNewPresentationGroup()
-			case Section.GroupView.rawValue:
+			case .GroupView:
 				// view the selected group in the detail view
-				self.performSegueWithIdentifier(SEGUE_SHOW_PRESENTATION_MASTERS_ID, sender: self.mainRootStore!.groups[indexPath.row])
-			default:
-				println("Error. Did select data row for unknown section at path: \(indexPath)")
+				self.performSegueWithSegueID(.GroupToPresentationMasters, sender: self.mainRootStore!.groups[indexPath.row])
 			}
 
 			self.updateControls()
@@ -942,8 +996,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* Override to support conditional editing of the table view */
 	override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		switch indexPath.section {
-		case Section.GroupView.rawValue:
+		switch Section.from(indexPath.section) {
+		case .GroupView:
 			return true
 		default:
 			return false
@@ -953,8 +1007,10 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* Override to support editing the table view. */
 	override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-		switch( editingStyle, indexPath.section ) {
-		case (.Delete, Section.GroupView.rawValue ):
+		let section = Section.from(indexPath.section)
+
+		switch(editingStyle, section) {
+		case (.Delete, .GroupView):
 			// Delete the row from the data source
 			self.deleteGroupAtIndex(indexPath.row)
 			tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
@@ -966,8 +1022,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* move the groups from the source row to the destination row based on the drag event */
 	override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-		switch sourceIndexPath.section {
-		case Section.GroupView.rawValue:
+		switch Section.from(sourceIndexPath.section) {
+		case .GroupView:
 			self.moveGroupAtIndex(sourceIndexPath.row, toIndex: destinationIndexPath.row)
 		default:
 			break
@@ -977,8 +1033,8 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* support rearranging rows in the table view */
 	override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-		switch indexPath.section {
-		case Section.GroupView.rawValue:
+		switch Section.from(indexPath.section) {
+		case .GroupView:
 			return true
 		default:
 			return false
@@ -990,13 +1046,13 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	/* prepare to navigate to a new view controller */
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier, sender) {
-		case (.Some(SEGUE_SHOW_PRESENTATION_MASTERS_ID), let group as PresentationGroupStore):
+		switch (getSegueID(segue), sender) {
+		case (.GroupToPresentationMasters, let group as PresentationGroupStore):
 			let masterTableController = segue.destinationViewController as! PresentationGroupDetailController
 			masterTableController.ditourModel = self.ditourModel
 			masterTableController.group = group
 		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
+			fatalError("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
@@ -1004,11 +1060,17 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 
 	//MARK: - Presentation Group Nested Enumerations
 
+	// SegueID for prepareForSegue
+	enum SegueID : String {
+		case GroupToPresentationMasters
+	}
+
+
 	/* enum of sections within the table */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case GroupView		// section to display each cell corresponding to a presentation group
 		case GroupAdd		// section to display a cell for adding a new presentation group
-		case Count			// number of sections
+		static let caseCount = Section.countCases()
 	}
 
 
@@ -1064,7 +1126,7 @@ extension TrackStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified track */
-final class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class TrackDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer, SegueHandling {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1085,14 +1147,14 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	/* array of ready items */
 	var readyItems = Array<TrackStore.ItemType>()
 
-
 	/* indicates whether an update has been scheduled to process any pending changes */
 	private var updateScheduled = false
 
-
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	/* segue enum for segue identifiers */
+	enum SegueID : String {
+		case TrackDetailShowFileInfo, TrackDetailShowPendingFileInfo
 	}
+
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -1102,6 +1164,10 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
 
 		self.title = self.track.detailTitle
+
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
 	}
 
 
@@ -1137,21 +1203,19 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.track.remoteItemsByReadyStatus()
 
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
-			switch section {
-			case Section.Config.rawValue:
+			switch Section.from(section) {
+			case .Config:
 				return "Configuration"
-			case Section.Pending.rawValue:
+			case .Pending:
 				return "Pending Media"
-			case Section.Ready.rawValue:
+			case .Ready:
 				return "Ready Media"
-			default:
-				return nil
 			}
 		} else {
 			return nil
@@ -1160,50 +1224,25 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case Section.Config.rawValue:
+		switch Section.from(section) {
+		case .Config:
 			return self.track.configuration != nil ? 1 : 0
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems.count
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems.count
-		default:
-			return 0
 		}
 	}
 
 
 	func remoteFileAtIndexPath(indexPath: NSIndexPath) -> RemoteFileStore {
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Config:
 			return self.track.configuration!
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
-		default:
-			fatalError("Failed request for remote item at index path: \(indexPath)")
-		}
-	}
-
-
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		switch indexPath.section {
-		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
-			return self.heightForRemoteItemAtIndexPath(indexPath)
-		default:
-			return LabelCell.defaultHeight
-		}
-	}
-
-
-	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteFileAtIndexPath(indexPath)
-
-		if self.isRemoteItemDownloading(remoteItem) {
-			return DownloadStatusCell.defaultHeight
-		} else {
-			return LabelCell.defaultHeight
 		}
 	}
 
@@ -1224,23 +1263,21 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteItem = self.remoteFileAtIndexPath(indexPath)
 
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Config:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Pending.rawValue:
+		case .Pending:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyRemoteFileCell(tableView, indexPath: indexPath)
-		default:
-			fatalError("No match for cell at index path: \(indexPath)")
 		}
 	}
 
@@ -1281,24 +1318,21 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 	// MARK - Track Detail Navigation
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier) {
-		case .Some(SEGUE_TRACK_SHOW_FILE_INFO_ID), .Some(SEGUE_TRACK_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow()!)
+		switch (getSegueID(segue)) {
+		case .TrackDetailShowFileInfo, .TrackDetailShowPendingFileInfo:
+			let remoteFile = self.remoteFileAtIndexPath(self.tableView.indexPathForSelectedRow!)
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
-		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
 
-
 	/* sections for the table view */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case Config, Pending, Ready
-		case Count
+		static let caseCount = Section.countCases()
 	}
 }
 
@@ -1335,7 +1369,7 @@ extension PresentationStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified presentation */
-final class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class PresentationDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer, SegueHandling {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1364,9 +1398,11 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	private var updateScheduled = false
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	/* SegueID enum for performing/preparing for segues */
+	enum SegueID : String {
+		case ShowActiveTrackDetail, ShowPendingTrackDetail, PresentationDetailShowFileInfo, PresentationDetailShowPendingFileInfo
 	}
+
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -1376,6 +1412,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
 
 		self.title = presentation.detailTitle
+
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
 
 		self.updateView()
 	}
@@ -1396,7 +1436,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 	@IBAction func changeDefaultPresentation(sender: AnyObject) {
 		self.presentation.current = self.defaultPresentationSwitch!.on
-		self.ditourModel?.saveChanges(nil)
+		do {
+			try self.ditourModel?.saveChanges()
+		} catch _ {
+		}
 		self.ditourModel?.reloadPresentation()
 	}
 
@@ -1430,21 +1473,19 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.presentation.remoteItemsByReadyStatus()
 
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
-			switch section {
-			case Section.Config.rawValue:
+			switch Section.from(section) {
+			case .Config:
 				return "Configuration"
-			case Section.Pending.rawValue:
+			case .Pending:
 				return "Pending Tracks"
-			case Section.Ready.rawValue:
+			case .Ready:
 				return "Ready Tracks"
-			default:
-				return nil
 			}
 		} else {
 			return nil
@@ -1453,50 +1494,25 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case Section.Config.rawValue:
+		switch Section.from(section) {
+		case .Config:
 			return self.presentation.configuration != nil ? 1 : 0
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems.count
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems.count
-		default:
-			return 0
 		}
 	}
 
 
 	func remoteItemAtIndexPath(indexPath: NSIndexPath) -> RemoteItemStore {
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Config:
 			return self.presentation.configuration!
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
-		default:
-			fatalError("Failed request for remote item at index path: \(indexPath)")
-		}
-	}
-
-
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		switch indexPath.section {
-		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
-			return self.heightForRemoteItemAtIndexPath(indexPath)
-		default:
-			return LabelCell.defaultHeight
-		}
-	}
-
-
-	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteItemAtIndexPath(indexPath)
-
-		if self.isRemoteItemDownloading(remoteItem) {
-			return DownloadStatusCell.defaultHeight
-		} else {
-			return LabelCell.defaultHeight
 		}
 	}
 
@@ -1517,23 +1533,21 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteItem = self.remoteItemAtIndexPath(indexPath)
 
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Config:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Pending.rawValue:
+		case .Pending:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingTrackCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyTrackCell(tableView, indexPath: indexPath)
 			}
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyTrackCell(tableView, indexPath: indexPath)
-		default:
-			fatalError("No match for cell at index path: \(indexPath)")
 		}
 	}
 
@@ -1605,10 +1619,10 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 
 	private func trackAtPath(indexPath: NSIndexPath) -> TrackStore {
-		switch indexPath.section {
-		case Section.Pending.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("No track at index path: \(indexPath)")
@@ -1619,38 +1633,35 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 	// MARK - Presentation Detail Navigation
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier) {
-		case .Some(SEGUE_SHOW_ACTIVE_TRACK_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_TRACK_DETAIL_ID):
-			let indexPath = self.tableView.indexPathForSelectedRow()!
+		let segueID = getSegueID(segue)
+		switch (segueID) {
+		case .ShowActiveTrackDetail, .ShowPendingTrackDetail:
+			let indexPath = self.tableView.indexPathForSelectedRow!
 			let track = trackAtPath(indexPath)
 
 			let trackController = segue.destinationViewController as! TrackDetailController
 			trackController.ditourModel = self.ditourModel
 			trackController.track = track
 
-			if segue.identifier! == SEGUE_SHOW_PENDING_TRACK_DETAIL_ID {
+			if segueID == .ShowPendingTrackDetail {
 				let downloadStatus = self.downloadStatus?.childStatusForRemoteItem(track) as! DownloadContainerStatus
 				trackController.downloadStatus = downloadStatus
 			}
 
-		case .Some(SEGUE_PRESENTATION_SHOW_FILE_INFO_ID), .Some(SEGUE_PRESENTATION_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!)
+		case .PresentationDetailShowFileInfo, .PresentationDetailShowPendingFileInfo:
+			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow!)
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile as! RemoteFileStore
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
-			
-		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
 
-
 	/* sections for the table view */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case Config, Pending, Ready
-		case Count
+		static let caseCount = Section.countCases()
 	}
 }
 
@@ -1689,7 +1700,7 @@ extension PresentationGroupStore : ConcreteRemoteItemContaining {
 
 
 /* table controller for displaying detail for a specified presentation group */
-final class PresentationGroupDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer {
+final class PresentationGroupDetailController : UITableViewController, DownloadStatusDelegate, DitourModelContainer, SegueHandling {
 	/* main model */
 	var ditourModel : DitourModel?
 
@@ -1718,9 +1729,11 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	private var updateScheduled = false
 
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	/* SegueID enumerating over possible segue identifiers */
+	enum SegueID : String {
+		case ShowActivePresentationDetail, ShowPendingPresentationDetail, GroupDetailShowFileInfo, GroupDetailShowPendingFileInfo
 	}
+
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -1733,6 +1746,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 		self.downloadStatus?.delegate = self
 
 		self.title = self.group.detailTitle
+
+		// enable self sizing table view cells
+		self.tableView.estimatedRowHeight = LabelCell.defaultHeight
+		self.tableView.rowHeight = UITableViewAutomaticDimension
 
 		self.updateDownloadIndicator()
 	}
@@ -1816,7 +1833,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
 			let presentation = self.presentationAtPath(indexPath)
 			presentation.current = true
-			self.ditourModel?.saveChanges(nil)
+			do {
+				try self.ditourModel?.saveChanges()
+			} catch _ {
+			}
 			self.ditourModel?.reloadPresentation()
 			self.tableView.reloadData()
 		}
@@ -1827,21 +1847,19 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 		// determine the ready and pending items for consistency with subsequent table data callbacks
 		(self.readyItems, self.pendingItems) = self.group.remoteItemsByReadyStatus()
 
-		return Section.Count.rawValue
+		return Section.caseCount
 	}
 
 
 	override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if self.tableView(tableView, numberOfRowsInSection: section) > 0 {	// only display a section title if there are any rows to display
-			switch section {
-			case Section.Config.rawValue:
+			switch Section.from(section) {
+			case .Config:
 				return "Configuration"
-			case Section.Pending.rawValue:
+			case .Pending:
 				return "Pending Presentations"
-			case Section.Ready.rawValue:
+			case .Ready:
 				return "Ready Presentations"
-			default:
-				return nil
 			}
 		} else {
 			return nil
@@ -1850,50 +1868,25 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		switch section {
-		case Section.Config.rawValue:
+		switch Section.from(section) {
+		case .Config:
 			return self.group.configuration != nil ? 1 : 0
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems.count
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems.count
-		default:
-			return 0
 		}
 	}
 
 
 	func remoteItemAtIndexPath(indexPath: NSIndexPath) -> RemoteItemStore {
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Config:
 			return self.group.configuration!
-		case Section.Pending.rawValue:
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
-		default:
-			fatalError("Failed request for remote item at index path: \(indexPath)")
-		}
-	}
-
-
-	override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		switch indexPath.section {
-		case Section.Config.rawValue, Section.Pending.rawValue, Section.Ready.rawValue:
-			return self.heightForRemoteItemAtIndexPath(indexPath)
-		default:
-			return LabelCell.defaultHeight
-		}
-	}
-
-
-	private func heightForRemoteItemAtIndexPath(indexPath: NSIndexPath) -> CGFloat {
-		let remoteItem = remoteItemAtIndexPath(indexPath)
-
-		if self.isRemoteItemDownloading(remoteItem) {
-			return DownloadStatusCell.defaultHeight
-		} else {
-			return LabelCell.defaultHeight
 		}
 	}
 
@@ -1914,23 +1907,21 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let remoteItem = self.remoteItemAtIndexPath(indexPath)
 
-		switch indexPath.section {
-		case Section.Config.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Config:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingRemoteFileCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyRemoteFileCell(tableView, indexPath: indexPath)
 			}
-		case Section.Pending.rawValue:
+		case .Pending:
 			if self.isRemoteItemDownloading(remoteItem) {
 				return self.pendingPresentationCell(tableView, indexPath: indexPath)
 			} else {
 				return self.readyPresentationCell(tableView, indexPath: indexPath)
 			}
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyPresentationCell(tableView, indexPath: indexPath)
-		default:
-			fatalError("No match for cell at index path: \(indexPath)")
 		}
 	}
 
@@ -2022,10 +2013,10 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 
 	private func presentationAtPath(indexPath: NSIndexPath) -> PresentationStore {
-		switch indexPath.section {
-		case Section.Pending.rawValue:
+		switch Section.from(indexPath.section) {
+		case .Pending:
 			return self.pendingItems[indexPath.row]
-		case Section.Ready.rawValue:
+		case .Ready:
 			return self.readyItems[indexPath.row]
 		default:
 			fatalError("No track at index path: \(indexPath)")
@@ -2036,37 +2027,36 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 	// MARK - Presentation Group Detail Navigation
 
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		switch (segue.identifier) {
-		case .Some(SEGUE_SHOW_ACTIVE_PRESENTATION_DETAIL_ID), .Some(SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID):
-			let indexPath = self.tableView.indexPathForSelectedRow()!
+		let segueID = getSegueID(segue)
+
+		switch (segueID) {
+		case .ShowActivePresentationDetail, .ShowPendingPresentationDetail:
+			let indexPath = self.tableView.indexPathForSelectedRow!
 			let presentation = self.presentationAtPath(indexPath)
 
 			let presentationController = segue.destinationViewController as! PresentationDetailController
 			presentationController.ditourModel = self.ditourModel
 			presentationController.presentation = presentation
 
-			if segue.identifier! == SEGUE_SHOW_PENDING_PRESENTATION_DETAIL_ID {
+			if segueID == .ShowPendingPresentationDetail {
 				presentationController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(presentation) as! DownloadContainerStatus?
 			}
 
-		case .Some(SEGUE_GROUP_SHOW_FILE_INFO_ID), .Some(SEGUE_GROUP_SHOW_PENDING_FILE_INFO_ID):
-			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow()!) as! RemoteFileStore
+		case .GroupDetailShowFileInfo, .GroupDetailShowPendingFileInfo:
+			let remoteFile = self.remoteItemAtIndexPath(self.tableView.indexPathForSelectedRow!) as! RemoteFileStore
 			let fileInfoController = segue.destinationViewController as! FileInfoController
 			fileInfoController.ditourModel = self.ditourModel
 			fileInfoController.remoteFile = remoteFile
 			fileInfoController.downloadStatus = self.downloadStatus?.childStatusForRemoteItem(remoteFile)
-
-		default:
-			println("Prepare for segue with ID: \(segue.identifier) does not match a known case...")
 		}
 	}
 
 
 
 	/* sections for the table view */
-	private enum Section : Int {
+	private enum Section : Int, CaseCountable {
 		case Config, Pending, Ready
-		case Count
+		static let caseCount = Section.countCases()
 	}
 }
 

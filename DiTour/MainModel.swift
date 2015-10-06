@@ -85,14 +85,19 @@ public class DitourModel : NSObject {
 		let fetch = NSFetchRequest( entityName: PresentationStore.entityName )
 		// fetch presentations explicitly marked disposable or that have no group assignment
 		fetch.predicate = NSPredicate( format: "(status = %d) || (group = nil)", RemoteItemStatus.Disposable.rawValue )
-		let presentations = self.mainManagedObjectContext.executeFetchRequest( fetch, error: nil ) as! [PresentationStore]
 
-		if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
-			for presentation in presentations {
-				presentation.managedObjectContext?.deleteObject(presentation)
+		do {
+			let presentations = try self.mainManagedObjectContext.executeFetchRequest(fetch) as! [PresentationStore]
+
+			if ( presentations.count > 0 ) {	// check if there are any presentations to delete so we can use a single save at the end outside the for loop
+				for presentation in presentations {
+					presentation.managedObjectContext?.deleteObject(presentation)
+				}
+
+				try self.saveChanges()
 			}
-
-			self.saveChanges(nil)
+		} catch {
+			fatalError("Error fetching presentations for cleanup: \(error)")
 		}
 	}
 
@@ -217,7 +222,10 @@ public class DitourModel : NSObject {
 		self.stop()
 		self.cleanup()
 
-		self.saveChanges( nil )
+		do {
+			try self.saveChanges()
+		} catch _ {
+		}
 	}
 
 
@@ -273,7 +281,7 @@ public class DitourModel : NSObject {
 
 	private class func applicationDocumentsDirectory() -> String {
 		let documentsDirectories = NSSearchPathForDirectoriesInDomains( .DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true )
-		return documentsDirectories.last! as! String
+		return documentsDirectories.last! as String
 	}
 
 
@@ -288,7 +296,13 @@ public class DitourModel : NSObject {
 
 		var error :NSError? = nil
 		let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel!)
-		let persistentStore :NSPersistentStore? = persistentStoreCoordinator.addPersistentStoreWithType(NSBinaryStoreType, configuration: nil, URL: storeURL, options: options, error: &error)
+		let persistentStore :NSPersistentStore?
+		do {
+			persistentStore = try persistentStoreCoordinator.addPersistentStoreWithType(NSBinaryStoreType, configuration: nil, URL: storeURL, options: options)
+		} catch let error1 as NSError {
+			error = error1
+			persistentStore = nil
+		}
 
 		/* TODO: Replace this implementation with code to handle the error appropriately.
 		Typical reasons for an error here include:
@@ -314,66 +328,90 @@ public class DitourModel : NSObject {
 	class private func fetchRootStore( managedObjectContext : NSManagedObjectContext ) -> RootStore {
 		let mainFetchRequest = NSFetchRequest(entityName: RootStore.entityName )
 
-		var error :NSError?
-		let rootStores = managedObjectContext.executeFetchRequest( mainFetchRequest, error: &error )!
+		let rootStores = try! managedObjectContext.executeFetchRequest( mainFetchRequest)
 
 		if rootStores.count > 0 {
 			return (rootStores[0] as! RootStore)
 		}
 		else {
 			let rootStore = RootStore.insertNewRootStoreInContext( managedObjectContext )
-			managedObjectContext.save( &error )
+			do {
+				try managedObjectContext.save()
+			} catch let error as NSError {
+				fatalError("Error saving new root store: \(error)")
+			}
 			return rootStore
 		}
 	}
 
 	// save changes down to the persistent store
-	func persistentSaveContext( editContext :NSManagedObjectContext, error errorPtr :NSErrorPointer ) -> Bool {
+	func persistentSaveContext( editContext :NSManagedObjectContext) throws {
+		var errorPtr: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
 		var success = false
 		var parentContext :NSManagedObjectContext? = nil
 		var localError : NSError?
 
 		// first save to the edit context
 		editContext.performBlockAndWait {
-			success = editContext.save( &localError )
+			do {
+				try editContext.save()
+				success = true
+			} catch let error as NSError {
+				localError = error
+				success = false
+			} catch {
+				fatalError()
+			}
 			parentContext = editContext.parentContext
 		}
 
 		// propagate the save until we get to the persistent store (i.e. no parent context)
 		if ( success && parentContext != nil ) {
-			return self.persistentSaveContext(parentContext!, error: errorPtr)
+			try self.persistentSaveContext(parentContext!)
+			return
 		}
 		else if !success {
-			println("Save error: \(localError?.description)")
-			errorPtr.memory = localError
-			return success
+			print("Save error: \(localError?.description)")
+			errorPtr = localError
+			if success {
+				return
+			}
+			throw errorPtr
 		}
 		else {
-			return success
+			if success {
+				return
+			}
+			throw errorPtr
 		}
 	}
 
 
 	// save changes in the main managed object context on the correct queue and blocking
-	func saveChanges( errorPtr :NSErrorPointer ) -> Bool {
+	func saveChanges() throws {
 		var success = false
 		var localError : NSError?
 
-		// first save to the managed object context on Main
-		self.mainManagedObjectContext.performBlockAndWait { () -> Void in
-			success = self.mainManagedObjectContext.save( &localError )
+		self.mainManagedObjectContext.performBlockAndWait {
+			do {
+				try self.mainManagedObjectContext.save()
+				success = true
+			} catch {
+				localError = error as NSError
+				success = false
+			}
 		}
 
-		if !success {
-			if localError != nil {
-				println( "Failed to save group edit to the main edit context: \(localError)" )
-				errorPtr.memory = localError
+		if success {
+			return
+		} else {
+			if let error = localError {
+				print( "Failed to save group edit to the main edit context: \(error)" )
+				throw error
 			}
 
-			return false
+			throw NSError(domain: "Migrator", code: 0, userInfo: nil)
 		}
-
-		return success
 	}
 }
 
@@ -387,21 +425,25 @@ private func purgeVersion1Data() {
 	let fileManager = NSFileManager.defaultManager()
 	if fileManager.fileExistsAtPath( oldPresentationPath ) {
 		var error :NSError? = nil
-		fileManager.removeItemAtPath( oldPresentationPath, error: &error )
+		do {
+			try fileManager.removeItemAtPath( oldPresentationPath)
+		} catch let error1 as NSError {
+			error = error1
+		}
 		if ( error != nil ) {
-			println( "Error removing version 1.0 presentation directory." )
+			print( "Error removing version 1.0 presentation directory." )
 		}
 	}
 }
 
 
 private func fetchDocumentDirectoryURL() -> NSURL {
-	let fileManager = NSFileManager.defaultManager()
-	var error : NSError?
-
-	let documentDirectoryURL = fileManager.URLForDirectory( NSSearchPathDirectory.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true, error: &error )
-
-	return documentDirectoryURL!
+	do {
+		return try NSFileManager.defaultManager().URLForDirectory( NSSearchPathDirectory.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
+	} catch let error as NSError {
+		// if the document directory doesn't exist then something really bad has happened
+		fatalError("Error fetching document directory URL: \(error)")
+	}
 }
 
 
@@ -415,7 +457,7 @@ private func performVersionInitialization() {
 
 	switch majorVersion {
 	case 0, 1:
-		println( "Cleaning up version 1 data..." )
+		print( "Cleaning up version 1 data..." )
 		purgeVersion1Data()
 	default:
 		break

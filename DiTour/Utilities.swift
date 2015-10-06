@@ -9,9 +9,33 @@
 import Foundation
 
 
+/* convenience extensions to provide required NSString properties and methods */
+extension String {
+	var pathExtension : String {
+		return (self as NSString).pathExtension
+	}
+
+	var lastPathComponent : String {
+		return (self as NSString).lastPathComponent
+	}
+
+	var stringByDeletingPathExtension : String {
+		return (self as NSString).stringByDeletingPathExtension
+	}
+
+	var stringByDeletingLastPathComponent : String {
+		return (self as NSString).stringByDeletingLastPathComponent
+	}
+
+	func stringByAppendingPathComponent(component: String) -> String {
+		return (self as NSString).stringByAppendingPathComponent(component)
+	}
+}
+
+
 
 /* dictionary that allows thread safe concurrent access */
-class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType, DictionaryLiteralConvertible {
+final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType, DictionaryLiteralConvertible {
 	/* internal dictionary */
 	var dictionary : [KeyType:ValueType]
 
@@ -64,17 +88,17 @@ class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType,
 		}
 
 		set {
-			// need to synchronize writes for consistent modifications
-			dispatch_barrier_async(self.queue) { () -> Void in
-				self.dictionary[key] = newValue
-			}
+			setValue(newValue, forKey: key)
 		}
 	}
 
 
 	/* assign the specified value to the specified key */
-	func setValue(value: ValueType, forKey key: KeyType) {
-		self[key] = value
+	func setValue(value: ValueType?, forKey key: KeyType) {
+		// need to synchronize writes for consistent modifications
+		dispatch_barrier_async(self.queue) { () -> Void in
+			self.dictionary[key] = value
+		}
 	}
 
 

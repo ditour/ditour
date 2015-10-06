@@ -41,7 +41,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 
 			for subController in viewController.childViewControllers {
-				self.propagateLobbyModel( subController as? UIViewController )
+				self.propagateLobbyModel( subController )
 			}
 		}
 	}

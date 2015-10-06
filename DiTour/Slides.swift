@@ -32,7 +32,9 @@ class Slide {
 
 		// register each Slide subclass to append to the supported extensions
 		register(slideClass: ImageSlide.self)
+
 		register(slideClass: SceneSlide.self)
+
 		register(slideClass: MovieSlide.self)
 		register(slideClass: PDFSlide.self)
 		register(slideClass: WebpageSlide.self)
@@ -72,7 +74,7 @@ class Slide {
 		let fileExtension = file.pathExtension.lowercaseString
 
 		if let SlideType = slideClassesByExtension[fileExtension] {
-			return SlideType(file: file, duration: duration)
+			return SlideType.init(file: file, duration: duration)
 		}
 		else {
 			return nil;
@@ -81,7 +83,7 @@ class Slide {
 
 
 	/* register a slide class so we can instantiate it by file extension */
-	private static func registerSlideClass<T : Slide>(inout #classesByExtension : [String:Slide.Type])( slideClass : T.Type ) {
+	private static func registerSlideClass<T : Slide>(inout classesByExtension classesByExtension : [String:Slide.Type])( slideClass : T.Type ) {
 		let fileExtensions = slideClass.supportedExtensions
 
 		for fileExtension in fileExtensions {
@@ -138,7 +140,7 @@ class Slide {
 // MARK: - Private Slide Utility Functions
 
 /* calculate the largest media view frame which fits within the screen frame while preserving the media's aspect ratio */
-private func calcMediaFrame(#screenFrame: CGRect, #mediaSize: CGSize) -> CGRect? {
+private func calcMediaFrame(screenFrame screenFrame: CGRect, mediaSize: CGSize) -> CGRect? {
 	if mediaSize.height > 0 && screenFrame.height > 0 {
 		let screenAspectRatio = screenFrame.width / screenFrame.height
 		let mediaAspectRatio = mediaSize.width / mediaSize.height
@@ -207,6 +209,7 @@ private final class ImageSlide : Slide {
 // MARK: - Slide for Displaying a 3D Scene
 
 /* Slide for displaying an COLLADA 3D model using SceneKit. */
+@available(iOS 8.0, *)
 private final class SceneSlide : Slide {
 	// The dae file must be compressed and contain materials (if any referenced) internally.
 	private static let sceneExtensions : Set<String> = ["dae"]
@@ -233,35 +236,33 @@ private final class SceneSlide : Slide {
 
 	/* display the image to the presenter */
 	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
-		if let location = NSURL(fileURLWithPath: self.mediaFile) {
-			if let scene = SCNScene(URL: location, options: nil, error: nil) {
-				// get the bounding box
-				var minBox = SCNVector3(x: 0, y: 0, z: 0)
-				var maxBox = SCNVector3(x: 0, y: 0, z: 0)
-				scene.rootNode.getBoundingBoxMin(&minBox, max: &maxBox)
-				let nativeSceneWidth =  CGFloat(maxBox.x - minBox.x)
-				let nativeSceneHeight = CGFloat(maxBox.y - minBox.y)
-				let nativeSceneSize = CGSize(width: nativeSceneWidth, height: nativeSceneHeight)
+		do {
+			let location = NSURL(fileURLWithPath: self.mediaFile)
+			let scene = try SCNScene(URL: location, options: nil)
+			// get the bounding box
+			var minBox = SCNVector3(x: 0, y: 0, z: 0)
+			var maxBox = SCNVector3(x: 0, y: 0, z: 0)
+			scene.rootNode.getBoundingBoxMin(&minBox, max: &maxBox)
+			let nativeSceneWidth =  CGFloat(maxBox.x - minBox.x)
+			let nativeSceneHeight = CGFloat(maxBox.y - minBox.y)
+			let nativeSceneSize = CGSize(width: nativeSceneWidth, height: nativeSceneHeight)
 
-				if let sceneFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: nativeSceneSize) {
-					let view = SCNView(frame: sceneFrame)
-					view.scene = scene
-					view.backgroundColor = UIColor.blackColor()
+			if let sceneFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: nativeSceneSize) {
+				let view = SCNView(frame: sceneFrame)
+				view.scene = scene
+				view.backgroundColor = UIColor.blackColor()
 
-					presenter.displayMediaView(view)
+				presenter.displayMediaView(view)
 
-					let delayInSeconds = Int64(self.duration)
-					let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
-					dispatch_after(popTime, dispatch_get_main_queue()) {
-						completionHandler(self)
-					}
-				} else {
+				let delayInSeconds = Int64(self.duration)
+				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
+				dispatch_after(popTime, dispatch_get_main_queue()) {
 					completionHandler(self)
 				}
 			} else {
 				completionHandler(self)
 			}
-		} else {
+		} catch _ {
 			completionHandler(self)
 		}
 	}
@@ -342,7 +343,7 @@ private final class PDFSlide : Slide {
 
 	private func newDocument() -> CGPDFDocumentRef {
 		let mediaURL = NSURL(fileURLWithPath: self.mediaFile)
-		return CGPDFDocumentCreateWithURL(mediaURL)
+		return CGPDFDocumentCreateWithURL(mediaURL)!
 	}
 
 
@@ -357,7 +358,7 @@ private final class PDFSlide : Slide {
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
 		if ( pageCount > 0 ) {
-			let pageRef = CGPDFDocumentGetPage(documentRef, 1)
+			let pageRef = CGPDFDocumentGetPage(documentRef, 1)!
 			let image = self.imageFromPageRef(pageRef)
 			return image
 		} else {
@@ -368,15 +369,15 @@ private final class PDFSlide : Slide {
 
 	/* generate an image from the specified page */
 	private func imageFromPageRef( pageRef: CGPDFPageRef ) -> UIImage? {
-		let bounds = CGPDFPageGetBoxRect(pageRef, kCGPDFCropBox)
+		let bounds = CGPDFPageGetBoxRect(pageRef, .CropBox)
 		let width = Int( CGRectGetWidth(bounds) )
 		let height = Int( CGRectGetHeight(bounds) )
 		let colorSpaceRef = CGColorSpaceCreateDeviceRGB()
 		let options = CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.PremultipliedFirst.rawValue
-		let context = CGBitmapContextCreate(nil, width, height, 8, 0, colorSpaceRef, CGBitmapInfo(options))
+		let context = CGBitmapContextCreate(nil, width, height, 8, 0, colorSpaceRef, options)
 		CGContextDrawPDFPage(context, pageRef)
 
-		let imageRef = CGBitmapContextCreateImage(context)
+		guard let imageRef = CGBitmapContextCreateImage(context) else { return nil }
 		return UIImage(CGImage: imageRef)
 	}
 
@@ -410,33 +411,28 @@ private final class PDFSlide : Slide {
 		let documentRef = self.newDocument()
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
-		let pageRef = CGPDFDocumentGetPage(documentRef, pageNumber)
-		if let image = self.imageFromPageRef(pageRef) {
-			if let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
-				let imageView = UIImageView(frame: imageFrame)
-				imageView.image = image
+		guard let pageRef = CGPDFDocumentGetPage(documentRef, pageNumber) else { completionHandler(self); return }
+		guard let image = self.imageFromPageRef(pageRef) else { completionHandler(self); return }
+		guard let imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) else { completionHandler(self); return }
 
-				presenter.displayMediaView(imageView)
+		let imageView = UIImageView(frame: imageFrame)
+		imageView.image = image
 
-				let nextPageNumber = pageNumber + 1
-				let delayInSeconds = Int64(self.duration)
-				let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
-				dispatch_after(popTime, dispatch_get_main_queue()) {
-					if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
-						// if the page number is valid display the image for the page otherwise we are done
-						if ( nextPageNumber <= pageCount ) {
-							self.performTransition(presenter);
-							self.displayPage(nextPageNumber, to: presenter, completionHandler: completionHandler, runID: runID)
-						} else {	// no more pages to present
-							completionHandler( self );
-						}
-					}
+		presenter.displayMediaView(imageView)
+
+		let nextPageNumber = pageNumber + 1
+		let delayInSeconds = Int64(self.duration)
+		let popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * nanosPerSecond )
+		dispatch_after(popTime, dispatch_get_main_queue()) {
+			if ( runID == self.currentRunID ) { // make sure the user hasn't switched to another track
+				// if the page number is valid display the image for the page otherwise we are done
+				if ( nextPageNumber <= pageCount ) {
+					self.performTransition(presenter);
+					self.displayPage(nextPageNumber, to: presenter, completionHandler: completionHandler, runID: runID)
+				} else {	// no more pages to present
+					completionHandler( self );
 				}
-			} else {
-				completionHandler(self)
 			}
-		} else {
-			completionHandler(self)
 		}
 	}
 }
@@ -520,8 +516,9 @@ private final class WebpageSlide : Slide {
 		// store a local copy to compare during post processing
 		let currentRunID = presenter.currentRunID;
 
-		if let slideWebSpec = NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding, error: nil) {
-			if let slideURL = NSURL(string: slideWebSpec as! String) {
+		do {
+			let slideWebSpec = try NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding)
+			if let slideURL = NSURL(string: slideWebSpec as String) {
 				let queryDictionary = WebpageSlide.dictionaryForQuery(slideURL.query)
 				if let zoomModeID = queryDictionary["ditour-zoom"]?.lowercaseString {
 					self.zoomMode = ZoomMode(rawValue: zoomModeID) ?? .None
@@ -549,7 +546,7 @@ private final class WebpageSlide : Slide {
 			} else {
 				completionHandler(self)
 			}
-		} else {
+		} catch _ {
 			completionHandler(self)
 		}
 	}
@@ -603,7 +600,7 @@ private final class WebpageSlide : Slide {
 					var zoomScale = CGFloat(1.0)
 
 					// initialize the content center variables with the default content view center
-					let contentView = webView.scrollView.subviews[0] as! UIView
+					let contentView = webView.scrollView.subviews[0] as UIView
 					var xContentCenter = CGRectGetMidX( contentView.frame )
 					var yContentCenter = CGRectGetMidY( contentView.frame )
 
