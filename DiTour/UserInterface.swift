@@ -333,12 +333,8 @@ final class TrackViewCell : UICollectionViewCell {
 
 /* Table View cell for displaying a title and subtitle */
 class LabelCell : UITableViewCell {
-	/* static constants */
-	private struct Constants {
-		/* green color used to indicate that a title is marked (e.g. current presentation) */
-		static let MARKED_COLOR = UIColor(red: 0.0, green: 0.5, blue: 0.0, alpha: 1.0)
-	}
-
+	/* green color used to indicate that a title is marked (e.g. current presentation) */
+	static let MARKED_COLOR = UIColor(red: 0.0, green: 0.5, blue: 0.0, alpha: 1.0)
 
 	/* label for displaying the title */
 	@IBOutlet weak var titleLabel: UILabel!
@@ -374,7 +370,7 @@ class LabelCell : UITableViewCell {
 
 	/* sets whether the specified title should be marked (e.g. current presentation) */
 	func setMarked(marked: Bool) {
-		self.titleLabel.textColor = marked ? Constants.MARKED_COLOR : UIColor.blackColor()
+		self.titleLabel.textColor = marked ? LabelCell.MARKED_COLOR : UIColor.blackColor()
 	}
 }
 

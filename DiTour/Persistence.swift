@@ -13,13 +13,10 @@ import CoreData
 
 /* root object to in persistent store (e.g. getting defaults) */
 class RootStore : NSManagedObject {
-	/* class constants */
-	private struct Constants {
-		/* entity name */
-		static let ENTITY_NAME = "Root"
-	}
+	/* entity name */
+	static let ENTITY_NAME = "Root"
 
-	class var entityName: String { return Constants.ENTITY_NAME }
+	class var entityName: String { return ENTITY_NAME }
 
 	/* current presentation */
 	@NSManaged var currentPresentation : PresentationStore?
@@ -33,7 +30,7 @@ class RootStore : NSManagedObject {
 
 	/* construct a new root and insert it into the managed object context */
 	class func insertNewRootStoreInContext(managedObjectContext: NSManagedObjectContext!) -> RootStore {
-		return NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as! RootStore
+		return NSEntityDescription.insertNewObjectForEntityForName(ENTITY_NAME, inManagedObjectContext: managedObjectContext) as! RootStore
 	}
 
 
@@ -205,16 +202,13 @@ class RemoteItemStore : NSManagedObject {
 
 /* local persistent store of a reference to a file on a remote server */
 class RemoteFileStore : RemoteItemStore {
-	/* class constants */
-	private struct Constants {
-		/* format for writing timestamps */
-		static private let DATE_FORMATTER : NSDateFormatter = {
-			let formatter = NSDateFormatter()
-			formatter.timeStyle = .MediumStyle
-			formatter.dateStyle = .MediumStyle
-			return formatter
-		}()
-	}
+	/* format for writing timestamps */
+	static private let DATE_FORMATTER : NSDateFormatter = {
+		let formatter = NSDateFormatter()
+		formatter.timeStyle = .MediumStyle
+		formatter.dateStyle = .MediumStyle
+		return formatter
+	}()
 
 	/* name of the file without the directory path */
 	var name : String { return self.path.lastPathComponent }
@@ -236,7 +230,7 @@ class RemoteFileStore : RemoteItemStore {
 				let modDate = fileAttributes[NSFileModificationDate] as! NSDate
 				let fileSize = fileAttributes[NSFileSize] as! NSNumber
 				let fileSizeString = NSByteCountFormatter.stringFromByteCount(fileSize.longLongValue, countStyle: .File)
-				return "Local ModificationDate:\n\t\(Constants.DATE_FORMATTER.stringFromDate(modDate))\n\nLocal File Size:\n\t\(fileSizeString)\n\n\(self.localDataSummary)"
+				return "Local ModificationDate:\n\t\(RemoteFileStore.DATE_FORMATTER.stringFromDate(modDate))\n\nLocal File Size:\n\t\(fileSizeString)\n\n\(self.localDataSummary)"
 			} catch {
 				print("Failure getting attributes of file at path: \(self.absolutePath), with error: \(error)")
 			}
@@ -471,19 +465,8 @@ extension String {
 
 /* persistent store for a presentation */
 class PresentationStore : RemoteContainerStore {
-	/* class constants */
-	private struct Constants {
-		/* entity name */
-		static let ENTITY_NAME = "Presentation"
-
-
-		/* format for writing base paths */
-		static private let BASE_PATH_DATE_FORMATTER : NSDateFormatter = {
-			let formatter = NSDateFormatter()
-			formatter.dateFormat = "yyyyMMdd'-'HHmmss"
-			return formatter
-		}()
-	}
+	/* entity name */
+	static let ENTITY_NAME = "Presentation"
 
 	@NSManaged var name: String
 	@NSManaged var timestamp: NSDate
@@ -515,7 +498,7 @@ class PresentationStore : RemoteContainerStore {
 	// synonymm for current
 	var isCurrent: Bool { return self.current }
 
-	class var entityName: String { return Constants.ENTITY_NAME }
+	class var entityName: String { return ENTITY_NAME }
 
 
 	/* load the effective configuration */
@@ -542,7 +525,16 @@ class PresentationStore : RemoteContainerStore {
 
 	/* construct a new presentation in the specified group from the specified remote directory */
 	class func newPresentationInGroup(group: PresentationGroupStore, from remoteDirectory: RemoteDirectory) -> PresentationStore {
-		let presentation = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as! PresentationStore
+		struct Constants {
+			/* format for writing base paths */
+			static private let BASE_PATH_DATE_FORMATTER : NSDateFormatter = {
+				let formatter = NSDateFormatter()
+				formatter.dateFormat = "yyyyMMdd'-'HHmmss"
+				return formatter
+			}()
+		}
+
+		let presentation = NSEntityDescription.insertNewObjectForEntityForName(ENTITY_NAME, inManagedObjectContext: group.managedObjectContext!) as! PresentationStore
 
 		presentation.status = RemoteItemStatus.Pending.rawValue
 		presentation.timestamp = NSDate()
@@ -633,23 +625,11 @@ class PresentationStore : RemoteContainerStore {
 
 /* persistent store for a presentation group */
 class PresentationGroupStore : RemoteContainerStore {
-	/* class constants */
-	private struct Constants {
-		/* entity name */
-		static let ENTITY_NAME = "PresentationGroup"
-
-
-		// format for the group based on the timestamp when the group was created
-		static private let BASE_PATH_DATE_FORMATTER : NSDateFormatter = {
-			let formatter = NSDateFormatter()
-			formatter.dateFormat = "yyyyMMdd'-'HHmmss"
-			return formatter
-		}()
-	}
-
+	/* entity name */
+	static let ENTITY_NAME = "PresentationGroup"
 
 	/* entity name */
-	class var entityName: String { return Constants.ENTITY_NAME }
+	class var entityName: String { return ENTITY_NAME }
 
 	@NSManaged var presentations: NSSet?
 	@NSManaged var root: RootStore
@@ -687,7 +667,17 @@ class PresentationGroupStore : RemoteContainerStore {
 
 	/* construct a new presentation group in the managed context and return it */
 	class func insertNewPresentationGroupInContext(managedObjectContext: NSManagedObjectContext!) -> PresentationGroupStore {
-		let group = NSEntityDescription.insertNewObjectForEntityForName(Constants.ENTITY_NAME, inManagedObjectContext: managedObjectContext) as! PresentationGroupStore
+		/* local static constants */
+		struct Constants {
+			// format for the group based on the timestamp when the group was created
+			static private let BASE_PATH_DATE_FORMATTER : NSDateFormatter = {
+				let formatter = NSDateFormatter()
+				formatter.dateFormat = "yyyyMMdd'-'HHmmss"
+				return formatter
+			}()
+		}
+
+		let group = NSEntityDescription.insertNewObjectForEntityForName(ENTITY_NAME, inManagedObjectContext: managedObjectContext) as! PresentationGroupStore
 
 		// generate a unique path for the group based on the timestamp when the group was created
 		let timestampString = Constants.BASE_PATH_DATE_FORMATTER.stringFromDate(NSDate())
