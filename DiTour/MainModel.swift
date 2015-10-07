@@ -24,11 +24,6 @@ private let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringBy
 // MARK: - Main Model
 // main model for DiTour where the primary state is maintained
 public class DitourModel : NSObject, PresenterDelegate {
-	// static initialization
-	private static let initializer :Void = {
-		performVersionInitialization()
-	}()
-
 	// indicates whether a track is being presented
 	private(set) var playing = false
 
@@ -462,45 +457,6 @@ private func fetchDocumentDirectoryURL() -> NSURL {
 		// if the document directory doesn't exist then something really bad has happened
 		fatalError("Error fetching document directory URL: \(error)")
 	}
-}
-
-
-private func performVersionInitialization() {
-	let MAJOR_VERSION_KEY = "majorVersion"
-	let MINOR_VERSION_KEY = "minorVersion"
-
-	let defaults = NSUserDefaults.standardUserDefaults()
-	let majorVersion = defaults.integerForKey( MAJOR_VERSION_KEY )
-	let minorVersion = defaults.integerForKey( MINOR_VERSION_KEY )
-
-	switch majorVersion {
-	case 0, 1:
-		print( "Cleaning up version 1 data..." )
-		purgeVersion1Data()
-	default:
-		break
-	}
-
-	// ------- Complete any migration from earlier versions in the above code
-
-	// Check and set the major/minor versions if needed
-
-	var hasChanges = false;
-	if majorVersion != 3 {
-		defaults.setInteger( 3, forKey: MAJOR_VERSION_KEY )
-		hasChanges = true;
-	}
-	if minorVersion != 0 {
-		defaults.setInteger( 0, forKey: MINOR_VERSION_KEY )
-		hasChanges = true;
-	}
-
-	// if there are any user defaults changes to save, save them now
-	if ( hasChanges ) {
-		defaults.synchronize()
-	}
-
-	// --------- Done processing user defaults for app version
 }
 
 
