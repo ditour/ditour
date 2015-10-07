@@ -724,11 +724,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group URL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fZA-2T-bgu">
-                                            <rect key="frame" x="20" y="11" width="89" height="21"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grY-J8-Yep">
                                             <rect key="frame" x="481" y="7" width="66" height="30"/>
                                             <state key="normal" title="Webpage">
@@ -747,19 +742,39 @@
                                                 <action selector="editGroup:" destination="J4K-xb-7m0" eventType="touchUpInside" id="72V-aB-Lm2"/>
                                             </connections>
                                         </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gu-2I-dbe">
+                                            <rect key="frame" x="8" y="7" width="12" height="29"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                            <color key="textColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group URL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fZA-2T-bgu">
+                                            <rect key="frame" x="28" y="11" width="89" height="21"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="grY-J8-Yep" secondAttribute="centerY" id="Fsx-Zi-Kyu"/>
                                         <constraint firstItem="grY-J8-Yep" firstAttribute="leading" secondItem="mtW-96-yQC" secondAttribute="trailing" constant="8" id="Gc9-qL-tsD"/>
+                                        <constraint firstItem="1gu-2I-dbe" firstAttribute="leading" secondItem="TRb-70-vNx" secondAttribute="leadingMargin" id="J4K-3w-FZq"/>
                                         <constraint firstItem="fZA-2T-bgu" firstAttribute="top" secondItem="TRb-70-vNx" secondAttribute="topMargin" constant="3" id="Qgj-e7-DoB"/>
+                                        <constraint firstItem="fZA-2T-bgu" firstAttribute="leading" secondItem="1gu-2I-dbe" secondAttribute="trailing" constant="8" id="SHf-t0-OsC"/>
                                         <constraint firstAttribute="trailing" secondItem="grY-J8-Yep" secondAttribute="trailing" constant="20" id="UwZ-Vy-9Jh"/>
                                         <constraint firstItem="mtW-96-yQC" firstAttribute="centerY" secondItem="grY-J8-Yep" secondAttribute="centerY" id="bpD-UI-XnE"/>
                                         <constraint firstItem="fZA-2T-bgu" firstAttribute="leading" secondItem="TRb-70-vNx" secondAttribute="leading" constant="20" id="dCb-Xm-Bu4"/>
                                         <constraint firstItem="mtW-96-yQC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fZA-2T-bgu" secondAttribute="trailing" constant="8" symbolic="YES" id="dU9-9R-IAy"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="fZA-2T-bgu" secondAttribute="bottom" constant="4" id="f4M-UN-R3t"/>
+                                        <constraint firstItem="1gu-2I-dbe" firstAttribute="centerY" secondItem="TRb-70-vNx" secondAttribute="centerY" id="hwj-Mh-0mS"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="dCb-Xm-Bu4"/>
+                                        </mask>
+                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="currentMarkerLabel" destination="1gu-2I-dbe" id="6Ta-y0-7ow"/>
                                     <outlet property="editButton" destination="mtW-96-yQC" id="dSE-4u-XiT"/>
                                     <outlet property="locationLabel" destination="fZA-2T-bgu" id="nMD-B1-Oqu"/>
                                     <outlet property="openURLButton" destination="grY-J8-Yep" id="MKy-rX-cIc"/>

@@ -654,6 +654,16 @@ class PresentationGroupStore : RemoteContainerStore {
 	@NSManaged var presentations: NSSet?
 	@NSManaged var root: RootStore
 
+	// indicates whether one of this group's presentations is the current one being displayed
+	var current : Bool {
+		for presentation in activePresentations {
+			if presentation.current {
+				return true
+			}
+		}
+		return false
+	}
+
 
 	/* name of the group based on the final component of the remote location */
 	var shortName: String {

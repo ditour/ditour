@@ -434,6 +434,21 @@ final class PresentationGroupCell : UITableViewCell {
 
 	/* button for opening the Group's URL */
 	@IBOutlet weak var openURLButton : UIButton!
+
+	/* marker indicating whether the group is the current one being displayed */
+	@IBOutlet weak var currentMarkerLabel : UILabel!
+
+	var group : PresentationGroupStore? {
+		didSet {
+			if let group = self.group {
+				self.locationLabel.text = group.remoteLocation
+				self.currentMarkerLabel.hidden = !group.current
+			} else {
+				self.locationLabel.text = ""
+				self.currentMarkerLabel.hidden = true
+			}
+		}
+	}
 }
 
 
@@ -687,6 +702,12 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 
 		self.updateControls()
+	}
+
+
+	override func viewDidAppear(animated: Bool) {
+		// refresh the table view in case the user selected a new presenation as current thus changing the current group
+		self.tableView.reloadData()
 	}
 
 
@@ -958,7 +979,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 			return editingCell
 		} else {
 			let viewCell = self.tableView.dequeueReusableCellWithIdentifier(Cell.VIEW_ID, forIndexPath: indexPath) as! PresentationGroupCell
-			viewCell.locationLabel.text = group.remoteLocation
+			viewCell.group = group
 			viewCell.editButton.hidden = self.editing			// hide the edit button when editing
 			viewCell.openURLButton.hidden = self.editing		// hide the open URL button when editing
 
