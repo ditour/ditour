@@ -28,13 +28,27 @@ private final class ExternalViewController : UIViewController {
 
 
 
-/* delegate implemented by presenters of media */
-@objc protocol PresentationDelegate {
+/* protocol for presenter delegates to implement to receive events */
+@objc protocol PresenterDelegate : class {
+	// handle event indicating that the presenter's availability has changed
+	func availabilityChanged(source: Presenter)
+}
+
+
+
+/* implemented by presenters of media */
+@objc protocol Presenter {
+	/* delegate to receive events from this presenter */
+	weak var delegate : PresenterDelegate? { get set }
+
 	/* unique identifier of the current run */
 	var currentRunID : NSObject? { get set }
 
 	/* window for displaying content on the external screen */
 	var externalWindow : UIWindow? { get }
+
+	// indicates whether this presenter is available for display
+	var available : Bool { get }
 
 	/* bounds of the external window */
 	var externalBounds : CGRect { get }
@@ -44,17 +58,23 @@ private final class ExternalViewController : UIViewController {
 
 	/* display the specified mediaView in the content view of the external window */
 	func displayMediaView(mediaView: UIView!)
+
+	/* update the configuration based on possible hardware state changes */
+	func updateConfiguration()
 }
 
 
 
 /* presents the media to an external screen */
-final class ExternalPresenter : NSObject, PresentationDelegate {
+final class ExternalPresenter : NSObject, Presenter {
 	/* unique identifier of the current run */
 	var currentRunID : NSObject?
 
 	/* window for displaying content on the external screen */
 	private(set) var externalWindow : UIWindow?
+
+	// indicates whether this presenter is available for display
+	var available : Bool { return self.externalWindow != nil }
 
 	/* bounds of the external window */
 	var externalBounds : CGRect { return self.externalWindow?.bounds ?? CGRect() }
@@ -62,6 +82,8 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 	/* container view within the external window that contains the media to display */
 	private var contentView : UIView?
 
+	/* delegate to receive events from this presenter */
+	weak var delegate : PresenterDelegate?
 
 	override init() {
 		super.init()
@@ -107,6 +129,7 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 
 	/* configure the external display */
 	func configureExternalDisplay() {
+		let initialAvailability = self.available
 		let screens = UIScreen.screens() as [UIScreen]
 
 		// test whether there is an external screen in addition to the device's screen
@@ -135,6 +158,11 @@ final class ExternalPresenter : NSObject, PresentationDelegate {
 		else {
 			print( "No external screen..." )
 			self.externalWindow = nil
+		}
+
+		// if availability changes, notify delegates
+		if initialAvailability != self.available {
+			self.delegate?.availabilityChanged(self)
 		}
 	}
 }
@@ -260,7 +288,7 @@ final class Track : NSObject {
 
 
 	/* present this track to the presenter and call the completion handler upon completion of this track */
-	func presentTo( presenter: PresentationDelegate, completionHandler: (Track)->Void ) {
+	func presentTo( presenter: Presenter, completionHandler: (Track)->Void ) {
 		self.playing = true
 
 		let slides = self.slides
@@ -275,7 +303,9 @@ final class Track : NSObject {
 
 
 	/* present the slide at the specified index to the presenter and call the completion handler upon completion */
-	private func presentSlide( atIndex slideIndex: UInt, to presenter: PresentationDelegate, forRun runID: NSObject, completionHandler: (Track)->Void ) {
+	private func presentSlide( atIndex slideIndex: UInt, to presenter: Presenter, forRun runID: NSObject, completionHandler: (Track)->Void ) {
+		//print("present slide at index: \(slideIndex), playing: \(self.playing)")
+
 		let slides = self.slides
 		let slide = slides[Int(slideIndex)]
 		self.currentSlide = slide

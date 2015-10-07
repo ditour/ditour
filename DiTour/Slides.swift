@@ -112,14 +112,14 @@ class Slide {
 
 
 	/* present this slide to the presenter */
-	func presentTo(presenter: PresentationDelegate, completionHandler: (Slide)->Void) {
+	func presentTo(presenter: Presenter, completionHandler: (Slide)->Void) {
 		self.performTransition(presenter)
 		self.displayTo(presenter, completionHandler: completionHandler)
 	}
 
 
 	/* perform the transition */
-	final func performTransition(presenter: PresentationDelegate) {
+	final func performTransition(presenter: Presenter) {
 		if let transitionSource = self.transitionSource {
 			let transition = transitionSource.generate()
 			presenter.beginTransition(transition)
@@ -128,7 +128,7 @@ class Slide {
 
 
 	/* display the image to the presenter */
-	func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {}
+	func displayTo(presenter: Presenter!, completionHandler: (Slide)->Void) {}
 
 
 	/* cancel the presentation of this slide */
@@ -187,7 +187,7 @@ private final class ImageSlide : Slide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
+	override func displayTo(presenter: Presenter!, completionHandler: (Slide)->Void) {
 		if let image = UIImage(contentsOfFile: self.mediaFile), imageFrame = calcMediaFrame(screenFrame: presenter.externalBounds, mediaSize: image.size) {
 			let imageView = UIImageView(frame: imageFrame)
 			imageView.image = UIImage(contentsOfFile: self.mediaFile)
@@ -235,7 +235,7 @@ private final class SceneSlide : Slide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
+	override func displayTo(presenter: Presenter!, completionHandler: (Slide)->Void) {
 		do {
 			let location = NSURL(fileURLWithPath: self.mediaFile)
 			let scene = try SCNScene(URL: location, options: nil)
@@ -284,7 +284,7 @@ private final class MovieSlide : Slide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
+	override func displayTo(presenter: Presenter!, completionHandler: (Slide)->Void) {
 		self.completionHandler = completionHandler
 
 		let mediaURL = NSURL(fileURLWithPath: self.mediaFile)
@@ -391,7 +391,7 @@ private final class PDFSlide : Slide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
+	override func displayTo(presenter: Presenter!, completionHandler: (Slide)->Void) {
 		let runID = NSDate()
 		self.currentRunID = runID
 
@@ -407,7 +407,7 @@ private final class PDFSlide : Slide {
 	}
 
 
-	private func displayPage(pageNumber: size_t, to presenter: PresentationDelegate, completionHandler: (Slide)->Void, runID: NSObject) {
+	private func displayPage(pageNumber: size_t, to presenter: Presenter, completionHandler: (Slide)->Void, runID: NSObject) {
 		let documentRef = self.newDocument()
 		let pageCount = CGPDFDocumentGetNumberOfPages(documentRef)
 
@@ -510,7 +510,7 @@ private final class WebpageSlide : Slide {
 
 
 	/* display the image to the presenter */
-	override func displayTo(presenter: PresentationDelegate!, completionHandler: (Slide)->Void) {
+	override func displayTo(presenter: Presenter!, completionHandler: (Slide)->Void) {
 		self.canceled = false;
 
 		// store a local copy to compare during post processing

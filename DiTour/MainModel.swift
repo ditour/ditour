@@ -23,15 +23,11 @@ private let PRESENTATION_GROUP_ROOT = fetchDocumentDirectoryURL().path!.stringBy
 
 // MARK: - Main Model
 // main model for DiTour where the primary state is maintained
-public class DitourModel : NSObject {
-	// container of static properties
-	private struct StaticProps {
-		// static initialization
-		private static let initializer :Void = {
-			performVersionInitialization()
-		}()
-	}
-
+public class DitourModel : NSObject, PresenterDelegate {
+	// static initialization
+	private static let initializer :Void = {
+		performVersionInitialization()
+	}()
 
 	// indicates whether a track is being presented
 	private(set) var playing = false
@@ -54,9 +50,9 @@ public class DitourModel : NSObject {
 
 	let mainStoreRoot : RootStore
 
-	var presentationDelegate : PresentationDelegate? = nil
+	var presenter : Presenter?
 
-	var canPlay : Bool { return self.tracks.count > 0 }
+	var canPlay : Bool { return self.tracks.count > 0 && presenter?.available ?? false }
 
 	var downloadSession : PresentationGroupDownloadSession? = nil
 
@@ -68,10 +64,14 @@ public class DitourModel : NSObject {
 		( self.managedObjectModel, self.mainManagedObjectContext ) = DitourModel.setupDataModel()
 
 		self.mainStoreRoot = DitourModel.fetchRootStore( self.mainManagedObjectContext )
+		self.presenter = ExternalPresenter()
 
 		super.init()
 
 		self.loadDefaultPresentation()
+
+		// handle presenter events
+		self.presenter?.delegate = self
 	}
 
 
@@ -145,6 +145,18 @@ public class DitourModel : NSObject {
 	}
 
 
+	// handle event indicating that the presenter's availability has changed
+	func availabilityChanged(source: Presenter) {
+		if source.available {
+			if !self.playing {
+				self.play()
+			}
+		} else {
+			self.stop()
+		}
+	}
+
+
 	func reloadPresentation() {
 		self.stop()
 		self.loadDefaultPresentation()
@@ -198,6 +210,10 @@ public class DitourModel : NSObject {
 	//MARK: - Playback
 
 	func play() -> Bool {
+		if self.playing {
+			return true
+		}
+
 		if self.canPlay {
 			if let defaultTrack = self.defaultTrack {
 				self.playTrack( defaultTrack, cancelCurrent: true )
@@ -243,7 +259,7 @@ public class DitourModel : NSObject {
 			oldTrack!.cancelPresentation()
 		}
 
-		if let presentationDelegate = self.presentationDelegate {
+		if let presentationDelegate = self.presenter {
 			self.currentTrack = track
 			track.presentTo(presentationDelegate, completionHandler: { (theTrack) -> Void in
 				// if playing, present the default track after any track completes on its own (no need to cancel)
