@@ -433,22 +433,6 @@ public class DitourModel : NSObject, PresenterDelegate {
 
 //MARK: - Private functions
 
-private func purgeVersion1Data() {
-	let oldPresentationPath = fetchDocumentDirectoryURL().path!.stringByAppendingPathComponent("Presentation")
-	let fileManager = NSFileManager.defaultManager()
-	if fileManager.fileExistsAtPath( oldPresentationPath ) {
-		var error :NSError? = nil
-		do {
-			try fileManager.removeItemAtPath( oldPresentationPath)
-		} catch let error1 as NSError {
-			error = error1
-		}
-		if ( error != nil ) {
-			print( "Error removing version 1.0 presentation directory." )
-		}
-	}
-}
-
 
 private func fetchDocumentDirectoryURL() -> NSURL {
 	do {
