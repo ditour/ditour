@@ -122,7 +122,9 @@ public class DitourModel : NSObject {
 				var tracks = [Track]()
 				for trackStore in presentationStore.tracks.array {
 					let track = Track( trackStore: trackStore as! TrackStore )
-					tracks.append( track )
+					if track.slides.count > 0 {		// only display tracks that have slides
+						tracks.append( track )
+					}
 				}
 
 				self.tracks = tracks
