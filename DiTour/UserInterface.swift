@@ -460,7 +460,8 @@ final class PresentationGroupEditCell : UITableViewCell, UITextFieldDelegate {
 	func textFieldShouldReturn(textField: UITextField) -> Bool {
 		// automatically prefix with "http://" if not already specified
 		if let text = textField.text {
-			if !text.hasPrefix("http://") {
+			// if text isn't prefixed with "http://" or "https://" then prepend with "http://"
+			if !text.hasPrefix("http://") && !text.hasPrefix("https://") {
 				textField.text = "http://\(text)"
 			}
 		}
