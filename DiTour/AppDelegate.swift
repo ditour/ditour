@@ -139,7 +139,8 @@ final private class MainWindow : UIWindow {
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		self.userInteractionEnabled = true
+		self.userInteractionEnabled = true		// allows this window to capture and handle touch events
+		UIDevice.currentDevice().batteryMonitoringEnabled = true	// otherwise battery state will be unknown
 		self.periodicallyUpdateDisplayState()
 	}
 
@@ -208,7 +209,7 @@ final private class MainWindow : UIWindow {
 		let isOnBattery : Bool
 		let conditionalTimeout : Double		// timeout to use assuming the other sleep conditions are met
 		switch UIDevice.currentDevice().batteryState {
-		case .Unplugged, .Unknown:
+		case .Unplugged:
 			isOnBattery = true
 			conditionalTimeout = Constants.BATTERY_DORMANT_TIMEOUT
 		default:
