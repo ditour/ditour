@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>StringsTable</key>
+	<string>Root</string>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Display Sleep</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Auto Screen Sleep</string>
+			<key>Key</key>
+			<string>auto_screen_sleep</string>
+			<key>DefaultValue</key>
+			<string>OnBattery</string>
+			<key>Values</key>
+			<array>
+				<string>Never</string>
+				<string>OnBattery</string>
+				<string>InactiveOffHours</string>
+				<string>Inactive</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Never</string>
+				<string>On Battery Power</string>
+				<string>Inactive - Off Hours Only</string>
+				<string>Inactive</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Day Begins</string>
+			<key>Key</key>
+			<string>day_start</string>
+			<key>DefaultValue</key>
+			<integer>7</integer>
+			<key>Values</key>
+			<array>
+				<integer>6</integer>
+				<integer>7</integer>
+				<integer>8</integer>
+				<integer>9</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>6:00 AM</string>
+				<string>7:00 AM</string>
+				<string>8:00 AM</string>
+				<string>9:00 AM</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Day Ends</string>
+			<key>Key</key>
+			<string>day_end</string>
+			<key>DefaultValue</key>
+			<integer>18</integer>
+			<key>Values</key>
+			<array>
+				<integer>17</integer>
+				<integer>18</integer>
+				<integer>19</integer>
+				<integer>20</integer>
+				<string>21</string>
+				<string>22</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>5:00 PM</string>
+				<string>6:00 PM</string>
+				<string>7:00 PM</string>
+				<string>8:00 PM</string>
+				<string>9:00 PM</string>
+				<string>10:00 PM</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
