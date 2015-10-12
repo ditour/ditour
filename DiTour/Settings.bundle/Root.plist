@@ -71,15 +71,17 @@
 			<integer>18</integer>
 			<key>Values</key>
 			<array>
+				<integer>16</integer>
 				<integer>17</integer>
 				<integer>18</integer>
 				<integer>19</integer>
 				<integer>20</integer>
-				<string>21</string>
-				<string>22</string>
+				<integer>21</integer>
+				<integer>22</integer>
 			</array>
 			<key>Titles</key>
 			<array>
+				<string>4:00 PM</string>
 				<string>5:00 PM</string>
 				<string>6:00 PM</string>
 				<string>7:00 PM</string>
