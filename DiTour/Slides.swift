@@ -12,6 +12,7 @@ import QuartzCore
 import JavaScriptCore
 import UIKit
 import SceneKit
+import WebKit
 
 
 /* conversion for seconds to nanoseconds */
@@ -459,7 +460,7 @@ private final class WebpageSlide : Slide {
 
 
 	/* web view in which to render the page corresponding to a URL */
-	var webView : UIWebView? = nil
+	var webView : WKWebView? = nil
 
 	/* indicates whether the run was canceled */
 	var canceled : Bool = false
@@ -487,7 +488,7 @@ private final class WebpageSlide : Slide {
 	/* cleanup the resources */
 	func cleanup() {
 		if let webView = self.webView {
-			webView.delegate = nil
+			webView.navigationDelegate = nil
 			webView.stopLoading()
 			self.webView = nil
 		}
@@ -519,18 +520,28 @@ private final class WebpageSlide : Slide {
 		do {
 			let slideWebSpec = try NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding)
 			if let slideURL = NSURL(string: slideWebSpec as String) {
+				print("")
+				//print("Loading Slide URL: \(slideURL)")
 				let queryDictionary = WebpageSlide.dictionaryForQuery(slideURL.query)
+				//print("query dictionary: \(queryDictionary)")
 				if let zoomModeID = queryDictionary["ditour-zoom"]?.lowercaseString {
 					self.zoomMode = ZoomMode(rawValue: zoomModeID) ?? .None
 				} else {
 					self.zoomMode = .Both
 				}
 
-				let webView = UIWebView(frame: presenter.externalBounds)
-				webView.scalesPageToFit = true
-				webView.delegate = self.webViewHandler
+				let webView = WKWebView(frame: presenter.externalBounds)
+				//webView.scalesPageToFit = true
+				webView.navigationDelegate = self.webViewHandler
 				webView.backgroundColor = UIColor.blackColor()
 				self.webView = webView
+
+				// inject webslide.js into the web page to support a callback to resize the slide
+				webView.configuration.userContentController.addScriptMessageHandler(self.webViewHandler, name: "resize")
+				let webscriptURL = NSBundle.mainBundle().URLForResource("webslide", withExtension: "js")
+				let webscript = try! NSString(contentsOfURL: webscriptURL!, usedEncoding: nil) as String
+				let resizeScript = WKUserScript(source: webscript, injectionTime: .AtDocumentEnd, forMainFrameOnly: true)
+				webView.configuration.userContentController.addUserScript(resizeScript)
 
 				presenter.displayMediaView(webView)
 				webView.loadRequest(NSURLRequest(URL: slideURL))
@@ -576,7 +587,7 @@ private final class WebpageSlide : Slide {
 
 
 	/* handles web view callbacks */
-	private final class WebViewHandler : NSObject, UIWebViewDelegate {
+	private final class WebViewHandler : NSObject, WKNavigationDelegate, WKScriptMessageHandler {
 		/* slide for which the web view is managed */
 		unowned let slide : WebpageSlide
 
@@ -587,55 +598,82 @@ private final class WebpageSlide : Slide {
 			super.init()
 		}
 
+		// process callbacks from the web page
+		@objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+			switch message.name {
+			case "resize":
+				guard let webView = message.webView, sizeDictionary = message.body as? NSDictionary as? Dictionary<String,AnyObject> else { break }
+				guard let width = sizeDictionary["width"] as? Double else { break }
+				guard let height = sizeDictionary["height"] as? Double else { break }
+				let size = CGSize(width: width, height: height)
+				resizeSlideView(webView, clientSize: size)
+			default:
+				break
+			}
+		}
 
-		/* Handle the web page load completion. Must mark the optional UIWebViewDelegate protocol method @objc so it will be considered as implemented. */
-		@objc func webViewDidFinishLoad(webView: UIWebView) {
+		private func resizeSlideView(webView: WKWebView, clientSize: CGSize) {
 			// scale the web view's scroll zoom to match the content width so we can see the whole width
 			if !self.slide.canceled && self.slide.webView == webView {
-				let contentSize = webView.scrollView.contentSize
+				let contentView = webView.scrollView.subviews[0] as UIView
+				let contentSize = contentView.bounds.size
+				//print("processing web view with content size: \(contentView.bounds.size) vs webView size: \(webView.bounds.size))")
+
+				guard let parentView = webView.superview else { return }
 
 				if contentSize.width > 0 && contentSize.height > 0 {
-					let widthZoom = CGRectGetWidth( webView.bounds ) / contentSize.width
-					let heightZoom = CGRectGetHeight( webView.bounds ) / contentSize.height
-					var zoomScale = CGFloat(1.0)
-
-					// initialize the content center variables with the default content view center
-					let contentView = webView.scrollView.subviews[0] as UIView
-					var xContentCenter = CGRectGetMidX( contentView.frame )
-					var yContentCenter = CGRectGetMidY( contentView.frame )
+					let widthZoom = parentView.bounds.size.width / contentSize.width
+					let heightZoom = parentView.bounds.size.height / contentSize.height
 
 					switch ( self.slide.zoomMode ) {
 					case .Width:
-						zoomScale = widthZoom
-						xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )	// center the content horizontally in the scroll view
+						let scale = widthZoom / heightZoom
+						webView.frame.size.width = parentView.bounds.size.width
+						webView.frame.size.height = scale * parentView.bounds.size.height
 
 					case .Height:
-						zoomScale = heightZoom;
-						yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )	// center the content vertically in the scroll view
+						let scale = heightZoom / widthZoom
+						webView.frame.size.width = scale * parentView.bounds.size.width
+						webView.frame.size.height = parentView.bounds.size.height
 
 					case .Both:
-						// use the minimum zoom to fit both the content width and height on the page
-						zoomScale = widthZoom < heightZoom ? widthZoom : heightZoom
-
-						// center the content both horizontally and vertically in the scroll view
-						xContentCenter = 0.5 * CGRectGetWidth( webView.scrollView.bounds )
-						yContentCenter = 0.5 * CGRectGetHeight( webView.scrollView.bounds )
+						if ( heightZoom < widthZoom ) {		// only height scaling matters as width is handled automatically
+							let scale = heightZoom / widthZoom
+							webView.frame.size.width = scale * parentView.bounds.size.width
+							webView.frame.size.height = parentView.bounds.size.height
+						} else {
+							let scale = widthZoom / heightZoom
+							webView.frame.size.width = parentView.bounds.size.width
+							webView.frame.size.height = scale * parentView.bounds.size.height
+						}
 
 					default:
-						zoomScale = 1.0
+						break
 					}
 
-					// set the scroll view zoom scale
-					if ( zoomScale != 1.0 ) {
-						webView.scrollView.minimumZoomScale = zoomScale
-						webView.scrollView.maximumZoomScale = zoomScale
-						webView.scrollView.zoomScale = zoomScale
+					// center the web view horizontally
+					let xOffset = (parentView.bounds.size.width - webView.bounds.size.width)/2
+					if xOffset >= 0 {
+						webView.frame.origin.x = xOffset
 					}
 
-					// recenter the content view relative to the scroll view since the scaling is relative to the upper left corner
-					contentView.center = CGPointMake( xContentCenter, yContentCenter )
+					// center the web view vertically
+					let yOffset = (parentView.bounds.size.height - webView.bounds.size.height)/2
+					if yOffset >= 0 {
+						webView.frame.origin.y = yOffset
+					}
+
+					// force the browser to layout the content with the new view size
+					webView.evaluateJavaScript("layoutDiTourSlide()") { (result, error) -> Void in }
 				}
 			}
+		}
+
+
+		/* Handle the web page load completion. Must mark the optional WKNavigationDelegate protocol method @objc so it will be considered as implemented. */
+		@objc func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+			// trigger the resizing of the slide
+			webView.evaluateJavaScript("resizeDiTourSlide()") { (result, error) -> Void in }
 		}
 	}
 }
