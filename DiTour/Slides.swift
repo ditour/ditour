@@ -634,7 +634,7 @@ private final class WebpageSlide : Slide {
 					case .Width:
 						let scale = widthZoom / heightZoom
 						webView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
-						webView.frame.size.width = parentView.bounds.size.width / scale
+						webView.bounds.size.width = parentView.bounds.size.width / scale
 						yOffset = (parentView.bounds.size.height - scale * webView.bounds.size.height)/2
 
 					case .Height:
@@ -652,7 +652,7 @@ private final class WebpageSlide : Slide {
 						} else {		// width is the constraining dimension
 							let scale = widthZoom / heightZoom
 							webView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
-							webView.frame.size.width = parentView.bounds.size.width / scale
+							webView.bounds.size.width = parentView.bounds.size.width / scale
 							yOffset = (parentView.bounds.size.height - scale * webView.bounds.size.height)/2
 						}
 
