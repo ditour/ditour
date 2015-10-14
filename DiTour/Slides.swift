@@ -686,5 +686,33 @@ private final class WebpageSlide : Slide {
 
 
 
+// Diagnostic view for displaying text to another view
+private class InfoView : UIView {
+	var info = "" {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
+
+
+	// add this view to the parent view and display the message
+	static func displayTo(parentView: UIView, message: String) {
+		dispatch_async(dispatch_get_main_queue()) { () -> Void in
+			let infoView = InfoView(frame: CGRect(x: 50, y: 50, width: parentView.bounds.width/2, height: parentView.bounds.height/2))
+			infoView.backgroundColor = UIColor.yellowColor()
+			parentView.addSubview(infoView)
+			infoView.info = message
+		}
+	}
+
+	override func drawRect(rect: CGRect) {
+		let context = UIGraphicsGetCurrentContext()
+		UIColor.yellowColor().setFill()
+		CGContextFillRect(context, self.bounds)
+		let attrInfo = NSAttributedString(string: self.info, attributes: [NSFontAttributeName: UIFont.boldSystemFontOfSize(16)])
+		attrInfo.drawInRect(self.bounds)
+	}
+}
+
 
 
