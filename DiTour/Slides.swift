@@ -615,36 +615,45 @@ private final class WebpageSlide : Slide {
 		private func resizeSlideView(webView: WKWebView, clientSize: CGSize) {
 			// scale the web view's scroll zoom to match the content width so we can see the whole width
 			if !self.slide.canceled && self.slide.webView == webView {
-				let contentView = webView.scrollView.subviews[0] as UIView
-				let contentSize = contentView.bounds.size
-				//print("processing web view with content size: \(contentView.bounds.size) vs webView size: \(webView.bounds.size))")
+				let contentSize = webView.scrollView.contentSize
 
 				guard let parentView = webView.superview else { return }
 
+				var xOffset = 0 as CGFloat
+				var yOffset = 0 as CGFloat
 				if contentSize.width > 0 && contentSize.height > 0 {
 					let widthZoom = parentView.bounds.size.width / contentSize.width
 					let heightZoom = parentView.bounds.size.height / contentSize.height
 
+					// verify that th zoom is not anomalous and if it is just return
+					if heightZoom == 0 || widthZoom == 0 {
+						return
+					}
+
 					switch ( self.slide.zoomMode ) {
 					case .Width:
 						let scale = widthZoom / heightZoom
-						webView.frame.size.width = parentView.bounds.size.width
-						webView.frame.size.height = scale * parentView.bounds.size.height
+						webView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
+						webView.frame.size.width = parentView.bounds.size.width / scale
+						yOffset = (parentView.bounds.size.height - scale * webView.bounds.size.height)/2
 
 					case .Height:
 						let scale = heightZoom / widthZoom
-						webView.frame.size.width = scale * parentView.bounds.size.width
-						webView.frame.size.height = parentView.bounds.size.height
+						webView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
+						webView.bounds.size.height = parentView.bounds.size.height / scale
+						xOffset = (parentView.bounds.size.width - scale * webView.bounds.size.width)/2
 
 					case .Both:
-						if ( heightZoom < widthZoom ) {		// only height scaling matters as width is handled automatically
+						if ( heightZoom < widthZoom ) {		// height is the constraining dimension
 							let scale = heightZoom / widthZoom
-							webView.frame.size.width = scale * parentView.bounds.size.width
-							webView.frame.size.height = parentView.bounds.size.height
-						} else {
+							webView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
+							webView.bounds.size.height = parentView.bounds.size.height / scale
+							xOffset = (parentView.bounds.size.width - scale * webView.bounds.size.width)/2
+						} else {		// width is the constraining dimension
 							let scale = widthZoom / heightZoom
-							webView.frame.size.width = parentView.bounds.size.width
-							webView.frame.size.height = scale * parentView.bounds.size.height
+							webView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
+							webView.frame.size.width = parentView.bounds.size.width / scale
+							yOffset = (parentView.bounds.size.height - scale * webView.bounds.size.height)/2
 						}
 
 					default:
@@ -652,19 +661,14 @@ private final class WebpageSlide : Slide {
 					}
 
 					// center the web view horizontally
-					let xOffset = (parentView.bounds.size.width - webView.bounds.size.width)/2
 					if xOffset >= 0 {
 						webView.frame.origin.x = xOffset
 					}
 
 					// center the web view vertically
-					let yOffset = (parentView.bounds.size.height - webView.bounds.size.height)/2
 					if yOffset >= 0 {
 						webView.frame.origin.y = yOffset
 					}
-
-					// force the browser to layout the content with the new view size
-					webView.evaluateJavaScript("layoutDiTourSlide()") { (result, error) -> Void in }
 				}
 			}
 		}

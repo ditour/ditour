@@ -13,18 +13,3 @@ function resizeDiTourSlide() {
 	return size
 }
 
-
-// force the web page to be layed out again without reloading
-function layoutDiTourSlide() {
-	try {
-		var node = document.createElement("div");
-		node.appendChild(document.createTextNode("_____"));
-		node.style.visibility = "hidden";
-		document.body.appendChild(node);
-	}
-	catch(exception) {
-	}
-
-	return true
-}
-
