@@ -520,7 +520,7 @@ private final class WebpageSlide : Slide {
 		do {
 			let slideWebSpec = try NSString(contentsOfFile: self.mediaFile, encoding: NSUTF8StringEncoding)
 			if let slideURL = NSURL(string: slideWebSpec as String) {
-				print("")
+				//print("")
 				//print("Loading Slide URL: \(slideURL)")
 				let queryDictionary = WebpageSlide.dictionaryForQuery(slideURL.query)
 				//print("query dictionary: \(queryDictionary)")
@@ -530,8 +530,10 @@ private final class WebpageSlide : Slide {
 					self.zoomMode = .Both
 				}
 
-				let webView = WKWebView(frame: presenter.externalBounds)
-				//webView.scalesPageToFit = true
+				let container = UIView(frame: presenter.externalBounds)
+				container.backgroundColor = UIColor.blackColor()
+				let webView = WKWebView(frame: container.bounds)
+				container.addSubview(webView)
 				webView.navigationDelegate = self.webViewHandler
 				webView.backgroundColor = UIColor.blackColor()
 				self.webView = webView
@@ -543,7 +545,7 @@ private final class WebpageSlide : Slide {
 				let resizeScript = WKUserScript(source: webscript, injectionTime: .AtDocumentEnd, forMainFrameOnly: true)
 				webView.configuration.userContentController.addUserScript(resizeScript)
 
-				presenter.displayMediaView(webView)
+				presenter.displayMediaView(container)
 				webView.loadRequest(NSURLRequest(URL: slideURL))
 
 				let delayInSeconds = Int64(self.duration)
@@ -615,7 +617,7 @@ private final class WebpageSlide : Slide {
 		private func resizeSlideView(webView: WKWebView, clientSize: CGSize) {
 			// scale the web view's scroll zoom to match the content width so we can see the whole width
 			if !self.slide.canceled && self.slide.webView == webView {
-				let contentSize = webView.scrollView.contentSize
+				let contentSize = clientSize
 
 				guard let parentView = webView.superview else { return }
 
