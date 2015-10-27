@@ -10,9 +10,9 @@
 		4C2BA9591A1E7BA9008BDB55 /* UserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2BA9581A1E7BA9008BDB55 /* UserInterface.swift */; };
 		4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */; };
 		4C556A231AA4AA6800E0E699 /* TidyWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C556A211AA4AA6800E0E699 /* TidyWrapper.c */; };
-		4C58880A1BC6BBE20052EEEF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C5888091BC6BBE20052EEEF /* Settings.bundle */; settings = {ASSET_TAGS = (); }; };
+		4C58880A1BC6BBE20052EEEF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C5888091BC6BBE20052EEEF /* Settings.bundle */; };
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
-		4C8123821BCD2A2600E7D371 /* webslide.js in Resources */ = {isa = PBXBuildFile; fileRef = 4C8123811BCD2A2600E7D371 /* webslide.js */; settings = {ASSET_TAGS = (); }; };
+		4C8123821BCD2A2600E7D371 /* webslide.js in Resources */ = {isa = PBXBuildFile; fileRef = 4C8123811BCD2A2600E7D371 /* webslide.js */; };
 		4C937D791631AAE200F251FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D781631AAE200F251FF /* UIKit.framework */; };
 		4C937D7B1631AAE200F251FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7A1631AAE200F251FF /* Foundation.framework */; };
 		4C937D7D1631AAE200F251FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C937D7C1631AAE200F251FF /* CoreGraphics.framework */; };
@@ -186,7 +186,7 @@
 			attributes = {
 				CLASSPREFIX = DiTour;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "UT-Battelle ORNL";
 				TargetAttributes = {
 					4C937D731631AAE200F251FF = {
@@ -323,7 +323,6 @@
 				PRODUCT_MODULE_NAME = DiTour;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
