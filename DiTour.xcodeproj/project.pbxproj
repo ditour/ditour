@@ -342,7 +342,6 @@
 				GCC_PREFIX_HEADER = "DiTour/DiTour-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Applications/Xcode6-Beta4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
 					/usr/include/tidy,
 				);
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
@@ -369,7 +368,6 @@
 				GCC_PREFIX_HEADER = "DiTour/DiTour-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Applications/Xcode6-Beta4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
 					/usr/include/tidy,
 				);
 				INFOPLIST_FILE = "DiTour/DiTour-Info.plist";
