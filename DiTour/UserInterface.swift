@@ -445,6 +445,13 @@ final class PresentationGroupCell : UITableViewCell {
 			}
 		}
 	}
+
+	/* UI action handler for opening the focussed group's URL */
+	@IBAction func openGroupURL(sender: UIButton) {
+		if let url = self.group?.remoteURL {
+			UIApplication.sharedApplication().openURL(url)
+		}
+	}
 }
 
 
@@ -704,20 +711,6 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	override func viewDidAppear(animated: Bool) {
 		// refresh the table view in case the user selected a new presenation as current thus changing the current group
 		self.tableView.reloadData()
-	}
-
-
-	/* UI action handler for opening the focussed group's URL */
-	@IBAction func openGroupURL(sender: UIButton) {
-		let senderPoint = sender.bounds.origin		// point in the button's own coordinates
-		let pointInTable = sender.convertPoint(senderPoint, toView: self.tableView)		// point in the table view
-
-		if let indexPath = self.tableView.indexPathForRowAtPoint(pointInTable) {
-			let group = self.currentRootStore!.groups[indexPath.row] as! PresentationGroupStore
-			if let url = group.remoteURL {
-				UIApplication.sharedApplication().openURL(url)
-			}
-		}
 	}
 
 
