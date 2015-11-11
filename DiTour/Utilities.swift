@@ -37,10 +37,10 @@ extension String {
 /* dictionary that allows thread safe concurrent access */
 final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType, DictionaryLiteralConvertible {
 	/* internal dictionary */
-	var dictionary : [KeyType:ValueType]
+	private var dictionary : [KeyType:ValueType]
 
 	/* queue modfications using a barrier and allow concurrent read operations */
-	let queue = dispatch_queue_create( "dictionary access", DISPATCH_QUEUE_CONCURRENT )
+	private let queue = dispatch_queue_create( "dictionary access", DISPATCH_QUEUE_CONCURRENT )
 
 
 	/* count of key-value pairs in this dicitionary */
