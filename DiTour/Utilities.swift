@@ -37,7 +37,7 @@ extension String {
 /* dictionary that allows thread safe concurrent access */
 final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, SequenceType, DictionaryLiteralConvertible {
 	/* internal dictionary */
-	private var dictionary : [KeyType:ValueType]
+	private var internalDictionary : [KeyType:ValueType]
 
 	/* queue modfications using a barrier and allow concurrent read operations */
 	private let queue = dispatch_queue_create( "dictionary access", DISPATCH_QUEUE_CONCURRENT )
@@ -47,9 +47,28 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 	var count : Int {
 		var count = 0
 		dispatch_sync(self.queue) { () -> Void in
-			count = self.dictionary.count
+			count = self.internalDictionary.count
 		}
 		return count
+	}
+
+
+	// safely get or set a copy of the internal dictionary value
+	var dictionary : [KeyType:ValueType] {
+		get {
+			var dictionaryCopy : [KeyType:ValueType]?
+			dispatch_sync(self.queue) { () -> Void in
+				dictionaryCopy = self.dictionary
+			}
+			return dictionaryCopy!
+		}
+
+		set {
+			let dictionaryCopy = newValue	// create a local copy on the current thread
+			dispatch_async(self.queue) { () -> Void in
+				self.internalDictionary = dictionaryCopy
+			}
+		}
 	}
 
 
@@ -73,7 +92,7 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 
 	/* initialize a concurrent dictionary from a copy of a standard dictionary */
 	init( dictionary: [KeyType:ValueType] ) {
-		self.dictionary = dictionary
+		self.internalDictionary = dictionary
 	}
 
 
@@ -82,7 +101,7 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 		get {
 			var value : ValueType?
 			dispatch_sync(self.queue) { () -> Void in
-				value = self.dictionary[key]
+				value = self.internalDictionary[key]
 			}
 			return value
 		}
@@ -97,7 +116,7 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 	func setValue(value: ValueType?, forKey key: KeyType) {
 		// need to synchronize writes for consistent modifications
 		dispatch_barrier_async(self.queue) { () -> Void in
-			self.dictionary[key] = value
+			self.internalDictionary[key] = value
 		}
 	}
 
@@ -107,7 +126,7 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 		var oldValue : ValueType? = nil
 		// need to synchronize removal for consistent modifications
 		dispatch_barrier_sync(self.queue) { () -> Void in
-			oldValue = self.dictionary.removeValueForKey(key)
+			oldValue = self.internalDictionary.removeValueForKey(key)
 		}
 		return oldValue
 	}
@@ -117,7 +136,7 @@ final class ConcurrentDictionary<KeyType:Hashable,ValueType> : NSObject, Sequenc
 	func generate() -> Dictionary<KeyType,ValueType>.Generator {
 		var generator : Dictionary<KeyType,ValueType>.Generator!
 		dispatch_sync(self.queue) { () -> Void in
-			generator = self.dictionary.generate()
+			generator = self.internalDictionary.generate()
 		}
 		return generator
 	}
