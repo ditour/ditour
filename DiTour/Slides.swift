@@ -318,7 +318,7 @@ private final class MovieSlide : Slide {
 	}
 
 
-	func handlePlayerCompletion(notification: NSNotification) {
+	@objc func handlePlayerCompletion(notification: NSNotification) {
 		self.clearNotifications()
 
 		if let handler = self.completionHandler {
