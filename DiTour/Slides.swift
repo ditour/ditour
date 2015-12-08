@@ -29,11 +29,13 @@ class Slide {
 		var classesByExtension = [String:Slide.Type]()
 
 		// register each Slide subclass to append to the supported extensions
-		Slide.registerSlideClass(ImageSlide.self, into: &classesByExtension)
-		Slide.registerSlideClass(SceneSlide.self, into: &classesByExtension)
-		Slide.registerSlideClass(MovieSlide.self, into: &classesByExtension)
-		Slide.registerSlideClass(PDFSlide.self, into: &classesByExtension)
-		Slide.registerSlideClass(WebpageSlide.self, into: &classesByExtension)
+		let slideClasses : [Slide.Type] = [ImageSlide.self, SceneSlide.self, MovieSlide.self, PDFSlide.self, WebpageSlide.self]
+		for slideClass in slideClasses {
+			for fileExtension in slideClass.supportedExtensions {
+				let extensionKey = fileExtension.lowercaseString
+				classesByExtension[extensionKey] = slideClass;
+			}
+		}
 
 		return classesByExtension
 	}()
@@ -74,17 +76,6 @@ class Slide {
 		}
 		else {
 			return nil;
-		}
-	}
-
-
-	/* register a slide class so we can instantiate it by file extension */
-	private static func registerSlideClass<T : Slide>(slideClass : T.Type, inout into classesByExtension : [String:Slide.Type]) {
-		let fileExtensions = slideClass.supportedExtensions
-
-		for fileExtension in fileExtensions {
-			let extensionKey = fileExtension.lowercaseString
-			classesByExtension[extensionKey] = slideClass;
 		}
 	}
 
