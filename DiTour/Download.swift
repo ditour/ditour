@@ -731,13 +731,13 @@ final class DownloadContainerStatus : DownloadStatus {
 			var possibleChildError : NSError?
 
 			for (_,childStatus) in self.childStatusItems {
-				++childCount
+				childCount += 1
 
 				progressSum += childStatus.progress
 
 				// count the number of child items completed
 				if childStatus.completed {
-					++completionCount
+					completionCount += 1
 				}
 
 				if childStatus.possibleError != nil {
