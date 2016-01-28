@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-final class AppDelegate: UIResponder, UIApplicationDelegate {
+final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestrictionDelegate {
 	// window
 	var window: UIWindow? = MainWindow()
 
@@ -90,6 +90,60 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 		self.mainWindow.restoreActive()
 		self.ditourModel.performShutdown()
+	}
+
+
+	// MARK: Guided Access Restriction Delegate
+
+	// Guided Access identifier
+	enum GuidedAccessID : String {
+		case Configuration		// just allow presentation as by a Tour Guide (no editing)
+
+		var label : String {
+			switch self {
+			case .Configuration:
+				return "Configuration"
+			}
+		}
+
+		var detailedDescription : String {
+			switch self {
+			case .Configuration:
+				return "Allow configuration and content editing."
+			}
+		}
+	}
+
+
+	// get the identifiers for guided access
+	func guidedAccessRestrictionIdentifiers() -> [String]? {
+		return [GuidedAccessID.Configuration.rawValue]
+	}
+
+
+	// get the short text for the guided access restriction
+	func textForGuidedAccessRestrictionWithIdentifier(restrictionIdentifier: String) -> String? {
+		let guidedAccessID = GuidedAccessID(rawValue: restrictionIdentifier)
+		return guidedAccessID?.label
+	}
+
+
+	// get the detailed description for the guided access restriction
+	func detailTextForGuidedAccessRestrictionWithIdentifier(restrictionIdentifier: String) -> String? {
+		let guidedAccessID = GuidedAccessID(rawValue: restrictionIdentifier)
+		return guidedAccessID?.detailedDescription
+	}
+
+
+	// handle the guided access state change for the specified restriction
+	func guidedAccessRestrictionWithIdentifier(restrictionIdentifier: String, didChangeState newRestrictionState: UIGuidedAccessRestrictionState) {
+		print("Changed guided access state for ID: \(restrictionIdentifier) to \(newRestrictionState.rawValue)")
+		switch newRestrictionState {
+		case .Allow:
+			print("New restriction state: Allow")
+		case .Deny:
+			print("New restriction state: Deny")
+		}
 	}
 }
 
