@@ -78,7 +78,7 @@ extension SegueHandling where Self: UIViewController, SegueID.RawValue == String
 
 // can handle Guided Access state changes
 protocol GuidedAccessHandling {
-	func guidedAccessChanged()
+	func guidedAccessChangedForID(id: GuidedAccessID)
 }
 
 
@@ -258,8 +258,11 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 	}
 
 
-	func guidedAccessChanged() {
-		self.configurationButton.enabled = self.allowsConfiguration
+	func guidedAccessChangedForID(id: GuidedAccessID) {
+		switch id {
+		case .Configuration:
+			self.configurationButton.enabled = self.allowsConfiguration
+		}
 	}
 
 

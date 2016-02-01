@@ -95,31 +95,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 	// MARK: Guided Access Restriction Delegate
 
-	// Guided Access identifier
-	enum GuidedAccessID : String {
-		case Configuration		// just allow presentation as by a Tour Guide (no editing)
-
-		var label : String {
-			return self.rawValue
-		}
-
-		var detailedDescription : String {
-			switch self {
-			case .Configuration:
-				return "Allow configuration and content editing."
-			}
-		}
-	}
-
-
 	// update the view controllers to handle Guided Access changes
-	func propagateGuidedAccess( viewController: UIViewController ) {
+	func propagateGuidedAccess( viewController: UIViewController, id guidedAccessID: GuidedAccessID ) {
 		if let guidedAccessHandler = viewController as? GuidedAccessHandling {
-			guidedAccessHandler.guidedAccessChanged()
+			guidedAccessHandler.guidedAccessChangedForID(guidedAccessID)
 		}
 
 		for subController in viewController.childViewControllers {
-			self.propagateGuidedAccess( subController )
+			self.propagateGuidedAccess( subController, id: guidedAccessID )
 		}
 	}
 
@@ -157,7 +140,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 		// propagate the changes to the view controllers
 		if let rootViewController = self.mainWindow.rootViewController {
-			propagateGuidedAccess(rootViewController)
+			propagateGuidedAccess(rootViewController, id: guidedAccessID)
 		}
 	}
 }
@@ -314,6 +297,24 @@ final private class MainWindow : UIWindow {
 			self.activeBrightness = UIScreen.mainScreen().brightness
 			UIScreen.mainScreen().brightness = 0.0
 			self.dormant = true
+		}
+	}
+}
+
+
+
+// Guided Access identifier
+enum GuidedAccessID : String {
+	case Configuration		// just allow presentation as by a Tour Guide (no editing)
+
+	var label : String {
+		return self.rawValue
+	}
+
+	var detailedDescription : String {
+		switch self {
+		case .Configuration:
+			return "Allow configuration and content editing."
 		}
 	}
 }
