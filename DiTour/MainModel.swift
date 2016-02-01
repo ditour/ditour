@@ -53,6 +53,9 @@ public class DitourModel : NSObject, PresenterDelegate {
 
 	var downloading : Bool { return self.downloadSession?.active ?? false }
 
+	// indicates whether configuration is allowed (e.g. users may be blocked from configuring in Guided Access)
+	var allowsConfiguration : Bool = true;
+
 
 	override init() {
 		// setup the data model

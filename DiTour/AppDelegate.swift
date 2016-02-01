@@ -100,10 +100,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 		case Configuration		// just allow presentation as by a Tour Guide (no editing)
 
 		var label : String {
-			switch self {
-			case .Configuration:
-				return "Configuration"
-			}
+			return self.rawValue
 		}
 
 		var detailedDescription : String {
@@ -111,6 +108,18 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 			case .Configuration:
 				return "Allow configuration and content editing."
 			}
+		}
+	}
+
+
+	// update the view controllers to handle Guided Access changes
+	func propagateGuidedAccess( viewController: UIViewController ) {
+		if let guidedAccessHandler = viewController as? GuidedAccessHandling {
+			guidedAccessHandler.guidedAccessChanged()
+		}
+
+		for subController in viewController.childViewControllers {
+			self.propagateGuidedAccess( subController )
 		}
 	}
 
@@ -137,12 +146,18 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 	// handle the guided access state change for the specified restriction
 	func guidedAccessRestrictionWithIdentifier(restrictionIdentifier: String, didChangeState newRestrictionState: UIGuidedAccessRestrictionState) {
-		print("Changed guided access state for ID: \(restrictionIdentifier) to \(newRestrictionState.rawValue)")
-		switch newRestrictionState {
-		case .Allow:
-			print("New restriction state: Allow")
-		case .Deny:
-			print("New restriction state: Deny")
+		guard let guidedAccessID = GuidedAccessID(rawValue: restrictionIdentifier) else { return }
+
+		switch (guidedAccessID, newRestrictionState) {
+		case (.Configuration, .Allow):
+			ditourModel.allowsConfiguration = true
+		case (.Configuration, .Deny):
+			ditourModel.allowsConfiguration = false
+		}
+
+		// propagate the changes to the view controllers
+		if let rootViewController = self.mainWindow.rootViewController {
+			propagateGuidedAccess(rootViewController)
 		}
 	}
 }

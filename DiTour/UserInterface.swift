@@ -76,11 +76,18 @@ extension SegueHandling where Self: UIViewController, SegueID.RawValue == String
 
 
 
+// can handle Guided Access state changes
+protocol GuidedAccessHandling {
+	func guidedAccessChanged()
+}
+
+
+
 /* Main view controller which displays the tracks of a Presentation from which the user can select */
-final class PresentationViewController : UICollectionViewController, DitourModelContainer, SegueHandling {
+final class PresentationViewController : UICollectionViewController, DitourModelContainer, SegueHandling, GuidedAccessHandling {
 	// enum for SegueHandling
 	enum SegueID : String {
-		case MainToGroups, TrackDetailShowPendingFileInfo
+		case MainToGroups
 	}
 
 	var ditourModel: DitourModel? {
@@ -94,6 +101,8 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 			self.ditourModel?.addObserver(self, forKeyPath: "currentTrack", options: ([.Old, .New]), context: nil)
 		}
 	}
+
+	@IBOutlet var configurationButton : UIBarButtonItem! = nil
 
 
 	deinit {
@@ -243,13 +252,30 @@ final class PresentationViewController : UICollectionViewController, DitourModel
 	}
 
 
+	// indicates whether configuration is allowed
+	private var allowsConfiguration : Bool {
+		return self.ditourModel?.allowsConfiguration ?? false
+	}
+
+
+	func guidedAccessChanged() {
+		self.configurationButton.enabled = self.allowsConfiguration
+	}
+
+
+	override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+		guard let segueID = SegueID(rawValue: identifier) else { return false }
+		switch segueID {
+		case .MainToGroups:
+			return self.allowsConfiguration
+		}
+	}
+
+
 	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		switch ( getSegueID(segue), segue.destinationViewController ) {
 
 		case ( .MainToGroups, let configController as PresentationGroupsTableController ):
-			configController.ditourModel = self.ditourModel
-
-		case ( .TrackDetailShowPendingFileInfo, let configController as PresentationGroupsTableController ):
 			configController.ditourModel = self.ditourModel
 
 		default:
