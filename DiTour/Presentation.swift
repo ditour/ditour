@@ -89,8 +89,8 @@ final class ExternalPresenter : NSObject, Presenter {
 		super.init()
 
 		// respond to external screen connection changes
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleScreensChange:", name: UIScreenDidConnectNotification, object: nil)
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleScreensChange:", name: UIScreenDidDisconnectNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ExternalPresenter.handleScreensChange(_:)), name: UIScreenDidConnectNotification, object: nil)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ExternalPresenter.handleScreensChange(_:)), name: UIScreenDidDisconnectNotification, object: nil)
 	}
 
 

@@ -279,7 +279,7 @@ private final class MovieSlide : Slide {
 		let videoItem = AVPlayerItem(asset: asset)
 		let player = AVPlayer(playerItem: videoItem)
 
-		NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePlayerCompletion:", name: AVPlayerItemDidPlayToEndTimeNotification, object: videoItem)
+		NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MovieSlide.handlePlayerCompletion), name: AVPlayerItemDidPlayToEndTimeNotification, object: videoItem)
 
 		let videoView = UIView(frame: presenter.externalBounds)
 		let videoLayer = AVPlayerLayer(player: player)

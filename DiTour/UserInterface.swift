@@ -39,7 +39,7 @@ private extension CaseCountable where Self : RawRepresentable, Self.RawValue == 
 
 
 	// Make an enum from the raw value which is expected to be valid (otherwise it is fatal).
-	static func from(rawValue: Int, line : Int = __LINE__, call : StaticString = __FUNCTION__, file : StaticString = __FILE__) -> Self {
+	static func from(rawValue: Int, line : Int = #line, call : StaticString = #function, file : StaticString = #file) -> Self {
 		guard let enumItem = Self(rawValue: rawValue) else {
 			fatalError("Error! Cannot convert raw value to enumeration of type \(Self.self) for Int: \(rawValue) called from \(call) at line: \(line) in file: \(file)")
 		}
@@ -52,7 +52,7 @@ private extension CaseCountable where Self : RawRepresentable, Self.RawValue == 
 
 /* provides a common segue handling protocol for view controllers (based on example in WWDC 2015 Session 411 "Swift in Practice") */
 private protocol SegueHandling {
-	typealias SegueID : RawRepresentable
+	associatedtype SegueID : RawRepresentable
 }
 
 
@@ -563,7 +563,7 @@ final class FileInfoController : UIViewController, DitourModelContainer, Downloa
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: Selector("popToPlaying"))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: #selector(FileInfoController.popToPlaying))
 
 		self.nameLabel.text = self.remoteFile?.name
 
@@ -783,14 +783,14 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 	private func updateControls() {
 		switch ( self.editingGroup, self.editing ) {
 		case (.Some, _):	// there is an editing group (e.g. editing the group name)
-			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelGroupEditing")
-			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "confirmGroupEditing")
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(PresentationGroupsTableController.cancelGroupEditing))
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(PresentationGroupsTableController.confirmGroupEditing))
 		case (.None, true):		// no editing group, but editing (e.g. moving or deleting groups)
-			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "dismissEditing")
-			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "deleteSelectedRows")
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(PresentationGroupsTableController.dismissEditing))
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: #selector(PresentationGroupsTableController.deleteSelectedRows))
 		case (.None, false):	// no editing group, not editing (e.g. not editing)
 			self.navigationItem.leftBarButtonItem = nil
-			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "editTable")
+			self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(PresentationGroupsTableController.editTable))
 		}
 	}
 
@@ -1127,7 +1127,7 @@ final class PresentationGroupsTableController : UITableViewController, DitourMod
 /* really contains remote items */
 protocol ConcreteRemoteItemContaining {
 	/* type of the remote items contained */
-	typealias ItemType : RemoteItemStore
+	associatedtype ItemType : RemoteItemStore
 
 	var detailTitle : String { get }
 
@@ -1201,7 +1201,7 @@ final class TrackDetailController : UITableViewController, DownloadStatusDelegat
 
 		self.updateScheduled = false
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: #selector(FileInfoController.popToPlaying))
 
 		self.title = self.track.detailTitle
 
@@ -1449,7 +1449,7 @@ final class PresentationDetailController : UITableViewController, DownloadStatus
 
 		self.updateScheduled = false
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: #selector(FileInfoController.popToPlaying))
 
 		self.title = presentation.detailTitle
 
@@ -1780,7 +1780,7 @@ final class PresentationGroupDetailController : UITableViewController, DownloadS
 
 		self.updateScheduled = false
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: "popToPlaying")
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Now Playing", style: .Done, target: self, action: #selector(FileInfoController.popToPlaying))
 
 		self.downloadStatus = self.ditourModel?.downloadStatusForGroup(self.group)
 		self.downloadStatus?.delegate = self
