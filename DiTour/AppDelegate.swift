@@ -34,6 +34,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 		self.propagateLobbyModel( self.window?.rootViewController )
 
+		logState()
+
 		return true
 	}
 
@@ -141,6 +143,89 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 		// propagate the changes to the view controllers
 		if let rootViewController = self.mainWindow.rootViewController {
 			propagateGuidedAccess(rootViewController, id: guidedAccessID)
+		}
+	}
+
+
+	private func logState() {
+		enum Context {
+			static let setup : Bool = {
+				UIDevice.currentDevice().batteryMonitoringEnabled = true	// otherwise battery state will be unknown
+				return true
+			}()
+		}
+
+		// dispatch the next logging at the end
+		defer {
+			let queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+			let updatePeriodNanos : Int64 = 1_000_000_000 * 60
+			let nextRun = dispatch_time(DISPATCH_TIME_NOW, updatePeriodNanos)
+			dispatch_after(nextRun, queue) {
+				self.logState()
+			}
+		}
+
+		if Context.setup {	// force setup exactly once
+			var loggerInfo : [String:AnyObject] = [:]
+
+			loggerInfo["message"] = "Heartbeat"		// message is a required field
+			loggerInfo["batteryLevel"] = UIDevice.currentDevice().batteryLevel
+
+			let batteryState : String
+			switch UIDevice.currentDevice().batteryState {
+			case .Charging:
+				batteryState = "Charging"
+			case .Full:
+				batteryState = "Full"
+			case .Unknown:
+				batteryState = "Unknown"
+			case .Unplugged:
+				batteryState = "Unplugged"
+			}
+			loggerInfo["batteryState"] = batteryState
+
+			loggerInfo["name"] = UIDevice.currentDevice().name
+			loggerInfo["systemName"] = UIDevice.currentDevice().systemName
+			loggerInfo["systemVersion"] = UIDevice.currentDevice().systemVersion
+
+			if let appInfo = NSBundle.mainBundle().infoDictionary {
+				loggerInfo["app"] = appInfo["CFBundleDisplayName"]
+				loggerInfo["version"] = appInfo["CFBundleShortVersionString"]
+				loggerInfo["build"] = appInfo["CFBundleVersion"]
+			}
+
+			let appState : String
+			switch UIApplication.sharedApplication().applicationState {
+			case .Active:
+				appState = "Active"
+			case .Background:
+				appState = "Background"
+			case .Inactive:
+				appState = "Inactive"
+			}
+			loggerInfo["state"] = appState
+
+			do {
+				let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: [])
+
+				//let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: .PrettyPrinted)
+				guard let loggerJSON = NSString(data: loggerData, encoding: NSUTF8StringEncoding) else {
+					throw NSError(domain: "JSON encoding error", code: 1, userInfo: nil)
+				}
+				print("\(NSDate()) - \(loggerJSON)")
+
+				let serverLocation = "http://log.sns.gov:12201/gelf"
+				guard let serverURL = NSURL(string: serverLocation) else {
+					throw NSError(domain: "URL creation error", code: 1, userInfo: ["url":serverLocation])
+				}
+				let request = NSMutableURLRequest(URL: serverURL)
+				request.HTTPMethod = "POST"
+				request.HTTPBody = loggerData
+				let postTask = NSURLSession.sharedSession().dataTaskWithRequest(request)
+				postTask.resume()
+			} catch {
+				//TODO: provide default JSON in case of failure
+			}
 		}
 	}
 }
