@@ -32,11 +32,31 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 		UIApplication.sharedApplication().idleTimerDisabled = true;
 
+		self.registerDefaultSettings()
+
 		self.propagateLobbyModel( self.window?.rootViewController )
 
-		logState()
-
 		return true
+	}
+
+
+	// register the default settings from the Settings bundle
+	private func registerDefaultSettings() {
+		guard let settingsPath = NSBundle.mainBundle().pathForResource("Settings", ofType: "bundle") else { return }
+		guard let settingsBundle = NSBundle(path: settingsPath) else { return }
+		guard let rootPath = settingsBundle.pathForResource("Root", ofType: "plist")  else { return }
+		guard let prefs = NSDictionary(contentsOfFile: rootPath) else { return }
+		guard let settings = prefs["PreferenceSpecifiers"] as? NSArray else { return }
+
+		var defaults = [String:AnyObject]()
+		for setting in settings {
+			if let setting = setting as? [String:AnyObject] {
+				guard let key = setting["Key"] as? String else { continue }
+				guard let value = setting["DefaultValue"] else { continue }
+				defaults[key] = value
+			}
+		}
+		NSUserDefaults.standardUserDefaults().registerDefaults(defaults)
 	}
 
 
@@ -85,6 +105,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 		self.mainWindow.restoreActive()
 		self.ditourModel.presenter?.updateConfiguration()
 		self.ditourModel.play()
+
+		// start the heartbeat logging
+		startHeartbeatLogging()
 	}
 
 
@@ -147,85 +170,111 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 	}
 
 
-	private func logState() {
+	private func startHeartbeatLogging() {
 		enum Context {
-			static let setup : Bool = {
-				UIDevice.currentDevice().batteryMonitoringEnabled = true	// otherwise battery state will be unknown
-				return true
-			}()
+			static var sessionID : UInt = 0
 		}
 
-		// dispatch the next logging at the end
-		defer {
-			let queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
-			let updatePeriodNanos : Int64 = 1_000_000_000 * 60
-			let nextRun = dispatch_time(DISPATCH_TIME_NOW, updatePeriodNanos)
-			dispatch_after(nextRun, queue) {
-				self.logState()
+		// enable battery monitoring so we can report battery state and level
+		UIDevice.currentDevice().batteryMonitoringEnabled = true
+
+		// get the server location and return if none is specified
+		guard let serverLocation = NSUserDefaults.standardUserDefaults().stringForKey("logging_url") else {
+			print("No heartbeat logging due to missing server URL.")
+			return
+		}
+		guard let serverURL = NSURL(string: serverLocation) else {
+			print("No heartbeat logging due to malformed server URL: \(serverLocation)")
+			return
+		}
+
+		// get the logging period
+		let loggingPeriodMinutes = NSUserDefaults.standardUserDefaults().integerForKey("logging_period")
+		if loggingPeriodMinutes <= 0 {
+			print("Logging disabled due to non-positive logging period: \(loggingPeriodMinutes) minutes.")
+			return		// nothing to do, so bail
+		}
+
+		//let loggingPeriodNanos : Int64 = 1_000_000_000 * 60 * Int64(loggingPeriodMinutes)
+		// ************************************
+		// FIXME: temporarily make the period shorter for testing purposes
+		// ************************************
+		let loggingPeriodNanos : Int64 = 1_000_000_000 * Int64(loggingPeriodMinutes)
+
+
+		func logHeartbeat(session sessionID: UInt) {
+			// make sure this session is still the current one otherwise this will terminate this session
+			if sessionID == Context.sessionID {
+				// dispatch the next logging for this session
+				let queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+				let nextRun = dispatch_time(DISPATCH_TIME_NOW, loggingPeriodNanos)
+				dispatch_after(nextRun, queue) {
+					logHeartbeat(session: sessionID)
+				}
+
+				// collect the information to log
+				var loggerInfo : [String:AnyObject] = [:]
+
+				loggerInfo["message"] = "Heartbeat"		// message is a required field
+				loggerInfo["batteryLevel"] = UIDevice.currentDevice().batteryLevel
+
+				let batteryState : String
+				switch UIDevice.currentDevice().batteryState {
+				case .Charging:
+					batteryState = "Charging"
+				case .Full:
+					batteryState = "Full"
+				case .Unknown:
+					batteryState = "Unknown"
+				case .Unplugged:
+					batteryState = "Unplugged"
+				}
+				loggerInfo["batteryState"] = batteryState
+
+				loggerInfo["name"] = UIDevice.currentDevice().name
+				loggerInfo["systemName"] = UIDevice.currentDevice().systemName
+				loggerInfo["systemVersion"] = UIDevice.currentDevice().systemVersion
+
+				if let appInfo = NSBundle.mainBundle().infoDictionary {
+					loggerInfo["app"] = appInfo["CFBundleDisplayName"]
+					loggerInfo["version"] = appInfo["CFBundleShortVersionString"]
+					loggerInfo["build"] = appInfo["CFBundleVersion"]
+				}
+
+				let appState : String
+				switch UIApplication.sharedApplication().applicationState {
+				case .Active:
+					appState = "Active"
+				case .Background:
+					appState = "Background"
+				case .Inactive:
+					appState = "Inactive"
+				}
+				loggerInfo["state"] = appState
+
+				do {
+					let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: [])
+
+//					guard let loggerJSON = NSString(data: loggerData, encoding: NSUTF8StringEncoding) else {
+//						throw NSError(domain: "JSON encoding error", code: 1, userInfo: nil)
+//					}
+//					print("\(NSDate()) - \(sessionID) - \(loggerJSON)")
+
+					let request = NSMutableURLRequest(URL: serverURL)
+					request.HTTPMethod = "POST"
+					request.HTTPBody = loggerData
+					let postTask = NSURLSession.sharedSession().dataTaskWithRequest(request)
+					postTask.resume()
+				} catch {
+					//TODO: provide default JSON in case of failure
+				}
 			}
 		}
 
-		if Context.setup {	// force setup exactly once
-			var loggerInfo : [String:AnyObject] = [:]
-
-			loggerInfo["message"] = "Heartbeat"		// message is a required field
-			loggerInfo["batteryLevel"] = UIDevice.currentDevice().batteryLevel
-
-			let batteryState : String
-			switch UIDevice.currentDevice().batteryState {
-			case .Charging:
-				batteryState = "Charging"
-			case .Full:
-				batteryState = "Full"
-			case .Unknown:
-				batteryState = "Unknown"
-			case .Unplugged:
-				batteryState = "Unplugged"
-			}
-			loggerInfo["batteryState"] = batteryState
-
-			loggerInfo["name"] = UIDevice.currentDevice().name
-			loggerInfo["systemName"] = UIDevice.currentDevice().systemName
-			loggerInfo["systemVersion"] = UIDevice.currentDevice().systemVersion
-
-			if let appInfo = NSBundle.mainBundle().infoDictionary {
-				loggerInfo["app"] = appInfo["CFBundleDisplayName"]
-				loggerInfo["version"] = appInfo["CFBundleShortVersionString"]
-				loggerInfo["build"] = appInfo["CFBundleVersion"]
-			}
-
-			let appState : String
-			switch UIApplication.sharedApplication().applicationState {
-			case .Active:
-				appState = "Active"
-			case .Background:
-				appState = "Background"
-			case .Inactive:
-				appState = "Inactive"
-			}
-			loggerInfo["state"] = appState
-
-			do {
-				let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: [])
-
-				//let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: .PrettyPrinted)
-				guard let loggerJSON = NSString(data: loggerData, encoding: NSUTF8StringEncoding) else {
-					throw NSError(domain: "JSON encoding error", code: 1, userInfo: nil)
-				}
-				print("\(NSDate()) - \(loggerJSON)")
-
-				let serverLocation = "http://log.sns.gov:12201/gelf"
-				guard let serverURL = NSURL(string: serverLocation) else {
-					throw NSError(domain: "URL creation error", code: 1, userInfo: ["url":serverLocation])
-				}
-				let request = NSMutableURLRequest(URL: serverURL)
-				request.HTTPMethod = "POST"
-				request.HTTPBody = loggerData
-				let postTask = NSURLSession.sharedSession().dataTaskWithRequest(request)
-				postTask.resume()
-			} catch {
-				//TODO: provide default JSON in case of failure
-			}
+		// initiate the first log with a new session so old logging sessions terminate
+		if loggingPeriodNanos > 0 {		// redundant check that logging is enabled
+			Context.sessionID = (Context.sessionID + 1) % 32768		// increment and recycle if necessary
+			logHeartbeat(session: Context.sessionID)
 		}
 	}
 }

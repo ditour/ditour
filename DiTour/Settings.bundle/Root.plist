@@ -90,6 +90,52 @@
 				<string>10:00 PM</string>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>System Logging</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Logging URL</string>
+			<key>Key</key>
+			<string>logging_url</string>
+			<key>DefaultValue</key>
+			<string>http://log.sns.gov:12201/gelf</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Logging Period</string>
+			<key>Key</key>
+			<string>logging_period</string>
+			<key>DefaultValue</key>
+			<string>15</string>
+			<key>Values</key>
+			<array>
+				<string>-1</string>
+				<string>5</string>
+				<string>10</string>
+				<string>15</string>
+				<string>20</string>
+				<string>30</string>
+				<string>60</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Never</string>
+				<string>5 minutes</string>
+				<string>10 minutes</string>
+				<string>15 minutes</string>
+				<string>20 minutes</string>
+				<string>30 minutes</string>
+				<string>1 hour</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
