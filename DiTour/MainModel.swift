@@ -36,6 +36,9 @@ public class DitourModel : NSObject, PresenterDelegate {
 	// track that is currently playing and key-value observable (dynamic)
 	private(set) dynamic var currentTrack :Track?
 
+	// current presentation name
+	private(set) var currentPresentationName : String?
+
 	// indicates whether there is a presentation update
 	private var hasPresentationUpdate = false
 
@@ -106,40 +109,41 @@ public class DitourModel : NSObject, PresenterDelegate {
 		self.hasPresentationUpdate = false
 
 		var success = false
+		var presentationName = "None"
+		var tracks : [Track] = []
 		self.mainStoreRoot.managedObjectContext?.performBlockAndWait(){ () -> Void in
-			success = self.loadPresentation( self.mainStoreRoot.currentPresentation )
+			if let presentationStore = self.mainStoreRoot.currentPresentation  {
+				if presentationStore.isReady {
+					for trackStore in presentationStore.tracks.array {
+						let track = Track( trackStore: trackStore as! TrackStore )
+						if track.slides.count > 0 {		// only display tracks that have slides
+							tracks.append( track )
+						}
+					}
+
+					presentationName = presentationStore.name
+
+					// remove any disposable presentations such as the one (if any) marked current at the time it was replaced
+					self.cleanupDisposablePresentations()
+
+					success = true
+				}
+				else {
+					success = false
+				}
+			}
+			else {
+				success = false
+			}
+		}
+
+		if success {
+			self.currentPresentationName = presentationName
+			self.tracks = tracks
+			self.defaultTrack = tracks.count > 0 ? tracks[0] : nil
 		}
 
 		return success
-	}
-
-
-	func loadPresentation( possiblePresentationStore : PresentationStore? ) -> Bool {
-		if let presentationStore = possiblePresentationStore  {
-			if presentationStore.isReady {
-				var tracks = [Track]()
-				for trackStore in presentationStore.tracks.array {
-					let track = Track( trackStore: trackStore as! TrackStore )
-					if track.slides.count > 0 {		// only display tracks that have slides
-						tracks.append( track )
-					}
-				}
-
-				self.tracks = tracks
-				self.defaultTrack = tracks.count > 0 ? tracks[0] : nil
-
-				// remove any disposable presentations such as the one (if any) marked current at the time it was replaced
-				self.cleanupDisposablePresentations()
-
-				return true
-			}
-			else {
-				return false
-			}
-		}
-		else {
-			return false
-		}
 	}
 
 

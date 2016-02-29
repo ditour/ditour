@@ -200,15 +200,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 		// FIXME: temporarily make the period shorter for testing purposes
 		// ************************************
 		let loggingPeriodNanos : Int64 = 1_000_000_000 * Int64(loggingPeriodMinutes)
+		let loggingQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
 
 
 		func logHeartbeat(session sessionID: UInt) {
 			// make sure this session is still the current one otherwise this will terminate this session
 			if sessionID == Context.sessionID {
 				// dispatch the next logging for this session
-				let queue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
 				let nextRun = dispatch_time(DISPATCH_TIME_NOW, loggingPeriodNanos)
-				dispatch_after(nextRun, queue) {
+				dispatch_after(nextRun, loggingQueue) {
 					logHeartbeat(session: sessionID)
 				}
 
@@ -252,6 +252,17 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 				}
 				loggerInfo["state"] = appState
 
+				dispatch_sync(dispatch_get_main_queue()) {
+					loggerInfo["playing"] = self.ditourModel.playing
+					loggerInfo["presentation"] = self.ditourModel.currentPresentationName ?? "None"
+					loggerInfo["track"] = self.ditourModel.currentTrack?.label ?? "None"
+					if let slideMedia = self.ditourModel.currentTrack?.currentSlide?.mediaFile {
+						loggerInfo["slide"] = (slideMedia as NSString).lastPathComponent
+					} else {
+						loggerInfo["slide"] = "None"
+					}
+				}
+
 				do {
 					let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: [])
 
@@ -273,8 +284,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 		// initiate the first log with a new session so old logging sessions terminate
 		if loggingPeriodNanos > 0 {		// redundant check that logging is enabled
-			Context.sessionID = (Context.sessionID + 1) % 32768		// increment and recycle if necessary
-			logHeartbeat(session: Context.sessionID)
+			dispatch_async(loggingQueue) {
+				Context.sessionID = (Context.sessionID + 1) % 32768		// increment and recycle if necessary
+				logHeartbeat(session: Context.sessionID)
+			}
 		}
 	}
 }

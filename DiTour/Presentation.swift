@@ -223,7 +223,7 @@ final class Track : NSObject {
 	private var playing : Bool = false
 
 	/* the current slide that is playing (if any) */
-	private var currentSlide : Slide? = nil
+	private(set) var currentSlide : Slide? = nil
 
 	/* initialize the track from the core data track store */
 	init( trackStore: TrackStore ) {
