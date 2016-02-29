@@ -195,11 +195,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 			return		// nothing to do, so bail
 		}
 
-		//let loggingPeriodNanos : Int64 = 1_000_000_000 * 60 * Int64(loggingPeriodMinutes)
-		// ************************************
-		// FIXME: temporarily make the period shorter for testing purposes
-		// ************************************
-		let loggingPeriodNanos : Int64 = 1_000_000_000 * Int64(loggingPeriodMinutes)
+		let loggingPeriodNanos : Int64 = 1_000_000_000 * 60 * Int64(loggingPeriodMinutes)
 		let loggingQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
 
 
