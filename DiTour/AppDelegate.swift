@@ -170,13 +170,28 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 	}
 
 
+	// Start a new heartbeat logging session with an incremented session ID.
+	// Call this everytime the application becomes active so the user preferences can be reloaded.
+	// Old sessions die as their session ID will not match the latest one.
 	private func startHeartbeatLogging() {
+		// Internal context
 		enum Context {
+			// unique number identifying the logging session
 			static var sessionID : UInt = 0
+
+			// serial background queue for logging
+			static let loggingQueue : dispatch_queue_t = {
+				let attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
+				let queue = dispatch_queue_create("logging", attr)
+				return queue
+			}()
 		}
 
 		// enable battery monitoring so we can report battery state and level
 		UIDevice.currentDevice().batteryMonitoringEnabled = true
+
+
+		// ------ Fetch the user preferences and configure the new logging session -------
 
 		// get the server location and return if none is specified
 		guard let serverLocation = NSUserDefaults.standardUserDefaults().stringForKey("logging_url") else {
@@ -196,24 +211,31 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 		}
 
 		let loggingPeriodNanos : Int64 = 1_000_000_000 * 60 * Int64(loggingPeriodMinutes)
-		let loggingQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
+
+		// ---------- Done fetching user preferences and configuration ---------------------
 
 
+		// nested function to log the heartbeat with the specified session ID
 		func logHeartbeat(session sessionID: UInt) {
 			// make sure this session is still the current one otherwise this will terminate this session
 			if sessionID == Context.sessionID {
-				// dispatch the next logging for this session
-				let nextRun = dispatch_time(DISPATCH_TIME_NOW, loggingPeriodNanos)
-				dispatch_after(nextRun, loggingQueue) {
-					logHeartbeat(session: sessionID)
+				// dispatch the next logging for this session after the current log
+				defer {
+					let nextRun = dispatch_time(DISPATCH_TIME_NOW, loggingPeriodNanos)
+					dispatch_after(nextRun, Context.loggingQueue) {
+						logHeartbeat(session: sessionID)
+					}
 				}
 
 				// collect the information to log
 				var loggerInfo : [String:AnyObject] = [:]
 
 				loggerInfo["message"] = "Heartbeat"		// message is a required field
+
+				// get the battery level
 				loggerInfo["batteryLevel"] = UIDevice.currentDevice().batteryLevel
 
+				// get the battery state
 				let batteryState : String
 				switch UIDevice.currentDevice().batteryState {
 				case .Charging:
@@ -227,16 +249,19 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 				}
 				loggerInfo["batteryState"] = batteryState
 
+				// get the device name and system info
 				loggerInfo["name"] = UIDevice.currentDevice().name
 				loggerInfo["systemName"] = UIDevice.currentDevice().systemName
 				loggerInfo["systemVersion"] = UIDevice.currentDevice().systemVersion
 
+				// gather application information
 				if let appInfo = NSBundle.mainBundle().infoDictionary {
 					loggerInfo["app"] = appInfo["CFBundleDisplayName"]
 					loggerInfo["version"] = appInfo["CFBundleShortVersionString"]
 					loggerInfo["build"] = appInfo["CFBundleVersion"]
 				}
 
+				// get the app state
 				let appState : String
 				switch UIApplication.sharedApplication().applicationState {
 				case .Active:
@@ -248,6 +273,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 				}
 				loggerInfo["state"] = appState
 
+				// gather the model state which is maintained on the the main queue
 				dispatch_sync(dispatch_get_main_queue()) {
 					loggerInfo["playing"] = self.ditourModel.playing
 					loggerInfo["presentation"] = self.ditourModel.currentPresentationName ?? "None"
@@ -259,14 +285,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 					}
 				}
 
+				// generate the log data as JSON and post it to the logging server
 				do {
 					let loggerData = try NSJSONSerialization.dataWithJSONObject(loggerInfo as NSDictionary, options: [])
 
-//					guard let loggerJSON = NSString(data: loggerData, encoding: NSUTF8StringEncoding) else {
-//						throw NSError(domain: "JSON encoding error", code: 1, userInfo: nil)
-//					}
-//					print("\(NSDate()) - \(sessionID) - \(loggerJSON)")
-
+					// post the request
 					let request = NSMutableURLRequest(URL: serverURL)
 					request.HTTPMethod = "POST"
 					request.HTTPBody = loggerData
@@ -278,12 +301,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 			}
 		}
 
-		// initiate the first log with a new session so old logging sessions terminate
-		if loggingPeriodNanos > 0 {		// redundant check that logging is enabled
-			dispatch_async(loggingQueue) {
-				Context.sessionID = (Context.sessionID + 1) % 32768		// increment and recycle if necessary
-				logHeartbeat(session: Context.sessionID)
-			}
+
+		// initiate the first log on the logging queue with a new session so old logging sessions terminate
+		dispatch_async(Context.loggingQueue) {
+			Context.sessionID = (Context.sessionID + 1) % 32768		// increment and recycle session ID if necessary
+			logHeartbeat(session: Context.sessionID)
 		}
 	}
 }
