@@ -232,8 +232,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate, UIGuidedAccessRestr
 
 				loggerInfo["message"] = "Heartbeat"		// message is a required field
 
-				// get the battery level
-				loggerInfo["batteryLevel"] = UIDevice.currentDevice().batteryLevel
+				// get the battery level as a percent since the logger can only graph integers
+				loggerInfo["batteryLevel"] = 100 * UIDevice.currentDevice().batteryLevel
 
 				// get the battery state
 				let batteryState : String
