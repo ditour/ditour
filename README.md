@@ -27,9 +27,12 @@ In each directory, a config.json file may be specified. The configuration is val
 Media should be placed on a web server that is accessible to the device. The URL should point to the presentation group's directory and has the following structure:
 
 Presentation Group Directory
-- Presentation directories plus optional config.json
-  - Track directories plus optional config.json
-    - media files, icon file plus optional config.json
+
+|_ Presentation directories plus optional config.json
+
+   |_Track directories plus optional config.json
+
+      |_ media files, icon file plus optional config.json
 
 The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf, dae (iOS 8 and later) and urlspec. Note that dae (COLLADA 3D model) files must be compressed and should contain any referenced materials internally and are only supported in iOS 8 and later.
 
