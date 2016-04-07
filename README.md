@@ -37,6 +37,7 @@ Any file named `Icon` with on of the supported image extensions is treated as an
 
 ### Web Page Slides
 A slide whose content is given by a web page can be specified using a plain text file with an extension of `urlspec` and whose contents is simply the URL of the page to render. By default, the page will be scaled (preserving aspect ratio) to fit on the external screen. You may optionally append a URL query key/value pair to specify an alternate scaling (all preserve aspect ratio) using one of the following mode values for the `ditour-zoom` key:
+
 | Zoom Mode | Zoom Behavior |
 | ----- | ------ |
 | `none` | Don't scale. Will display the page just as Safari would cropped to the screen's view and positioned at the top left corner of the page pinned to the top left corner of the screen. |
