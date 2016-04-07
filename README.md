@@ -36,11 +36,13 @@ The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf, dae
 Any file named `Icon` with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.
 
 ### Web Page Slides
-A slide whose content is given by a web page can be specified using a plain text file with an extension of `urlspec` and whose contents is simply the URL of the page to render. By default, the page will be scaled (preserving aspect ratio) to fit on the external screen. You may optionally append a URL query key/value pair to specify an alternate scaling (all preserve aspect ratio) using one of the following values for the `ditour-zoom` key:
-* `none` - Don't scale. Will display the page just as Safari would cropped to the screen's view and positioned at the top left corner of the page pinned to the top left corner of the screen.
-* `width` - Scale the page to fit the width of the page onto the screen, cropping vertically and positioned at the top of the page pinned to the top of the screen.
-* `height` - Scale the page to fit the height of the page onto the screen, cropping horizontally and positioned at the left of the page pinned to the left of the screen.
-* `both` - This is the default behavior. It scales the page to fit both horizontally and vertically on the external screen.
+A slide whose content is given by a web page can be specified using a plain text file with an extension of `urlspec` and whose contents is simply the URL of the page to render. By default, the page will be scaled (preserving aspect ratio) to fit on the external screen. You may optionally append a URL query key/value pair to specify an alternate scaling (all preserve aspect ratio) using one of the following mode values for the `ditour-zoom` key:
+| Zoom Mode | Zoom Behavior |
+| ----- | ------ |
+| `none` | Don't scale. Will display the page just as Safari would cropped to the screen's view and positioned at the top left corner of the page pinned to the top left corner of the screen. |
+| `width` | Scale the page to fit the width of the page onto the screen, cropping vertically and positioned at the top of the page pinned to the top of the screen. |
+| `height` | Scale the page to fit the height of the page onto the screen, cropping horizontally and positioned at the left of the page pinned to the left of the screen. |
+| `both` | This is the default behavior. It scales the page to fit both horizontally and vertically on the external screen. |
 
 For example, to disable any scaling, one can specify the URL as: http://web.ornl.gov/~t6p/Main/DiTour.html?ditour-zoom=none
 
