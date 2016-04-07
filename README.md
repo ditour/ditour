@@ -31,7 +31,7 @@ Media should be placed on a web server that is accessible to the device. The URL
     * Track directories plus optional config.json
 	  * Media files, icon file plus optional config.json
 
-The supported media file extensions are: png, jpeg, jpg, gif, mp4, m4v, pdf, dae (iOS 8 and later) and urlspec. Note that dae (COLLADA 3D model) files must be compressed and should contain any referenced materials internally and are only supported in iOS 8 and later.
+The supported media file extensions are: `png`, `jpeg`, `jpg`, `gif`, `mp4`, `m4v`, `pdf`, `dae` (iOS 8 and later) and `urlspec`. Note that dae (COLLADA 3D model) files must be compressed and should contain any referenced materials internally and are only supported in iOS 8 and later.
 
 Any file named `Icon` with on of the supported image extensions is treated as an icon for the track rather than a slide. In the absence of an explicit icon, the first image slide or PDF page will be used if available and otherwise a default icon.
 
