@@ -1,6 +1,6 @@
 # Copyright 2015, UT-Battelle, LLC
 ## All rights reserved
-## DiTour
+# DiTour
 ## OPEN SOURCE LICENSE
 Subject to the conditions of this License, UT-Battelle, LLC (the “Licensor”) hereby grants, free of charge, to any person (the “Licensee”) obtaining a copy of this software and associated documentation files (the "Software"), a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to use, copy, modify, merge, publish, distribute, and/or sublicense copies of the Software.
 
