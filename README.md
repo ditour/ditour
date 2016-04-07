@@ -16,9 +16,9 @@ Within each directory pointed to by the group, is a list of directories (one for
 
 ### Configuration
 In each directory, a config.json file may be specified. The configuration is valid at the level of the directory and is inherited by all sub directories. Properties specified in a configuration file override inherited. The configuration file format is JSON format which may contain any of the following information:
-*	slideDuration  - floating point value indicating the time in seconds to display a slide
-*	singelImageSlideTrackDuration - floating point value indicating the time in seconds for displaying a track with a single slide before transitioning to the next track
-*	slideTransition - JSON dictionary of with the following key/value pairs:
+* slideDuration  - floating point value indicating the time in seconds to display a slide
+* singelImageSlideTrackDuration - floating point value indicating the time in seconds for displaying a track with a single slide before transitioning to the next track
+* slideTransition - JSON dictionary of with the following key/value pairs:
   ⁃	"type" - string value for the transition type (one of:  "fade", "push", "reveal" or "moveIn")
   ⁃	"subtype" - string value for the transition subtype (one of: "fromTop", "fromLeft", "fromRight" or "fromBottom")
   ⁃	"duration" - floating point value in seconds for the transition time
