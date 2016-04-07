@@ -19,9 +19,9 @@ In each directory, a config.json file may be specified. The configuration is val
 * slideDuration  - floating point value indicating the time in seconds to display a slide
 * singelImageSlideTrackDuration - floating point value indicating the time in seconds for displaying a track with a single slide before transitioning to the next track
 * slideTransition - JSON dictionary of with the following key/value pairs:
-  ⁃	"type" - string value for the transition type (one of:  "fade", "push", "reveal" or "moveIn")
-  ⁃	"subtype" - string value for the transition subtype (one of: "fromTop", "fromLeft", "fromRight" or "fromBottom")
-  ⁃	"duration" - floating point value in seconds for the transition time
+  ⁃ "type" - string value for the transition type (one of:  "fade", "push", "reveal" or "moveIn")
+  ⁃ "subtype" - string value for the transition subtype (one of: "fromTop", "fromLeft", "fromRight" or "fromBottom")
+  ⁃ "duration" - floating point value in seconds for the transition time
 
 ### Media Directory Layout and Index Format
 Media should be placed on a web server that is accessible to the device. The URL should point to the presentation group's directory and has the following structure:
