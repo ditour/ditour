@@ -19,9 +19,9 @@ In each directory, a config.json file may be specified. The configuration is val
 * slideDuration  - floating point value indicating the time in seconds to display a slide
 * singelImageSlideTrackDuration - floating point value indicating the time in seconds for displaying a track with a single slide before transitioning to the next track
 * slideTransition - JSON dictionary of with the following key/value pairs:
-  ⁃ "type" - string value for the transition type (one of:  "fade", "push", "reveal" or "moveIn")
-  ⁃ "subtype" - string value for the transition subtype (one of: "fromTop", "fromLeft", "fromRight" or "fromBottom")
-  ⁃ "duration" - floating point value in seconds for the transition time
+  - "type" - string value for the transition type (one of:  "fade", "push", "reveal" or "moveIn")
+  - "subtype" - string value for the transition subtype (one of: "fromTop", "fromLeft", "fromRight" or "fromBottom")
+  - "duration" - floating point value in seconds for the transition time
 
 ### Media Directory Layout and Index Format
 Media should be placed on a web server that is accessible to the device. The URL should point to the presentation group's directory and has the following structure:
@@ -37,10 +37,10 @@ Any file named "Icon" with on of the supported image extensions is treated as an
 
 ### Web Page Slides
 A slide whose content is given by a web page can be specified using a plain text file with an extension of "urlspec" and whose contents is simply the URL of the page to render. By default, the page will be scaled (preserving aspect ratio) to fit on the external screen. You may optionally append a URL query key/value pair to specify an alternate scaling (all preserve aspect ratio) using one of the following values for the "ditour-zoom" key:
-*	none		- Don't scale. Will display the page just as Safari would cropped to the screen's view and positioned at the top left corner of the page pinned to the top left corner of the screen.
-*	width		- Scale the page to fit the width of the page onto the screen, cropping vertically and positioned at the top of the page pinned to the top of the screen.
+*	none	- Don't scale. Will display the page just as Safari would cropped to the screen's view and positioned at the top left corner of the page pinned to the top left corner of the screen.
+*	width	- Scale the page to fit the width of the page onto the screen, cropping vertically and positioned at the top of the page pinned to the top of the screen.
 *	height	- Scale the page to fit the height of the page onto the screen, cropping horizontally and positioned at the left of the page pinned to the left of the screen.
-*	both		- This is the default behavior. It scales the page to fit both horizontally and vertically on the external screen.
+*	both	- This is the default behavior. It scales the page to fit both horizontally and vertically on the external screen.
 
 For example, to disable any scaling, one can specify the URL as: http://web.ornl.gov/~t6p/Main/DiTour.html?ditour-zoom=none
 
