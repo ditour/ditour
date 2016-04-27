@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		4C2BA9591A1E7BA9008BDB55 /* UserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2BA9581A1E7BA9008BDB55 /* UserInterface.swift */; };
 		4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3AA3AD19F8467B00A3E3EE /* Presentation.swift */; };
-		4C3E27D31CB53B6000D39861 /* LICENSE.md in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E27D11CB53B6000D39861 /* LICENSE.md */; };
-		4C3E27D41CB53B6000D39861 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E27D21CB53B6000D39861 /* README.md */; };
 		4C556A231AA4AA6800E0E699 /* TidyWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C556A211AA4AA6800E0E699 /* TidyWrapper.c */; };
 		4C58880A1BC6BBE20052EEEF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C5888091BC6BBE20052EEEF /* Settings.bundle */; };
 		4C690BD918214AB300A823CC /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C690BD818214AB300A823CC /* libtidy.dylib */; };
@@ -246,12 +244,10 @@
 				4CF28F4B1A11437000145972 /* Utilities.swift in Sources */,
 				4C3AA3AE19F8467B00A3E3EE /* Presentation.swift in Sources */,
 				4CF0ABA519CB1B2600DEA8D8 /* MainModel.swift in Sources */,
-				4C3E27D41CB53B6000D39861 /* README.md in Sources */,
 				4C2BA9591A1E7BA9008BDB55 /* UserInterface.swift in Sources */,
 				4C556A231AA4AA6800E0E699 /* TidyWrapper.c in Sources */,
 				4CF72B781A0C0C2200FAF651 /* Download.swift in Sources */,
 				4CB7E8FF1A02758C005447E8 /* Persistence.swift in Sources */,
-				4C3E27D31CB53B6000D39861 /* LICENSE.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
